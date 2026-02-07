@@ -323,33 +323,36 @@ const LoginModern = () => {
 
   return (
     <div className="auth-container">
+      <div className="auth-page-title">
+        <h1>Crime Management System</h1>
+        <p className="auth-page-subtitle">Secure Access Portal</p>
+      </div>
+      
       <div className="auth-wrapper">
-        {/* Header removed as per requirement */}
-
         <div className="auth-card">
-          {/* Tab Navigation */}
-          <div className="auth-tabs">
-            <button
-              className={`auth-tab ${activeTab === 'user' ? 'active' : ''}`}
-              onClick={() => handleTabChange('user')}
-            >
-              👤 User
-            </button>
-            <button
-              className={`auth-tab ${activeTab === 'admin' ? 'active' : ''}`}
-              onClick={() => handleTabChange('admin')}
-            >
-              ⚙️ Admin
-            </button>
-            <button
-              className={`auth-tab ${activeTab === 'police' ? 'active' : ''}`}
-              onClick={() => handleTabChange('police')}
-            >
-              👮 Officer
-            </button>
-          </div>
-
           <div className="auth-card-body">
+            {/* Tab Navigation */}
+            <div className="auth-tabs">
+              <button
+                className={`auth-tab ${activeTab === 'user' ? 'active' : ''}`}
+                onClick={() => handleTabChange('user')}
+              >
+                ✓ Citizen
+              </button>
+              <button
+                className={`auth-tab ${activeTab === 'admin' ? 'active' : ''}`}
+                onClick={() => handleTabChange('admin')}
+              >
+                ⚙ Administrator
+              </button>
+              <button
+                className={`auth-tab ${activeTab === 'police' ? 'active' : ''}`}
+                onClick={() => handleTabChange('police')}
+              >
+                🛡 Law Officer
+              </button>
+            </div>
+
             {/* Global Alerts */}
             {error && <div className="alert alert-danger">{error}</div>}
             {success && <div className="alert alert-success">{success}</div>}
@@ -392,13 +395,13 @@ const LoginModern = () => {
                     </form>
 
                     <div className="form-footer">
-                      Don't have an account?{' '}
+                      <p>Don't have an account?</p>
                       <button
                         type="button"
-                        className="btn-link"
+                        className="btn-register-link"
                         onClick={() => setIsRegistering(true)}
                       >
-                        Register here
+                        🔐 Create New Account
                       </button>
                     </div>
                   </>
@@ -472,13 +475,13 @@ const LoginModern = () => {
                     </form>
 
                     <div className="form-footer">
-                      Already have an account?{' '}
+                      <p>Already have an account?</p>
                       <button
                         type="button"
-                        className="btn-link"
+                        className="btn-register-link"
                         onClick={() => setIsRegistering(false)}
                       >
-                        Login here
+                        🔑 Back to Login
                       </button>
                     </div>
                   </>
@@ -568,10 +571,10 @@ const LoginModern = () => {
                       New officer?{' '}
                       <button
                         type="button"
-                        className="btn-link"
+                        className="btn-register-link"
                         onClick={() => setIsRegistering(true)}
                       >
-                        Register here
+                        🔐 Create New Account
                       </button>
                     </div>
                   </>
@@ -666,10 +669,10 @@ const LoginModern = () => {
                       Already registered?{' '}
                       <button
                         type="button"
-                        className="btn-link"
+                        className="btn-register-link"
                         onClick={() => setIsRegistering(false)}
                       >
-                        Login here
+                        🔑 Back to Login
                       </button>
                     </div>
                   </>
@@ -683,6 +686,14 @@ const LoginModern = () => {
           <p>&copy; 2024. All rights reserved.</p>
         </div>
       </div>
+
+      {/* Professional Footer */}
+      <footer className="auth-footer">
+        <div className="auth-footer-content">
+          <p className="auth-footer-text">Crime Management System © 2026</p>
+          <p className="auth-footer-credit">Made by <span className="developer-name">Pritam Rangari</span></p>
+        </div>
+      </footer>
     </div>
   );
 };

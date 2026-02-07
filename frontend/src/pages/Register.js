@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button, Alert, Card } from 'react-bootstrap';
 import { authAPI } from '../api/client';
 import '../styles/auth-modern.css';
 
@@ -119,154 +118,88 @@ const Register = () => {
 
   return (
     <div className="auth-container">
+      <div className="auth-page-title">
+        <h1>Crime Management System</h1>
+        <p className="auth-page-subtitle">Create Your Account</p>
+      </div>
+
       <div className="auth-wrapper">
         <div className="auth-card">
           <div className="auth-card-header">
-            <h1 className="auth-card-title">Create Account</h1>
+            <h2 className="auth-card-title">Register</h2>
             <p className="auth-card-subtitle">Join our crime management system</p>
           </div>
-          <div className="auth-card-body" style={{ padding: '2rem 1.5rem' }}>
+          <div className="auth-card-body">
 
             {error && (
-              <Alert variant="danger" className="mb-3" style={{
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                border: '1px solid #ef4444',
-                borderRadius: '0.5rem'
-              }}>
+              <div className="alert alert-danger">
                 {error}
-              </Alert>
+              </div>
             )}
 
-            <Form onSubmit={handleRegister}>
-                <Form.Group className="mb-3">
-                  <Form.Label className="fw-bold" style={{ color: '#1a1a1a' }}>Username</Form.Label>
-                  <Form.Control
+            <form onSubmit={handleRegister}>
+                <div className="form-group">
+                  <label className="form-label">Username</label>
+                  <input
                     type="text"
+                    className="form-control"
                     name="username"
                     placeholder="Choose username"
                     value={formData.username}
                     onChange={handleChange}
                     required
-                    style={{
-                      borderColor: '#0ea5e9',
-                      borderWidth: '2px',
-                      backgroundColor: '#ffffff',
-                      color: '#1a1a1a',
-                      borderRadius: '0.5rem',
-                      padding: '0.75rem 1rem'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#0284c7';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(14, 165, 233, 0.1)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#0ea5e9';
-                      e.target.style.boxShadow = 'none';
-                    }}
                   />
-                </Form.Group>
+                </div>
 
-                <Form.Group className="mb-3">
-                  <Form.Label className="fw-bold" style={{ color: '#1a1a1a' }}>Email</Form.Label>
-                  <Form.Control
+                <div className="form-group">
+                  <label className="form-label">Email</label>
+                  <input
                     type="email"
+                    className="form-control"
                     name="email"
                     placeholder="Enter email"
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    style={{
-                      borderColor: '#0ea5e9',
-                      borderWidth: '2px',
-                      backgroundColor: '#ffffff',
-                      color: '#1a1a1a',
-                      borderRadius: '0.5rem',
-                      padding: '0.75rem 1rem'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#0284c7';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(14, 165, 233, 0.1)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#0ea5e9';
-                      e.target.style.boxShadow = 'none';
-                    }}
                   />
-                </Form.Group>
+                </div>
 
-                <Form.Group className="mb-3">
-                  <Form.Label className="fw-bold" style={{ color: '#1a1a1a' }}>Phone</Form.Label>
-                  <Form.Control
+                <div className="form-group">
+                  <label className="form-label">Phone</label>
+                  <input
                     type="tel"
+                    className="form-control"
                     name="phone"
                     placeholder="Enter phone number"
                     value={formData.phone}
                     onChange={handleChange}
-                    style={{
-                      borderColor: '#0ea5e9',
-                      borderWidth: '2px',
-                      backgroundColor: '#ffffff',
-                      color: '#1a1a1a',
-                      borderRadius: '0.5rem',
-                      padding: '0.75rem 1rem'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#0284c7';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(14, 165, 233, 0.1)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#0ea5e9';
-                      e.target.style.boxShadow = 'none';
-                    }}
                   />
-                </Form.Group>
+                </div>
 
-                <Form.Group className="mb-4">
-                  <Form.Label className="fw-bold" style={{ color: '#1a1a1a' }}>Register As</Form.Label>
-                  <Form.Select
+                <div className="form-group">
+                  <label className="form-label">Register As</label>
+                  <select
+                    className="form-select"
                     name="role"
                     value={formData.role}
                     onChange={handleChange}
-                    style={{
-                      borderColor: '#0ea5e9',
-                      borderWidth: '2px',
-                      backgroundColor: '#ffffff',
-                      color: '#1a1a1a',
-                      borderRadius: '0.5rem',
-                      padding: '0.75rem 1rem'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#0284c7';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(14, 165, 233, 0.1)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#0ea5e9';
-                      e.target.style.boxShadow = 'none';
-                    }}
                   >
                     <option value="User">User</option>
                     <option value="Admin">Admin</option>
                     <option value="Police">Police Officer</option>
-                  </Form.Select>
-                </Form.Group>
+                  </select>
+                </div>
 
                 {formData.role === 'Police' && (
-                  <Form.Group className="mb-3">
-                    <Form.Label className="fw-bold" style={{ color: '#1a1a1a' }}>Police Station</Form.Label>
-                    <Form.Select
+                  <div className="form-group">
+                    <label className="form-label">Police Station</label>
+                    <select
+                      className="form-select"
                       name="station_id"
                       value={formData.station_id}
                       onChange={handleChange}
                       required
                       disabled={stationsLoading}
-                      style={{
-                        borderColor: '#0ea5e9',
-                        borderWidth: '2px',
-                        backgroundColor: '#ffffff',
-                        color: '#1a1a1a',
-                        borderRadius: '0.5rem',
-                        padding: '0.75rem 1rem'
-                      }}
                     >
                       <option value="">{stationsLoading ? 'Loading stations...' : '-- Select Police Station --'}</option>
                       {stations.map((station) => {
@@ -278,109 +211,68 @@ const Register = () => {
                           </option>
                         );
                       })}
-                    </Form.Select>
-                  </Form.Group>
+                    </select>
+                  </div>
                 )}
 
-                <Form.Group className="mb-3">
-                  <Form.Label className="fw-bold" style={{ color: '#1a1a1a' }}>Password</Form.Label>
-                  <Form.Control
+                <div className="form-group">
+                  <label className="form-label">Password</label>
+                  <input
                     type="password"
+                    className="form-control"
                     name="password"
                     placeholder="Enter password"
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    style={{
-                      borderColor: '#0ea5e9',
-                      borderWidth: '2px',
-                      backgroundColor: '#ffffff',
-                      color: '#1a1a1a',
-                      borderRadius: '0.5rem',
-                      padding: '0.75rem 1rem'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#0284c7';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(14, 165, 233, 0.1)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#0ea5e9';
-                      e.target.style.boxShadow = 'none';
-                    }}
                   />
-                </Form.Group>
+                </div>
 
-                <Form.Group className="mb-3">
-                  <Form.Label className="fw-bold" style={{ color: '#1a1a1a' }}>Confirm Password</Form.Label>
-                  <Form.Control
+                <div className="form-group">
+                  <label className="form-label">Confirm Password</label>
+                  <input
                     type="password"
+                    className="form-control"
                     name="confirmPassword"
                     placeholder="Confirm password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     required
-                    style={{
-                      borderColor: '#0ea5e9',
-                      borderWidth: '2px',
-                      backgroundColor: '#ffffff',
-                      color: '#1a1a1a',
-                      borderRadius: '0.5rem',
-                      padding: '0.75rem 1rem'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#0284c7';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(14, 165, 233, 0.1)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#0ea5e9';
-                      e.target.style.boxShadow = 'none';
-                    }}
                   />
-                </Form.Group>
+                </div>
 
-                <Button
-                  variant="primary"
+                <button
                   type="submit"
-                  className="w-100 fw-bold"
+                  className="btn btn-primary"
                   disabled={loading}
-                  style={{
-                    backgroundColor: '#0ea5e9',
-                    borderColor: '#0ea5e9',
-                    color: '#ffffff',
-                    padding: '0.75rem',
-                    borderRadius: '0.5rem',
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#0284c7';
-                    e.target.style.boxShadow = '0 6px 16px rgba(14, 165, 233, 0.2)';
-                    e.target.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = '#0ea5e9';
-                    e.target.style.boxShadow = 'none';
-                    e.target.style.transform = 'translateY(0)';
-                  }}
                 >
                   {loading ? 'Registering...' : 'Register'}
-                </Button>
-              </Form>
+                </button>
+              </form>
 
-              <hr style={{ color: '#e5e7eb', margin: '1.5rem 0' }} />
-
-              <p style={{ textAlign: 'center', color: '#666666', fontSize: '0.95rem' }}>
-                Already have an account?{' '}
-                <a href="/login" style={{ color: '#0ea5e9', textDecoration: 'none', fontWeight: '600' }}>
-                  Login here
-                </a>
-              </p>
+              <div className="form-footer">
+                <p>Already have an account?</p>
+                <button
+                  type="button"
+                  className="btn-register-link"
+                  onClick={() => window.location.href = '/login'}
+                >
+                  🔑 Login here
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-  );
+
+      {/* Professional Footer */}
+      <footer className="auth-footer">
+        <div className="auth-footer-content">
+          <p className="auth-footer-text">Crime Management System © 2026</p>
+          <p className="auth-footer-credit">Made by <span className="developer-name">Pritam Rangari</span></p>
+        </div>
+      </footer>
+    </div>
 };
 
 export default Register;
