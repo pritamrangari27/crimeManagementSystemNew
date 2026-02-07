@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Table, Card, Badge, Button, Spinner, Alert, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import { firsAPI } from '../api/client';
 import '../styles/forms.css';
 
 const UserFIRList = () => {
@@ -29,8 +30,8 @@ const UserFIRList = () => {
       try {
         setLoading(true);
         setError('');
-        const response = await fetch(`http://localhost:3000/api/firs/user/${user.id}`);
-        const data = await response.json();
+        const response = await firsAPI.getByUser(user.id);
+        const data = response.data;
         
         if (data.status === 'success' && Array.isArray(data.data)) {
           setFirs(data.data);
@@ -48,7 +49,7 @@ const UserFIRList = () => {
     if (user?.id) {
       fetchFIRs();
     }
-  }, [user]);
+  }, [user?.id]);
 
   // Filter and sort FIRs
   useEffect(() => {

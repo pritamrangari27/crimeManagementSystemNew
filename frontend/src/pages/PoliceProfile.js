@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Form, Alert, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Alert, Spinner, Badge, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import '../styles/forms.css';
@@ -42,7 +42,7 @@ const PoliceProfile = () => {
     setSuccess('');
 
     try {
-      const response = await fetch(`http://localhost:3000/api/auth/update-profile`, {
+      const response = await fetch(`http://localhost:5000/api/auth/update-profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -70,6 +70,15 @@ const PoliceProfile = () => {
     }
   };
 
+  const getInitials = () => {
+    return (user?.username || 'P')
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
+
   if (role !== 'Police') {
     return null;
   }
@@ -77,175 +86,315 @@ const PoliceProfile = () => {
   return (
     <div className="d-flex">
       <Sidebar userRole={role} />
-      <Container fluid className="main-content py-4">
-        <Row className="mb-4">
+      <Container fluid className="main-content py-5 px-4" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
+        {/* Header */}
+        <Row className="mb-5">
           <Col>
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <h2 className="fw-bold">
-                  <i className="fas fa-user-circle me-2"></i> My Profile
-                </h2>
-                <p className="text-muted">View and manage your police officer profile</p>
+                <h1 className="fw-bold mb-2" style={{ color: '#2c3e50' }}>
+                  <i className="fas fa-police me-3" style={{ color: '#3498db' }}></i> Officer Profile
+                </h1>
+                <p className="text-muted fs-5">Manage your police officer account and settings</p>
               </div>
-              <Button variant="secondary" size="sm" onClick={() => navigate(-1)}>
+              <Button 
+                variant="outline-secondary" 
+                size="lg" 
+                onClick={() => navigate(-1)}
+                className="fw-bold"
+              >
                 <i className="fas fa-arrow-left me-2"></i>Back
               </Button>
             </div>
           </Col>
         </Row>
 
-        <Row className="justify-content-center">
-          <Col lg={8}>
-            {/* Officer Information */}
-            <Card className="border-0 shadow-sm mb-4">
-              <Card.Header className="bg-primary text-white fw-bold">
-                <i className="fas fa-user me-2"></i> Officer Information
-              </Card.Header>
-              <Card.Body>
-                {error && <Alert variant="danger">{error}</Alert>}
-                {success && <Alert variant="success">{success}</Alert>}
+        {/* Profile Header Card */}
+        <Card 
+          className="border-0 shadow-lg mb-5 overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #2980b9 0%, #3498db 100%)',
+          }}
+        >
+          <Card.Body className="p-5 text-white">
+            <Row className="align-items-center">
+              <Col md={2} className="text-center mb-4 mb-md-0">
+                <div
+                  style={{
+                    width: '120px',
+                    height: '120px',
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                    fontSize: '48px',
+                    fontWeight: 'bold',
+                    border: '4px solid white'
+                  }}
+                >
+                  {getInitials()}
+                </div>
+              </Col>
+              <Col md={10}>
+                <h2 className="fw-bold mb-2">{user?.username}</h2>
+                <p className="mb-3 fs-6">
+                  <i className="fas fa-envelope me-2"></i> {user?.email}
+                </p>
+                <div className="d-flex gap-3 flex-wrap">
+                  <Badge bg="light" text="dark" className="p-2 fs-6">
+                    <i className="fas fa-id-badge me-2"></i> Badge: {user?.badge_number || 'N/A'}
+                  </Badge>
+                  <Badge bg="success" className="p-2 fs-6">
+                    <i className="fas fa-check-circle me-2"></i> On Duty
+                  </Badge>
+                </div>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
 
-                {isEditing ? (
-                  <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-4">
-                      <Form.Label className="fw-bold">Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        required
-                      />
-                    </Form.Group>
+        {error && <Alert variant="danger" className="mb-4">{error}</Alert>}
+        {success && <Alert variant="success" className="mb-4">{success}</Alert>}
 
-                    <Form.Group className="mb-4">
-                      <Form.Label className="fw-bold">Email</Form.Label>
-                      <Form.Control
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                      />
-                    </Form.Group>
+        {/* Combined Profile Information & Settings Table */}
+        <Card className="border-0 shadow-sm overflow-hidden">
+          <Card.Header className="fw-bold text-white p-4" style={{ background: 'linear-gradient(135deg, #2980b9 0%, #3498db 100%)' }}>
+            <i className="fas fa-user-circle me-2"></i> Officer Profile
+          </Card.Header>
+          <Card.Body className="p-0">
+            {isEditing ? (
+              <div className="p-4">
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group className="mb-4">
+                    <Form.Label className="fw-bold mb-2">
+                      <i className="fas fa-user me-2" style={{ color: '#3498db' }}></i>Full Name
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleChange}
+                      required
+                      className="border-2"
+                      style={{ borderColor: '#e0e0e0' }}
+                    />
+                  </Form.Group>
 
-                    <Form.Group className="mb-4">
-                      <Form.Label className="fw-bold">Phone</Form.Label>
-                      <Form.Control
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
+                  <Form.Group className="mb-4">
+                    <Form.Label className="fw-bold mb-2">
+                      <i className="fas fa-envelope me-2" style={{ color: '#3498db' }}></i>Email Address
+                    </Form.Label>
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="border-2"
+                      style={{ borderColor: '#e0e0e0' }}
+                    />
+                  </Form.Group>
 
-                    <Form.Group className="mb-4">
-                      <Form.Label className="fw-bold">Badge Number</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="badge_number"
-                        value={formData.badge_number}
-                        onChange={handleChange}
-                        disabled
-                      />
-                      <Form.Text className="text-muted">Badge number cannot be changed</Form.Text>
-                    </Form.Group>
+                  <Form.Group className="mb-4">
+                    <Form.Label className="fw-bold mb-2">
+                      <i className="fas fa-phone me-2" style={{ color: '#3498db' }}></i>Phone Number
+                    </Form.Label>
+                    <Form.Control
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="Enter your phone number"
+                      className="border-2"
+                      style={{ borderColor: '#e0e0e0' }}
+                    />
+                  </Form.Group>
 
-                    <div className="d-flex gap-2">
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        disabled={loading}
-                        className="fw-bold"
-                      >
-                        {loading ? <>
-                          <Spinner animation="border" size="sm" className="me-2" />
-                          Saving...
-                        </> : <>
-                          <i className="fas fa-save me-2"></i> Save Changes
-                        </>}
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        onClick={() => {
-                          setIsEditing(false);
-                          setFormData({
-                            username: user?.username || '',
-                            email: user?.email || '',
-                            phone: user?.phone || '',
-                            badge_number: user?.badge_number || ''
-                          });
-                        }}
-                        className="fw-bold"
-                      >
-                        <i className="fas fa-times me-2"></i> Cancel
-                      </Button>
-                    </div>
-                  </Form>
-                ) : (
-                  <div>
-                    <Row className="mb-4">
-                      <Col md={6}>
-                        <h6 className="text-muted small fw-bold">Name</h6>
-                        <p className="fw-bold">{user.username}</p>
-                      </Col>
-                      <Col md={6}>
-                        <h6 className="text-muted small fw-bold">Badge Number</h6>
-                        <p className="fw-bold">{user.badge_number || 'N/A'}</p>
-                      </Col>
-                    </Row>
-                    <Row className="mb-4">
-                      <Col md={6}>
-                        <h6 className="text-muted small fw-bold">Email</h6>
-                        <p className="fw-bold">{user.email}</p>
-                      </Col>
-                      <Col md={6}>
-                        <h6 className="text-muted small fw-bold">Phone</h6>
-                        <p className="fw-bold">{user.phone || 'Not provided'}</p>
-                      </Col>
-                    </Row>
+                  <Form.Group className="mb-4">
+                    <Form.Label className="fw-bold mb-2">
+                      <i className="fas fa-id-badge me-2" style={{ color: '#3498db' }}></i>Badge Number
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="badge_number"
+                      value={formData.badge_number}
+                      onChange={handleChange}
+                      disabled
+                      className="bg-light border-2"
+                      style={{ borderColor: '#e0e0e0' }}
+                    />
+                    <Form.Text className="text-muted">Badge number cannot be changed</Form.Text>
+                  </Form.Group>
+
+                  <div className="d-flex gap-2 pt-3">
                     <Button
-                      variant="primary"
+                      style={{ background: 'linear-gradient(135deg, #2980b9 0%, #3498db 100%)', border: 'none' }}
+                      type="submit"
+                      disabled={loading}
+                      className="fw-bold"
+                    >
+                      {loading ? <>
+                        <Spinner animation="border" size="sm" className="me-2" />
+                        Saving...
+                      </> : <>
+                        <i className="fas fa-save me-2"></i> Save Changes
+                      </>}
+                    </Button>
+                    <Button
+                      variant="outline-secondary"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setFormData({
+                          username: user?.username || '',
+                          email: user?.email || '',
+                          phone: user?.phone || '',
+                          badge_number: user?.badge_number || ''
+                        });
+                      }}
+                      className="fw-bold"
+                    >
+                      <i className="fas fa-times me-2"></i> Cancel
+                    </Button>
+                  </div>
+                </Form>
+              </div>
+            ) : (
+              <div>
+                <div className="p-4 border-bottom">
+                  <h6 className="fw-bold mb-3">Officer Information</h6>
+                  <Table borderless responsive className="mb-0">
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                        <td style={{ width: '35%', paddingBottom: '12px' }}>
+                          <span className="text-muted fw-bold small">
+                            <i className="fas fa-user me-2" style={{ color: '#3498db' }}></i>Full Name
+                          </span>
+                        </td>
+                        <td style={{ paddingBottom: '12px' }}>
+                          <span className="fw-bold">{user.username}</span>
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                          <span className="text-muted fw-bold small">
+                            <i className="fas fa-id-badge me-2" style={{ color: '#3498db' }}></i>Badge Number
+                          </span>
+                        </td>
+                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                          <span className="fw-bold">{user.badge_number || 'N/A'}</span>
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                          <span className="text-muted fw-bold small">
+                            <i className="fas fa-envelope me-2" style={{ color: '#3498db' }}></i>Email
+                          </span>
+                        </td>
+                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                          <span className="fw-bold">{user.email}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ paddingTop: '8px', verticalAlign: 'top' }}>
+                          <span className="text-muted fw-bold small">
+                            <i className="fas fa-phone me-2" style={{ color: '#3498db' }}></i>Phone Number
+                          </span>
+                        </td>
+                        <td style={{ paddingTop: '8px' }}>
+                          <span className="fw-bold">{user.phone || <span className="text-muted">Not provided</span>}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
+
+                <div className="p-4 border-bottom">
+                  <h6 className="fw-bold mb-3">Station Assignment</h6>
+                  <Table borderless responsive className="mb-0">
+                    <tbody>
+                      <tr>
+                        <td style={{ width: '35%' }}>
+                          <span className="text-muted fw-bold small">
+                            <i className="fas fa-shield-alt me-2" style={{ color: '#27ae60' }}></i>Assigned Station
+                          </span>
+                        </td>
+                        <td>
+                          <span className="fw-bold">{stationId || <span className="text-muted">Not assigned</span>}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
+
+                <div className="p-4 border-bottom">
+                  <h6 className="fw-bold mb-3">Account Status</h6>
+                  <Table borderless responsive className="mb-0">
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                        <td style={{ width: '35%', paddingBottom: '12px' }}>
+                          <span className="text-muted fw-bold small">
+                            <i className="fas fa-heartbeat me-2" style={{ color: '#28a745' }}></i>Duty Status
+                          </span>
+                        </td>
+                        <td style={{ paddingBottom: '12px' }}>
+                          <Badge bg="success" className="p-2">
+                            <i className="fas fa-check-circle me-1"></i> On Duty
+                          </Badge>
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                          <span className="text-muted fw-bold small">
+                            <i className="fas fa-badge me-2" style={{ color: '#0dcaf0' }}></i>Role
+                          </span>
+                        </td>
+                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                          <Badge bg="info" className="p-2">
+                            <i className="fas fa-police me-1"></i> Police Officer
+                          </Badge>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ paddingTop: '8px' }}>
+                          <span className="text-muted fw-bold small">
+                            <i className="fas fa-calendar-check me-2" style={{ color: '#ffc107' }}></i>Member Since
+                          </span>
+                        </td>
+                        <td style={{ paddingTop: '8px' }}>
+                          <span className="fw-bold">
+                            {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
+
+                <div className="p-4">
+                  <h6 className="fw-bold mb-3">Security</h6>
+                  <div className="d-flex gap-2 flex-wrap">
+                    <Button
+                      style={{ background: 'linear-gradient(135deg, #2980b9 0%, #3498db 100%)', border: 'none' }}
                       onClick={() => setIsEditing(true)}
                       className="fw-bold"
                     >
                       <i className="fas fa-edit me-2"></i> Edit Profile
                     </Button>
+                    <Button
+                      style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', border: 'none' }}
+                      onClick={() => navigate('/change-password')}
+                      className="fw-bold"
+                    >
+                      <i className="fas fa-key me-2"></i> Change Password
+                    </Button>
                   </div>
-                )}
-              </Card.Body>
-            </Card>
-
-            {/* Station Assignment */}
-            <Card className="border-0 shadow-sm mb-4">
-              <Card.Header className="bg-success text-white fw-bold">
-                <i className="fas fa-building me-2"></i> Station Assignment
-              </Card.Header>
-              <Card.Body>
-                <div className="mb-0">
-                  <h6 className="text-muted small fw-bold">Assigned Station</h6>
-                  <p className="fw-bold">{stationId || 'Not assigned'}</p>
                 </div>
-              </Card.Body>
-            </Card>
-
-            {/* Security */}
-            <Card className="border-0 shadow-sm">
-              <Card.Header className="bg-info text-white fw-bold">
-                <i className="fas fa-lock me-2"></i> Security
-              </Card.Header>
-              <Card.Body>
-                <Button
-                  variant="outline-primary"
-                  onClick={() => navigate('/change-password')}
-                  className="fw-bold"
-                >
-                  <i className="fas fa-key me-2"></i> Change Password
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+              </div>
+            )}
+          </Card.Body>
+        </Card>
       </Container>
     </div>
   );

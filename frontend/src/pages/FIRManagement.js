@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button, Table, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { firsAPI } from '../api/client';
+import { CRIME_TYPES } from '../constants/crimeTypes';
 
 const FIRManagement = () => {
   const navigate = useNavigate();
@@ -89,138 +90,146 @@ const FIRManagement = () => {
           <Button variant="secondary" size="sm" onClick={() => navigate(-1)} className="me-2">
             <i className="fas fa-arrow-left me-2"></i>Back
           </Button>
-          <Button variant="primary" onClick={() => setShowForm(!showForm)}>
-            {showForm ? 'Cancel' : '+ File New FIR'}
+          <Button variant="primary" onClick={() => setShowForm(true)}>
+            <i className="fas fa-plus me-2"></i>File New FIR
           </Button>
         </Col>
       </Row>
 
-      {showForm && (
-        <Card className="mb-4 shadow-sm">
-          <Card.Header className="bg-primary text-white fw-bold">
-            File New FIR
-          </Card.Header>
-          <Card.Body>
-            <Form onSubmit={handleCreateFIR}>
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Crime Type *</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="crime_type"
-                      value={formData.crime_type}
-                      onChange={handleFormChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Crime Date *</Form.Label>
-                    <Form.Control
-                      type="date"
-                      name="crime_date"
-                      value={formData.crime_date}
-                      onChange={handleFormChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+      <Modal show={showForm} onHide={() => setShowForm(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>File New FIR</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleCreateFIR}>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Crime Type *</Form.Label>
+                  <Form.Select
+                    name="crime_type"
+                    value={formData.crime_type}
+                    onChange={handleFormChange}
+                    required
+                  >
+                    <option value="">-- Select Crime Type --</option>
+                    {CRIME_TYPES.map((crime) => (
+                      <option key={crime.value} value={crime.value}>
+                        {crime.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Crime Date *</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="crime_date"
+                    value={formData.crime_date}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Victim Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="victim_name"
-                      value={formData.victim_name}
-                      onChange={handleFormChange}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Accused Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="accused_name"
-                      value={formData.accused_name}
-                      onChange={handleFormChange}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Victim Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="victim_name"
+                    value={formData.victim_name}
+                    onChange={handleFormChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Accused Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="accused_name"
+                    value={formData.accused_name}
+                    onChange={handleFormChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Crime Location *</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="crime_location"
-                  value={formData.crime_location}
-                  onChange={handleFormChange}
-                  required
-                />
-              </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Crime Location *</Form.Label>
+              <Form.Control
+                type="text"
+                name="crime_location"
+                value={formData.crime_location}
+                onChange={handleFormChange}
+                required
+              />
+            </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  name="description"
-                  rows={3}
-                  value={formData.description}
-                  onChange={handleFormChange}
-                />
-              </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="description"
+                rows={3}
+                value={formData.description}
+                onChange={handleFormChange}
+              />
+            </Form.Group>
 
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Victim Email</Form.Label>
-                    <Form.Control
-                      type="email"
-                      name="victim_email"
-                      value={formData.victim_email}
-                      onChange={handleFormChange}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Victim Phone</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="victim_phone"
-                      value={formData.victim_phone}
-                      onChange={handleFormChange}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Victim Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="victim_email"
+                    value={formData.victim_email}
+                    onChange={handleFormChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Victim Phone</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="victim_phone"
+                    value={formData.victim_phone}
+                    onChange={handleFormChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Priority</Form.Label>
-                <Form.Select
-                  name="priority"
-                  value={formData.priority}
-                  onChange={handleFormChange}
-                >
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                </Form.Select>
-              </Form.Group>
-
-              <Button variant="success" type="submit" className="w-100">
-                File FIR
-              </Button>
-            </Form>
-          </Card.Body>
-        </Card>
-      )}
+            <Form.Group className="mb-3">
+              <Form.Label>Priority</Form.Label>
+              <Form.Select
+                name="priority"
+                value={formData.priority}
+                onChange={handleFormChange}
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </Form.Select>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowForm(false)}>
+            Close
+          </Button>
+          <Button variant="success" onClick={(e) => handleCreateFIR(e)}>
+            File FIR
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <Form.Group className="mb-4">
         <Form.Control
@@ -273,11 +282,11 @@ const FIRManagement = () => {
                 <td>High</td>
                 <td>
                   <Button
-                    href={`/fir/${fir.id}`}
+                    onClick={() => navigate(`/fir/${fir.id}`)}
                     variant="info"
                     size="sm"
                   >
-                    View
+                    <i className="fas fa-eye"></i> View
                   </Button>
                 </td>
               </tr>

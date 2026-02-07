@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 console.log('API Base URL:', API_BASE_URL);
 
@@ -132,31 +132,6 @@ export const dashboardAPI = {
   getFIRStatus: () => api.get('/dashboard/fir-status'),
   getCrimesByLocation: () => api.get('/dashboard/crimes-by-location'),
   getActivity: (limit = 10) => api.get(`/dashboard/activity?limit=${limit}`)
-};
-
-// Upload API
-export const uploadAPI = {
-  uploadPhoto: (file) => {
-    const formData = new FormData();
-    formData.append('photo', file);
-    return api.post('/upload/photo', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
-  },
-  uploadDocument: (file) => {
-    const formData = new FormData();
-    formData.append('document', file);
-    return api.post('/upload/document', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
-  },
-  uploadMultiple: (files) => {
-    const formData = new FormData();
-    files.forEach(file => formData.append('files', file));
-    return api.post('/upload/multiple', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
-  }
 };
 
 export default api;

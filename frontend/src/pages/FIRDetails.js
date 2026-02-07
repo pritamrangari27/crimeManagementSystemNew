@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Badge, Button, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Badge, Button, Spinner, Alert, Table } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import { firsAPI } from '../api/client';
 import '../styles/forms.css';
 
 const FIRDetails = () => {
@@ -29,8 +30,8 @@ const FIRDetails = () => {
       try {
         setLoading(true);
         setError('');
-        const response = await fetch(`http://localhost:3000/api/firs/${id}`);
-        const data = await response.json();
+        const response = await firsAPI.getById(id);
+        const data = response.data;
         
         if (data.status === 'success') {
           setFir(data.data);
@@ -72,21 +73,12 @@ const FIRDetails = () => {
 
     setApproving(true);
     try {
-      const response = await fetch(`http://localhost:3000/api/firs/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'Approved' })
-      });
-
-      const data = await response.json();
-      if (data.status === 'success') {
-        setFir({ ...fir, status: 'Approved' });
-        alert('FIR approved successfully');
-      } else {
-        alert('Failed to approve FIR');
-      }
+      await firsAPI.approve(id, null);
+      setFir({ ...fir, status: 'Approved' });
+      alert('FIR approved successfully');
     } catch (err) {
       alert('Error approving FIR');
+      console.error('Error:', err);
     } finally {
       setApproving(false);
     }
@@ -98,21 +90,12 @@ const FIRDetails = () => {
 
     setRejecting(true);
     try {
-      const response = await fetch(`http://localhost:3000/api/firs/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'Rejected' })
-      });
-
-      const data = await response.json();
-      if (data.status === 'success') {
-        setFir({ ...fir, status: 'Rejected' });
-        alert('FIR rejected successfully');
-      } else {
-        alert('Failed to reject FIR');
-      }
+      await firsAPI.reject(id, 'Rejected by officer');
+      setFir({ ...fir, status: 'Rejected' });
+      alert('FIR rejected successfully');
     } catch (err) {
       alert('Error rejecting FIR');
+      console.error('Error:', err);
     } finally {
       setRejecting(false);
     }
@@ -148,9 +131,21 @@ const FIRDetails = () => {
             >
               <i className="fas fa-arrow-left me-2"></i> Back
             </Button>
-            <h2 className="fw-bold">
-              <i className="fas fa-file-contract me-2"></i> FIR Details
-            </h2>
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <h2 className="fw-bold mb-2">
+                  <i className="fas fa-file-contract me-2"></i> FIR Details
+                </h2>
+                {!loading && fir && (
+                  <p className="text-muted mb-0">
+                    FIR-{String(fir.id).padStart(4, '0')} • 
+                    <Badge bg={getStatusVariant(fir.status)} className="ms-2">
+                      {fir.status}
+                    </Badge>
+                  </p>
+                )}
+              </div>
+            </div>
           </Col>
         </Row>
 
@@ -168,144 +163,178 @@ const FIRDetails = () => {
         ) : (
           <Row>
             <Col lg={8}>
-              {/* Basic Info Card */}
-              <Card className="border-0 shadow-sm mb-4">
-                <Card.Header className="bg-primary text-white fw-bold">
-                  <i className="fas fa-info-circle me-2"></i> Basic Information
+              {/* FIR Information Table-like Structure */}
+              <Card className="border-0 shadow-sm mb-4 overflow-hidden">
+                <Card.Header className="fw-bold text-white p-4" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+                  <i className="fas fa-file-contract me-2"></i> FIR Case Details
                 </Card.Header>
-                <Card.Body>
-                  <Row className="mb-4">
-                    <Col md={6}>
-                      <h6 className="text-muted small fw-bold">FIR ID</h6>
-                      <p className="fw-bold text-primary">
-                        FIR-{String(fir.id).padStart(4, '0')}
-                      </p>
-                    </Col>
-                    <Col md={6}>
-                      <h6 className="text-muted small fw-bold">Status</h6>
-                      <Badge bg={getStatusVariant(fir.status)} style={{ fontSize: '14px' }}>
-                        {fir.status}
-                      </Badge>
-                    </Col>
-                  </Row>
+                <Card.Body className="p-0">
+                  {/* FIR Basic Information */}
+                  <div className="p-4 border-bottom">
+                    <h6 className="fw-bold mb-3 d-flex align-items-center">
+                      <i className="fas fa-info-circle me-2" style={{ color: '#667eea' }}></i> Case Information
+                    </h6>
+                    <Table borderless responsive className="mb-0">
+                      <tbody>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          <td style={{ width: '40%', paddingBottom: '12px' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-file-alt me-2 text-primary"></i>FIR ID
+                            </span>
+                          </td>
+                          <td style={{ paddingBottom: '12px' }}>
+                            <span className="fw-bold text-primary">FIR-{String(fir.id).padStart(4, '0')}</span>
+                          </td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-circle-dot me-2" style={{ color: getStatusVariant(fir.status) === 'success' ? '#28a745' : getStatusVariant(fir.status) === 'danger' ? '#dc3545' : getStatusVariant(fir.status) === 'info' ? '#0dcaf0' : '#ffc107' }}></i>Status
+                            </span>
+                          </td>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <Badge bg={getStatusVariant(fir.status)} className="p-2" style={{ fontSize: '12px' }}>
+                              {fir.status}
+                            </Badge>
+                          </td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-gavel me-2 text-danger"></i>Crime Type
+                            </span>
+                          </td>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="fw-bold">{fir.crime_type}</span>
+                          </td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-calendar-alt me-2 text-warning"></i>Filed Date
+                            </span>
+                          </td>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="fw-bold">{formatDate(fir.created_at || fir.date)}</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style={{ paddingTop: '8px' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-map-marker-alt me-2 text-success"></i>Police Station
+                            </span>
+                          </td>
+                          <td style={{ paddingTop: '8px' }}>
+                            <span className="fw-bold">{fir.station_id}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
 
-                  <Row className="mb-4">
-                    <Col md={6}>
-                      <h6 className="text-muted small fw-bold">Crime Type</h6>
-                      <p className="fw-bold">{fir.crime_type}</p>
-                    </Col>
-                    <Col md={6}>
-                      <h6 className="text-muted small fw-bold">Police Station</h6>
-                      <p className="fw-bold">{fir.station_id}</p>
-                    </Col>
-                  </Row>
+                  {/* Complainant Information */}
+                  <div className="p-4 border-bottom">
+                    <h6 className="fw-bold mb-3 d-flex align-items-center">
+                      <i className="fas fa-user me-2" style={{ color: '#0dcaf0' }}></i> Complainant Information
+                    </h6>
+                    <Table borderless responsive className="mb-0">
+                      <tbody>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          <td style={{ width: '40%', paddingBottom: '12px' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-user me-2" style={{ color: '#0dcaf0' }}></i>Full Name
+                            </span>
+                          </td>
+                          <td style={{ paddingBottom: '12px' }}>
+                            <span className="fw-bold">{fir.name}</span>
+                          </td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-birthday-cake me-2" style={{ color: '#0dcaf0' }}></i>Age
+                            </span>
+                          </td>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="fw-bold">{fir.age} years</span>
+                          </td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-phone me-2 text-success"></i>Phone Number
+                            </span>
+                          </td>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="fw-bold">{fir.number}</span>
+                          </td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-link me-2 text-warning"></i>Relation to Accused
+                            </span>
+                          </td>
+                          <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
+                            <span className="fw-bold">{fir.relation}</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style={{ paddingTop: '8px', verticalAlign: 'top' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-home me-2 text-secondary"></i>Address
+                            </span>
+                          </td>
+                          <td style={{ paddingTop: '8px' }}>
+                            <span className="fw-bold">{fir.address}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
 
-                  <Row>
-                    <Col md={6}>
-                      <h6 className="text-muted small fw-bold">Filed Date</h6>
-                      <p className="small">{formatDate(fir.created_at || fir.date)}</p>
-                    </Col>
-                    <Col md={6}>
-                      <h6 className="text-muted small fw-bold">Accused</h6>
-                      <p className="fw-bold">{fir.accused}</p>
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
+                  {/* Accused Information */}
+                  <div className="p-4 border-bottom">
+                    <h6 className="fw-bold mb-3 d-flex align-items-center">
+                      <i className="fas fa-user-secret me-2 text-danger"></i> Accused Information
+                    </h6>
+                    <Table borderless responsive className="mb-0">
+                      <tbody>
+                        <tr>
+                          <td style={{ width: '40%' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-user-secret me-2 text-danger"></i>Name
+                            </span>
+                          </td>
+                          <td>
+                            <span className="fw-bold">{fir.accused}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
 
-              {/* Accused Information Card */}
-              <Card className="border-0 shadow-sm mb-4">
-                <Card.Header className="bg-danger text-white fw-bold">
-                  <i className="fas fa-user-secret me-2"></i> Accused Information
-                </Card.Header>
-                <Card.Body>
-                  <Row>
-                    <Col md={12}>
-                      <p className="mb-0">{fir.accused}</p>
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
-
-              {/* Complainant Information Card */}
-              <Card className="border-0 shadow-sm mb-4">
-                <Card.Header className="bg-info text-white fw-bold">
-                  <i className="fas fa-user me-2"></i> Complainant Information
-                </Card.Header>
-                <Card.Body>
-                  <Row className="mb-3">
-                    <Col md={6}>
-                      <h6 className="text-muted small fw-bold">Name</h6>
-                      <p className="fw-bold">{fir.name}</p>
-                    </Col>
-                    <Col md={6}>
-                      <h6 className="text-muted small fw-bold">Age</h6>
-                      <p className="fw-bold">{fir.age} years</p>
-                    </Col>
-                  </Row>
-
-                  <Row className="mb-3">
-                    <Col md={6}>
-                      <h6 className="text-muted small fw-bold">Phone Number</h6>
-                      <p className="fw-bold">{fir.number}</p>
-                    </Col>
-                    <Col md={6}>
-                      <h6 className="text-muted small fw-bold">Relation to Accused</h6>
-                      <p className="fw-bold">{fir.relation}</p>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col>
-                      <h6 className="text-muted small fw-bold">Address</h6>
-                      <p className="fw-bold">{fir.address}</p>
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
-
-              {/* Purpose Card */}
-              <Card className="border-0 shadow-sm mb-4">
-                <Card.Header className="bg-warning text-white fw-bold">
-                  <i className="fas fa-comment-dots me-2"></i> Purpose of FIR
-                </Card.Header>
-                <Card.Body>
-                  <p>{fir.purpose}</p>
-                </Card.Body>
-              </Card>
-
-              {/* Evidence Card */}
-              {fir.file && (
-                <Card className="border-0 shadow-sm mb-4">
-                  <Card.Header className="bg-secondary text-white fw-bold">
-                    <i className="fas fa-file-upload me-2"></i> Evidence File
-                  </Card.Header>
-                  <Card.Body>
-                    <div className="d-flex align-items-center gap-3">
-                      <i className="fas fa-file-pdf text-danger" style={{ fontSize: '48px' }}></i>
-                      <div>
-                        <p className="mb-1 fw-bold">{fir.file}</p>
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          href={`http://localhost:3000/uploads/${fir.file}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <i className="fas fa-download me-1"></i> Download
-                        </Button>
-                      </div>
+                  {/* Purpose/Description */}
+                  <div className="p-4">
+                    <h6 className="fw-bold mb-3 d-flex align-items-center">
+                      <i className="fas fa-comment-dots me-2" style={{ color: '#ffc107' }}></i> Purpose of FIR
+                    </h6>
+                    <div className="p-3 bg-light rounded-2" style={{ borderLeft: '4px solid #ffc107', lineHeight: '1.6', fontSize: '14px' }}>
+                      {fir.purpose}
                     </div>
-                  </Card.Body>
-                </Card>
-              )}
+                  </div>
+                </Card.Body>
+              </Card>
 
               {/* Action Buttons for Police */}
               {role === 'Police' && fir.status === 'Sent' && (
-                <Card className="border-0 shadow-sm">
+                <Card className="border-0 shadow-sm mt-4">
                   <Card.Body>
-                    <Row className="gap-3">
-                      <Col>
+                    <h6 className="mb-3 fw-bold">
+                      <i className="fas fa-tasks me-2 text-primary"></i> Police Actions
+                    </h6>
+                    <Row className="g-3">
+                      <Col sm={6}>
                         <Button
                           variant="success"
                           size="lg"
@@ -314,10 +343,10 @@ const FIRDetails = () => {
                           disabled={approving}
                         >
                           <i className="fas fa-check-circle me-2"></i>
-                          {approving ? 'Approving...' : 'Approve FIR'}
+                          {approving ? 'Approving...' : 'Approve'}
                         </Button>
                       </Col>
-                      <Col>
+                      <Col sm={6}>
                         <Button
                           variant="danger"
                           size="lg"
@@ -326,7 +355,7 @@ const FIRDetails = () => {
                           disabled={rejecting}
                         >
                           <i className="fas fa-times-circle me-2"></i>
-                          {rejecting ? 'Rejecting...' : 'Reject FIR'}
+                          {rejecting ? 'Rejecting...' : 'Reject'}
                         </Button>
                       </Col>
                     </Row>
@@ -335,67 +364,105 @@ const FIRDetails = () => {
               )}
             </Col>
 
-            {/* Sidebar with Additional Info */}
+            {/* Sidebar with Modern Circular Progress */}
             <Col lg={4}>
-              <Card className="border-0 shadow-sm mb-4">
-                <Card.Header className="bg-success text-white fw-bold">
-                  <i className="fas fa-check-circle me-2"></i> Status Timeline
-                </Card.Header>
-                <Card.Body>
-                  <div className="timeline">
-                    <div className="d-flex mb-3">
-                      <div className="me-3">
-                        <i className="fas fa-circle text-info" style={{ fontSize: '12px' }}></i>
+              {/* Modern Circular Progress Indicator */}
+              <div className="p-4 rounded-3" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', borderLeft: '4px solid #667eea' }}>
+                <h6 className="fw-bold mb-4 d-flex align-items-center" style={{ color: '#2c3e50' }}>
+                  <i className="fas fa-tasks me-2" style={{ color: '#667eea', fontSize: '18px' }}></i>
+                  Case Progress
+                </h6>
+
+                {/* Circular Progress Indicator */}
+                <div className="d-flex flex-column align-items-center mb-4">
+                  <div style={{ position: 'relative', width: '140px', height: '140px', marginBottom: '20px' }}>
+                    <svg width="140" height="140" style={{ transform: 'rotate(-90deg)' }}>
+                      {/* Background Circle */}
+                      <circle
+                        cx="70"
+                        cy="70"
+                        r="60"
+                        fill="none"
+                        stroke="#e0e0e0"
+                        strokeWidth="8"
+                      />
+                      {/* Progress Circle */}
+                      <circle
+                        cx="70"
+                        cy="70"
+                        r="60"
+                        fill="none"
+                        stroke={fir.status === 'Approved' ? '#28a745' : fir.status === 'Rejected' ? '#dc3545' : '#667eea'}
+                        strokeWidth="8"
+                        strokeDasharray={`${(fir.status === 'Approved' ? 100 : fir.status === 'Rejected' ? 100 : 50) * 3.77} 377`}
+                        strokeLinecap="round"
+                        style={{ transition: 'stroke-dasharray 0.6s ease', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+                      />
+                    </svg>
+                    {/* Center Content */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontSize: '32px', fontWeight: 'bold', color: fir.status === 'Approved' ? '#28a745' : fir.status === 'Rejected' ? '#dc3545' : '#667eea' }}>
+                        {fir.status === 'Approved' ? 100 : fir.status === 'Rejected' ? 100 : 50}%
                       </div>
+                      <div style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>Done</div>
+                    </div>
+                  </div>
+
+                  {/* Status Label Below Circle */}
+                  <div className="text-center mb-3">
+                    <p className="text-muted small fw-bold mb-1">Current Status</p>
+                    <div className="d-inline-flex align-items-center" style={{ gap: '8px', padding: '8px 16px', borderRadius: '20px', background: fir.status === 'Approved' ? 'rgba(40, 167, 69, 0.1)' : fir.status === 'Rejected' ? 'rgba(220, 53, 69, 0.1)' : 'rgba(102, 126, 234, 0.1)' }}>
+                      <div
+                        style={{
+                          width: '10px',
+                          height: '10px',
+                          borderRadius: '50%',
+                          backgroundColor: fir.status === 'Approved' ? '#28a745' : fir.status === 'Rejected' ? '#dc3545' : '#667eea',
+                          animation: 'pulse 2s infinite'
+                        }}
+                      ></div>
+                      <span className="fw-bold" style={{ color: fir.status === 'Approved' ? '#28a745' : fir.status === 'Rejected' ? '#dc3545' : '#667eea', fontSize: '13px' }}>
+                        {fir.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Timeline Details */}
+                <div className="p-3 bg-white rounded-2 mb-3" style={{ border: '1px solid #e0e0e0' }}>
+                  <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                      <p className="text-muted small fw-bold mb-1">Submission Date</p>
+                      <p className="fw-bold mb-0" style={{ color: '#2c3e50', fontSize: '13px' }}>
+                        <i className="fas fa-calendar-alt me-2" style={{ color: '#667eea' }}></i>
+                        {formatDate(fir.created_at || fir.date)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {fir.status !== 'Sent' && (
+                  <div className="p-3 bg-white rounded-2" style={{ border: `1px solid ${fir.status === 'Approved' ? '#28a745' : '#dc3545'}` }}>
+                    <div className="d-flex justify-content-between align-items-start">
                       <div>
-                        <h6 className="mb-0 small fw-bold">FIR Sent</h6>
-                        <small className="text-muted">{formatDate(fir.created_at || fir.date)}</small>
+                        <p className="text-muted small fw-bold mb-1">{fir.status} Date</p>
+                        <p className="fw-bold mb-0" style={{ color: fir.status === 'Approved' ? '#28a745' : '#dc3545', fontSize: '13px' }}>
+                          <i className={`fas fa-${fir.status === 'Approved' ? 'check-circle' : 'times-circle'} me-2`}></i>
+                          {fir.updated_at ? formatDate(fir.updated_at) : 'Recently'}
+                        </p>
                       </div>
                     </div>
-                    {fir.status !== 'Sent' && (
-                      <div className="d-flex mb-3">
-                        <div className="me-3">
-                          <i
-                            className={`fas fa-${fir.status === 'Approved' ? 'check-circle text-success' : 'times-circle text-danger'}`}
-                            style={{ fontSize: '12px' }}
-                          ></i>
-                        </div>
-                        <div>
-                          <h6 className="mb-0 small fw-bold">
-                            FIR {fir.status}
-                          </h6>
-                          <small className="text-muted">
-                            {fir.updated_at ? formatDate(fir.updated_at) : 'Recently'}
-                          </small>
-                        </div>
-                      </div>
-                    )}
                   </div>
-                </Card.Body>
-              </Card>
-
-              <Card className="border-0 shadow-sm">
-                <Card.Header className="bg-primary text-white fw-bold">
-                  <i className="fas fa-lightbulb me-2"></i> What Next?
-                </Card.Header>
-                <Card.Body className="small">
-                  {fir.status === 'Sent' && (
-                    <p>
-                      Your FIR is being reviewed by the police station. Please check back for updates.
-                    </p>
-                  )}
-                  {fir.status === 'Approved' && (
-                    <p>
-                      Your FIR has been approved. You will be contacted shortly with further details.
-                    </p>
-                  )}
-                  {fir.status === 'Rejected' && (
-                    <p>
-                      Your FIR has been rejected. Please contact the police station for more information.
-                    </p>
-                  )}
-                </Card.Body>
-              </Card>
+                )}
+              </div>
             </Col>
           </Row>
         )}

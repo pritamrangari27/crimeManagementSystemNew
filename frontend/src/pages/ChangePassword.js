@@ -156,14 +156,11 @@ const ChangePassword = () => {
                     <Form.Control
                       type="password"
                       name="newPassword"
-                      placeholder="Enter new password (min 6 characters)"
+                      placeholder="Enter new password"
                       value={formData.newPassword}
                       onChange={handleChange}
                       required
                     />
-                    <Form.Text className="text-muted">
-                      Minimum 6 characters
-                    </Form.Text>
                   </Form.Group>
 
                   <Form.Group className="mb-4">
@@ -218,20 +215,6 @@ const ChangePassword = () => {
                     </Button>
                   </div>
                 </Form>
-              </Card.Body>
-            </Card>
-
-            <Card className="border-0 shadow-sm mt-4">
-              <Card.Header className="bg-info text-white fw-bold">
-                <i className="fas fa-lightbulb me-2"></i> Password Tips
-              </Card.Header>
-              <Card.Body className="small">
-                <ul className="mb-0">
-                  <li>Use a strong password with mixed characters</li>
-                  <li>Avoid using easily guessable information</li>
-                  <li>Don't reuse passwords from other accounts</li>
-                  <li>Change your password regularly for security</li>
-                </ul>
               </Card.Body>
             </Card>
           </Col>

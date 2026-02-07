@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-const multer = require('multer');
 
 // Routes
 const authRouter = require('./routes/auth');
@@ -12,11 +11,10 @@ const criminalsRouter = require('./routes/criminals');
 const firsRouter = require('./routes/firs');
 const policeRouter = require('./routes/police');
 const stationsRouter = require('./routes/stations');
-const uploadRouter = require('./routes/upload');
 const dashboardRouter = require('./routes/dashboard');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // SQLite DB setup
 const db = new sqlite3.Database('./db_crime.sqlite', (err) => {
@@ -57,7 +55,6 @@ app.use(session({
 
 // Static files
 app.use(express.static(path.join(__dirname, '../frontend/build')));
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use('/img', express.static(path.join(__dirname, '../Img')));
 
 // Middleware to attach db to requests
@@ -72,7 +69,6 @@ app.use('/api/criminals', criminalsRouter);
 app.use('/api/firs', firsRouter);
 app.use('/api/police', policeRouter);
 app.use('/api/stations', stationsRouter);
-app.use('/api/upload', uploadRouter);
 app.use('/api/dashboard', dashboardRouter);
 
 // Health check

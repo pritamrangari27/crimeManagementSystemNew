@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { firsAPI, dashboardAPI } from '../api/client';
+import { firsAPI } from '../api/client';
 import '../styles/dashboard.css';
 
 const UserDashboard = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('authUser'));
   const role = localStorage.getItem('userRole');
-  const [stats, setStats] = useState(null);
   const [myFIRs, setMyFIRs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,18 +24,15 @@ const UserDashboard = () => {
 
         console.log('Fetching data for user:', user.id);
         
-        const [statsRes, firsRes] = await Promise.all([
-          dashboardAPI.getStats(),
-          firsAPI.getByUser(user.id)
-        ]);
+        const firsRes = await firsAPI.getByUser(user.id);
 
         console.log('FIRs Response:', firsRes.data);
 
-        if (statsRes.data.status === 'success') {
-          setStats(statsRes.data.data);
-        }
         if (firsRes.data.status === 'success') {
           setMyFIRs(firsRes.data.data || []);
+          setError(null);
+        } else {
+          setError('Failed to load FIRs. Please try again later.');
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -46,8 +42,10 @@ const UserDashboard = () => {
       }
     };
 
-    fetchData();
-  }, [user]);
+    if (user?.id) {
+      fetchData();
+    }
+  }, [user?.id]);
 
   if (loading) return (
     <div className="d-flex">

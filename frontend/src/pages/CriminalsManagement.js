@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { criminalsAPI } from '../api/client';
+import { CRIME_TYPES } from '../constants/crimeTypes';
 import '../styles/dashboard.css';
 
 const CriminalsManagement = () => {
@@ -115,18 +116,17 @@ const CriminalsManagement = () => {
           <Button variant="secondary" size="sm" onClick={() => navigate(-1)} className="me-2">
             <i className="fas fa-arrow-left me-2"></i>Back
           </Button>
-          <Button variant="primary" onClick={() => setShowForm(!showForm)}>
-            {showForm ? 'Cancel' : '+ Add Criminal'}
+          <Button variant="primary" onClick={() => setShowForm(true)}>
+            <i className="fas fa-plus me-2"></i>Add Criminal
           </Button>
         </Col>
       </Row>
 
-      {showForm && (
-        <Card className="mb-4 shadow-sm">
-          <Card.Header className="bg-primary text-white fw-bold">
-            Add New Criminal
-          </Card.Header>
-          <Card.Body>
+      <Modal show={showForm} onHide={() => setShowForm(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Add New Criminal</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
             <Form onSubmit={handleAddCriminal}>
               <Row>
                 <Col md={6}>
@@ -144,13 +144,19 @@ const CriminalsManagement = () => {
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Crime Type *</Form.Label>
-                    <Form.Control
-                      type="text"
+                    <Form.Select
                       name="crime_type"
                       value={formData.crime_type}
                       onChange={handleFormChange}
                       required
-                    />
+                    >
+                      <option value="">-- Select Crime Type --</option>
+                      {CRIME_TYPES.map((crime) => (
+                        <option key={crime.value} value={crime.value}>
+                          {crime.label}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </Form.Group>
                 </Col>
               </Row>
@@ -256,13 +262,17 @@ const CriminalsManagement = () => {
                 />
               </Form.Group>
 
-              <Button variant="success" type="submit" className="w-100">
-                Add Criminal
-              </Button>
             </Form>
-          </Card.Body>
-        </Card>
-      )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowForm(false)}>
+            Close
+          </Button>
+          <Button variant="success" onClick={(e) => handleAddCriminal(e)}>
+            Add Criminal
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <Form.Group className="mb-4">
         <Form.Control
@@ -295,19 +305,19 @@ const CriminalsManagement = () => {
                 <td>{criminal.contact}</td>
                 <td>
                   <Button
-                    href={`/admin/criminal/${criminal.id}`}
                     variant="info"
                     size="sm"
                     className="me-2"
+                    onClick={() => navigate(`/admin/criminal/${criminal.id}`)}
                   >
-                    View
+                    <i className="fas fa-eye me-1"></i>View
                   </Button>
                   <Button
                     variant="danger"
                     size="sm"
                     onClick={() => handleDelete(criminal.id)}
                   >
-                    Delete
+                    <i className="fas fa-trash me-1"></i>Delete
                   </Button>
                 </td>
               </tr>

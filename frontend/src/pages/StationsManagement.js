@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button, Table, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { stationsAPI } from '../api/client';
 
@@ -89,126 +89,128 @@ const StationsManagement = () => {
           <Button variant="secondary" size="sm" onClick={() => navigate(-1)} className="me-2">
             <i className="fas fa-arrow-left me-2"></i>Back
           </Button>
-          <Button variant="primary" onClick={() => setShowForm(!showForm)}>
-            {showForm ? 'Cancel' : '+ Add Station'}
+          <Button variant="primary" onClick={() => setShowForm(true)}>
+            <i className="fas fa-plus me-2"></i>Add Station
           </Button>
         </Col>
       </Row>
 
-      {showForm && (
-        <Card className="mb-4 shadow-sm">
-          <Card.Header className="bg-primary text-white fw-bold">
-            Add New Police Station
-          </Card.Header>
-          <Card.Body>
-            <Form onSubmit={handleAddStation}>
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Station Name *</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="station_name"
-                      value={formData.station_name}
-                      onChange={handleFormChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Station Code *</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="station_code"
-                      value={formData.station_code}
-                      onChange={handleFormChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+      <Modal show={showForm} onHide={() => setShowForm(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Add New Police Station</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleAddStation}>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Station Name *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="station_name"
+                    value={formData.station_name}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Station Code *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="station_code"
+                    value={formData.station_code}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Address *</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleFormChange}
-                  required
-                />
-              </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Address *</Form.Label>
+              <Form.Control
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleFormChange}
+                required
+              />
+            </Form.Group>
 
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>City *</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleFormChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>State *</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="state"
-                      value={formData.state}
-                      onChange={handleFormChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>City *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>State *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Phone</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleFormChange}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleFormChange}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Phone</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleFormChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleFormChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-              <Form.Group className="mb-3">
-                <Form.Label>In-Charge</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="incharge"
-                  value={formData.incharge}
-                  onChange={handleFormChange}
-                />
-              </Form.Group>
-
-              <Button variant="success" type="submit" className="w-100">
-                Add Station
-              </Button>
-            </Form>
-          </Card.Body>
-        </Card>
-      )}
+            <Form.Group className="mb-3">
+              <Form.Label>In-Charge</Form.Label>
+              <Form.Control
+                type="text"
+                name="incharge"
+                value={formData.incharge}
+                onChange={handleFormChange}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowForm(false)}>
+            Close
+          </Button>
+          <Button variant="success" onClick={(e) => handleAddStation(e)}>
+            Add Station
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <Table striped bordered hover responsive>
         <thead className="bg-dark text-white">
@@ -234,19 +236,19 @@ const StationsManagement = () => {
                 <td>{station.email}</td>
                 <td>
                   <Button
-                    href={`/admin/station/${station.id}`}
                     variant="info"
                     size="sm"
                     className="me-2"
+                    onClick={() => navigate(`/admin/station/${station.id}`)}
                   >
-                    View
+                    <i className="fas fa-eye me-1"></i>View
                   </Button>
                   <Button
                     variant="danger"
                     size="sm"
                     onClick={() => handleDelete(station.id)}
                   >
-                    Delete
+                    <i className="fas fa-trash me-1"></i>Delete
                   </Button>
                 </td>
               </tr>

@@ -5,7 +5,6 @@ import './styles/global.css';
 
 // Pages
 import LoginModern from './pages/LoginModern';
-import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';

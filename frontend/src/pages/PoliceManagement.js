@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button, Table, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { policeAPI } from '../api/client';
 
@@ -87,104 +87,106 @@ const PoliceManagement = () => {
           <Button variant="secondary" size="sm" onClick={() => navigate(-1)} className="me-2">
             <i className="fas fa-arrow-left me-2"></i>Back
           </Button>
-          <Button variant="primary" onClick={() => setShowForm(!showForm)}>
-            {showForm ? 'Cancel' : '+ Add Police Officer'}
+          <Button variant="primary" onClick={() => setShowForm(true)}>
+            <i className="fas fa-plus me-2"></i>Add Police Officer
           </Button>
         </Col>
       </Row>
 
-      {showForm && (
-        <Card className="mb-4 shadow-sm">
-          <Card.Header className="bg-primary text-white fw-bold">
+      <Modal show={showForm} onHide={() => setShowForm(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Add Police Officer</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleAddPolice}>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Police ID *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="police_id"
+                    value={formData.police_id}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Full Name *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email *</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Phone</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleFormChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Position</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="position"
+                    value={formData.position}
+                    onChange={handleFormChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Joining Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="joining_date"
+                    value={formData.joining_date}
+                    onChange={handleFormChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowForm(false)}>
+            Close
+          </Button>
+          <Button variant="success" onClick={(e) => handleAddPolice(e)}>
             Add Police Officer
-          </Card.Header>
-          <Card.Body>
-            <Form onSubmit={handleAddPolice}>
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Police ID *</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="police_id"
-                      value={formData.police_id}
-                      onChange={handleFormChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Full Name *</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleFormChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Email *</Form.Label>
-                    <Form.Control
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleFormChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Phone</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleFormChange}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Position</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="position"
-                      value={formData.position}
-                      onChange={handleFormChange}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Joining Date</Form.Label>
-                    <Form.Control
-                      type="date"
-                      name="joining_date"
-                      value={formData.joining_date}
-                      onChange={handleFormChange}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              <Button variant="success" type="submit" className="w-100">
-                Add Police Officer
-              </Button>
-            </Form>
-          </Card.Body>
-        </Card>
-      )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <Table striped bordered hover responsive>
         <thead className="bg-dark text-white">
@@ -210,19 +212,19 @@ const PoliceManagement = () => {
                 <td>{officer.station_name}</td>
                 <td>
                   <Button
-                    href={`/admin/police/${officer.id}`}
                     variant="info"
                     size="sm"
                     className="me-2"
+                    onClick={() => navigate(`/admin/police/${officer.id}`)}
                   >
-                    View
+                    <i className="fas fa-eye me-1"></i>View
                   </Button>
                   <Button
                     variant="danger"
                     size="sm"
                     onClick={() => handleDelete(officer.id)}
                   >
-                    Delete
+                    <i className="fas fa-trash me-1"></i>Delete
                   </Button>
                 </td>
               </tr>

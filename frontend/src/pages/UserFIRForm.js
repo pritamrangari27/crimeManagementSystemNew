@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import { firsAPI } from '../api/client';
+import { CRIME_TYPES } from '../constants/crimeTypes';
 import '../styles/forms.css';
 
 const UserFIRForm = () => {
@@ -25,8 +27,7 @@ const UserFIRForm = () => {
     number: '',
     address: '',
     relation: '',
-    purpose: '',
-    file: null
+    purpose: ''
   });
 
   // Verify user is User role
@@ -64,27 +65,6 @@ const UserFIRForm = () => {
       ...prev,
       [name]: value
     }));
-  };
-
-  // Handle file upload
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
-      if (!allowedTypes.includes(file.type)) {
-        setError('Only PDF, JPG, PNG, and GIF files are allowed');
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        setError('File size must be less than 5MB');
-        return;
-      }
-      setFormData(prev => ({
-        ...prev,
-        file: file
-      }));
-      setError('');
-    }
   };
 
   // Validate form
@@ -141,25 +121,6 @@ const UserFIRForm = () => {
     setSubmitting(true);
 
     try {
-      let filename = null;
-
-      // Upload file only if provided
-      if (formData.file) {
-        const fileFormData = new FormData();
-        fileFormData.append('file', formData.file);
-
-        const fileResponse = await fetch('http://localhost:3000/api/upload', {
-          method: 'POST',
-          body: fileFormData
-        });
-
-        const fileData = await fileResponse.json();
-        if (fileData.status !== 'success') {
-          throw new Error('File upload failed');
-        }
-        filename = fileData.filename || fileData.data.path;
-      }
-
       // Submit FIR
       const firData = {
         user_id: user.id,
@@ -172,7 +133,6 @@ const UserFIRForm = () => {
         address: formData.address,
         relation: formData.relation,
         purpose: formData.purpose,
-        file: filename,
         status: 'Sent'
       };
 
@@ -195,8 +155,7 @@ const UserFIRForm = () => {
           number: '',
           address: '',
           relation: '',
-          purpose: '',
-          file: null
+          purpose: ''
         });
         // Redirect after 2 seconds
         setTimeout(() => {
@@ -268,14 +227,19 @@ const UserFIRForm = () => {
                     <Form.Label className="fw-bold">
                       <i className="fas fa-exclamation-circle me-2"></i> Crime Type *
                     </Form.Label>
-                    <Form.Control
-                      type="text"
+                    <Form.Select
                       name="crime_type"
-                      placeholder="e.g., Theft, Assault, Burglary"
                       value={formData.crime_type}
                       onChange={handleChange}
                       required
-                    />
+                    >
+                      <option value="">-- Select Crime Type --</option>
+                      {CRIME_TYPES.map((crime) => (
+                        <option key={crime.value} value={crime.value}>
+                          {crime.label}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </Form.Group>
 
                   {/* Accused Heading */}
@@ -400,21 +364,6 @@ const UserFIRForm = () => {
                     />
                   </Form.Group>
 
-                  {/* File Upload */}
-                  <Form.Group className="mb-4">
-                    <Form.Label className="fw-bold">
-                      <i className="fas fa-file-upload me-2"></i> Upload Evidence File
-                    </Form.Label>
-                    <Form.Control
-                      type="file"
-                      onChange={handleFileChange}
-                      accept=".pdf,.jpg,.jpeg,.png,.gif"
-                    />
-                    <Form.Text className="text-muted">
-                      Allowed: PDF, JPG, PNG, GIF (Max 5MB)
-                    </Form.Text>
-                  </Form.Group>
-
                   {/* Buttons */}
                   <div className="d-flex gap-2">
                     <Button
@@ -450,8 +399,7 @@ const UserFIRForm = () => {
                           number: '',
                           address: '',
                           relation: '',
-                          purpose: '',
-                          file: null
+                          purpose: ''
                         });
                         setError('');
                       }}
