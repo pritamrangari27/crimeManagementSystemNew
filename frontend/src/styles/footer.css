@@ -1,0 +1,119 @@
+/* ============================================
+   FOOTER STYLING
+   ============================================ */
+
+.app-footer {
+  background: #ffffff;
+  border-top: 1px solid #f0f0f0;
+  padding: 12px 16px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-year {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+  font-weight: 500;
+}
+
+.footer-divider {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  margin: 4px 0;
+}
+
+.footer-divider div {
+  width: 20px;
+  height: 1px;
+  background-color: #7c3aed;
+  opacity: 0.3;
+}
+
+.footer-credit {
+  font-size: 0.8rem;
+  color: #7c3aed;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.developer-name {
+  font-weight: 700;
+  color: #7c3aed;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+.developer-name:hover {
+  color: #0ea5e9;
+  text-decoration-style: solid;
+}
+@media (max-width: 992px) {
+  .app-footer {
+    padding: 10px 12px;
+  }
+
+  .footer-credit {
+    font-size: 0.75rem;
+  }
+
+  .footer-year {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-footer {
+    padding: 10px 8px;
+  }
+
+  .footer-credit {
+    font-size: 0.7rem;
+  }
+
+  .footer-year {
+    font-size: 0.65rem;
+  }
+
+  .footer-divider div {
+    width: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-footer {
+    padding: 8px 6px;
+  }
+
+  .footer-credit {
+    font-size: 0.65rem;
+  }
+
+  .footer-year {
+    font-size: 0.6rem;
+  }
+
+  .footer-divider div {
+    width: 10px;
+  }
+}

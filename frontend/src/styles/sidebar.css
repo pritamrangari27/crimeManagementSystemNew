@@ -5,7 +5,6 @@
 :root {
   --sidebar-width: 260px;
   --sidebar-bg: #ffffff;
-  --sidebar-border: #000000;
   --sidebar-text: #7c3aed;
   --sidebar-hover: #f3e8ff;
   --sidebar-active: #6d28d9;
@@ -21,7 +20,6 @@
   top: 0;
   left: 0;
   background: var(--sidebar-bg);
-  border-right: 1px solid var(--sidebar-border);
   padding: 24px 16px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
   z-index: 1001;
@@ -34,7 +32,6 @@
 /* Sidebar Header */
 .sidebar-header {
   padding: 0 0 20px 0;
-  border-bottom: 1px solid var(--sidebar-border);
   margin-bottom: 24px;
 }
 
@@ -106,7 +103,6 @@
 
 /* Sidebar Footer */
 .sidebar-footer {
-  border-top: 1px solid var(--sidebar-border);
   padding-top: 16px;
   margin-top: auto;
 }
@@ -119,6 +115,60 @@
   color: #dc2626 !important;
   background-color: rgba(239, 68, 68, 0.08) !important;
   border-left-color: #ef4444 !important;
+}
+
+/* User Dropdown Popup Card */
+.user-popup-card {
+  position: fixed;
+  bottom: 25px;
+  left: 20px;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  z-index: 1100;
+  overflow: hidden;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-popup-button {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: #7c3aed;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-popup-button:hover {
+  background-color: #f3e8ff;
+}
+
+.user-popup-button.logout {
+  color: #ef4444;
+  border-top: 1px solid #f0f0f0;
+}
+
+.user-popup-button.logout:hover {
+  background-color: rgba(239, 68, 68, 0.08);
 }
 
 /* Sidebar Toggle for Mobile */

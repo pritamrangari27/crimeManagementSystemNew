@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Nav, Modal, Button, Table, Badge, Form } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/sidebar.css';
@@ -6,13 +6,38 @@ import '../styles/sidebar.css';
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const popupRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editFormData, setEditFormData] = useState({});
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [passwordFormData, setPasswordFormData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordError, setPasswordError] = useState('');
   const user = JSON.parse(localStorage.getItem('authUser'));
   const userRole = localStorage.getItem('userRole');
+
+  // Close popup when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setShowUserDropdown(false);
+      }
+    };
+
+    if (showUserDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showUserDropdown]);
 
   const isActive = (path) => location.pathname === path;
 
@@ -92,12 +117,12 @@ const Sidebar = () => {
         </Nav>
 
         {/* Sidebar Footer - User Profile Dropdown */}
-        <div className="sidebar-footer">
-          <div className="sidebar-user-dropdown" style={{ borderTop: '1px solid #000000', paddingTop: '12px' }}>
+        <div className="sidebar-footer" ref={popupRef}>
+          <div className="sidebar-user-dropdown" style={{ paddingTop: '12px' }}>
             <Button
               variant="light"
               className="w-100 text-start fw-bold d-flex align-items-center justify-content-between"
-              style={{ color: '#7c3aed', borderColor: '#7c3aed', padding: '10px 12px' }}
+              style={{ color: '#7c3aed', padding: '10px 12px' }}
               onClick={() => setShowUserDropdown(!showUserDropdown)}
             >
               <span>
@@ -107,35 +132,21 @@ const Sidebar = () => {
               <i className={`fas fa-chevron-down ${showUserDropdown ? 'rotate' : ''}`} style={{ fontSize: '0.85rem', transition: 'transform 0.2s' }}></i>
             </Button>
 
-            {/* Dropdown Menu */}
+            {/* Popup Card at Bottom Left */}
             {showUserDropdown && (
-              <div 
-                className="sidebar-dropdown-menu"
-                style={{
-                  backgroundColor: '#f8f9fa',
-                  borderRadius: '0.5rem',
-                  marginTop: '8px',
-                  border: '1px solid #e0e0e0',
-                  overflow: 'hidden'
-                }}
-              >
-                <Button
-                  variant="link"
-                  className="w-100 text-start py-2 px-3 fw-bold text-decoration-none"
-                  style={{ color: '#7c3aed', fontSize: '0.95rem' }}
+              <div className="user-popup-card">
+                <button
+                  className="user-popup-button"
                   onClick={() => {
                     setShowProfileModal(true);
                     setShowUserDropdown(false);
                   }}
                 >
-                  <i className="fas fa-id-card me-2"></i>
+                  <i className="fas fa-id-card"></i>
                   Profile
-                </Button>
-                <div style={{ borderTop: '1px solid #e0e0e0' }}></div>
-                <Button
-                  variant="link"
-                  className="w-100 text-start py-2 px-3 fw-bold text-decoration-none text-danger"
-                  style={{ fontSize: '0.95rem' }}
+                </button>
+                <button
+                  className="user-popup-button logout"
                   onClick={() => {
                     if (window.confirm('Are you sure you want to logout?')) {
                       localStorage.removeItem('authUser');
@@ -147,9 +158,9 @@ const Sidebar = () => {
                     }
                   }}
                 >
-                  <i className="fas fa-sign-out-alt me-2"></i>
+                  <i className="fas fa-sign-out-alt"></i>
                   Logout
-                </Button>
+                </button>
               </div>
             )}
           </div>
@@ -422,13 +433,146 @@ const Sidebar = () => {
                   size="sm" 
                   onClick={() => {
                     setShowProfileModal(false);
-                    navigate('/change-password');
+                    setShowChangePasswordModal(true);
+                    setPasswordFormData({
+                      currentPassword: '',
+                      newPassword: '',
+                      confirmPassword: ''
+                    });
+                    setPasswordError('');
                   }}
                 >
                   <i className="fas fa-key me-2"></i>Change Password
                 </Button>
               </>
             )}
+          </Modal.Footer>
+        </Modal>
+
+        {/* Change Password Modal */}
+        <Modal 
+          show={showChangePasswordModal} 
+          onHide={() => {
+            setShowChangePasswordModal(false);
+            setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+            setPasswordError('');
+          }}
+          centered
+          backdrop="static"
+        >
+          <Modal.Header closeButton style={{ borderBottom: '1px solid #e0e0e0' }}>
+            <Modal.Title style={{ color: '#0ea5e9', fontWeight: 'bold' }}>
+              <i className="fas fa-key me-2"></i>Change Password
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{ padding: '20px' }}>
+            {passwordError && (
+              <div className="alert alert-danger" role="alert">
+                <i className="fas fa-exclamation-circle me-2"></i>{passwordError}
+              </div>
+            )}
+            <Form>
+              <Form.Group className="mb-3">
+                <Form.Label style={{ fontWeight: 'bold', color: '#1a1a1a' }}>
+                  <i className="fas fa-lock me-2" style={{ color: '#0ea5e9' }}></i>Current Password
+                </Form.Label>
+                <Form.Control 
+                  type="password"
+                  placeholder="Enter your current password"
+                  value={passwordFormData.currentPassword}
+                  onChange={(e) => {
+                    setPasswordFormData({ ...passwordFormData, currentPassword: e.target.value });
+                    setPasswordError('');
+                  }}
+                  style={{ 
+                    borderColor: passwordError ? '#ef4444' : '#e0e0e0',
+                    borderRadius: '0.5rem'
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label style={{ fontWeight: 'bold', color: '#1a1a1a' }}>
+                  <i className="fas fa-key me-2" style={{ color: '#0ea5e9' }}></i>New Password
+                </Form.Label>
+                <Form.Control 
+                  type="password"
+                  placeholder="Enter your new password"
+                  value={passwordFormData.newPassword}
+                  onChange={(e) => {
+                    setPasswordFormData({ ...passwordFormData, newPassword: e.target.value });
+                    setPasswordError('');
+                  }}
+                  style={{ 
+                    borderColor: passwordError ? '#ef4444' : '#e0e0e0',
+                    borderRadius: '0.5rem'
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label style={{ fontWeight: 'bold', color: '#1a1a1a' }}>
+                  <i className="fas fa-lock me-2" style={{ color: '#0ea5e9' }}></i>Confirm Password
+                </Form.Label>
+                <Form.Control 
+                  type="password"
+                  placeholder="Confirm your new password"
+                  value={passwordFormData.confirmPassword}
+                  onChange={(e) => {
+                    setPasswordFormData({ ...passwordFormData, confirmPassword: e.target.value });
+                    setPasswordError('');
+                  }}
+                  style={{ 
+                    borderColor: passwordError ? '#ef4444' : '#e0e0e0',
+                    borderRadius: '0.5rem'
+                  }}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer style={{ display: 'flex', gap: '8px', justifyContent: 'center', borderTop: '1px solid #e0e0e0' }}>
+            <Button 
+              variant="secondary" 
+              size="sm"
+              onClick={() => {
+                setShowChangePasswordModal(false);
+                setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                setPasswordError('');
+              }}
+            >
+              <i className="fas fa-times me-2"></i>Cancel
+            </Button>
+            <Button 
+              variant="success" 
+              size="sm"
+              onClick={() => {
+                // Validation
+                if (!passwordFormData.currentPassword) {
+                  setPasswordError('Current password is required');
+                  return;
+                }
+                if (!passwordFormData.newPassword) {
+                  setPasswordError('New password is required');
+                  return;
+                }
+                if (passwordFormData.newPassword.length < 6) {
+                  setPasswordError('New password must be at least 6 characters');
+                  return;
+                }
+                if (passwordFormData.newPassword !== passwordFormData.confirmPassword) {
+                  setPasswordError('Passwords do not match');
+                  return;
+                }
+                
+                // Simulate password update (in real app, call API)
+                alert('Password changed successfully!');
+                setShowChangePasswordModal(false);
+                setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                setPasswordError('');
+              }}
+            >
+              <i className="fas fa-save me-2"></i>Update Password
+            </Button>
           </Modal.Footer>
         </Modal>
       </div>

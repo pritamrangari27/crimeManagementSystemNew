@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import { firsAPI } from '../api/client';
 import '../styles/dashboard.css';
 
@@ -175,7 +176,9 @@ const UserDashboard = () => {
 
         </Container>
       </div>
-    </>  );
+      <Footer />
+    </>
+  );
 };
 
 export default UserDashboard;
