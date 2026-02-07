@@ -199,7 +199,7 @@ const CrimeAnalysis = () => {
                                 role="progressbar"
                                 style={{
                                   width: `${percentage}%`,
-                                  background: `linear-gradient(90deg, #667eea 0%, #764ba2 100%)`,
+                                  background: `#0ea5e9`,
                                   fontSize: '0.85rem',
                                   fontWeight: 'bold',
                                   color: 'white'
@@ -233,7 +233,7 @@ const CrimeAnalysis = () => {
                   <div className="space-y-3">
                     {firStatus.map((status, idx) => {
                       const percentage = (status.count / totalFIRs) * 100;
-                      const statusColor = status.status === 'Approved' ? '#1cc88a' : status.status === 'Rejected' ? '#e74a3b' : '#f6c23e';
+                      const statusColor = status.status === 'Approved' ? '#10b981' : status.status === 'Rejected' ? '#ef4444' : '#f59e0b';
                       return (
                         <div key={idx} className="mb-3">
                           <div className="d-flex justify-content-between align-items-center mb-2">

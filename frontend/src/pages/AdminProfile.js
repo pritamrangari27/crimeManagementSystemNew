@@ -85,14 +85,14 @@ const AdminProfile = () => {
   return (
     <div className="d-flex">
       <Sidebar userRole={role} />
-      <Container fluid className="main-content py-5 px-4" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
+      <Container fluid className="main-content py-5 px-4" style={{ background: '#ffffff' }}>
         {/* Header */}
         <Row className="mb-5">
           <Col>
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <h1 className="fw-bold mb-2" style={{ color: '#2c3e50' }}>
-                  <i className="fas fa-user-shield me-3" style={{ color: '#e74c3c' }}></i> Admin Profile
+                <h1 className="fw-bold mb-2" style={{ color: '#1a1a1a' }}>
+                  <i className="fas fa-user-shield me-3" style={{ color: '#0ea5e9' }}></i> Admin Profile
                 </h1>
                 <p className="text-muted fs-5">Manage your administrator account and settings</p>
               </div>
@@ -112,7 +112,7 @@ const AdminProfile = () => {
         <Card 
           className="border-0 shadow-lg mb-5 overflow-hidden"
           style={{
-            background: 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)',
+            background: '#0ea5e9',
           }}
         >
           <Card.Body className="p-5 text-white">
@@ -159,7 +159,7 @@ const AdminProfile = () => {
 
         {/* Combined Profile Information & Settings Table */}
         <Card className="border-0 shadow-sm overflow-hidden">
-          <Card.Header className="fw-bold text-white p-4" style={{ background: 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)' }}>
+          <Card.Header className="fw-bold text-white p-4" style={{ background: '#0ea5e9' }}>
             <i className="fas fa-user-circle me-2"></i> Admin Profile
           </Card.Header>
           <Card.Body className="p-0">
@@ -228,7 +228,7 @@ const AdminProfile = () => {
 
                   <div className="d-flex gap-2 pt-3">
                     <Button
-                      style={{ background: 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)', border: 'none' }}
+                      style={{ background: '#0ea5e9', border: 'none' }}
                       type="submit"
                       disabled={loading}
                       className="fw-bold"
@@ -353,7 +353,7 @@ const AdminProfile = () => {
                       <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                         <td style={{ width: '35%', paddingBottom: '12px' }}>
                           <span className="text-muted fw-bold small">
-                            <i className="fas fa-check-circle me-2" style={{ color: '#28a745' }}></i>Status
+                            <i className="fas fa-check-circle me-2" style={{ color: '#10b981' }}></i>Status
                           </span>
                         </td>
                         <td style={{ paddingBottom: '12px' }}>
@@ -377,7 +377,7 @@ const AdminProfile = () => {
                       <tr>
                         <td style={{ paddingTop: '8px' }}>
                           <span className="text-muted fw-bold small">
-                            <i className="fas fa-calendar-check me-2" style={{ color: '#ffc107' }}></i>Member Since
+                            <i className="fas fa-calendar-check me-2" style={{ color: '#f59e0b' }}></i>Member Since
                           </span>
                         </td>
                         <td style={{ paddingTop: '8px' }}>
@@ -394,14 +394,14 @@ const AdminProfile = () => {
                   <h6 className="fw-bold mb-3">Security</h6>
                   <div className="d-flex gap-2 flex-wrap">
                     <Button
-                      style={{ background: 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)', border: 'none' }}
+                      style={{ background: '#0ea5e9', border: 'none' }}
                       onClick={() => setIsEditing(true)}
                       className="fw-bold"
                     >
                       <i className="fas fa-edit me-2"></i> Edit Profile
                     </Button>
                     <Button
-                      style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', border: 'none' }}
+                      style={{ background: '#ef4444', border: 'none' }}
                       onClick={() => navigate('/change-password')}
                       className="fw-bold"
                     >

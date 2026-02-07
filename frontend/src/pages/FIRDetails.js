@@ -165,14 +165,14 @@ const FIRDetails = () => {
             <Col lg={8}>
               {/* FIR Information Table-like Structure */}
               <Card className="border-0 shadow-sm mb-4 overflow-hidden">
-                <Card.Header className="fw-bold text-white p-4" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+                <Card.Header className="fw-bold text-white p-4" style={{ background: '#0ea5e9' }}>
                   <i className="fas fa-file-contract me-2"></i> FIR Case Details
                 </Card.Header>
                 <Card.Body className="p-0">
                   {/* FIR Basic Information */}
                   <div className="p-4 border-bottom">
                     <h6 className="fw-bold mb-3 d-flex align-items-center">
-                      <i className="fas fa-info-circle me-2" style={{ color: '#667eea' }}></i> Case Information
+                      <i className="fas fa-info-circle me-2" style={{ color: '#0ea5e9' }}></i> Case Information
                     </h6>
                     <Table borderless responsive className="mb-0">
                       <tbody>
@@ -189,7 +189,7 @@ const FIRDetails = () => {
                         <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                           <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
                             <span className="text-muted fw-bold small">
-                              <i className="fas fa-circle-dot me-2" style={{ color: getStatusVariant(fir.status) === 'success' ? '#28a745' : getStatusVariant(fir.status) === 'danger' ? '#dc3545' : getStatusVariant(fir.status) === 'info' ? '#0dcaf0' : '#ffc107' }}></i>Status
+                              <i className="fas fa-circle-dot me-2" style={{ color: getStatusVariant(fir.status) === 'success' ? '#10b981' : getStatusVariant(fir.status) === 'danger' ? '#ef4444' : getStatusVariant(fir.status) === 'info' ? '#06b6d4' : '#f59e0b' }}></i>Status
                             </span>
                           </td>
                           <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
@@ -235,14 +235,14 @@ const FIRDetails = () => {
                   {/* Complainant Information */}
                   <div className="p-4 border-bottom">
                     <h6 className="fw-bold mb-3 d-flex align-items-center">
-                      <i className="fas fa-user me-2" style={{ color: '#0dcaf0' }}></i> Complainant Information
+                      <i className="fas fa-user me-2" style={{ color: '#0ea5e9' }}></i> Complainant Information
                     </h6>
                     <Table borderless responsive className="mb-0">
                       <tbody>
                         <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                           <td style={{ width: '40%', paddingBottom: '12px' }}>
                             <span className="text-muted fw-bold small">
-                              <i className="fas fa-user me-2" style={{ color: '#0dcaf0' }}></i>Full Name
+                              <i className="fas fa-user me-2" style={{ color: '#0ea5e9' }}></i>Full Name
                             </span>
                           </td>
                           <td style={{ paddingBottom: '12px' }}>
@@ -252,7 +252,7 @@ const FIRDetails = () => {
                         <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                           <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
                             <span className="text-muted fw-bold small">
-                              <i className="fas fa-birthday-cake me-2" style={{ color: '#0dcaf0' }}></i>Age
+                              <i className="fas fa-birthday-cake me-2" style={{ color: '#0ea5e9' }}></i>Age
                             </span>
                           </td>
                           <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
@@ -319,7 +319,7 @@ const FIRDetails = () => {
                     <h6 className="fw-bold mb-3 d-flex align-items-center">
                       <i className="fas fa-comment-dots me-2" style={{ color: '#ffc107' }}></i> Purpose of FIR
                     </h6>
-                    <div className="p-3 bg-light rounded-2" style={{ borderLeft: '4px solid #ffc107', lineHeight: '1.6', fontSize: '14px' }}>
+                    <div className="p-3 rounded-2" style={{ borderLeft: '4px solid #0ea5e9', lineHeight: '1.6', fontSize: '14px', backgroundColor: '#f0f9ff' }}>
                       {fir.purpose}
                     </div>
                   </div>
@@ -367,9 +367,9 @@ const FIRDetails = () => {
             {/* Sidebar with Modern Circular Progress */}
             <Col lg={4}>
               {/* Modern Circular Progress Indicator */}
-              <div className="p-4 rounded-3" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', borderLeft: '4px solid #667eea' }}>
-                <h6 className="fw-bold mb-4 d-flex align-items-center" style={{ color: '#2c3e50' }}>
-                  <i className="fas fa-tasks me-2" style={{ color: '#667eea', fontSize: '18px' }}></i>
+              <div className="p-4 rounded-3" style={{ backgroundColor: '#f0f9ff', borderLeft: '4px solid #0ea5e9' }}>
+                <h6 className="fw-bold mb-4 d-flex align-items-center" style={{ color: '#1a1a1a' }}>
+                  <i className="fas fa-tasks me-2" style={{ color: '#0ea5e9', fontSize: '18px' }}></i>
                   Case Progress
                 </h6>
 
@@ -392,7 +392,7 @@ const FIRDetails = () => {
                         cy="70"
                         r="60"
                         fill="none"
-                        stroke={fir.status === 'Approved' ? '#28a745' : fir.status === 'Rejected' ? '#dc3545' : '#667eea'}
+                        stroke={fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#0ea5e9'}
                         strokeWidth="8"
                         strokeDasharray={`${(fir.status === 'Approved' ? 100 : fir.status === 'Rejected' ? 100 : 50) * 3.77} 377`}
                         strokeLinecap="round"
@@ -409,7 +409,7 @@ const FIRDetails = () => {
                         textAlign: 'center'
                       }}
                     >
-                      <div style={{ fontSize: '32px', fontWeight: 'bold', color: fir.status === 'Approved' ? '#28a745' : fir.status === 'Rejected' ? '#dc3545' : '#667eea' }}>
+                      <div style={{ fontSize: '32px', fontWeight: 'bold', color: fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#0ea5e9' }}>
                         {fir.status === 'Approved' ? 100 : fir.status === 'Rejected' ? 100 : 50}%
                       </div>
                       <div style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>Done</div>
@@ -425,11 +425,11 @@ const FIRDetails = () => {
                           width: '10px',
                           height: '10px',
                           borderRadius: '50%',
-                          backgroundColor: fir.status === 'Approved' ? '#28a745' : fir.status === 'Rejected' ? '#dc3545' : '#667eea',
+                          backgroundColor: fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#0ea5e9',
                           animation: 'pulse 2s infinite'
                         }}
                       ></div>
-                      <span className="fw-bold" style={{ color: fir.status === 'Approved' ? '#28a745' : fir.status === 'Rejected' ? '#dc3545' : '#667eea', fontSize: '13px' }}>
+                      <span className="fw-bold" style={{ color: fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#0ea5e9', fontSize: '13px' }}>
                         {fir.status}
                       </span>
                     </div>
@@ -442,7 +442,7 @@ const FIRDetails = () => {
                     <div>
                       <p className="text-muted small fw-bold mb-1">Submission Date</p>
                       <p className="fw-bold mb-0" style={{ color: '#2c3e50', fontSize: '13px' }}>
-                        <i className="fas fa-calendar-alt me-2" style={{ color: '#667eea' }}></i>
+                        <i className="fas fa-calendar-alt me-2" style={{ color: '#0ea5e9' }}></i>
                         {formatDate(fir.created_at || fir.date)}
                       </p>
                     </div>
@@ -450,11 +450,11 @@ const FIRDetails = () => {
                 </div>
 
                 {fir.status !== 'Sent' && (
-                  <div className="p-3 bg-white rounded-2" style={{ border: `1px solid ${fir.status === 'Approved' ? '#28a745' : '#dc3545'}` }}>
+                  <div className="p-3 bg-white rounded-2" style={{ border: `1px solid ${fir.status === 'Approved' ? '#10b981' : '#ef4444'}` }}>
                     <div className="d-flex justify-content-between align-items-start">
                       <div>
                         <p className="text-muted small fw-bold mb-1">{fir.status} Date</p>
-                        <p className="fw-bold mb-0" style={{ color: fir.status === 'Approved' ? '#28a745' : '#dc3545', fontSize: '13px' }}>
+                        <p className="fw-bold mb-0" style={{ color: fir.status === 'Approved' ? '#10b981' : '#ef4444', fontSize: '13px' }}>
                           <i className={`fas fa-${fir.status === 'Approved' ? 'check-circle' : 'times-circle'} me-2`}></i>
                           {fir.updated_at ? formatDate(fir.updated_at) : 'Recently'}
                         </p>

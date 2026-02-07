@@ -86,14 +86,14 @@ const PoliceProfile = () => {
   return (
     <div className="d-flex">
       <Sidebar userRole={role} />
-      <Container fluid className="main-content py-5 px-4" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
+      <Container fluid className="main-content py-5 px-4" style={{ background: '#ffffff' }}>
         {/* Header */}
         <Row className="mb-5">
           <Col>
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <h1 className="fw-bold mb-2" style={{ color: '#2c3e50' }}>
-                  <i className="fas fa-police me-3" style={{ color: '#3498db' }}></i> Officer Profile
+                <h1 className="fw-bold mb-2" style={{ color: '#1a1a1a' }}>
+                  <i className="fas fa-police me-3" style={{ color: '#0ea5e9' }}></i> Officer Profile
                 </h1>
                 <p className="text-muted fs-5">Manage your police officer account and settings</p>
               </div>
@@ -113,7 +113,7 @@ const PoliceProfile = () => {
         <Card 
           className="border-0 shadow-lg mb-5 overflow-hidden"
           style={{
-            background: 'linear-gradient(135deg, #2980b9 0%, #3498db 100%)',
+            background: '#0ea5e9',
           }}
         >
           <Card.Body className="p-5 text-white">
@@ -160,7 +160,7 @@ const PoliceProfile = () => {
 
         {/* Combined Profile Information & Settings Table */}
         <Card className="border-0 shadow-sm overflow-hidden">
-          <Card.Header className="fw-bold text-white p-4" style={{ background: 'linear-gradient(135deg, #2980b9 0%, #3498db 100%)' }}>
+          <Card.Header className="fw-bold text-white p-4" style={{ background: '#0ea5e9' }}>
             <i className="fas fa-user-circle me-2"></i> Officer Profile
           </Card.Header>
           <Card.Body className="p-0">
@@ -184,7 +184,7 @@ const PoliceProfile = () => {
 
                   <Form.Group className="mb-4">
                     <Form.Label className="fw-bold mb-2">
-                      <i className="fas fa-envelope me-2" style={{ color: '#3498db' }}></i>Email Address
+                      <i className="fas fa-envelope me-2" style={{ color: '#0ea5e9' }}></i>Email Address
                     </Form.Label>
                     <Form.Control
                       type="email"
@@ -230,7 +230,7 @@ const PoliceProfile = () => {
 
                   <div className="d-flex gap-2 pt-3">
                     <Button
-                      style={{ background: 'linear-gradient(135deg, #2980b9 0%, #3498db 100%)', border: 'none' }}
+                      style={{ background: '#0ea5e9', border: 'none' }}
                       type="submit"
                       disabled={loading}
                       className="fw-bold"
@@ -269,7 +269,7 @@ const PoliceProfile = () => {
                       <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                         <td style={{ width: '35%', paddingBottom: '12px' }}>
                           <span className="text-muted fw-bold small">
-                            <i className="fas fa-user me-2" style={{ color: '#3498db' }}></i>Full Name
+                            <i className="fas fa-user me-2" style={{ color: '#0ea5e9' }}></i>Full Name
                           </span>
                         </td>
                         <td style={{ paddingBottom: '12px' }}>
@@ -279,7 +279,7 @@ const PoliceProfile = () => {
                       <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                         <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
                           <span className="text-muted fw-bold small">
-                            <i className="fas fa-id-badge me-2" style={{ color: '#3498db' }}></i>Badge Number
+                            <i className="fas fa-id-badge me-2" style={{ color: '#0ea5e9' }}></i>Badge Number
                           </span>
                         </td>
                         <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
@@ -289,7 +289,7 @@ const PoliceProfile = () => {
                       <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                         <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
                           <span className="text-muted fw-bold small">
-                            <i className="fas fa-envelope me-2" style={{ color: '#3498db' }}></i>Email
+                            <i className="fas fa-envelope me-2" style={{ color: '#0ea5e9' }}></i>Email
                           </span>
                         </td>
                         <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
@@ -299,7 +299,7 @@ const PoliceProfile = () => {
                       <tr>
                         <td style={{ paddingTop: '8px', verticalAlign: 'top' }}>
                           <span className="text-muted fw-bold small">
-                            <i className="fas fa-phone me-2" style={{ color: '#3498db' }}></i>Phone Number
+                            <i className="fas fa-phone me-2" style={{ color: '#0ea5e9' }}></i>Phone Number
                           </span>
                         </td>
                         <td style={{ paddingTop: '8px' }}>
@@ -335,7 +335,7 @@ const PoliceProfile = () => {
                       <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                         <td style={{ width: '35%', paddingBottom: '12px' }}>
                           <span className="text-muted fw-bold small">
-                            <i className="fas fa-heartbeat me-2" style={{ color: '#28a745' }}></i>Duty Status
+                            <i className="fas fa-heartbeat me-2" style={{ color: '#10b981' }}></i>Duty Status
                           </span>
                         </td>
                         <td style={{ paddingBottom: '12px' }}>
@@ -347,7 +347,7 @@ const PoliceProfile = () => {
                       <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                         <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
                           <span className="text-muted fw-bold small">
-                            <i className="fas fa-badge me-2" style={{ color: '#0dcaf0' }}></i>Role
+                            <i className="fas fa-badge me-2" style={{ color: '#06b6d4' }}></i>Role
                           </span>
                         </td>
                         <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
@@ -359,7 +359,7 @@ const PoliceProfile = () => {
                       <tr>
                         <td style={{ paddingTop: '8px' }}>
                           <span className="text-muted fw-bold small">
-                            <i className="fas fa-calendar-check me-2" style={{ color: '#ffc107' }}></i>Member Since
+                            <i className="fas fa-calendar-check me-2" style={{ color: '#f59e0b' }}></i>Member Since
                           </span>
                         </td>
                         <td style={{ paddingTop: '8px' }}>
@@ -376,14 +376,14 @@ const PoliceProfile = () => {
                   <h6 className="fw-bold mb-3">Security</h6>
                   <div className="d-flex gap-2 flex-wrap">
                     <Button
-                      style={{ background: 'linear-gradient(135deg, #2980b9 0%, #3498db 100%)', border: 'none' }}
+                      style={{ background: '#0ea5e9', border: 'none' }}
                       onClick={() => setIsEditing(true)}
                       className="fw-bold"
                     >
                       <i className="fas fa-edit me-2"></i> Edit Profile
                     </Button>
                     <Button
-                      style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', border: 'none' }}
+                      style={{ background: '#ef4444', border: 'none' }}
                       onClick={() => navigate('/change-password')}
                       className="fw-bold"
                     >
