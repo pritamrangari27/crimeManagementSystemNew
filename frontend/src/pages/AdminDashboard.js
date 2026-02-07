@@ -262,33 +262,57 @@ const AdminDashboard = () => {
                 <Card.Body className="p-4">
                   <div className="d-grid gap-2">
                     <Button
-                      href="/admin/criminals/add"
-                      className="btn-lg fw-bold rounded-2"
-                      style={{ background: 'linear-gradient(135deg, #4e73df, #36b9cc)' }}
+                      variant="primary"
+                      size="lg"
+                      className="fw-bold rounded-2"
+                      onClick={() => navigate('/admin/criminals')}
+                      style={{
+                        backgroundColor: '#0ea5e9',
+                        borderColor: '#0ea5e9',
+                        color: '#ffffff'
+                      }}
                     >
                       <i className="fas fa-user-plus me-2"></i> Add Criminal
                     </Button>
 
                     <Button
-                      href="/admin/police/add"
-                      className="btn-lg fw-bold rounded-2"
-                      style={{ background: 'linear-gradient(135deg, #1cc88a, #17a076)' }}
+                      variant="primary"
+                      size="lg"
+                      className="fw-bold rounded-2"
+                      onClick={() => navigate('/admin/police')}
+                      style={{
+                        backgroundColor: '#0ea5e9',
+                        borderColor: '#0ea5e9',
+                        color: '#ffffff'
+                      }}
                     >
                       <i className="fas fa-user-tie me-2"></i> Add Police Officer
                     </Button>
 
                     <Button
-                      href="/admin/stations/add"
-                      className="btn-lg fw-bold rounded-2"
-                      style={{ background: 'linear-gradient(135deg, #f6c23e, #f8b63d)' }}
+                      variant="primary"
+                      size="lg"
+                      className="fw-bold rounded-2"
+                      onClick={() => navigate('/admin/stations')}
+                      style={{
+                        backgroundColor: '#0ea5e9',
+                        borderColor: '#0ea5e9',
+                        color: '#ffffff'
+                      }}
                     >
                       <i className="fas fa-building me-2"></i> Add Police Station
                     </Button>
 
                     <Button
-                      href="/admin/crime-analysis"
-                      className="btn-lg fw-bold rounded-2"
-                      style={{ background: 'linear-gradient(135deg, #36b9cc, #2e8b9e)' }}
+                      variant="primary"
+                      size="lg"
+                      className="fw-bold rounded-2"
+                      onClick={() => navigate('/admin/crime-analysis')}
+                      style={{
+                        backgroundColor: '#0ea5e9',
+                        borderColor: '#0ea5e9',
+                        color: '#ffffff'
+                      }}
                     >
                       <i className="fas fa-chart-bar me-2"></i> View Crime Analysis
                     </Button>
