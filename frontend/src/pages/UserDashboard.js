@@ -167,7 +167,7 @@ const UserDashboard = () => {
 
       <Row className="mt-4">
         <Col>
-          <Button href="/fir/new" variant="primary" size="lg" className="w-100">
+          <Button href="/fir/form" variant="primary" size="lg" className="w-100">
             + File New FIR
           </Button>
         </Col>
