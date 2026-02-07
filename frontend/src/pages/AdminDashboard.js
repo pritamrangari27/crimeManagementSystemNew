@@ -92,7 +92,7 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <Sidebar userRole="Admin" />
+      <Sidebar />
       
       <div className="with-sidebar">
         <Container fluid className="dashboard-container py-5 px-4">

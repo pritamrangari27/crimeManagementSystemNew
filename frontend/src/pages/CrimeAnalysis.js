@@ -74,7 +74,7 @@ const CrimeAnalysis = () => {
   if (loading) {
     return (
       <div className="d-flex">
-        <Sidebar userRole={role} />
+        <Sidebar />
         <div className="with-sidebar w-100">
           <div className="text-center py-5">
             <Spinner animation="border" />
@@ -87,7 +87,7 @@ const CrimeAnalysis = () => {
 
   return (
     <>
-      <Sidebar userRole={role} />
+      <Sidebar />
       
       <div className="with-sidebar">
         <Container fluid className="dashboard-container py-5 px-4">

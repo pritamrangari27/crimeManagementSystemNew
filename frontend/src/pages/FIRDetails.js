@@ -119,7 +119,7 @@ const FIRDetails = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar userRole={role} />
+      <Sidebar />
       <Container fluid className="main-content py-4">
         {/* Header */}
         <Row className="mb-4">

@@ -248,18 +248,17 @@ const Register = () => {
                 >
                   {loading ? 'Registering...' : 'Register'}
                 </button>
-              </form>
+            </form>
 
-              <div className="form-footer">
-                <p>Already have an account?</p>
-                <button
-                  type="button"
-                  className="btn-register-link"
-                  onClick={() => window.location.href = '/login'}
-                >
-                  🔑 Login here
-                </button>
-              </div>
+            <div className="form-footer">
+              <p>Already have an account?</p>
+              <button
+                type="button"
+                className="btn-register-link"
+                onClick={() => window.location.href = '/login'}
+              >
+                🔑 Login here
+              </button>
             </div>
           </div>
         </div>
@@ -273,6 +272,7 @@ const Register = () => {
         </div>
       </footer>
     </div>
+  );
 };
 
 export default Register;

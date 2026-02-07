@@ -173,26 +173,32 @@ const UserFIRForm = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar userRole={role} />
+      <Sidebar />
       <Container fluid className="main-content py-4">
         <Row className="mb-4">
           <Col>
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-between align-items-start">
               <div>
                 <h2 className="fw-bold">
                   <i className="fas fa-file-contract me-2"></i> File New FIR
                 </h2>
                 <p className="text-muted">Submit a First Information Report about a crime</p>
               </div>
-              <Button variant="secondary" size="sm" onClick={() => navigate(-1)}>
+              <Button 
+                variant="outline-secondary" 
+                size="sm" 
+                onClick={() => navigate(-1)}
+                className="fw-bold"
+                style={{ marginTop: '2px' }}
+              >
                 <i className="fas fa-arrow-left me-2"></i>Back
               </Button>
             </div>
           </Col>
         </Row>
 
-        <Row>
-          <Col lg={8}>
+        <Row className="justify-content-center">
+          <Col lg={8} md={10} xs={12}>
             <Card className="border-0 shadow-sm">
               <Card.Header className="bg-primary text-white fw-bold">
                 FIR Details
@@ -418,9 +424,6 @@ const UserFIRForm = () => {
                 </Form>
               </Card.Body>
             </Card>
-          </Col>
-
-          <Col lg={4}>
           </Col>
         </Row>
       </Container>

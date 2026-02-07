@@ -106,7 +106,7 @@ const ChangePassword = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar userRole={role} />
+      <Sidebar />
       <Container fluid className="main-content py-4">
         <Row className="mb-4">
           <Col>

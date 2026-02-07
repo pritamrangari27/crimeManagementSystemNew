@@ -377,6 +377,7 @@ textarea.form-control {
 .btn-sm {
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
+  width: auto;
 }
 
 .btn-icon {
@@ -490,7 +491,8 @@ textarea.form-control {
     gap: 0.75rem;
   }
 
-  .btn {
+  .button-group .btn,
+  .action-buttons .btn {
     width: 100%;
     justify-content: center;
   }
@@ -499,7 +501,8 @@ textarea.form-control {
     flex-direction: column;
   }
 
-  .btn-sm {
+  .button-group .btn-sm,
+  .action-buttons .btn-sm {
     width: 100%;
     justify-content: center;
   }
@@ -669,20 +672,6 @@ textarea.form-control {
   margin-bottom: 1.5rem;
 }
 
-/* Button Styles - Consolidated */
-.btn {
-  border-radius: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .btn-primary {
   background-color: #0ea5e9;
   color: #ffffff;
@@ -766,6 +755,7 @@ textarea.form-control {
 .btn-sm {
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
+  width: auto;
 }
 
 .btn-icon {
@@ -879,7 +869,8 @@ textarea.form-control {
     gap: 0.75rem;
   }
 
-  .btn {
+  .button-group .btn,
+  .action-buttons .btn {
     width: 100%;
     justify-content: center;
   }
@@ -888,7 +879,8 @@ textarea.form-control {
     flex-direction: column;
   }
 
-  .btn-sm {
+  .button-group .btn-sm,
+  .action-buttons .btn-sm {
     width: 100%;
     justify-content: center;
   }

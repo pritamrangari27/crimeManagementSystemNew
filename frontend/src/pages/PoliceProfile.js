@@ -85,7 +85,7 @@ const PoliceProfile = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar userRole={role} />
+      <Sidebar />
       <Container fluid className="main-content py-5 px-4" style={{ background: '#ffffff' }}>
         {/* Header */}
         <Row className="mb-5">
@@ -146,7 +146,7 @@ const PoliceProfile = () => {
                   <Badge bg="light" text="dark" className="p-2 fs-6">
                     <i className="fas fa-id-badge me-2"></i> Badge: {user?.badge_number || 'N/A'}
                   </Badge>
-                  <Badge bg="success" className="p-2 fs-6">
+                  <Badge bg="success" text="dark" className="p-2 fs-6">
                     <i className="fas fa-check-circle me-2"></i> On Duty
                   </Badge>
                 </div>
@@ -376,6 +376,7 @@ const PoliceProfile = () => {
                   <h6 className="fw-bold mb-3">Security</h6>
                   <div className="d-flex gap-2 flex-wrap">
                     <Button
+                      size="sm"
                       style={{ background: '#0ea5e9', border: 'none' }}
                       onClick={() => setIsEditing(true)}
                       className="fw-bold"
@@ -383,6 +384,7 @@ const PoliceProfile = () => {
                       <i className="fas fa-edit me-2"></i> Edit Profile
                     </Button>
                     <Button
+                      size="sm"
                       style={{ background: '#ef4444', border: 'none' }}
                       onClick={() => navigate('/change-password')}
                       className="fw-bold"

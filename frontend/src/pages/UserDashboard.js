@@ -49,7 +49,7 @@ const UserDashboard = () => {
 
   if (loading) return (
     <div className="d-flex">
-      <Sidebar userRole={role} />
+      <Sidebar />
       <div className="with-sidebar w-100">
         <div className="text-center py-5">Loading dashboard...</div>
       </div>
@@ -58,7 +58,7 @@ const UserDashboard = () => {
 
   if (error) return (
     <div className="d-flex">
-      <Sidebar userRole={role} />
+      <Sidebar />
       <div className="with-sidebar w-100">
         <div className="text-center py-5 text-danger">
           <p>{error}</p>
@@ -73,7 +73,7 @@ const UserDashboard = () => {
 
   return (
     <>
-      <Sidebar userRole={role} />
+      <Sidebar />
       
       <div className="with-sidebar">
         <Container fluid className="dashboard-container py-5 px-4">
@@ -81,6 +81,15 @@ const UserDashboard = () => {
         <Col>
           <h2 className="fw-bold">User Dashboard</h2>
           <p className="text-muted">Welcome back! Manage your FIRs and track their status.</p>
+        </Col>
+        <Col md={3} className="text-end">
+          <Button 
+            variant="primary" 
+            onClick={() => navigate('/fir/form')}
+            className="fw-bold"
+          >
+            <i className="fas fa-file-medical me-2"></i>File New FIR
+          </Button>
         </Col>
       </Row>
 
@@ -163,13 +172,7 @@ const UserDashboard = () => {
         </Card.Body>
       </Card>
 
-      <Row className="mt-4">
-        <Col>
-          <Button href="/fir/form" variant="primary" size="lg" className="w-100">
-            + File New FIR
-          </Button>
-        </Col>
-      </Row>
+
         </Container>
       </div>
     </>  );

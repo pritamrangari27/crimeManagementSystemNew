@@ -69,7 +69,7 @@ const PoliceDashboard = () => {
 
   return (
     <>
-      <Sidebar userRole={role} />
+      <Sidebar />
       
       <div className="with-sidebar">
         <Container fluid className="dashboard-container py-5 px-4">
