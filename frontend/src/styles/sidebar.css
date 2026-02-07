@@ -1,14 +1,16 @@
 /* ============================================
-   SIDEBAR STYLING
+   SIDEBAR STYLING - MODERN SAAS DESIGN
    ============================================ */
 
 :root {
-  --sidebar-width: 280px;
-  --sidebar-bg: linear-gradient(180deg, #212529 0%, #1a1a1a 100%);
-  --sidebar-hover: rgba(0, 153, 255, 0.15);
-  --sidebar-active: #0099FF;
-  --sidebar-text: #e9ecef;
-  --primary-color: #0099FF;
+  --sidebar-width: 260px;
+  --sidebar-bg: #ffffff;
+  --sidebar-border: #e5e7eb;
+  --sidebar-text: #4b5563;
+  --sidebar-hover: #f0f9ff;
+  --sidebar-active: #0369a1;
+  --sidebar-active-bg: #e0f2fe;
+  --primary-color: #0ea5e9;
 }
 
 /* Main Sidebar Container */
@@ -19,10 +21,11 @@
   top: 0;
   left: 0;
   background: var(--sidebar-bg);
-  padding: 20px;
-  box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+  border-right: 1px solid var(--sidebar-border);
+  padding: 24px 16px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
   z-index: 1001;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -30,77 +33,91 @@
 
 /* Sidebar Header */
 .sidebar-header {
-  padding: 15px 0 20px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 20px;
+  padding: 0 0 20px 0;
+  border-bottom: 1px solid var(--sidebar-border);
+  margin-bottom: 24px;
 }
 
 .sidebar-header h5 {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: #0369a1;
+  margin: 0;
 }
 
 .sidebar-header i {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  color: #0ea5e9;
+  margin-right: 8px;
 }
 
 /* Sidebar Navigation */
 .sidebar-nav {
   flex: 1;
-  padding: 10px 0;
+  padding: 8px 0;
 }
 
 .sidebar-link {
   color: var(--sidebar-text) !important;
-  padding: 12px 15px !important;
-  margin-bottom: 5px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  padding: 10px 12px !important;
+  margin-bottom: 4px;
+  border-radius: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   font-weight: 500;
   white-space: nowrap;
   border-left: 3px solid transparent;
+  font-size: 0.9375rem;
 }
 
 .sidebar-link:hover {
   background-color: var(--sidebar-hover);
-  color: var(--primary-color) !important;
-  border-left-color: var(--primary-color);
-  transform: translateX(5px);
+  color: #0369a1 !important;
+  border-left-color: #0ea5e9;
+  transform: translateX(3px);
 }
 
 .sidebar-link.active {
-  background-color: rgba(78, 115, 223, 0.2);
-  color: var(--primary-color) !important;
-  border-left-color: var(--primary-color);
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active) !important;
+  border-left-color: #0ea5e9;
   font-weight: 600;
 }
 
 .sidebar-link i {
-  width: 20px;
+  width: 18px;
   text-align: center;
-  margin-right: 10px;
+  margin-right: 12px;
   font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-link:hover i {
+  color: #0ea5e9;
+}
+
+.sidebar-link.active i {
+  color: #0ea5e9;
 }
 
 /* Sidebar Footer */
 .sidebar-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 15px;
+  border-top: 1px solid var(--sidebar-border);
+  padding-top: 16px;
   margin-top: auto;
 }
 
 .logout-link {
-  color: #f8d7da !important;
+  color: #ef4444 !important;
 }
 
 .logout-link:hover {
-  color: #dc3545 !important;
-  background-color: rgba(220, 53, 69, 0.1);
-  border-left-color: #dc3545;
+  color: #dc2626 !important;
+  background-color: rgba(239, 68, 68, 0.08) !important;
+  border-left-color: #ef4444 !important;
 }
 
 /* Sidebar Toggle for Mobile */
@@ -134,7 +151,7 @@
 .main-content {
   margin-left: var(--sidebar-width);
   transition: margin-left 0.3s ease;
-  background-color: var(--secondary-color, #f8f9fc);
+  background-color: #f8fafc;
   min-height: 100vh;
 }
 
@@ -142,28 +159,28 @@
    RESPONSIVE DESIGN
    ============================================ */
 
-/* Tablets (768px and up) */
 @media (max-width: 992px) {
   .sidebar {
-    width: 220px;
-    --sidebar-width: 220px;
+    width: 240px;
+    --sidebar-width: 240px;
+    padding: 20px 12px;
   }
 
   .with-sidebar {
-    margin-left: 220px;
+    margin-left: 240px;
   }
 
   .main-content {
-    margin-left: 220px;
+    margin-left: 240px;
   }
 
   .sidebar-link {
-    padding: 10px 12px !important;
-    font-size: 0.95rem;
+    padding: 9px 10px !important;
+    font-size: 0.9rem;
   }
 
   .sidebar-header h5 {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -171,9 +188,9 @@
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
-    width: 280px;
-    --sidebar-width: 280px;
-    left: -280px;
+    width: 260px;
+    --sidebar-width: 260px;
+    left: -260px;
     height: 100vh;
     transition: left 0.3s ease;
     border-radius: 0;
@@ -196,18 +213,17 @@
   }
 
   .sidebar-toggle-mobile .btn {
-    background-color: var(--primary-color);
+    background-color: #0ea5e9;
     border: none;
     padding: 8px 12px;
-    border-radius: 5px;
+    border-radius: 0.5rem;
   }
 
   .sidebar-toggle-mobile .btn:hover {
-    background-color: #0077CC;
+    background-color: #0284c7;
   }
 }
 
-/* Extra small devices (480px and down) */
 @media (max-width: 480px) {
   .sidebar {
     width: 100%;
@@ -217,7 +233,6 @@
 
   .sidebar-link {
     padding: 12px 15px !important;
-    justify-content: flex-start;
   }
 
   .sidebar-header {
@@ -225,44 +240,22 @@
   }
 }
 
-/* Scrollbar styling for sidebar */
+/* Scrollbar styling */
 .sidebar::-webkit-scrollbar {
   width: 6px;
 }
 
 .sidebar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: #f3f4f6;
+  border-radius: 10px;
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 3px;
+  background: #d1d5db;
+  border-radius: 10px;
 }
 
 .sidebar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #9ca3af;
 }
 
-/* Animation for sidebar items */
-.sidebar-link i {
-  transition: transform 0.2s ease;
-}
-
-.sidebar-link:hover i {
-  transform: translateX(3px);
-}
-
-.sidebar-link.active i {
-  animation: slideInLeft 0.3s ease;
-}
-
-@keyframes slideInLeft {
-  from {
-    transform: translateX(-10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
