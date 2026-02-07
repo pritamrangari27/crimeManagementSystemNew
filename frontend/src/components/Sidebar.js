@@ -167,20 +167,20 @@ const Sidebar = () => {
         </div>
 
         {/* Profile Modal */}
-        <Modal show={showProfileModal} onHide={() => setShowProfileModal(false)} centered size="lg">
-          <Modal.Header closeButton style={{ backgroundColor: '#0ea5e9', borderColor: '#0284c7' }}>
-            <Modal.Title style={{ color: 'white' }}>
+        <Modal show={showProfileModal} onHide={() => setShowProfileModal(false)} centered size="md">
+          <Modal.Header closeButton style={{ backgroundColor: '#0ea5e9', borderColor: '#0284c7', padding: '12px 16px' }}>
+            <Modal.Title style={{ color: 'white', fontSize: '1.1rem' }}>
               <i className="fas fa-id-card me-2"></i>
               My Profile
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body style={{ padding: '24px' }}>
+          <Modal.Body style={{ padding: '20px' }}>
             {isEditingProfile ? (
               // Edit Form
               <div>
                 <Form>
-                  <Form.Group className="mb-3">
-                    <Form.Label className="fw-bold">
+                  <Form.Group className="mb-2">
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.9rem' }}>
                       <i className="fas fa-user me-2" style={{ color: '#0ea5e9' }}></i>Username
                     </Form.Label>
                     <Form.Control
@@ -188,12 +188,13 @@ const Sidebar = () => {
                       value={editFormData.username || user?.username || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, username: e.target.value })}
                       className="border-2"
+                      size="sm"
                       style={{ borderColor: '#e0e0e0' }}
                     />
                   </Form.Group>
 
-                  <Form.Group className="mb-3">
-                    <Form.Label className="fw-bold">
+                  <Form.Group className="mb-2">
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.9rem' }}>
                       <i className="fas fa-envelope me-2" style={{ color: '#0ea5e9' }}></i>Email
                     </Form.Label>
                     <Form.Control
@@ -201,12 +202,13 @@ const Sidebar = () => {
                       value={editFormData.email || user?.email || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
                       className="border-2"
+                      size="sm"
                       style={{ borderColor: '#e0e0e0' }}
                     />
                   </Form.Group>
 
-                  <Form.Group className="mb-3">
-                    <Form.Label className="fw-bold">
+                  <Form.Group className="mb-2">
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.9rem' }}>
                       <i className="fas fa-phone me-2" style={{ color: '#0ea5e9' }}></i>Phone Number
                     </Form.Label>
                     <Form.Control
@@ -215,30 +217,31 @@ const Sidebar = () => {
                       onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
                       placeholder="Enter your phone number"
                       className="border-2"
+                      size="sm"
                       style={{ borderColor: '#e0e0e0' }}
                     />
                   </Form.Group>
 
                   {userRole === 'User' && (
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-bold">
+                    <Form.Group className="mb-2">
+                      <Form.Label className="fw-bold" style={{ fontSize: '0.9rem' }}>
                         <i className="fas fa-map-marker-alt me-2" style={{ color: '#0ea5e9' }}></i>Address
                       </Form.Label>
                       <Form.Control
                         as="textarea"
-                        rows={3}
+                        rows={2}
                         value={editFormData.address || user?.address || ''}
                         onChange={(e) => setEditFormData({ ...editFormData, address: e.target.value })}
                         placeholder="Enter your address"
                         className="border-2"
-                        style={{ borderColor: '#e0e0e0' }}
+                        style={{ borderColor: '#e0e0e0', fontSize: '0.9rem' }}
                       />
                     </Form.Group>
                   )}
 
                   {userRole === 'Admin' && (
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-bold">
+                    <Form.Group className="mb-2">
+                      <Form.Label className="fw-bold" style={{ fontSize: '0.9rem' }}>
                         <i className="fas fa-building me-2" style={{ color: '#0ea5e9' }}></i>Department
                       </Form.Label>
                       <Form.Control
@@ -247,6 +250,7 @@ const Sidebar = () => {
                         onChange={(e) => setEditFormData({ ...editFormData, department: e.target.value })}
                         placeholder="Enter your department"
                         className="border-2"
+                        size="sm"
                         style={{ borderColor: '#e0e0e0' }}
                       />
                     </Form.Group>
@@ -257,118 +261,118 @@ const Sidebar = () => {
               // View Mode
               <>
                 {/* Profile Header with Avatar */}
-                <div style={{ textAlign: 'center', marginBottom: '24px', paddingBottom: '16px', borderBottom: '2px solid #e0e0e0' }}>
+                <div style={{ textAlign: 'center', marginBottom: '12px', paddingBottom: '8px', borderBottom: '1px solid #e0e0e0' }}>
                   <div
                     style={{
-                      width: '80px',
-                      height: '80px',
+                      width: '60px',
+                      height: '60px',
                       borderRadius: '50%',
                       background: '#0ea5e9',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      margin: '0 auto 12px',
-                      fontSize: '32px',
+                      margin: '0 auto 8px',
+                      fontSize: '24px',
                       fontWeight: 'bold',
                       color: 'white',
-                      border: '4px solid white',
+                      border: '3px solid white',
                       boxShadow: '0 2px 8px rgba(14, 165, 233, 0.2)'
                     }}
                   >
                     {user?.username?.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) || 'U'}
                   </div>
-                  <h5 style={{ margin: '0 0 4px 0', fontWeight: 'bold', color: '#1a1a1a' }}>
+                  <h5 style={{ margin: '0 0 2px 0', fontWeight: 'bold', color: '#1a1a1a', fontSize: '1rem' }}>
                     {user?.username}
                   </h5>
-                  <p style={{ margin: '0', fontSize: '0.9rem', color: '#666' }}>
-                    <i className="fas fa-envelope me-2" style={{ color: '#0ea5e9' }}></i>
+                  <p style={{ margin: '0', fontSize: '0.85rem', color: '#666' }}>
+                    <i className="fas fa-envelope me-1" style={{ color: '#0ea5e9' }}></i>
                     {user?.email}
                   </p>
                 </div>
 
                 {/* Status Badges */}
-                <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                <div style={{ textAlign: 'center', marginBottom: '10px', fontsize: '0.85rem' }}>
                   {userRole === 'User' && (
                     <>
-                      <Badge bg="light" text="dark" className="me-2 p-2" style={{ fontSize: '0.85rem' }}>
-                        <i className="fas fa-user me-1"></i> Active User
+                      <Badge bg="light" text="dark" className="me-1" style={{ fontSize: '0.75rem', padding: '4px 6px' }}>
+                        <i className="fas fa-user me-1"></i>User
                       </Badge>
-                      <Badge bg="success" text="dark" className="p-2" style={{ fontSize: '0.85rem' }}>
-                        <i className="fas fa-check-circle me-1"></i> Verified
+                      <Badge bg="success" text="dark" style={{ fontSize: '0.75rem', padding: '4px 6px' }}>
+                        <i className="fas fa-check-circle me-1"></i>Verified
                       </Badge>
                     </>
                   )}
                   {userRole === 'Admin' && (
                     <>
-                      <Badge bg="light" text="dark" className="me-2 p-2" style={{ fontSize: '0.85rem' }}>
-                        <i className="fas fa-crown me-1"></i> Administrator
+                      <Badge bg="light" text="dark" className="me-1" style={{ fontSize: '0.75rem', padding: '4px 6px' }}>
+                        <i className="fas fa-crown me-1"></i>Admin
                       </Badge>
-                      <Badge bg="success" text="dark" className="p-2" style={{ fontSize: '0.85rem' }}>
-                        <i className="fas fa-check-circle me-1"></i> Active
+                      <Badge bg="success" text="dark" style={{ fontSize: '0.75rem', padding: '4px 6px' }}>
+                        <i className="fas fa-check-circle me-1"></i>Active
                       </Badge>
                     </>
                   )}
                   {userRole === 'Police' && (
                     <>
-                      <Badge bg="light" text="dark" className="me-2 p-2" style={{ fontSize: '0.85rem' }}>
-                        <i className="fas fa-id-badge me-1"></i> Badge: {user?.badge_number || 'N/A'}
+                      <Badge bg="light" text="dark" className="me-1" style={{ fontSize: '0.75rem', padding: '4px 6px' }}>
+                        <i className="fas fa-id-badge me-1"></i>Badge: {user?.badge_number || 'N/A'}
                       </Badge>
-                      <Badge bg="success" text="dark" className="p-2" style={{ fontSize: '0.85rem' }}>
-                        <i className="fas fa-check-circle me-1"></i> On Duty
+                      <Badge bg="success" text="dark" style={{ fontSize: '0.75rem', padding: '4px 6px' }}>
+                        <i className="fas fa-check-circle me-1"></i>On Duty
                       </Badge>
                     </>
                   )}
                 </div>
 
                 {/* Profile Information Table */}
-                <Table borderless responsive style={{ fontSize: '0.9rem', marginBottom: '0' }}>
+                <Table borderless responsive style={{ fontSize: '0.85rem', marginBottom: '0' }}>
                   <tbody>
-                    <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                      <td style={{ width: '40%', paddingBottom: '12px', paddingTop: '8px', fontWeight: 'bold' }}>
-                        <i className="fas fa-user me-2" style={{ color: '#0ea5e9' }}></i>Username
+                    <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                      <td style={{ width: '40%', paddingBottom: '6px', paddingTop: '4px', fontWeight: 'bold' }}>
+                        <i className="fas fa-user me-1" style={{ color: '#0ea5e9' }}></i>Username
                       </td>
-                      <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>{user?.username}</td>
+                      <td style={{ paddingBottom: '6px', paddingTop: '4px' }}>{user?.username}</td>
                     </tr>
-                    <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                      <td style={{ paddingBottom: '12px', paddingTop: '8px', fontWeight: 'bold' }}>
-                        <i className="fas fa-envelope me-2" style={{ color: '#0ea5e9' }}></i>Email
+                    <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                      <td style={{ paddingBottom: '6px', paddingTop: '4px', fontWeight: 'bold' }}>
+                        <i className="fas fa-envelope me-1" style={{ color: '#0ea5e9' }}></i>Email
                       </td>
-                      <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>{user?.email}</td>
+                      <td style={{ paddingBottom: '6px', paddingTop: '4px' }}>{user?.email}</td>
                     </tr>
-                    <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                      <td style={{ paddingBottom: '12px', paddingTop: '8px', fontWeight: 'bold' }}>
-                        <i className="fas fa-phone me-2" style={{ color: '#0ea5e9' }}></i>Phone Number
+                    <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                      <td style={{ paddingBottom: '6px', paddingTop: '4px', fontWeight: 'bold' }}>
+                        <i className="fas fa-phone me-1" style={{ color: '#0ea5e9' }}></i>Phone
                       </td>
-                      <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
-                        {user?.phone || <span style={{ color: '#999' }}>Not provided</span>}
+                      <td style={{ paddingBottom: '6px', paddingTop: '4px' }}>
+                        {user?.phone || <span style={{ color: '#999' }}>N/A</span>}
                       </td>
                     </tr>
                     {userRole === 'User' && (
                       <tr>
-                        <td style={{ paddingTop: '8px', fontWeight: 'bold' }}>
-                          <i className="fas fa-map-marker-alt me-2" style={{ color: '#0ea5e9' }}></i>Address
+                        <td style={{ paddingTop: '4px', fontWeight: 'bold' }}>
+                          <i className="fas fa-map-marker-alt me-1" style={{ color: '#0ea5e9' }}></i>Address
                         </td>
-                        <td style={{ paddingTop: '8px' }}>
-                          {user?.address || <span style={{ color: '#999' }}>Not provided</span>}
+                        <td style={{ paddingTop: '4px' }}>
+                          {user?.address || <span style={{ color: '#999' }}>N/A</span>}
                         </td>
                       </tr>
                     )}
                     {userRole === 'Admin' && (
                       <tr>
-                        <td style={{ paddingTop: '8px', fontWeight: 'bold' }}>
-                          <i className="fas fa-building me-2" style={{ color: '#0ea5e9' }}></i>Department
+                        <td style={{ paddingTop: '4px', fontWeight: 'bold' }}>
+                          <i className="fas fa-building me-1" style={{ color: '#0ea5e9' }}></i>Department
                         </td>
-                        <td style={{ paddingTop: '8px' }}>
-                          {user?.department || <span style={{ color: '#999' }}>Not provided</span>}
+                        <td style={{ paddingTop: '4px' }}>
+                          {user?.department || <span style={{ color: '#999' }}>N/A</span>}
                         </td>
                       </tr>
                     )}
                     {userRole === 'Police' && (
                       <tr>
-                        <td style={{ paddingTop: '8px', fontWeight: 'bold' }}>
-                          <i className="fas fa-id-badge me-2" style={{ color: '#0ea5e9' }}></i>Badge Number
+                        <td style={{ paddingTop: '4px', fontWeight: 'bold' }}>
+                          <i className="fas fa-id-badge me-1" style={{ color: '#0ea5e9' }}></i>Badge
                         </td>
-                        <td style={{ paddingTop: '8px' }}>
+                        <td style={{ paddingTop: '4px' }}>
                           {user?.badge_number || 'N/A'}
                         </td>
                       </tr>
@@ -378,7 +382,7 @@ const Sidebar = () => {
               </>
             )}
           </Modal.Body>
-          <Modal.Footer style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+          <Modal.Footer style={{ display: 'flex', gap: '8px', justifyContent: 'center', padding: '12px 16px', borderTop: '1px solid #e0e0e0' }}>
             {isEditingProfile ? (
               <>
                 <Button 
