@@ -32,7 +32,7 @@ const AdminDashboard = () => {
       }
 
       try {
-        const actResponse = await dashboardAPI.getActivity(8);
+        const actResponse = await dashboardAPI.getActivity(10);
         if (actResponse.data.status === 'success') {
           setActivities(actResponse.data.activities || []);
         }
@@ -44,6 +44,19 @@ const AdminDashboard = () => {
     };
 
     fetchStats();
+
+    // Refresh activities every 30 seconds for real-time updates
+    const interval = setInterval(() => {
+      dashboardAPI.getActivity(10)
+        .then(actResponse => {
+          if (actResponse.data.status === 'success') {
+            setActivities(actResponse.data.activities || []);
+          }
+        })
+        .catch(error => console.error('Error refreshing activities:', error));
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const StatCard = ({ title, value, icon, color }) => (
@@ -136,7 +149,7 @@ const AdminDashboard = () => {
                   <Button
                     variant="outline-success"
                     size="sm"
-                    href="/admin/firs/approved"
+                    onClick={() => navigate('/admin/firs')}
                     className="w-100"
                   >
                     <i className="fas fa-arrow-right me-1"></i> View Details
@@ -153,7 +166,7 @@ const AdminDashboard = () => {
                   <Button
                     variant="outline-warning"
                     size="sm"
-                    href="/admin/firs/pending"
+                    onClick={() => navigate('/admin/firs')}
                     className="w-100"
                   >
                     <i className="fas fa-arrow-right me-1"></i> View Details
@@ -170,7 +183,7 @@ const AdminDashboard = () => {
                   <Button
                     variant="outline-danger"
                     size="sm"
-                    href="/admin/firs/rejected"
+                    onClick={() => navigate('/admin/firs')}
                     className="w-100"
                   >
                     <i className="fas fa-arrow-right me-1"></i> View Details
@@ -185,24 +198,41 @@ const AdminDashboard = () => {
             {/* Recent Activities */}
             <Col lg={7} className="mb-4">
               <Card className="border-0 shadow-sm">
-                <Card.Header className="bg-gradient border-0 p-4">
+                <Card.Header className="bg-gradient border-0 p-4 d-flex justify-content-between align-items-center">
                   <h5 className="mb-0 fw-bold text-white">
                     <i className="fas fa-history me-2"></i> Recent Activities
                   </h5>
+                  <small className="text-white-50">Live feed (updates every 30s)</small>
                 </Card.Header>
                 <Card.Body className="p-0">
                   {activities && activities.length > 0 ? (
                     <div className="activity-feed">
                       {activities.map((activity, index) => (
-                        <div key={index} className="activity-item p-3 border-bottom">
+                        <div key={index} className="activity-item p-3 border-bottom" style={{
+                          backgroundColor: index % 2 === 0 ? '#f8f9fa' : '#ffffff',
+                          transition: 'background-color 0.2s'
+                        }}>
                           <div className="d-flex align-items-start">
-                            <div className="activity-icon me-3">
-                              <i className={`${activity.icon || 'fas fa-info-circle'} fa-lg text-primary`}></i>
+                            <div className="activity-icon me-3" style={{
+                              width: '40px',
+                              height: '40px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              borderRadius: '50%',
+                              backgroundColor: '#0ea5e9',
+                              color: 'white'
+                            }}>
+                              <i className={`${activity.icon || 'fas fa-info-circle'}`}></i>
                             </div>
                             <div className="flex-grow-1">
-                              <h6 className="mb-1 fw-bold">{activity.action}</h6>
-                              <p className="text-muted small mb-0">{activity.description}</p>
-                              <small className="text-muted">
+                              <h6 className="mb-1 fw-bold" style={{ color: '#1a1a1a', fontSize: '0.95rem' }}>
+                                {activity.action}
+                              </h6>
+                              <p className="text-muted small mb-1" style={{ fontSize: '0.85rem' }}>
+                                {activity.description}
+                              </p>
+                              <small className="text-muted" style={{ fontSize: '0.8rem' }}>
                                 <i className="fas fa-clock me-1"></i>
                                 {activity.timestamp}
                               </small>
@@ -213,7 +243,8 @@ const AdminDashboard = () => {
                     </div>
                   ) : (
                     <div className="text-center py-5 text-muted">
-                      <p>No recent activities</p>
+                      <i className="fas fa-inbox fa-3x mb-3" style={{ opacity: 0.3 }}></i>
+                      <p className="mb-0">No recent activities</p>
                     </div>
                   )}
                 </Card.Body>

@@ -22,6 +22,9 @@ import AdminProfile from './pages/AdminProfile';
 import PoliceProfile from './pages/PoliceProfile';
 import CrimeAnalysis from './pages/CrimeAnalysis';
 import ChangePassword from './pages/ChangePassword';
+import StationDetails from './pages/StationDetails';
+import CriminalDetails from './pages/CriminalDetails';
+import PoliceDetails from './pages/PoliceDetails';
 
 // Components
 import Navigation from './components/Navigation';
@@ -51,10 +54,34 @@ function AppLayout() {
             }
           />
           <Route
+            path="/admin/stations"
+            element={
+              <PrivateRoute>
+                <StationsManagement />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/station/:id"
+            element={
+              <PrivateRoute>
+                <StationDetails />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/admin/criminals"
             element={
               <PrivateRoute>
                 <CriminalsManagement />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/criminal/:id"
+            element={
+              <PrivateRoute>
+                <CriminalDetails />
               </PrivateRoute>
             }
           />
@@ -67,10 +94,10 @@ function AppLayout() {
             }
           />
           <Route
-            path="/admin/stations"
+            path="/admin/police/:id"
             element={
               <PrivateRoute>
-                <StationsManagement />
+                <PoliceDetails />
               </PrivateRoute>
             }
           />

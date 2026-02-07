@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { logActivity } = require('../utils/activityLogger');
 
 // Add police officer
 router.post('/add', (req, res) => {
@@ -24,6 +25,19 @@ router.post('/add', (req, res) => {
       }
       return res.status(500).json({ status: 'error', message: 'Database error' });
     }
+    
+    // Log the police officer addition activity
+    logActivity(
+      req.db,
+      null,
+      'POLICE_ADDED',
+      'Police officer added',
+      `${name} added as police officer at ${station_name}`,
+      'Police',
+      this.lastID,
+      'fas fa-users-cog'
+    );
+    
     res.json({ status: 'success', message: 'Police officer added', id: this.lastID });
   });
 });

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { logActivity } = require('../utils/activityLogger');
 
 // Create FIR - POST /api/firs
 router.post('/', (req, res) => {
@@ -29,6 +30,19 @@ router.post('/', (req, res) => {
       console.error('Database error:', err);
       return res.status(500).json({ status: 'error', message: 'Database error' });
     }
+    
+    // Log the FIR creation activity
+    logActivity(
+      req.db,
+      user_id,
+      'FIR_CREATED',
+      'FIR filed successfully',
+      `New FIR filed against ${accused} for ${crime_type}`,
+      'FIR',
+      this.lastID,
+      'fas fa-file-alt'
+    );
+    
     res.json({ 
       status: 'success', 
       message: 'FIR created successfully', 
@@ -144,6 +158,78 @@ router.delete('/:id', (req, res) => {
       return res.status(404).json({ status: 'error', message: 'FIR not found' });
     }
     res.json({ status: 'success', message: 'FIR deleted successfully' });
+  });
+});
+
+// Approve FIR - PUT /api/firs/:id/approve
+router.put('/:id/approve', (req, res) => {
+  const { id } = req.params;
+  const { assigned_officer_id } = req.body;
+
+  const sql = `UPDATE firs SET status = 'Approved', updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
+
+  req.db.run(sql, [id], function(err) {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ status: 'error', message: 'Database error' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ status: 'error', message: 'FIR not found' });
+    }
+
+    // Get FIR details for logging
+    req.db.get('SELECT * FROM firs WHERE id = ?', [id], (err, fir) => {
+      if (!err && fir) {
+        logActivity(
+          req.db,
+          assigned_officer_id || null,
+          'FIR_APPROVED',
+          'FIR approved',
+          `FIR #${id} against ${fir.accused} approved for ${fir.crime_type}`,
+          'FIR',
+          id,
+          'fas fa-check-circle'
+        );
+      }
+    });
+
+    res.json({ status: 'success', message: 'FIR approved successfully' });
+  });
+});
+
+// Reject FIR - PUT /api/firs/:id/reject
+router.put('/:id/reject', (req, res) => {
+  const { id } = req.params;
+  const { rejection_reason } = req.body;
+
+  const sql = `UPDATE firs SET status = 'Rejected', updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
+
+  req.db.run(sql, [id], function(err) {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ status: 'error', message: 'Database error' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ status: 'error', message: 'FIR not found' });
+    }
+
+    // Get FIR details for logging
+    req.db.get('SELECT * FROM firs WHERE id = ?', [id], (err, fir) => {
+      if (!err && fir) {
+        logActivity(
+          req.db,
+          null,
+          'FIR_REJECTED',
+          'FIR rejected',
+          `FIR #${id} against ${fir.accused} rejected. Reason: ${rejection_reason || 'N/A'}`,
+          'FIR',
+          id,
+          'fas fa-times-circle'
+        );
+      }
+    });
+
+    res.json({ status: 'success', message: 'FIR rejected successfully' });
   });
 });
 

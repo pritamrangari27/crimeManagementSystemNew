@@ -79,22 +79,108 @@ router.get('/crimes-by-location', (req, res) => {
 router.get('/activity', (req, res) => {
   const limit = req.query.limit || 10;
 
-  const sql = `SELECT 'Criminal' as type, criminal_name as name, crime_type as detail, created_at 
-               FROM criminals 
-               UNION ALL
-               SELECT 'FIR' as type, fir_number as name, crime_type as detail, created_at 
-               FROM firs 
-               UNION ALL
-               SELECT 'Police' as type, name as name, position as detail, created_at 
-               FROM police 
-               ORDER BY created_at DESC LIMIT ?`;
+  // First try activity_log table
+  const activityLogSql = `
+    SELECT 
+      al.id,
+      al.action,
+      al.description,
+      al.icon,
+      al.created_at as timestamp,
+      COALESCE(u.username, 'System') as user
+    FROM activity_log al
+    LEFT JOIN users u ON al.user_id = u.id
+    ORDER BY al.created_at DESC 
+    LIMIT ?
+  `;
+
+  req.db.all(activityLogSql, [limit], (err, logRows) => {
+    if (err) {
+      console.error('Activity log error:', err);
+      // Fallback to old method if no activity_log table
+      return getActivityFallback(req, res, limit);
+    }
+
+    if (logRows && logRows.length > 0) {
+      return res.json({ 
+        status: 'success', 
+        activities: logRows.map(row => ({
+          action: row.action,
+          description: row.description,
+          icon: row.icon || 'fas fa-history',
+          timestamp: formatTime(row.timestamp),
+          user: row.user
+        }))
+      });
+    }
+
+    // Fallback if no records in activity_log
+    getActivityFallback(req, res, limit);
+  });
+});
+
+// Fallback activity method
+function getActivityFallback(req, res, limit) {
+  const sql = `
+    SELECT 
+      'Criminal' as type, 
+      Criminal_name as name, 
+      crime_type as detail, 
+      created_at,
+      'fas fa-user-secret' as icon
+    FROM criminals 
+    UNION ALL
+    SELECT 
+      'FIR' as type, 
+      'FIR #' || id as name, 
+      crime_type as detail, 
+      created_at,
+      'fas fa-file-alt' as icon
+    FROM firs 
+    UNION ALL
+    SELECT 
+      'Police' as type, 
+      name as name, 
+      station_name as detail, 
+      created_at,
+      'fas fa-users-cog' as icon
+    FROM police 
+    ORDER BY created_at DESC 
+    LIMIT ?
+  `;
 
   req.db.all(sql, [limit], (err, rows) => {
     if (err) {
       return res.status(500).json({ status: 'error', message: 'Database error' });
     }
-    res.json({ status: 'success', data: rows });
+    
+    const formattedRows = rows.map(row => ({
+      action: `New ${row.type} Record`,
+      description: `${row.name} - ${row.detail}`,
+      icon: row.icon,
+      timestamp: formatTime(row.created_at)
+    }));
+    
+    res.json({ status: 'success', activities: formattedRows });
   });
-});
+}
+
+function formatTime(dateString) {
+  if (!dateString) return 'Just now';
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000);
+    
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return Math.floor(diff / 60) + ' mins ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + ' hours ago';
+    if (diff < 604800) return Math.floor(diff / 86400) + ' days ago';
+    
+    return date.toLocaleDateString();
+  } catch (e) {
+    return dateString;
+  }
+}
 
 module.exports = router;

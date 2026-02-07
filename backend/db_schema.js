@@ -106,6 +106,20 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
+  // Activity Log table
+  db.run(`CREATE TABLE IF NOT EXISTS activity_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    activity_type TEXT NOT NULL,
+    action TEXT NOT NULL,
+    description TEXT,
+    entity_type TEXT,
+    entity_id INTEGER,
+    icon TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+  )`);
+
   console.log('Database schema created successfully!');
 });
 

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { logActivity } = require('../utils/activityLogger');
 
 /**
  * PRODUCTION NOTES:
@@ -74,6 +75,18 @@ router.post('/login', (req, res) => {
 
       // Set secure session
       req.session.user = user;
+      
+      // Log the login activity
+      logActivity(
+        req.db,
+        user.id,
+        'LOGIN',
+        `${user.role} logged in`,
+        `${user.username} (${user.role}) logged into the system`,
+        'User',
+        user.id,
+        'fas fa-sign-in-alt'
+      );
       
       res.json({ 
         status: 'success', 
