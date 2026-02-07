@@ -253,9 +253,9 @@ const FIRManagement = () => {
           {firs.length > 0 ? (
             firs.map((fir) => (
               <tr key={fir.id}>
-                <td>{fir.fir_number}</td>
+                <td>FIR-{String(fir.id).padStart(4, '0')}</td>
                 <td>{fir.crime_type}</td>
-                <td>{fir.crime_location}</td>
+                <td>{fir.address || '-'}</td>
                 <td>{new Date(fir.created_at).toLocaleDateString()}</td>
                 <td>
                   <span
@@ -270,7 +270,7 @@ const FIRManagement = () => {
                     {fir.status}
                   </span>
                 </td>
-                <td>{fir.priority}</td>
+                <td>High</td>
                 <td>
                   <Button
                     href={`/fir/${fir.id}`}

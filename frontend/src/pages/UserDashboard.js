@@ -12,37 +12,60 @@ const UserDashboard = () => {
   const [stats, setStats] = useState(null);
   const [myFIRs, setMyFIRs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem('authUser'));
+        if (!user || !user.id) {
+          setError('User not found. Please log in again.');
+          setLoading(false);
+          return;
+        }
+
+        console.log('Fetching data for user:', user.id);
+        
         const [statsRes, firsRes] = await Promise.all([
           dashboardAPI.getStats(),
           firsAPI.getByUser(user.id)
         ]);
 
+        console.log('FIRs Response:', firsRes.data);
+
         if (statsRes.data.status === 'success') {
           setStats(statsRes.data.data);
         }
         if (firsRes.data.status === 'success') {
-          setMyFIRs(firsRes.data.data);
+          setMyFIRs(firsRes.data.data || []);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
+        setError('Failed to load FIRs. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [user]);
 
   if (loading) return (
     <div className="d-flex">
       <Sidebar userRole={role} />
       <div className="with-sidebar w-100">
         <div className="text-center py-5">Loading dashboard...</div>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="d-flex">
+      <Sidebar userRole={role} />
+      <div className="with-sidebar w-100">
+        <div className="text-center py-5 text-danger">
+          <p>{error}</p>
+          <button className="btn btn-primary" onClick={() => navigate('/login')}>Go to Login</button>
+        </div>
       </div>
     </div>
   );
@@ -110,7 +133,7 @@ const UserDashboard = () => {
                 <tbody>
                   {myFIRs.slice(0, 5).map((fir) => (
                     <tr key={fir.id}>
-                      <td>{fir.fir_number}</td>
+                      <td>FIR-{String(fir.id).padStart(4, '0')}</td>
                       <td>{fir.crime_type}</td>
                       <td>
                         <span
