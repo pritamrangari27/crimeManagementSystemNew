@@ -23,11 +23,7 @@ const UserDashboard = () => {
           return;
         }
 
-        console.log('Fetching data for user:', user.id);
-        
         const firsRes = await firsAPI.getByUser(user.id);
-
-        console.log('FIRs Response:', firsRes.data);
 
         if (firsRes.data.status === 'success') {
           setMyFIRs(firsRes.data.data || []);

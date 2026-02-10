@@ -31,7 +31,7 @@ const Register = () => {
             setStations(data.data);
           }
         } catch (err) {
-          console.log('Could not fetch stations:', err);
+          // Silent fail - stations list optional
         } finally {
           setStationsLoading(false);
         }
@@ -80,14 +80,6 @@ const Register = () => {
     setLoading(true);
 
     try {
-      console.log('Registering with data:', {
-        username: formData.username,
-        email: formData.email,
-        role: formData.role,
-        phone: formData.phone,
-        station_id: formData.station_id
-      });
-
       const response = await authAPI.register(
         formData.username,
         formData.password,
@@ -96,8 +88,6 @@ const Register = () => {
         formData.role,
         formData.station_id
       );
-
-      console.log('Registration response:', response.data);
 
       if (response.data.status === 'success') {
         alert(`Registration successful! Welcome ${formData.username}. Please login with your credentials.`);

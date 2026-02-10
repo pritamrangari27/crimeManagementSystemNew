@@ -2,8 +2,6 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-console.log('API Base URL:', API_BASE_URL);
-
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
@@ -16,13 +14,10 @@ const api = axios.create({
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
-    console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`);
-    
     // Add token to request headers if it exists
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('[Auth Token Added]');
     }
     
     return config;
@@ -39,8 +34,7 @@ api.interceptors.response.use(
     console.log(`[API Response] ${response.status} - ${response.config.url}`);
     return response;
   },
-  (error) => {
-    console.error('[Response Error]', {
+  (econsole.error('[Response Error]', {
       message: error.message,
       status: error.response?.status,
       data: error.response?.data,

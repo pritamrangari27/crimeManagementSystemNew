@@ -47,7 +47,7 @@ const LoginModern = () => {
             setStations(data.data);
           }
         } catch (err) {
-          console.log('Could not fetch stations:', err);
+          // Silent fail - stations list optional
         }
       };
       fetchStations();
@@ -77,7 +77,6 @@ const LoginModern = () => {
 
     setLoading(true);
     try {
-      console.log('=== ADMIN LOGIN ATTEMPT ===');
       const response = await authAPI.login(adminLogin.username, adminLogin.password, 'Admin');
       
       if (response.data.status === 'success') {
@@ -120,16 +119,9 @@ const LoginModern = () => {
 
     setLoading(true);
     try {
-      console.log('=== USER LOGIN ATTEMPT ===');
-      console.log('Username:', userLogin.username);
-      console.log('Calling: authAPI.login()');
-      
       const response = await authAPI.login(userLogin.username, userLogin.password, 'User');
       
-      console.log('Login response received:', response.data);
-      
       if (response.data.status === 'success') {
-        console.log('Login successful! User:', response.data.user);
         localStorage.setItem('authUser', JSON.stringify(response.data.user));
         localStorage.setItem('userRole', 'User');
         // Store token if provided in response
@@ -144,13 +136,6 @@ const LoginModern = () => {
         setError(response.data.message || 'Login failed');
       }
     } catch (err) {
-      console.error('=== USER LOGIN ERROR ===');
-      console.error('Error object:', err);
-      console.error('Error code:', err.code);
-      console.error('Error message:', err.message);
-      console.error('Response status:', err.response?.status);
-      console.error('Response data:', err.response?.data);
-      
       let errorMessage = 'Login failed. ';
       
       if (err.code === 'ECONNABORTED') {
@@ -186,7 +171,6 @@ const LoginModern = () => {
 
     setLoading(true);
     try {
-      console.log('=== POLICE LOGIN ATTEMPT ===');
       const response = await authAPI.login(policeLogin.username, policeLogin.password, 'Police');
       
       if (response.data.status === 'success') {
