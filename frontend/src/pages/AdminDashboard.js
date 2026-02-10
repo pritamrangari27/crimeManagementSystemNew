@@ -103,7 +103,7 @@ const AdminDashboard = () => {
               <div className="d-flex justify-content-between align-items-center">
                 <div>
                   <h2 className="fw-bold mb-1">
-                    <i className="fas fa-chart-line me-2 text-primary"></i>
+                    <i className="fas fa-chart-line me-2" style={{ color: '#10b981' }}></i>
                     Admin Dashboard
                   </h2>
                   <p className="text-muted mb-0">Welcome back! Here's an overview of your system.</p>
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
                               alignItems: 'center',
                               justifyContent: 'center',
                               borderRadius: '50%',
-                              backgroundColor: '#0ea5e9',
+                              backgroundColor: '#10b981',
                               color: 'white'
                             }}>
                               <i className={`${activity.icon || 'fas fa-info-circle'}`}></i>
@@ -263,13 +263,12 @@ const AdminDashboard = () => {
                 <Card.Body className="p-4">
                   <div className="d-grid gap-2">
                     <Button
-                      variant="primary"
                       size="lg"
                       className="fw-bold rounded-2"
                       onClick={() => navigate('/admin/criminals')}
                       style={{
-                        backgroundColor: '#0ea5e9',
-                        borderColor: '#0ea5e9',
+                        backgroundColor: '#10b981',
+                        borderColor: '#10b981',
                         color: '#ffffff'
                       }}
                     >
@@ -277,13 +276,12 @@ const AdminDashboard = () => {
                     </Button>
 
                     <Button
-                      variant="primary"
                       size="lg"
                       className="fw-bold rounded-2"
                       onClick={() => navigate('/admin/police')}
                       style={{
-                        backgroundColor: '#0ea5e9',
-                        borderColor: '#0ea5e9',
+                        backgroundColor: '#10b981',
+                        borderColor: '#10b981',
                         color: '#ffffff'
                       }}
                     >
@@ -291,13 +289,12 @@ const AdminDashboard = () => {
                     </Button>
 
                     <Button
-                      variant="primary"
                       size="lg"
                       className="fw-bold rounded-2"
                       onClick={() => navigate('/admin/stations')}
                       style={{
-                        backgroundColor: '#0ea5e9',
-                        borderColor: '#0ea5e9',
+                        backgroundColor: '#10b981',
+                        borderColor: '#10b981',
                         color: '#ffffff'
                       }}
                     >
@@ -305,13 +302,12 @@ const AdminDashboard = () => {
                     </Button>
 
                     <Button
-                      variant="primary"
                       size="lg"
                       className="fw-bold rounded-2"
                       onClick={() => navigate('/admin/crime-analysis')}
                       style={{
-                        backgroundColor: '#0ea5e9',
-                        borderColor: '#0ea5e9',
+                        backgroundColor: '#10b981',
+                        borderColor: '#10b981',
                         color: '#ffffff'
                       }}
                     >

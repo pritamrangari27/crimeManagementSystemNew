@@ -56,7 +56,7 @@ const StationDetails = () => {
                   <p><strong>Station Code:</strong> {station.station_code}</p>
                 </Col>
                 <Col md={6}>
-                  <p><strong>In-Charge:</strong> {station.incharge || 'N/A'}</p>
+                  <p><strong>In-Charge:</strong> {station.in_charge || 'N/A'}</p>
                 </Col>
               </Row>
 

@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 const dbPath = './db_crime.sqlite';
 
@@ -113,9 +114,36 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
+  // Activity Log table
+  db.run(`CREATE TABLE IF NOT EXISTS activity_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    action TEXT,
+    title TEXT,
+    description TEXT,
+    target_type TEXT,
+    target_id INTEGER,
+    icon TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+  )`);
+
   console.log('✓ Database tables created');
 
-  // Insert test users
+  // Create indexes for performance
+  db.run('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_users_role ON users(role)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_users_station ON users(station_id)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_firs_user_id ON firs(user_id)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_firs_status ON firs(status)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_firs_station_id ON firs(station_id)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_criminals_station_id ON criminals(station_id)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_activity_user_id ON activity_log(user_id)');
+  
+  console.log('✓ Database indexes created');
+
+  // Hash and insert test users
   const insertUsers = [
     { username: 'admin123', email: 'admin@crime-system.com', password: 'password123', phone: '9876543210', role: 'Admin' },
     { username: 'testuser123', email: 'user@crime-system.com', password: 'password123', phone: '9123456789', role: 'User' },
@@ -124,19 +152,27 @@ db.serialize(() => {
     { username: 'user_002', email: 'user002@crime-system.com', password: 'password123', phone: '9222333444', role: 'User' }
   ];
 
-  insertUsers.forEach(user => {
-    const sql = `INSERT OR IGNORE INTO users (username, email, password, phone, role, station_id) 
-                 VALUES (?, ?, ?, ?, ?, ?)`;
-    db.run(sql, [user.username, user.email, user.password, user.phone, user.role, user.station_id || null], 
-      function(err) {
-        if (err) {
-          console.error(`Error inserting user ${user.username}:`, err);
-        } else if (this.changes > 0) {
-          console.log(`✓ User inserted: ${user.username}`);
-        }
+  // Use async/await to hash passwords
+  (async () => {
+    for (const user of insertUsers) {
+      try {
+        const hashedPassword = await bcrypt.hash(user.password, 10);
+        const sql = `INSERT OR IGNORE INTO users (username, email, password, phone, role, station_id) 
+                     VALUES (?, ?, ?, ?, ?, ?)`;
+        db.run(sql, [user.username, user.email, hashedPassword, user.phone, user.role, user.station_id || null], 
+          function(err) {
+            if (err) {
+              console.error(`Error inserting user ${user.username}:`, err);
+            } else if (this.changes > 0) {
+              console.log(`✓ User inserted: ${user.username}`);
+            }
+          }
+        );
+      } catch (err) {
+        console.error(`Error hashing password for ${user.username}:`, err);
       }
-    );
-  });
+    }
+  })();
 
   // Insert police stations
   const insertStations = [

@@ -85,7 +85,8 @@ const UserDashboard = () => {
         </Col>
         <Col md={3} className="text-end">
           <Button 
-            variant="primary" 
+            style={{ backgroundColor: '#10b981', borderColor: '#10b981', fontWeight: '600' }}
+            size="sm"
             onClick={() => navigate('/fir/form')}
             className="fw-bold"
           >

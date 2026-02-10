@@ -4,12 +4,14 @@
 
 :root {
   --sidebar-width: 260px;
-  --sidebar-bg: #ffffff;
-  --sidebar-text: #7c3aed;
-  --sidebar-hover: #f3e8ff;
-  --sidebar-active: #6d28d9;
-  --sidebar-active-bg: #e9d5ff;
-  --primary-color: #7c3aed;
+  --sidebar-bg: linear-gradient(135deg, #ffffff 0%, #f8f7ff 100%);
+  --sidebar-text: #10b981;
+  --sidebar-hover: #d1fae5;
+  --sidebar-active: #059669;
+  --sidebar-active-bg: #d1fae5;
+  --primary-color: #10b981;
+  --accent-green: #10b981;
+  --accent-light-green: #ecfdf5;
 }
 
 /* Main Sidebar Container */
@@ -21,34 +23,43 @@
   left: 0;
   background: var(--sidebar-bg);
   padding: 24px 16px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
   z-index: 1001;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  border-right: 2px solid #d1fae5;
 }
 
 /* Sidebar Header */
 .sidebar-header {
   padding: 0 0 20px 0;
   margin-bottom: 24px;
+  border-bottom: 2px solid #d1fae5;
+  padding-bottom: 20px;
 }
 
 .sidebar-header h5 {
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #7c3aed;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0;
+  display: flex;
+  align-items: center;
 }
 
 .sidebar-header i {
   font-size: 1.25rem;
-  color: #7c3aed;
+  color: #10b981;
   margin-right: 8px;
   transition: all 0.2s ease;
+  filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.2));
 }
 
 /* Sidebar Navigation */
@@ -59,34 +70,40 @@
 
 .sidebar-link {
   color: var(--sidebar-text) !important;
-  padding: 10px 12px !important;
-  margin-bottom: 4px;
-  border-radius: 0.5rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 12px 14px !important;
+  margin-bottom: 6px;
+  border-radius: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
-  border-left: 3px solid transparent;
+  border-left: 4px solid transparent;
+  border-right: 2px solid transparent;
   font-size: 0.9375rem;
+  position: relative;
 }
 
 .sidebar-link:hover {
   background-color: var(--sidebar-hover);
-  color: #6d28d9 !important;
-  border-left-color: #7c3aed;
-  transform: translateX(3px);
+  color: #059669 !important;
+  border-left-color: #10b981;
+  border-right-color: #10b981;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
 }
 
 .sidebar-link.active {
   background-color: var(--sidebar-active-bg);
-  color: var(--sidebar-active) !important;
-  border-left-color: #7c3aed;
-  font-weight: 600;
+  color: #059669 !important;
+  border-left-color: #10b981;
+  border-right-color: #10b981;
+  font-weight: 700;
+  box-shadow: inset -2px 0 0 #10b981;
 }
 
 .sidebar-link i {
-  width: 18px;
+  width: 20px;
   text-align: center;
   margin-right: 12px;
   font-size: 1rem;
@@ -94,17 +111,21 @@
 }
 
 .sidebar-link:hover i {
-  color: #7c3aed;
+  color: #10b981;
+  transform: scale(1.1);
 }
 
 .sidebar-link.active i {
-  color: #7c3aed;
+  color: #10b981;
+  transform: scale(1.15);
 }
 
 /* Sidebar Footer */
 .sidebar-footer {
   padding-top: 16px;
   margin-top: auto;
+  border-top: 2px solid #d1fae5;
+  padding-top: 16px;
 }
 
 .logout-link {
@@ -122,13 +143,14 @@
   position: fixed;
   bottom: 25px;
   left: 20px;
-  background: #ffffff;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
   border-radius: 0.75rem;
-  box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.15);
-  min-width: 200px;
+  box-shadow: 0 10px 25px 0 rgba(16, 185, 129, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+  min-width: 240px;
   z-index: 1100;
   overflow: hidden;
   animation: slideUp 0.2s ease;
+  border: 1px solid #d1fae5;
 }
 
 @keyframes slideUp {
@@ -147,7 +169,7 @@
   padding: 12px 16px;
   border: none;
   background: transparent;
-  color: #7c3aed;
+  color: #10b981;
   font-weight: 600;
   font-size: 0.95rem;
   text-align: left;
@@ -159,12 +181,14 @@
 }
 
 .user-popup-button:hover {
-  background-color: #f3e8ff;
+  background-color: #d1fae5;
+  color: #059669;
+  transform: translateX(2px);
 }
 
 .user-popup-button.logout {
   color: #ef4444;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid #d1fae5;
 }
 
 .user-popup-button.logout:hover {

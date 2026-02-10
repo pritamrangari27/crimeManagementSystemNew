@@ -7,6 +7,7 @@ const path = require('path');
 
 // Routes
 const authRouter = require('./routes/auth');
+const adminRouter = require('./routes/admin');
 const criminalsRouter = require('./routes/criminals');
 const firsRouter = require('./routes/firs');
 const policeRouter = require('./routes/police');
@@ -65,6 +66,7 @@ app.use((req, res, next) => {
 
 // API Routes
 app.use('/api/auth', authRouter);
+app.use('/api/admin', adminRouter);
 app.use('/api/criminals', criminalsRouter);
 app.use('/api/firs', firsRouter);
 app.use('/api/police', policeRouter);

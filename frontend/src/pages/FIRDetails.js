@@ -126,6 +126,7 @@ const FIRDetails = () => {
           <Col>
             <Button
               variant="outline-secondary"
+              size="sm"
               onClick={() => navigate(-1)}
               className="mb-3"
             >
@@ -367,9 +368,9 @@ const FIRDetails = () => {
             {/* Sidebar with Modern Circular Progress */}
             <Col lg={4}>
               {/* Modern Circular Progress Indicator */}
-              <div className="p-4 rounded-3" style={{ backgroundColor: '#f0f9ff', borderLeft: '4px solid #0ea5e9' }}>
+              <div className="p-4 rounded-3" style={{ backgroundColor: '#f0fdf4', borderLeft: '4px solid #10b981' }}>
                 <h6 className="fw-bold mb-4 d-flex align-items-center" style={{ color: '#1a1a1a' }}>
-                  <i className="fas fa-tasks me-2" style={{ color: '#0ea5e9', fontSize: '18px' }}></i>
+                  <i className="fas fa-tasks me-2" style={{ color: '#10b981', fontSize: '18px' }}></i>
                   Case Progress
                 </h6>
 
@@ -383,7 +384,7 @@ const FIRDetails = () => {
                         cy="70"
                         r="60"
                         fill="none"
-                        stroke="#e0e0e0"
+                        stroke="#d1fae5"
                         strokeWidth="8"
                       />
                       {/* Progress Circle */}
@@ -392,11 +393,11 @@ const FIRDetails = () => {
                         cy="70"
                         r="60"
                         fill="none"
-                        stroke={fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#0ea5e9'}
+                        stroke={fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#10b981'}
                         strokeWidth="8"
                         strokeDasharray={`${(fir.status === 'Approved' ? 100 : fir.status === 'Rejected' ? 100 : 50) * 3.77} 377`}
                         strokeLinecap="round"
-                        style={{ transition: 'stroke-dasharray 0.6s ease', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+                        style={{ transition: 'stroke-dasharray 0.6s ease', filter: 'drop-shadow(0 2px 4px rgba(16, 185, 129, 0.2))' }}
                       />
                     </svg>
                     {/* Center Content */}
@@ -409,7 +410,7 @@ const FIRDetails = () => {
                         textAlign: 'center'
                       }}
                     >
-                      <div style={{ fontSize: '32px', fontWeight: 'bold', color: fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#0ea5e9' }}>
+                      <div style={{ fontSize: '32px', fontWeight: 'bold', color: fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#10b981' }}>
                         {fir.status === 'Approved' ? 100 : fir.status === 'Rejected' ? 100 : 50}%
                       </div>
                       <div style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>Done</div>
@@ -419,17 +420,17 @@ const FIRDetails = () => {
                   {/* Status Label Below Circle */}
                   <div className="text-center mb-3">
                     <p className="text-muted small fw-bold mb-1">Current Status</p>
-                    <div className="d-inline-flex align-items-center" style={{ gap: '8px', padding: '8px 16px', borderRadius: '20px', background: fir.status === 'Approved' ? 'rgba(40, 167, 69, 0.1)' : fir.status === 'Rejected' ? 'rgba(220, 53, 69, 0.1)' : 'rgba(102, 126, 234, 0.1)' }}>
+                    <div className="d-inline-flex align-items-center" style={{ gap: '8px', padding: '8px 16px', borderRadius: '20px', background: fir.status === 'Approved' ? 'rgba(16, 185, 129, 0.1)' : fir.status === 'Rejected' ? 'rgba(220, 53, 69, 0.1)' : 'rgba(16, 185, 129, 0.1)' }}>
                       <div
                         style={{
                           width: '10px',
                           height: '10px',
                           borderRadius: '50%',
-                          backgroundColor: fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#0ea5e9',
+                          backgroundColor: fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#10b981',
                           animation: 'pulse 2s infinite'
                         }}
                       ></div>
-                      <span className="fw-bold" style={{ color: fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#0ea5e9', fontSize: '13px' }}>
+                      <span className="fw-bold" style={{ color: fir.status === 'Approved' ? '#10b981' : fir.status === 'Rejected' ? '#ef4444' : '#10b981', fontSize: '13px' }}>
                         {fir.status}
                       </span>
                     </div>
@@ -437,12 +438,12 @@ const FIRDetails = () => {
                 </div>
 
                 {/* Timeline Details */}
-                <div className="p-3 bg-white rounded-2 mb-3" style={{ border: '1px solid #e0e0e0' }}>
+                <div className="p-3 bg-white rounded-2 mb-3" style={{ border: '1px solid #d1fae5' }}>
                   <div className="d-flex justify-content-between align-items-start">
                     <div>
                       <p className="text-muted small fw-bold mb-1">Submission Date</p>
                       <p className="fw-bold mb-0" style={{ color: '#2c3e50', fontSize: '13px' }}>
-                        <i className="fas fa-calendar-alt me-2" style={{ color: '#0ea5e9' }}></i>
+                        <i className="fas fa-calendar-alt me-2" style={{ color: '#10b981' }}></i>
                         {formatDate(fir.created_at || fir.date)}
                       </p>
                     </div>

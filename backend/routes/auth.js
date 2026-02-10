@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const { logActivity } = require('../utils/activityLogger');
 
 /**
  * PRODUCTION NOTES:
- * - Implement bcrypt for password hashing in production
- * - Add rate limiting to prevent brute force attacks
- * - Implement HTTPS with secure cookies
- * - Add CSRF protection middleware
- * - Implement password strength requirements
- * - Add email verification for new registrations
- * - Implement account lockout after failed login attempts
+ * - ✓ Implemented bcrypt for password hashing
+ * - TODO: Add rate limiting to prevent brute force attacks
+ * - TODO: Implement HTTPS with secure cookies
+ * - TODO: Add CSRF protection middleware
+ * - TODO: Add email verification for new registrations
+ * - TODO: Implement account lockout after failed login attempts
  */
 
 // Middleware to check if user is authenticated
@@ -38,8 +38,8 @@ const validatePassword = (password) => {
   return password.length >= 6;
 };
 
-// Login endpoint with RBAC
-router.post('/login', (req, res) => {
+// Login endpoint with RBAC and bcrypt
+router.post('/login', async (req, res) => {
   try {
     const { username, password, role } = req.body;
 
@@ -52,12 +52,10 @@ router.post('/login', (req, res) => {
       return res.status(400).json({ status: 'error', message: 'Invalid role selected' });
     }
 
-    // IMPORTANT: In production, use bcrypt to compare passwords
-    // const isPasswordValid = await bcrypt.compare(password, user.password_hash);
-    const sql = `SELECT id, username, email, phone, role, station_id, profile_pic FROM users 
-                 WHERE username = ? AND password = ? AND role = ?`;
+    const sql = `SELECT id, username, email, phone, role, station_id, profile_pic, password FROM users 
+                 WHERE username = ? AND role = ?`;
     
-    req.db.get(sql, [username, password, role], (err, user) => {
+    req.db.get(sql, [username, role], async (err, user) => {
       if (err) {
         console.error('Login database error:', err);
         return res.status(500).json({ status: 'error', message: 'Authentication service unavailable' });
@@ -68,38 +66,57 @@ router.post('/login', (req, res) => {
         return res.status(401).json({ status: 'error', message: 'Invalid username or password' });
       }
 
-      // Role-based validation
-      if (role === 'Police' && !user.station_id) {
-        return res.status(401).json({ status: 'error', message: 'Police officer must be assigned to a station' });
-      }
+      // Compare password using bcrypt
+      try {
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        
+        if (!isPasswordValid) {
+          return res.status(401).json({ status: 'error', message: 'Invalid username or password' });
+        }
 
-      // Set secure session
-      req.session.user = user;
-      
-      // Log the login activity
-      logActivity(
-        req.db,
-        user.id,
-        'LOGIN',
-        `${user.role} logged in`,
-        `${user.username} (${user.role}) logged into the system`,
-        'User',
-        user.id,
-        'fas fa-sign-in-alt'
-      );
-      
-      res.json({ 
-        status: 'success', 
-        message: `Login successful as ${role}`,
-        user: {
+        // Role-based validation
+        if (role === 'Police' && !user.station_id) {
+          return res.status(401).json({ status: 'error', message: 'Police officer must be assigned to a station' });
+        }
+
+        // Set secure session (don't include password)
+        req.session.user = {
           id: user.id,
           username: user.username,
           email: user.email,
           role: user.role,
           station_id: user.station_id,
           profile_pic: user.profile_pic
-        }
-      });
+        };
+        
+        // Log the login activity
+        logActivity(
+          req.db,
+          user.id,
+          'LOGIN',
+          `${user.role} logged in`,
+          `${user.username} (${user.role}) logged into the system`,
+          'User',
+          user.id,
+          'fas fa-sign-in-alt'
+        );
+        
+        res.json({ 
+          status: 'success', 
+          message: `Login successful as ${role}`,
+          user: {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            station_id: user.station_id,
+            profile_pic: user.profile_pic
+          }
+        });
+      } catch (bcryptErr) {
+        console.error('Password comparison error:', bcryptErr);
+        return res.status(500).json({ status: 'error', message: 'Authentication service error' });
+      }
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -107,8 +124,8 @@ router.post('/login', (req, res) => {
   }
 });
 
-// Register endpoint with validation
-router.post('/register', (req, res) => {
+// Register endpoint with validation and bcrypt hashing
+router.post('/register', async (req, res) => {
   try {
     const { username, password, email, phone, role, station_id } = req.body;
 
@@ -139,34 +156,32 @@ router.post('/register', (req, res) => {
       return res.status(400).json({ status: 'error', message: 'Police officers must select a station' });
     }
 
-    const sql = `INSERT INTO users (username, password, email, phone, role, station_id) 
-                 VALUES (?, ?, ?, ?, ?, ?)`;
-    
-    // Police role requires station_id
-    if (role === 'Police' && !station_id) {
-      return res.status(400).json({ status: 'error', message: 'Station ID is required for Police registration' });
-    }
-
-    // Additional validation for role
-    if (!['Admin', 'User', 'Police'].includes(role)) {
-      return res.status(400).json({ status: 'error', message: 'Invalid role selected' });
-    }
-
-    req.db.run(sql, [username, password, email, phone || '', role, station_id || null], function(err) {
-      if (err) {
-        console.error('Registration database error:', err);
-        if (err.message.includes('UNIQUE')) {
-          return res.status(409).json({ status: 'error', message: 'Username or email already registered' });
+    // Hash the password
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      
+      const sql = `INSERT INTO users (username, password, email, phone, role, station_id) 
+                   VALUES (?, ?, ?, ?, ?, ?)`;
+      
+      req.db.run(sql, [username, hashedPassword, email, phone || '', role, station_id || null], function(err) {
+        if (err) {
+          console.error('Registration database error:', err);
+          if (err.message.includes('UNIQUE')) {
+            return res.status(409).json({ status: 'error', message: 'Username or email already registered' });
+          }
+          return res.status(500).json({ status: 'error', message: 'Registration failed' });
         }
-        return res.status(500).json({ status: 'error', message: 'Registration failed' });
-      }
 
-      res.status(201).json({ 
-        status: 'success', 
-        message: `${role} registration successful. Please login with your credentials.`,
-        id: this.lastID
+        res.status(201).json({ 
+          status: 'success', 
+          message: `${role} registration successful. Please login with your credentials.`,
+          id: this.lastID
+        });
       });
-    });
+    } catch (hashErr) {
+      console.error('Password hashing error:', hashErr);
+      return res.status(500).json({ status: 'error', message: 'Registration service error' });
+    }
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ status: 'error', message: 'An unexpected error occurred during registration' });

@@ -200,7 +200,7 @@ const UserFIRForm = () => {
         <Row className="justify-content-center">
           <Col lg={8} md={10} xs={12}>
             <Card className="border-0 shadow-sm">
-              <Card.Header className="bg-primary text-white fw-bold">
+              <Card.Header style={{ backgroundColor: '#10b981', color: 'white' }} className="fw-bold">
                 FIR Details
               </Card.Header>
               <Card.Body>
@@ -373,10 +373,10 @@ const UserFIRForm = () => {
                   {/* Buttons */}
                   <div className="d-flex gap-2">
                     <Button
-                      variant="primary"
+                      style={{ backgroundColor: '#10b981', borderColor: '#10b981', fontWeight: '600' }}
                       type="submit"
                       disabled={submitting || loading}
-                      size="lg"
+                      size="sm"
                       className="fw-bold"
                     >
                       {submitting ? (

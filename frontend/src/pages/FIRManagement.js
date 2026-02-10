@@ -90,7 +90,7 @@ const FIRManagement = () => {
           <Button variant="secondary" size="sm" onClick={() => navigate(-1)} className="me-2">
             <i className="fas fa-arrow-left me-2"></i>Back
           </Button>
-          <Button variant="primary" onClick={() => setShowForm(true)}>
+          <Button style={{ backgroundColor: '#10b981', borderColor: '#10b981', fontWeight: '600' }} size="sm" onClick={() => setShowForm(true)}>
             <i className="fas fa-plus me-2"></i>File New FIR
           </Button>
         </Col>

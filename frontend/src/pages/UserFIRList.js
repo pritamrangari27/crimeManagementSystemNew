@@ -149,7 +149,7 @@ const UserFIRList = () => {
               <i className="fas fa-arrow-left me-2"></i> Back
             </Button>
             <Button
-              variant="primary"
+              style={{ backgroundColor: '#10b981', borderColor: '#10b981', fontWeight: '600' }}
               size="sm"
               onClick={() => navigate('/fir/form')}
               className="fw-bold"
@@ -237,7 +237,7 @@ const UserFIRList = () => {
 
         {/* FIR Table */}
         <Card className="border-0 shadow-sm">
-          <Card.Header className="bg-primary text-white fw-bold">
+          <Card.Header style={{ backgroundColor: '#0bd92a', color: 'white' }} className="fw-bold">
             <i className="fas fa-table me-2"></i> FIR Records
           </Card.Header>
           <Card.Body className="p-0">
@@ -256,18 +256,11 @@ const UserFIRList = () => {
               <div className="text-center py-5">
                 <i className="fas fa-inbox text-muted" style={{ fontSize: '48px' }}></i>
                 <p className="mt-3 text-muted">No FIRs found</p>
-                <Button
-                  variant="primary"
-                  onClick={() => navigate('/fir/form')}
-                  className="fw-bold"
-                >
-                  <i className="fas fa-plus me-2"></i> File Your First FIR
-                </Button>
               </div>
             ) : (
               <div className="table-responsive">
                 <Table hover className="mb-0">
-                  <thead className="table-light">
+                  <thead className="table-success">
                     <tr>
                       <th className="fw-bold">FIR ID</th>
                       <th className="fw-bold">Crime Type</th>

@@ -4,23 +4,23 @@ const router = express.Router();
 // Add police station
 router.post('/add', (req, res) => {
   const {
-    station_name, station_id, state, address
+    station_name, station_code, address, city, state, phone, email, in_charge
   } = req.body;
 
-  if (!station_name || !station_id || !state || !address) {
+  if (!station_name || !station_code || !address || !state) {
     return res.status(400).json({ status: 'error', message: 'Missing required fields' });
   }
 
   const sql = `INSERT INTO police_station (
-    station_name, station_id, state, address
-  ) VALUES (?, ?, ?, ?)`;
+    station_name, station_code, address, city, state, phone, email, in_charge
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
   req.db.run(sql, [
-    station_name, station_id, state, address
+    station_name, station_code, address, city, state, phone, email, in_charge
   ], function(err) {
     if (err) {
       if (err.message.includes('UNIQUE')) {
-        return res.status(400).json({ status: 'error', message: 'Station ID already exists' });
+        return res.status(400).json({ status: 'error', message: 'Station Code already exists' });
       }
       return res.status(500).json({ status: 'error', message: 'Database error' });
     }

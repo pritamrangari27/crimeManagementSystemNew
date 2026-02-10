@@ -16,7 +16,7 @@ const StationsManagement = () => {
     state: '',
     phone: '',
     email: '',
-    incharge: ''
+    in_charge: ''
   });
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const StationsManagement = () => {
         state: '',
         phone: '',
         email: '',
-        incharge: ''
+        in_charge: ''
       });
       setShowForm(false);
       fetchStations();
@@ -89,7 +89,7 @@ const StationsManagement = () => {
           <Button variant="secondary" size="sm" onClick={() => navigate(-1)} className="me-2">
             <i className="fas fa-arrow-left me-2"></i>Back
           </Button>
-          <Button variant="primary" onClick={() => setShowForm(true)}>
+          <Button style={{ backgroundColor: '#10b981', borderColor: '#10b981', fontWeight: '600' }} size="sm" onClick={() => setShowForm(true)}>
             <i className="fas fa-plus me-2"></i>Add Station
           </Button>
         </Col>
@@ -192,12 +192,13 @@ const StationsManagement = () => {
             </Row>
 
             <Form.Group className="mb-3">
-              <Form.Label>In-Charge</Form.Label>
+              <Form.Label>In-Charge Officer</Form.Label>
               <Form.Control
                 type="text"
-                name="incharge"
-                value={formData.incharge}
+                name="in_charge"
+                value={formData.in_charge}
                 onChange={handleFormChange}
+                placeholder="Name of in-charge officer"
               />
             </Form.Group>
           </Form>
@@ -206,7 +207,7 @@ const StationsManagement = () => {
           <Button variant="secondary" onClick={() => setShowForm(false)}>
             Close
           </Button>
-          <Button variant="success" onClick={(e) => handleAddStation(e)}>
+          <Button style={{ backgroundColor: '#10b981', borderColor: '#10b981', fontWeight: '600' }} onClick={(e) => handleAddStation(e)}>
             Add Station
           </Button>
         </Modal.Footer>

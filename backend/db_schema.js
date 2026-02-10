@@ -44,9 +44,13 @@ db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS police_station (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     station_name TEXT NOT NULL,
-    station_id TEXT UNIQUE,
-    state TEXT,
-    address TEXT,
+    station_code TEXT UNIQUE,
+    address TEXT NOT NULL,
+    city TEXT,
+    state TEXT NOT NULL,
+    phone TEXT,
+    email TEXT,
+    in_charge TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
