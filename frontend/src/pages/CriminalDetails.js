@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { criminalsAPI } from '../api/client';
+import Sidebar from '../components/Sidebar';
 
 const CriminalDetails = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const CriminalDetails = () => {
 
   const fetchCriminal = async () => {
     try {
-      const response = await criminalsAPI.get(id);
+      const response = await criminalsAPI.getById(id);
       if (response.data.status === 'success') {
         setCriminal(response.data.data);
       }
@@ -32,7 +33,10 @@ const CriminalDetails = () => {
   if (!criminal) return <div className="text-center py-5">Criminal record not found</div>;
 
   return (
-    <Container fluid className="py-4">
+    <>
+      <Sidebar />
+      <div className="with-sidebar">
+        <Container fluid className="py-4">
       <Row className="mb-4">
         <Col>
           <h2 className="fw-bold">Criminal Details</h2>
@@ -83,7 +87,9 @@ const CriminalDetails = () => {
           </Card>
         </Col>
       </Row>
-    </Container>
+        </Container>
+      </div>
+    </>
   );
 };
 

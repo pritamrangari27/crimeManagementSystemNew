@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { policeAPI } from '../api/client';
+import Sidebar from '../components/Sidebar';
 
 const PoliceDetails = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const PoliceDetails = () => {
 
   const fetchOfficer = async () => {
     try {
-      const response = await policeAPI.get(id);
+      const response = await policeAPI.getById(id);
       if (response.data.status === 'success') {
         setOfficer(response.data.data);
       }
@@ -32,7 +33,10 @@ const PoliceDetails = () => {
   if (!officer) return <div className="text-center py-5">Police officer not found</div>;
 
   return (
-    <Container fluid className="py-4">
+    <>
+      <Sidebar />
+      <div className="with-sidebar">
+        <Container fluid className="py-4">
       <Row className="mb-4">
         <Col>
           <h2 className="fw-bold">Police Officer Details</h2>
@@ -48,24 +52,15 @@ const PoliceDetails = () => {
         <Col lg={8}>
           <Card className="border-0 shadow-sm">
             <Card.Header className="bg-primary text-white">
-              <h5 className="mb-0">{officer.name || 'N/A'}</h5>
+              <h5 className="mb-0">{officer.name || 'N/A'} - {officer.police_id || 'N/A'}</h5>
             </Card.Header>
             <Card.Body>
               <Row className="mb-3">
                 <Col md={6}>
-                  <p><strong>Badge Number:</strong> {officer.badge_number || 'N/A'}</p>
+                  <p><strong>Police ID:</strong> {officer.police_id || 'N/A'}</p>
                 </Col>
                 <Col md={6}>
-                  <p><strong>Rank:</strong> {officer.rank || 'N/A'}</p>
-                </Col>
-              </Row>
-
-              <Row className="mb-3">
-                <Col md={6}>
-                  <p><strong>Contact:</strong> {officer.contact || 'N/A'}</p>
-                </Col>
-                <Col md={6}>
-                  <p><strong>Station Name:</strong> {officer.station_name || 'N/A'}</p>
+                  <p><strong>Phone:</strong> {officer.phone || 'N/A'}</p>
                 </Col>
               </Row>
 
@@ -74,16 +69,40 @@ const PoliceDetails = () => {
                   <p><strong>Email:</strong> {officer.email || 'N/A'}</p>
                 </Col>
                 <Col md={6}>
-                  <p><strong>Department:</strong> {officer.department || 'N/A'}</p>
+                  <p><strong>Crime Type/Specialization:</strong> {officer.crime_type || 'N/A'}</p>
                 </Col>
               </Row>
 
-              <p><strong>Address:</strong> {officer.address || 'N/A'}</p>
+              <Row className="mb-3">
+                <Col md={6}>
+                  <p><strong>Station Name:</strong> {officer.station_name || 'N/A'}</p>
+                </Col>
+                <Col md={6}>
+                  <p><strong>Station ID:</strong> {officer.station_id || 'N/A'}</p>
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col md={12}>
+                  <p><strong>Address:</strong> {officer.address || 'N/A'}</p>
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col md={6}>
+                  <p><strong>Date Joined:</strong> {officer.created_at ? new Date(officer.created_at).toLocaleDateString() : 'N/A'}</p>
+                </Col>
+                <Col md={6}>
+                  <p><strong>ID:</strong> #{officer.id || 'N/A'}</p>
+                </Col>
+              </Row>
             </Card.Body>
           </Card>
         </Col>
       </Row>
-    </Container>
+        </Container>
+      </div>
+    </>
   );
 };
 

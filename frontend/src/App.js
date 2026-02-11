@@ -27,7 +27,6 @@ import CriminalDetails from './pages/CriminalDetails';
 import PoliceDetails from './pages/PoliceDetails';
 
 // Components
-import Navigation from './components/Navigation';
 import PrivateRoute from './api/PrivateRoute';
 import { useLocation } from 'react-router-dom';
 
@@ -35,7 +34,6 @@ import { useLocation } from 'react-router-dom';
 function AppLayout() {
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
-  const isProtectedRoute = !isAuthPage;
 
   return (
     <>

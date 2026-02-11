@@ -52,9 +52,13 @@ db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS police_station (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     station_name TEXT NOT NULL,
-    station_id TEXT UNIQUE,
-    state TEXT,
-    address TEXT,
+    station_code TEXT UNIQUE,
+    address TEXT NOT NULL,
+    city TEXT,
+    state TEXT NOT NULL,
+    phone TEXT,
+    email TEXT,
+    in_charge TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
@@ -118,11 +122,11 @@ db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS activity_log (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
+    activity_type TEXT,
     action TEXT,
-    title TEXT,
     description TEXT,
-    target_type TEXT,
-    target_id INTEGER,
+    entity_type TEXT,
+    entity_id INTEGER,
     icon TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
@@ -176,20 +180,20 @@ db.serialize(() => {
 
   // Insert police stations
   const insertStations = [
-    { station_name: 'Central Police Station', station_id: 'PS001', state: 'Delhi', address: '123 Main Street, Delhi' },
-    { station_name: 'North Police Station', station_id: 'PS002', state: 'Delhi', address: '456 North Avenue, Delhi' },
-    { station_name: 'South Police Station', station_id: 'PS003', state: 'Delhi', address: '789 South Road, Delhi' },
-    { station_name: 'East Police Station', station_id: 'PS004', state: 'Delhi', address: '321 East Lane, Delhi' },
-    { station_name: 'West Police Station', station_id: 'PS005', state: 'Delhi', address: '654 West Boulevard, Delhi' },
-    { station_name: 'Mumbai Central Police Station', station_id: 'PS006', state: 'Maharashtra', address: '111 Marine Drive, Mumbai' },
-    { station_name: 'Bangalore Police Station', station_id: 'PS007', state: 'Karnataka', address: '222 Brigade Road, Bangalore' },
-    { station_name: 'Hyderabad Police Station', station_id: 'PS008', state: 'Telangana', address: '333 Secunderabad Road, Hyderabad' }
+    { station_name: 'Central Police Station', station_code: 'PS001', city: 'Delhi', state: 'Delhi', address: '123 Main Street, Delhi', phone: '011-2342-5678', email: 'central.ps@delhi.police.in', in_charge: 'Rajesh Kumar' },
+    { station_name: 'North Police Station', station_code: 'PS002', city: 'Delhi', state: 'Delhi', address: '456 North Avenue, Delhi', phone: '011-2356-7890', email: 'north.ps@delhi.police.in', in_charge: 'Priya Singh' },
+    { station_name: 'South Police Station', station_code: 'PS003', city: 'Delhi', state: 'Delhi', address: '789 South Road, Delhi', phone: '011-2345-6789', email: 'south.ps@delhi.police.in', in_charge: 'Amit Patel' },
+    { station_name: 'East Police Station', station_code: 'PS004', city: 'Delhi', state: 'Delhi', address: '321 East Lane, Delhi', phone: '011-2367-8901', email: 'east.ps@delhi.police.in', in_charge: 'Neha Verma' },
+    { station_name: 'West Police Station', station_code: 'PS005', city: 'Delhi', state: 'Delhi', address: '654 West Boulevard, Delhi', phone: '011-2378-9012', email: 'west.ps@delhi.police.in', in_charge: 'Vikram Sharma' },
+    { station_name: 'Mumbai Central Police Station', station_code: 'PS006', city: 'Mumbai', state: 'Maharashtra', address: '111 Marine Drive, Mumbai', phone: '022-2265-8901', email: 'central.ps@mumbai.police.in', in_charge: 'Suresh Desai' },
+    { station_name: 'Bangalore Police Station', station_code: 'PS007', city: 'Bangalore', state: 'Karnataka', address: '222 Brigade Road, Bangalore', phone: '080-4125-6789', email: 'brigade.ps@bangalore.police.in', in_charge: 'Arun Nair' },
+    { station_name: 'Hyderabad Police Station', station_code: 'PS008', city: 'Hyderabad', state: 'Telangana', address: '333 Secunderabad Road, Hyderabad', phone: '040-6789-0123', email: 'cyber.ps@hyderabad.police.in', in_charge: 'Sanjay Reddy' }
   ];
 
   insertStations.forEach(station => {
-    const sql = `INSERT OR IGNORE INTO police_station (station_name, station_id, state, address) 
-                 VALUES (?, ?, ?, ?)`;
-    db.run(sql, [station.station_name, station.station_id, station.state, station.address], 
+    const sql = `INSERT OR IGNORE INTO police_station (station_name, station_code, address, city, state, phone, email, in_charge) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    db.run(sql, [station.station_name, station.station_code, station.address, station.city, station.state, station.phone, station.email, station.in_charge], 
       function(err) {
         if (err) {
           console.error(`Error inserting station ${station.station_name}:`, err);

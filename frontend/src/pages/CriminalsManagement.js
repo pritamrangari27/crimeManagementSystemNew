@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-boo
 import { useNavigate } from 'react-router-dom';
 import { criminalsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
+import Sidebar from '../components/Sidebar';
 import '../styles/dashboard.css';
 
 const CriminalsManagement = () => {
@@ -10,6 +11,8 @@ const CriminalsManagement = () => {
   const [criminals, setCriminals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedCriminal, setSelectedCriminal] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [formData, setFormData] = useState({
     criminal_name: '',
@@ -104,10 +107,18 @@ const CriminalsManagement = () => {
     }
   };
 
+  const handleViewCriminal = (criminal) => {
+    setSelectedCriminal(criminal);
+    setShowViewModal(true);
+  };
+
   if (loading) return <div className="text-center py-5">Loading...</div>;
 
   return (
-    <Container fluid className="py-4">
+    <>
+      <Sidebar />
+      <div className="with-sidebar">
+        <Container fluid className="py-4">
       <Row className="mb-4">
         <Col>
           <h2 className="fw-bold">Criminal Management</h2>
@@ -274,6 +285,115 @@ const CriminalsManagement = () => {
         </Modal.Footer>
       </Modal>
 
+      {/* View Criminal Modal */}
+      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} size="lg" centered backdrop="static">
+        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: '8px 8px 0 0' }}>
+          <Modal.Title style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>
+            <i className="fas fa-user-secret me-3"></i>Criminal Details
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ backgroundColor: '#f8f9fa', padding: '2rem' }}>
+          {selectedCriminal && (
+            <div>
+              {/* Name Section */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h5 className="fw-bold mb-3" style={{ color: '#333', fontSize: '1.3rem' }}>
+                  <i className="fas fa-id-card me-2" style={{ color: '#667eea' }}></i>{selectedCriminal.criminal_name}
+                </h5>
+              </div>
+
+              {/* Crime Information */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
+                  <i className="fas fa-scale-balanced me-2" style={{ color: '#e74c3c' }}></i>Crime Information
+                </h6>
+                <Row>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Crime Type</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <span className="badge bg-danger" style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}>{selectedCriminal.crime_type}</span>
+                    </p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Crime Date</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <i className="far fa-calendar me-2" style={{ color: '#3498db' }}></i>{selectedCriminal.crime_date}
+                    </p>
+                  </Col>
+                  <Col md={12} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Crime Location</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <i className="fas fa-map-pin me-2" style={{ color: '#e67e22' }}></i>{selectedCriminal.crime_location}
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+
+              {/* Personal Information */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
+                  <i className="fas fa-user-circle me-2" style={{ color: '#27ae60' }}></i>Personal Details
+                </h6>
+                <Row>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Date of Birth</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <i className="fas fa-birthday-cake me-2" style={{ color: '#9b59b6' }}></i>{selectedCriminal.date_of_birth}
+                    </p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Gender</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <span className="badge bg-info" style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}>{selectedCriminal.gender}</span>
+                    </p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Email</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
+                      <i className="fas fa-envelope me-2" style={{ color: '#e74c3c' }}></i>{selectedCriminal.email}
+                    </p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Contact</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <i className="fas fa-phone me-2" style={{ color: '#3498db' }}></i>{selectedCriminal.contact}
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+
+              {/* Address Information */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
+                  <i className="fas fa-home me-2" style={{ color: '#f39c12' }}></i>Address
+                </h6>
+                <Row>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>State</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>{selectedCriminal.state}</p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>City</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>{selectedCriminal.city}</p>
+                  </Col>
+                  <Col md={12} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Full Address</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
+                      <i className="fas fa-location-dot me-2" style={{ color: '#1abc9c' }}></i>{selectedCriminal.address}
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: '#f8f9fa', borderTop: '1px solid #dee2e6', padding: '1rem' }}>
+          <Button variant="secondary" onClick={() => setShowViewModal(false)} style={{ borderRadius: '6px', padding: '0.5rem 1.5rem' }}>
+            <i className="fas fa-times me-2"></i>Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <Form.Group className="mb-4">
         <Form.Control
           type="text"
@@ -308,7 +428,7 @@ const CriminalsManagement = () => {
                     variant="info"
                     size="sm"
                     className="me-2"
-                    onClick={() => navigate(`/admin/criminal/${criminal.id}`)}
+                    onClick={() => handleViewCriminal(criminal)}
                   >
                     <i className="fas fa-eye me-1"></i>View
                   </Button>
@@ -331,7 +451,9 @@ const CriminalsManagement = () => {
           )}
         </tbody>
       </Table>
-    </Container>
+        </Container>
+      </div>
+    </>
   );
 };
 

@@ -3,13 +3,17 @@ import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-boo
 import { useNavigate } from 'react-router-dom';
 import { firsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
+import Sidebar from '../components/Sidebar';
 
 const FIRManagement = () => {
   const navigate = useNavigate();
   const [firs, setFirs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [viewingFIR, setViewingFIR] = useState(null);
   const [formData, setFormData] = useState({
     crime_type: '',
     crime_date: '',
@@ -78,10 +82,37 @@ const FIRManagement = () => {
     }
   };
 
+  const handleSearch = async (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.trim()) {
+      try {
+        const response = await firsAPI.search(query);
+        if (response.data.status === 'success') {
+          setFirs(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error searching:', error);
+        fetchFIRs();
+      }
+    } else {
+      fetchFIRs();
+    }
+  };
+
+  const handleViewFIR = (fir) => {
+    setViewingFIR(fir);
+    setShowViewModal(true);
+  };
+
   if (loading) return <div className="text-center py-5">Loading...</div>;
 
   return (
-    <Container fluid className="py-4">
+    <>
+      <Sidebar />
+      <div className="with-sidebar">
+        <Container fluid className="py-4">
       <Row className="mb-4">
         <Col>
           <h2 className="fw-bold">FIR Management</h2>
@@ -282,7 +313,7 @@ const FIRManagement = () => {
                 <td>High</td>
                 <td>
                   <Button
-                    onClick={() => navigate(`/fir/${fir.id}`)}
+                    onClick={() => handleViewFIR(fir)}
                     variant="info"
                     size="sm"
                   >
@@ -300,7 +331,110 @@ const FIRManagement = () => {
           )}
         </tbody>
       </Table>
-    </Container>
+
+      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="lg" backdrop="static">
+        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: '8px 8px 0 0' }}>
+          <Modal.Title style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>
+            <i className="fas fa-file-invoice me-3"></i>FIR Details
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ backgroundColor: '#f8f9fa', padding: '2rem' }}>
+          {viewingFIR && (
+            <div>
+              {/* FIR Status Section */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h5 className="fw-bold mb-3" style={{ color: '#333', fontSize: '1.3rem' }}>
+                  <i className="fas fa-file-text me-2" style={{ color: '#667eea' }}></i>FIR Report
+                </h5>
+                <p className="text-muted mb-0">
+                  <span className={`badge bg-${viewingFIR.status === 'Approved' ? 'success' : viewingFIR.status === 'Rejected' ? 'danger' : 'warning'}`} style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}>
+                    {viewingFIR.status === 'Approved' ? '✓ Approved' : viewingFIR.status === 'Rejected' ? '✕ Rejected' : '⟳ Pending'}
+                  </span>
+                </p>
+              </div>
+
+              {/* Crime Information */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
+                  <i className="fas fa-scale-balanced me-2" style={{ color: '#e74c3c' }}></i>Crime Information
+                </h6>
+                <Row>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Crime Type</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <span className="badge bg-danger">{viewingFIR.crime_type}</span>
+                    </p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Crime Date</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <i className="far fa-calendar me-2" style={{ color: '#3498db' }}></i>{viewingFIR.crime_date}
+                    </p>
+                  </Col>
+                  <Col md={12} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Crime Location</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <i className="fas fa-map-pin me-2" style={{ color: '#e67e22' }}></i>{viewingFIR.crime_location}
+                    </p>
+                  </Col>
+                  <Col md={12} className="mb-0">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Description</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
+                      <i className="fas fa-align-left me-2" style={{ color: '#9b59b6' }}></i>{viewingFIR.description}
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+
+              {/* Victim Information */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
+                  <i className="fas fa-user-injured me-2" style={{ color: '#27ae60' }}></i>Victim Information
+                </h6>
+                <Row>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Victim Name</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <i className="fas fa-user me-2" style={{ color: '#2c3e50' }}></i>{viewingFIR.victim_name}
+                    </p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Victim Phone</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <i className="fas fa-mobile-alt me-2" style={{ color: '#27ae60' }}></i>{viewingFIR.victim_phone}
+                    </p>
+                  </Col>
+                  <Col md={12} className="mb-0">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Victim Email</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
+                      <i className="fas fa-envelope me-2" style={{ color: '#e74c3c' }}></i>{viewingFIR.victim_email}
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+
+              {/* Accused Information */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
+                  <i className="fas fa-user-slash me-2" style={{ color: '#e74c3c' }}></i>Accused Information
+                </h6>
+                <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Accused Name</p>
+                <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                  <i className="fas fa-user-secret me-2" style={{ color: '#8b0000' }}></i>{viewingFIR.accused_name}
+                </p>
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: '#f8f9fa', borderTop: '1px solid #dee2e6', padding: '1rem' }}>
+          <Button variant="secondary" onClick={() => setShowViewModal(false)} style={{ borderRadius: '6px', padding: '0.5rem 1.5rem' }}>
+            <i className="fas fa-times me-2"></i>Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+        </Container>
+      </div>
+    </>
   );
 };
 

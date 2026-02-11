@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { stationsAPI } from '../api/client';
+import Sidebar from '../components/Sidebar';
 
 const StationDetails = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const StationDetails = () => {
 
   const fetchStation = async () => {
     try {
-      const response = await stationsAPI.get(id);
+      const response = await stationsAPI.getById(id);
       if (response.data.status === 'success') {
         setStation(response.data.data);
       }
@@ -32,7 +33,10 @@ const StationDetails = () => {
   if (!station) return <div className="text-center py-5">Station not found</div>;
 
   return (
-    <Container fluid className="py-4">
+    <>
+      <Sidebar />
+      <div className="with-sidebar">
+        <Container fluid className="py-4">
       <Row className="mb-4">
         <Col>
           <h2 className="fw-bold">Police Station Details</h2>
@@ -83,7 +87,9 @@ const StationDetails = () => {
           </Card>
         </Col>
       </Row>
-    </Container>
+        </Container>
+      </div>
+    </>
   );
 };
 

@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { stationsAPI } from '../api/client';
+import Sidebar from '../components/Sidebar';
 
 const StationsManagement = () => {
   const navigate = useNavigate();
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedStation, setSelectedStation] = useState(null);
   const [formData, setFormData] = useState({
     station_name: '',
     station_code: '',
@@ -33,6 +37,25 @@ const StationsManagement = () => {
       console.error('Error fetching stations:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSearch = async (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.trim()) {
+      try {
+        const response = await stationsAPI.search(query);
+        if (response.data.status === 'success') {
+          setStations(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error searching:', error);
+        fetchStations();
+      }
+    } else {
+      fetchStations();
     }
   };
 
@@ -65,6 +88,11 @@ const StationsManagement = () => {
     }
   };
 
+  const handleViewStation = (station) => {
+    setSelectedStation(station);
+    setShowViewModal(true);
+  };
+
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure?')) {
       try {
@@ -80,7 +108,10 @@ const StationsManagement = () => {
   if (loading) return <div className="text-center py-5">Loading...</div>;
 
   return (
-    <Container fluid className="py-4">
+    <>
+      <Sidebar />
+      <div className="with-sidebar">
+        <Container fluid className="py-4">
       <Row className="mb-4">
         <Col>
           <h2 className="fw-bold">Police Station Management</h2>
@@ -213,6 +244,16 @@ const StationsManagement = () => {
         </Modal.Footer>
       </Modal>
 
+      <Form.Group className="mb-4">
+        <Form.Control
+          type="text"
+          placeholder="🔍 Search by station name, code, city, or state..."
+          value={searchQuery}
+          onChange={handleSearch}
+          style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.75rem', fontSize: '0.95rem' }}
+        />
+      </Form.Group>
+
       <Table striped bordered hover responsive>
         <thead className="bg-dark text-white">
           <tr>
@@ -240,7 +281,7 @@ const StationsManagement = () => {
                     variant="info"
                     size="sm"
                     className="me-2"
-                    onClick={() => navigate(`/admin/station/${station.id}`)}
+                    onClick={() => handleViewStation(station)}
                   >
                     <i className="fas fa-eye me-1"></i>View
                   </Button>
@@ -263,7 +304,96 @@ const StationsManagement = () => {
           )}
         </tbody>
       </Table>
-    </Container>
+
+      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="lg" backdrop="static">
+        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: '8px 8px 0 0' }}>
+          <Modal.Title style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>
+            <i className="fas fa-police me-3"></i>Police Station Details
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ backgroundColor: '#f8f9fa', padding: '2rem' }}>
+          {selectedStation && (
+            <div>
+              {/* Station Name Section */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h5 className="fw-bold mb-3" style={{ color: '#333', fontSize: '1.3rem' }}>
+                  <i className="fas fa-building me-2" style={{ color: '#667eea' }}></i>{selectedStation.station_name}
+                </h5>
+                <p className="text-muted mb-0">
+                  <span className="badge bg-primary" style={{ padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}>{selectedStation.station_code}</span>
+                </p>
+              </div>
+
+              {/* Contact Information */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
+                  <i className="fas fa-phone-alt me-2" style={{ color: '#e74c3c' }}></i>Contact Information
+                </h6>
+                <Row>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Phone</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <i className="fas fa-mobile-alt me-2" style={{ color: '#27ae60' }}></i>{selectedStation.phone}
+                    </p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Email</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
+                      <i className="fas fa-envelope me-2" style={{ color: '#3498db' }}></i>{selectedStation.email}
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+
+              {/* Location Information */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
+                  <i className="fas fa-map-location-dot me-2" style={{ color: '#f39c12' }}></i>Location
+                </h6>
+                <Row>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>State</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <span className="badge bg-info">{selectedStation.state}</span>
+                    </p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>City</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <span className="badge bg-info">{selectedStation.city}</span>
+                    </p>
+                  </Col>
+                  <Col md={12} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Full Address</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
+                      <i className="fas fa-location-dot me-2" style={{ color: '#1abc9c' }}></i>{selectedStation.address}
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+
+              {/* In-Charge Officer */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
+                  <i className="fas fa-user-tie me-2" style={{ color: '#9b59b6' }}></i>Management
+                </h6>
+                <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>In-Charge Officer</p>
+                <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                  <i className="fas fa-user-shield me-2" style={{ color: '#2980b9' }}></i>{selectedStation.in_charge}
+                </p>
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: '#f8f9fa', borderTop: '1px solid #dee2e6', padding: '1rem' }}>
+          <Button variant="secondary" onClick={() => setShowViewModal(false)} style={{ borderRadius: '6px', padding: '0.5rem 1.5rem' }}>
+            <i className="fas fa-times me-2"></i>Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+        </Container>
+      </div>
+    </>
   );
 };
 
