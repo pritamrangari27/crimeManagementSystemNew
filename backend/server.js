@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+require('dotenv').config();
 
 // Routes
 const authRouter = require('./routes/auth');
@@ -16,6 +17,7 @@ const dashboardRouter = require('./routes/dashboard');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // SQLite DB setup
 const db = new sqlite3.Database('./db_crime.sqlite', (err) => {
@@ -26,11 +28,16 @@ const db = new sqlite3.Database('./db_crime.sqlite', (err) => {
   }
 });
 
+// CORS Configuration
+const allowedOrigins = NODE_ENV === 'production' 
+  ? [process.env.FRONTEND_URL || 'https://default-frontend.vercel.app']
+  : ['http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002'];
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cors({
-  origin: ['http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002'],
+  origin: allowedOrigins,
   credentials: true
 }));
 
@@ -44,12 +51,13 @@ app.set('maxHeaderSize', 25 * 1024 * 1024); // 25MB header limit
 
 // Session configuration
 app.use(session({
-  secret: 'crime_management_secret_key_2024',
+  secret: process.env.SESSION_SECRET || 'crime_management_secret_key_2024',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
+    secure: NODE_ENV === 'production', // HTTPS only in production
     httpOnly: true,
+    sameSite: NODE_ENV === 'production' ? 'lax' : 'lax',
     maxAge: 24 * 60 * 60 * 1000
   }
 }));

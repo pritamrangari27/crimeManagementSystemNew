@@ -262,20 +262,36 @@ const FIRManagement = () => {
         </Modal.Footer>
       </Modal>
 
-      <Form.Group className="mb-4">
-        <Form.Control
-          as="select"
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-        >
-          <option value="">All FIRs</option>
-          <option value="Pending">Pending</option>
-          <option value="Approved">Approved</option>
-          <option value="Rejected">Rejected</option>
-          <option value="Investigating">Investigating</option>
-          <option value="Closed">Closed</option>
-        </Form.Control>
-      </Form.Group>
+      <Row className="mb-4">
+        <Col md={6}>
+          <Form.Group>
+            <Form.Control
+              type="text"
+              placeholder="🔍 Search by crime type, victim name, accused name..."
+              value={searchQuery}
+              onChange={handleSearch}
+              style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.75rem', fontSize: '0.95rem' }}
+            />
+          </Form.Group>
+        </Col>
+        <Col md={6}>
+          <Form.Group>
+            <Form.Control
+              as="select"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.75rem' }}
+            >
+              <option value="">📋 All FIRs</option>
+              <option value="Pending">⟳ Pending</option>
+              <option value="Approved">✓ Approved</option>
+              <option value="Rejected">✕ Rejected</option>
+              <option value="Investigating">🔍 Investigating</option>
+              <option value="Closed">✔ Closed</option>
+            </Form.Control>
+          </Form.Group>
+        </Col>
+      </Row>
 
       <Table striped bordered hover responsive>
         <thead className="bg-dark text-white">
@@ -342,70 +358,77 @@ const FIRManagement = () => {
           {viewingFIR && (
             <div>
               {/* FIR Status Section */}
-              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h5 className="fw-bold mb-3" style={{ color: '#333', fontSize: '1.3rem' }}>
-                  <i className="fas fa-file-text me-2" style={{ color: '#667eea' }}></i>FIR Report
-                </h5>
-                <p className="text-muted mb-0">
-                  <span className={`badge bg-${viewingFIR.status === 'Approved' ? 'success' : viewingFIR.status === 'Rejected' ? 'danger' : 'warning'}`} style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}>
-                    {viewingFIR.status === 'Approved' ? '✓ Approved' : viewingFIR.status === 'Rejected' ? '✕ Rejected' : '⟳ Pending'}
-                  </span>
-                </p>
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
+                <Row>
+                  <Col md={8}>
+                    <h5 className="fw-bold mb-0" style={{ color: '#333', fontSize: '1.3rem' }}>
+                      <i className="fas fa-file-contract me-2" style={{ color: '#667eea' }}></i>FIR Report
+                    </h5>
+                    <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>First Information Report - Case Details</p>
+                  </Col>
+                  <Col md={4} className="text-end">
+                    <span className={`badge bg-${viewingFIR.status === 'Approved' ? 'success' : viewingFIR.status === 'Rejected' ? 'danger' : 'warning'}`} style={{ padding: '0.75rem 1rem', fontSize: '0.95rem' }}>
+                      {viewingFIR.status === 'Approved' ? '✓ Approved' : viewingFIR.status === 'Rejected' ? '✕ Rejected' : viewingFIR.status === 'Investigating' ? '🔍 Investigating' : '⟳ Pending'}
+                    </span>
+                  </Col>
+                </Row>
               </div>
 
               {/* Crime Information */}
               <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
-                  <i className="fas fa-scale-balanced me-2" style={{ color: '#e74c3c' }}></i>Crime Information
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '3px solid #e74c3c', color: '#333' }}>
+                  <i className="fas fa-exclamation-triangle me-2" style={{ color: '#e74c3c' }}></i>Crime Details
                 </h6>
                 <Row>
                   <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Crime Type</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <span className="badge bg-danger">{viewingFIR.crime_type}</span>
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Type</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '700', color: '#e74c3c' }}>
+                      <span className="badge bg-danger" style={{ padding: '0.5rem 0.75rem' }}>{viewingFIR.crime_type}</span>
                     </p>
                   </Col>
                   <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Crime Date</p>
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date & Time</p>
                     <p style={{ fontSize: '1rem', fontWeight: '600' }}>
                       <i className="far fa-calendar me-2" style={{ color: '#3498db' }}></i>{viewingFIR.crime_date}
                     </p>
                   </Col>
                   <Col md={12} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Crime Location</p>
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Location</p>
                     <p style={{ fontSize: '1rem', fontWeight: '600' }}>
                       <i className="fas fa-map-pin me-2" style={{ color: '#e67e22' }}></i>{viewingFIR.crime_location}
                     </p>
                   </Col>
                   <Col md={12} className="mb-0">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Description</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
-                      <i className="fas fa-align-left me-2" style={{ color: '#9b59b6' }}></i>{viewingFIR.description}
-                    </p>
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Description</p>
+                    <div style={{ backgroundColor: '#f8f9fa', padding: '1rem', borderRadius: '8px', borderLeft: '4px solid #e74c3c' }}>
+                      <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word', margin: '0' }}>
+                        {viewingFIR.description || 'N/A'}
+                      </p>
+                    </div>
                   </Col>
                 </Row>
               </div>
 
               {/* Victim Information */}
               <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
-                  <i className="fas fa-user-injured me-2" style={{ color: '#27ae60' }}></i>Victim Information
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '3px solid #27ae60', color: '#333' }}>
+                  <i className="fas fa-user-shield me-2" style={{ color: '#27ae60' }}></i>Victim Details
                 </h6>
                 <Row>
                   <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Victim Name</p>
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Full Name</p>
                     <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <i className="fas fa-user me-2" style={{ color: '#2c3e50' }}></i>{viewingFIR.victim_name}
+                      <i className="fas fa-user-circle me-2" style={{ color: '#2c3e50' }}></i>{viewingFIR.victim_name}
                     </p>
                   </Col>
                   <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Victim Phone</p>
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Phone Number</p>
                     <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <i className="fas fa-mobile-alt me-2" style={{ color: '#27ae60' }}></i>{viewingFIR.victim_phone}
+                      <i className="fas fa-phone me-2" style={{ color: '#27ae60' }}></i>{viewingFIR.victim_phone}
                     </p>
                   </Col>
                   <Col md={12} className="mb-0">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Victim Email</p>
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email Address</p>
                     <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
                       <i className="fas fa-envelope me-2" style={{ color: '#e74c3c' }}></i>{viewingFIR.victim_email}
                     </p>
@@ -415,13 +438,42 @@ const FIRManagement = () => {
 
               {/* Accused Information */}
               <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
-                  <i className="fas fa-user-slash me-2" style={{ color: '#e74c3c' }}></i>Accused Information
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '3px solid #c0392b', color: '#333' }}>
+                  <i className="fas fa-user-secret me-2" style={{ color: '#c0392b' }}></i>Accused Details
                 </h6>
-                <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Accused Name</p>
-                <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                  <i className="fas fa-user-secret me-2" style={{ color: '#8b0000' }}></i>{viewingFIR.accused_name}
-                </p>
+                <div style={{ backgroundColor: '#f8f9fa', padding: '1.5rem', borderRadius: '8px', borderLeft: '4px solid #c0392b' }}>
+                  <Row>
+                    <Col md={12}>
+                      <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Accused Name/Description</p>
+                      <p style={{ fontSize: '1.1rem', fontWeight: '700', color: '#c0392b', margin: '0' }}>
+                        {viewingFIR.accused_name}
+                      </p>
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+
+              {/* Additional Information */}
+              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '3px solid #667eea', color: '#333' }}>
+                  <i className="fas fa-info-circle me-2" style={{ color: '#667eea' }}></i>Additional Information
+                </h6>
+                <Row>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Filing Date</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <i className="far fa-clock me-2" style={{ color: '#f39c12' }}></i>{viewingFIR.created_at ? new Date(viewingFIR.created_at).toLocaleDateString() : 'N/A'}
+                    </p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>FIR Status</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
+                      <span className={`badge bg-${viewingFIR.status === 'Approved' ? 'success' : viewingFIR.status === 'Rejected' ? 'danger' : 'warning'}`} style={{ padding: '0.4rem 0.6rem', fontSize: '0.8rem' }}>
+                        {viewingFIR.status}
+                      </span>
+                    </p>
+                  </Col>
+                </Row>
               </div>
             </div>
           )}
