@@ -2,6 +2,45 @@ const express = require('express');
 const router = express.Router();
 const { logActivity } = require('../utils/activityLogger');
 
+// ===== HELPER FUNCTIONS =====
+
+/**
+ * Helper function to get FIR by ID
+ */
+const getFirById = (db, id, callback) => {
+  const sql = `SELECT * FROM firs WHERE id = ?`;
+  db.get(sql, [id], callback);
+};
+
+/**
+ * Helper function to execute database queries with error handling
+ */
+const executeDatabaseQuery = (db, sql, params, res, isRun = false) => {
+  return new Promise((resolve, reject) => {
+    if (isRun) {
+      db.run(sql, params, function(err) {
+        if (err) {
+          console.error('Database error:', err);
+          res.status(500).json({ status: 'error', message: 'Database error' });
+          reject(err);
+        } else {
+          resolve(this);
+        }
+      });
+    } else {
+      db.all(sql, params, (err, rows) => {
+        if (err) {
+          console.error('Database error:', err);
+          res.status(500).json({ status: 'error', message: 'Database error' });
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    }
+  });
+};
+
 // Create FIR - POST /api/firs
 router.post('/', (req, res) => {
   const {
@@ -94,9 +133,8 @@ router.get('/user/:user_id', (req, res) => {
 // Get FIR by ID - GET /api/firs/:id
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  const sql = `SELECT * FROM firs WHERE id = ?`;
 
-  req.db.get(sql, [id], (err, row) => {
+  getFirById(req.db, id, (err, row) => {
     if (err) {
       console.error('Database error:', err);
       return res.status(500).json({ status: 'error', message: 'Database error' });
@@ -177,8 +215,8 @@ router.put('/:id/approve', (req, res) => {
       return res.status(404).json({ status: 'error', message: 'FIR not found' });
     }
 
-    // Get FIR details for logging
-    req.db.get('SELECT * FROM firs WHERE id = ?', [id], (err, fir) => {
+    // Get FIR details for logging using helper function
+    getFirById(req.db, id, (err, fir) => {
       if (!err && fir) {
         logActivity(
           req.db,
@@ -213,8 +251,8 @@ router.put('/:id/reject', (req, res) => {
       return res.status(404).json({ status: 'error', message: 'FIR not found' });
     }
 
-    // Get FIR details for logging
-    req.db.get('SELECT * FROM firs WHERE id = ?', [id], (err, fir) => {
+    // Get FIR details for logging using helper function
+    getFirById(req.db, id, (err, fir) => {
       if (!err && fir) {
         logActivity(
           req.db,

@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "init-db": "node db_init.js"
+    "init-db": "node db_init.js",
+    "sample-data": "node sample_data.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
