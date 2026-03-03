@@ -8,11 +8,12 @@ const dbPath = './db_crime.sqlite';
 async function initializeDatabase(db) {
   return new Promise((resolve, reject) => {
     // Check if database has data
-    db.get("SELECT COUNT(*) as count FROM users", (err, row) => {
+    db.get("SELECT COUNT(*) as count FROM users", async (err, row) => {
       if (err) {
         console.log('Creating tables...');
-        createTables(db, (tableErr) => {
+        createTables(db, async (tableErr) => {
           if (tableErr) return reject(tableErr);
+          await runMigrations(db);
           insertTestData(db, (dataErr) => {
             if (dataErr) return reject(dataErr);
             resolve();
@@ -20,12 +21,44 @@ async function initializeDatabase(db) {
         });
       } else if (row && row.count === 0) {
         console.log('Tables exist but empty. Seeding data...');
+        await runMigrations(db);
         insertTestData(db, (err) => {
           if (err) return reject(err);
           resolve();
         });
       } else {
         console.log('✓ Database already initialized with data');
+        await runMigrations(db);
+        resolve();
+      }
+    });
+  });
+}
+
+// Run database migrations
+async function runMigrations(db) {
+  return new Promise((resolve) => {
+    // Add user_id column to firs table if it doesn't exist
+    db.all("PRAGMA table_info(firs)", (err, columns) => {
+      if (err) {
+        console.log('Could not check FIRs table structure');
+        resolve();
+        return;
+      }
+
+      const hasUserIdColumn = columns && columns.some(col => col.name === 'user_id');
+      
+      if (!hasUserIdColumn) {
+        console.log('Adding user_id column to firs table...');
+        db.run('ALTER TABLE firs ADD COLUMN user_id INTEGER', (err) => {
+          if (err && !err.message.includes('duplicate column')) {
+            console.log('Note:', err);
+          } else if (!err) {
+            console.log('✓ Added user_id column to firs table');
+          }
+          resolve();
+        });
+      } else {
         resolve();
       }
     });
