@@ -251,7 +251,7 @@ const Sidebar = () => {
             )}
           </Modal.Body>
           {activities.length > 1 && (
-            <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', justifyContent: 'center', padding: '10px' }}>
+            <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', justifyContent: 'center', padding: '10px', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
               <div style={{ display: 'flex', gap: '6px' }}>
                 {activities.map((_, idx) => (
                   <button key={idx} onClick={() => setActSlideIndex(idx)} style={{
@@ -261,6 +261,18 @@ const Sidebar = () => {
                   }} />
                 ))}
               </div>
+              <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 500 }}>
+                <i className="fas fa-clock me-1" style={{ fontSize: '0.6rem' }}></i>
+                All activities in last 1 hour
+              </span>
+            </Modal.Footer>
+          )}
+          {activities.length <= 1 && (
+            <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', justifyContent: 'center', padding: '10px' }}>
+              <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 500 }}>
+                <i className="fas fa-clock me-1" style={{ fontSize: '0.6rem' }}></i>
+                All activities in last 1 hour
+              </span>
             </Modal.Footer>
           )}
         </Modal>

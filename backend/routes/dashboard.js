@@ -91,6 +91,7 @@ router.get('/activity', (req, res) => {
       COALESCE(u.username, 'System') as user
     FROM activity_log al
     LEFT JOIN users u ON al.user_id = u.id
+    WHERE al.created_at >= datetime('now', '-1 hour')
     ORDER BY al.created_at DESC 
     LIMIT ?
   `;
@@ -130,6 +131,7 @@ function getActivityFallback(req, res, limit) {
       created_at,
       'fas fa-user-secret' as icon
     FROM criminals 
+    WHERE created_at >= datetime('now', '-1 hour')
     UNION ALL
     SELECT 
       'FIR' as type, 
@@ -138,6 +140,7 @@ function getActivityFallback(req, res, limit) {
       created_at,
       'fas fa-file-alt' as icon
     FROM firs 
+    WHERE created_at >= datetime('now', '-1 hour')
     UNION ALL
     SELECT 
       'Police' as type, 
@@ -146,6 +149,7 @@ function getActivityFallback(req, res, limit) {
       created_at,
       'fas fa-users-cog' as icon
     FROM police 
+    WHERE created_at >= datetime('now', '-1 hour')
     ORDER BY created_at DESC 
     LIMIT ?
   `;

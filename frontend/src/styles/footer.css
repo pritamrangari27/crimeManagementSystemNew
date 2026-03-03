@@ -8,9 +8,9 @@
   padding: 10px 24px;
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: var(--sidebar-width, 260px);
   right: 0;
-  width: 100%;
+  width: auto;
   z-index: 100;
   display: flex;
   align-items: center;
@@ -82,6 +82,8 @@
 @media (max-width: 768px) {
   .app-footer {
     padding: 8px 12px;
+    left: 0;
+    width: 100%;
   }
 
   .footer-content {
