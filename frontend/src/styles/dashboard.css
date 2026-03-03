@@ -1,14 +1,245 @@
 /* Dashboard Styles - Modern SaaS Design System */
 
+/* ── Bento-grid token system ── */
+:root {
+  --grid-gap: 14px;
+  --card-radius: 12px;
+  --card-pad: 18px;
+  --card-pad-sm: 14px;
+  --transition-base: 0.3s ease-in-out;
+  --transition-spring: 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  --shadow-rest: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.10);
+  --shadow-lifted: 0 14px 32px rgba(0,0,0,0.13);
+}
+
 .dashboard-container {
   background-color: #ffffff;
   min-height: calc(100vh - var(--banner-height, 38px) - 50px);
-  padding: 1.2rem;
+  padding: var(--grid-gap);
   font-family: var(--font-stack);
-  padding-top: 1.5rem;
+  padding-top: calc(var(--grid-gap) + 4px);
   padding-bottom: 60px;
   animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) both;
   overflow-y: auto;
+}
+
+/* ── Bento grid layout ── */
+.bento-grid {
+  display: grid;
+  gap: var(--grid-gap);
+}
+.bento-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.bento-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.bento-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.bento-grid.cols-1 { grid-template-columns: 1fr; }
+@media (max-width: 992px) {
+  .bento-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .bento-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 576px) {
+  .bento-grid.cols-4,
+  .bento-grid.cols-3,
+  .bento-grid.cols-2 { grid-template-columns: 1fr; }
+}
+
+/* ── Staggered entrance helpers (applied via nth-child) ── */
+.stagger-enter > * {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: fadeSlideIn 0.45s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+.stagger-enter > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger-enter > *:nth-child(2) { animation-delay: 0.10s; }
+.stagger-enter > *:nth-child(3) { animation-delay: 0.16s; }
+.stagger-enter > *:nth-child(4) { animation-delay: 0.22s; }
+.stagger-enter > *:nth-child(5) { animation-delay: 0.28s; }
+.stagger-enter > *:nth-child(6) { animation-delay: 0.34s; }
+.stagger-enter > *:nth-child(7) { animation-delay: 0.40s; }
+.stagger-enter > *:nth-child(8) { animation-delay: 0.46s; }
+
+@keyframes fadeSlideIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Micro-interaction card ── */
+.bento-card {
+  background: #fff;
+  border-radius: var(--card-radius);
+  padding: var(--card-pad);
+  box-shadow: var(--shadow-rest);
+  border: 1.5px solid #e2e8f0;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+.bento-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  background: linear-gradient(135deg, rgba(16,185,129,0.04) 0%, transparent 60%);
+  transition: opacity var(--transition-base);
+  pointer-events: none;
+}
+.bento-card:hover {
+  transform: translateY(-3px) scale(1.008);
+  box-shadow: var(--shadow-hover);
+  border-color: #cbd5e1;
+}
+.bento-card:hover::after { opacity: 1; }
+
+/* ── Stat widget inside bento card ── */
+.bento-stat-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+.bento-stat-value {
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #0f172a;
+}
+.bento-stat-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: transform var(--transition-spring);
+}
+.bento-card:hover .bento-stat-icon {
+  transform: scale(1.12) rotate(4deg);
+}
+
+/* ── Pulse badge for urgent data ── */
+.pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  animation: pulseGlow 1.8s ease-in-out infinite;
+}
+.pulse-dot.warn  { background: #f59e0b; box-shadow: 0 0 0 0 rgba(245,158,11,0.5); }
+.pulse-dot.danger{ background: #ef4444; box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+.pulse-dot.info  { background: #06b6d4; box-shadow: 0 0 0 0 rgba(6,182,212,0.5); }
+@keyframes pulseGlow {
+  0%   { box-shadow: 0 0 0 0 currentColor; }
+  50%  { box-shadow: 0 0 0 6px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* ── Status overview card (Admin / Police) ── */
+.status-card-value {
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* ── High-density table wrapper (Admin / Police) ── */
+.dense-table-wrap {
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: var(--shadow-rest);
+  transition: box-shadow var(--transition-base);
+}
+.dense-table-wrap:hover { box-shadow: var(--shadow-hover); }
+.dense-table-wrap .table { margin: 0; font-size: 0.8rem; }
+.dense-table-wrap .table thead th {
+  position: sticky; top: 0; z-index: 2;
+  padding: 10px 14px;
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.dense-table-wrap .table tbody td {
+  padding: 8px 14px;
+  vertical-align: middle;
+}
+.dense-table-wrap .table tbody tr {
+  transition: background var(--transition-base);
+}
+
+/* ── Quick-action button rows ── */
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  width: 100%;
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+.action-btn:hover {
+  border-color: #10b981;
+  background: rgba(16,185,129,0.04);
+  transform: translateX(3px);
+  box-shadow: var(--shadow-rest);
+}
+.action-btn .action-icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  transition: transform var(--transition-spring);
+}
+.action-btn:hover .action-icon { transform: scale(1.1); }
+
+/* ── Info row (key-value pairs) ── */
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 0.82rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row .info-label {
+  color: #94a3b8; font-weight: 600; min-width: 80px;
+}
+.info-row .info-value { color: #1e293b; font-weight: 600; }
+
+/* ── Dashboard page header ── */
+.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--grid-gap);
+  animation: fadeIn 0.35s cubic-bezier(0.4,0,0.2,1) both;
+}
+.dash-header h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+.dash-header p {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 2px 0 0;
 }
 
 .dashboard-header {
@@ -176,12 +407,15 @@
 
 /* Stat-card entrance animation */
 .stat-card {
-  animation: fadeInUp 0.45s cubic-bezier(0.4,0,0.2,1) both;
-  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s cubic-bezier(0.4,0,0.2,1);
+  animation: fadeSlideIn 0.45s cubic-bezier(0.4,0,0.2,1) both;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+  border-radius: var(--card-radius) !important;
+  border: 1.5px solid #e2e8f0 !important;
 }
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+  transform: translateY(-3px) scale(1.008);
+  box-shadow: var(--shadow-hover);
+  border-color: #cbd5e1 !important;
 }
 
 /* Activity Section */
