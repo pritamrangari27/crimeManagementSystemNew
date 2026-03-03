@@ -373,8 +373,8 @@ const LoginModern = () => {
                   </button>
                 </form>
 
-                <div className="form-footer">
-                  <p>Don't have an account?</p>
+                <div className="form-footer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
+                  <p style={{ margin: 0 }}>Don't have an account?</p>
                   <button
                     type="button"
                     className="btn-register-link"
