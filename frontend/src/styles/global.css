@@ -136,7 +136,7 @@ body {
 
 .btn {
   border-radius: 0.5rem;
-  transition: var(--transition);
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, background-color 0.25s ease, color 0.25s ease;
   font-weight: 500;
   padding: 0.625rem 1.25rem;
   border: none;
@@ -146,15 +146,18 @@ body {
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
 .btn:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.97);
+  transition-duration: 0.1s;
 }
 
 .btn-primary {
@@ -229,12 +232,14 @@ body {
   border: 1px solid var(--gray-200);
   border-radius: 0.75rem;
   box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s cubic-bezier(0.4,0,0.2,1), border-color 0.3s ease;
+  animation: fadeInUp 0.45s cubic-bezier(0.4,0,0.2,1) both;
 }
 
 .card:hover {
   box-shadow: var(--shadow-md);
   border-color: var(--gray-300);
+  transform: translateY(-3px);
 }
 
 .card-header {
@@ -376,44 +381,82 @@ body {
   color: var(--sky-blue-600);
 }
 
-/* Animations */
+/* ================================================
+   ANIMATIONS — Global Library
+   ================================================ */
+
+/* --- Keyframes --- */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
 @keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
-
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
 @keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes gentleBounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+@keyframes ripple {
+  0%   { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.25); }
+  100% { box-shadow: 0 0 0 12px rgba(14, 165, 233, 0); }
 }
 
-.fade-in {
-  animation: fadeIn 0.3s ease-out;
-}
+/* --- Utility Classes --- */
+.fade-in            { animation: fadeIn 0.35s cubic-bezier(0.4,0,0.2,1) both; }
+.fade-in-up         { animation: fadeInUp 0.45s cubic-bezier(0.4,0,0.2,1) both; }
+.fade-in-down       { animation: fadeInDown 0.4s cubic-bezier(0.4,0,0.2,1) both; }
+.fade-in-left       { animation: fadeInLeft 0.4s cubic-bezier(0.4,0,0.2,1) both; }
+.fade-in-right      { animation: fadeInRight 0.4s cubic-bezier(0.4,0,0.2,1) both; }
+.slide-in-left      { animation: slideInLeft 0.35s cubic-bezier(0.4,0,0.2,1) both; }
+.scale-in           { animation: scaleIn 0.35s cubic-bezier(0.4,0,0.2,1) both; }
 
-.slide-in-left {
-  animation: slideInLeft 0.3s ease-out;
+/* Staggered children: apply .stagger-children on parent */
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Responsive */
