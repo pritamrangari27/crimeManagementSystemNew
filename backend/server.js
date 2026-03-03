@@ -55,15 +55,33 @@ const db = new sqlite3.Database('./db_crime.sqlite', async (err) => {
 
 // CORS Configuration
 const allowedOrigins = NODE_ENV === 'production' 
-  ? [process.env.FRONTEND_URL || 'https://default-frontend.vercel.app']
-  : ['http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002'];
+  ? [
+      process.env.FRONTEND_URL,
+      'https://crime-management-system-new.vercel.app',
+      'https://*.vercel.app'
+    ].filter(Boolean)
+  : ['http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002', 'http://localhost:3000/'];
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
+
+// CORS middleware with origin checking
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is in allowed list or matches Vercel pattern
+    const isAllowed = allowedOrigins.includes(origin) || 
+                      origin.includes('vercel.app') ||
+                      NODE_ENV !== 'production';
+    
+    callback(null, isAllowed);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Increase request header size limit
