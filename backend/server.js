@@ -5,6 +5,7 @@ const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 require('dotenv').config();
+const { initializeDatabase } = require('./utils/dbInitializer');
 
 // Routes
 const authRouter = require('./routes/auth');
@@ -37,11 +38,18 @@ if (NODE_ENV === 'production') {
 }
 
 // SQLite DB setup
-const db = new sqlite3.Database('./db_crime.sqlite', (err) => {
+const db = new sqlite3.Database('./db_crime.sqlite', async (err) => {
   if (err) {
     console.error('Could not connect to SQLite database', err);
   } else {
     console.log('✓ Connected to SQLite database');
+    
+    // Initialize database tables and data if needed
+    try {
+      await initializeDatabase(db);
+    } catch (initErr) {
+      console.error('Error initializing database:', initErr);
+    }
   }
 });
 
