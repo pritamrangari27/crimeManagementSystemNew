@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { firsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import Sidebar from '../components/Sidebar';
+import '../styles/dashboard.css';
 
 const FIRManagement = () => {
   const navigate = useNavigate();
@@ -115,20 +116,18 @@ const FIRManagement = () => {
     <>
       <Sidebar />
       <div className="with-sidebar">
-        <Container fluid className="py-3 px-3">
-      <Row className="mb-2">
-        <Col>
-          <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>FIR Management</h2>
-        </Col>
-        <Col className="text-end">
-          <Button variant="secondary" size="sm" onClick={() => navigate(-1)} className="me-2">
+        <Container fluid className="mgmt-container page-stagger">
+      <div className="mgmt-header">
+        <h2>FIR Management</h2>
+        <div className="mgmt-header-actions">
+          <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
             <i className="fas fa-arrow-left me-2"></i>Back
-          </Button>
-          <Button style={{ backgroundColor: '#10b981', borderColor: '#10b981', fontWeight: '600' }} size="sm" onClick={() => setShowForm(true)}>
+          </button>
+          <button className="mgmt-btn-primary" onClick={() => setShowForm(true)}>
             <i className="fas fa-plus me-2"></i>File New FIR
-          </Button>
-        </Col>
-      </Row>
+          </button>
+        </div>
+      </div>
 
       <Modal show={showForm} onHide={() => setShowForm(false)} size="lg">
         <Modal.Header closeButton>
@@ -265,38 +264,30 @@ const FIRManagement = () => {
         </Modal.Footer>
       </Modal>
 
-      <Row className="mb-2">
-        <Col md={6}>
-          <Form.Group>
-            <Form.Control
-              type="text"
-              placeholder="🔍 Search by crime type, victim name, accused name..."
-              value={searchQuery}
-              onChange={handleSearch}
-              style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}
-            />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group>
-            <Form.Control
-              as="select"
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}
-            >
-              <option value="">📋 All FIRs</option>
-              <option value="Sent">📤 Sent</option>
-              <option value="Approved">✓ Approved</option>
-              <option value="Rejected">✕ Rejected</option>
-            </Form.Control>
-          </Form.Group>
-        </Col>
-      </Row>
+      <div className="mgmt-controls">
+          <input
+            type="text"
+            className="mgmt-search"
+            placeholder="&#128269; Search by crime type, victim name, accused name..."
+            value={searchQuery}
+            onChange={handleSearch}
+          />
+          <select
+            className="mgmt-filter"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="">All FIRs</option>
+            <option value="Sent">Sent</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+      </div>
 
-      <div style={{ maxHeight: 'calc(100vh - 280px)', overflowY: 'auto', border: '1px solid #dee2e6', borderRadius: '8px' }}>
-      <Table striped bordered hover responsive className="mb-0" style={{ fontSize: '0.82rem' }}>
-        <thead className="bg-dark text-white" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+      <div className="mgmt-table-wrap">
+        <div className="mgmt-table-scroll">
+      <table className="mgmt-table">
+        <thead>
           <tr>
             <th>FIR Number</th>
             <th>Crime Type</th>
@@ -317,7 +308,7 @@ const FIRManagement = () => {
                 <td>{new Date(fir.created_at).toLocaleDateString()}</td>
                 <td>
                   <span
-                    className={`badge bg-${
+                    className={`mgmt-badge ${
                       fir.status === 'Approved'
                         ? 'success'
                         : fir.status === 'Rejected'
@@ -330,27 +321,27 @@ const FIRManagement = () => {
                 </td>
                 <td>High</td>
                 <td>
-                  <div className="d-flex gap-1">
-                    <Button
+                  <div className="mgmt-actions">
+                    <button
                       onClick={() => handleViewFIR(fir)}
-                      variant="info"
-                      size="sm"
+                      className="view"
                     >
                       <i className="fas fa-eye"></i>
-                    </Button>
+                    </button>
                   </div>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="text-center">
+              <td colSpan="7" className="mgmt-empty">
                 No FIRs found
               </td>
             </tr>
           )}
         </tbody>
-      </Table>
+      </table>
+      </div>
       </div>
 
       <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="md" dialogClassName="fir-view-modal">

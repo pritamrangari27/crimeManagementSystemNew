@@ -387,7 +387,7 @@ const LoginModern = () => {
 
                   <button type="submit" className="btn btn-primary" disabled={loading}>
                     {loading && <span className="loading-spinner"></span>}
-                    {loading ? 'Logging in...' : 'Login'}
+                    {loading ? 'Logging in...' : 'Login as User'}
                   </button>
                 </form>
 
@@ -486,12 +486,12 @@ const LoginModern = () => {
 
                   <button type="submit" className="btn btn-primary" disabled={loading}>
                     {loading && <span className="loading-spinner"></span>}
-                    {loading ? 'Logging in...' : 'Login as Officer'}
+                    {loading ? 'Logging in...' : 'Login as Police'}
                   </button>
                 </form>
 
                 <div className="form-footer">
-                  New officer?{' '}
+                  New Police?{' '}
                   <button
                     type="button"
                     className="btn-register-link"
@@ -538,7 +538,7 @@ const LoginModern = () => {
                       onChange={(e) => setUserRegister({ ...userRegister, email: e.target.value })} required />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Phone (Optional)</label>
+                    <label className="form-label">Phone</label>
                     <input type="tel" className="form-control" placeholder="Enter your phone number"
                       value={userRegister.phone}
                       onChange={(e) => setUserRegister({ ...userRegister, phone: e.target.value })} />

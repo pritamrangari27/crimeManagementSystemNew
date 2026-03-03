@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { firsAPI } from '../api/client';
 import '../styles/forms.css';
+import '../styles/dashboard.css';
 
 const PoliceSentFIRs = () => {
   const navigate = useNavigate();
@@ -131,50 +132,36 @@ const PoliceSentFIRs = () => {
   return (
     <div className="d-flex">
       <Sidebar />
-      <Container fluid className="main-content py-3 px-3">
+      <Container fluid className="mgmt-container page-stagger">
         {/* Header */}
-        <Row className="mb-2">
-          <Col>
-            <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>
-              <i className="fas fa-file-alt me-2"></i> FIR Management
-            </h2>
+        <div className="mgmt-header">
+          <div>
+            <h2><i className="fas fa-file-alt me-2"></i> FIR Management</h2>
             <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>Review and manage FIRs sent to your station</p>
-          </Col>
-          <Col className="text-end">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => navigate(-1)}
-              className="fw-bold"
-            >
+          </div>
+          <div className="mgmt-header-actions">
+            <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
               <i className="fas fa-arrow-left me-2"></i> Back
-            </Button>
-          </Col>
-        </Row>
+            </button>
+          </div>
+        </div>
 
         {/* Filter Row */}
-        <Row className="mb-3">
-          <Col md={4}>
-            <Form.Select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.6rem' }}
-            >
-              <option value="">All FIRs ({allFirs.length})</option>
-              <option value="Sent">Sent ({allFirs.filter(f => f.status === 'Sent').length})</option>
-              <option value="Approved">Approved ({allFirs.filter(f => f.status === 'Approved').length})</option>
-              <option value="Rejected">Rejected ({allFirs.filter(f => f.status === 'Rejected').length})</option>
-            </Form.Select>
-          </Col>
-        </Row>
+        <div className="mgmt-controls">
+          <select
+            className="mgmt-filter"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="">All FIRs ({allFirs.length})</option>
+            <option value="Sent">Sent ({allFirs.filter(f => f.status === 'Sent').length})</option>
+            <option value="Approved">Approved ({allFirs.filter(f => f.status === 'Approved').length})</option>
+            <option value="Rejected">Rejected ({allFirs.filter(f => f.status === 'Rejected').length})</option>
+          </select>
+        </div>
 
         {/* FIR Table */}
-        <Card className="border-0 shadow-sm">
-          <Card.Header style={{ background: '#0ea5e9' }} className="text-white fw-bold py-2" style={{ fontSize: '0.85rem' }}>
-            <i className="fas fa-list me-2"></i> Station FIRs ({firs.length})
-          </Card.Header>
-          <Card.Body className="p-0">
-            {loading ? (
+        {loading ? (
               <div className="text-center py-3">
                 <Spinner animation="border" size="sm" role="status">
                   <span className="visually-hidden">Loading...</span>
@@ -196,27 +183,28 @@ const PoliceSentFIRs = () => {
                 </p>
               </div>
             ) : (
-              <div className="table-responsive" style={{ maxHeight: 'calc(100vh - 300px)', overflowY: 'auto' }}>
-                <Table hover className="mb-0 table-sm" style={{ fontSize: '0.82rem' }}>
-                  <thead style={{ backgroundColor: '#e0f2fe', position: 'sticky', top: 0, zIndex: 1 }}>
+              <div className="mgmt-table-wrap">
+                <div className="mgmt-table-scroll">
+                <table className="mgmt-table">
+                  <thead>
                     <tr>
-                      <th className="fw-bold">FIR ID</th>
-                      <th className="fw-bold">Crime Type</th>
-                      <th className="fw-bold">Accused</th>
-                      <th className="fw-bold">Complainant</th>
-                      <th className="fw-bold">Filed Date</th>
-                      <th className="fw-bold">Status</th>
-                      <th className="fw-bold">Actions</th>
+                      <th>FIR ID</th>
+                      <th>Crime Type</th>
+                      <th>Accused</th>
+                      <th>Complainant</th>
+                      <th>Filed Date</th>
+                      <th>Status</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {firs.map(fir => (
-                      <tr key={fir.id} className="align-middle">
+                      <tr key={fir.id}>
                         <td className="fw-bold text-primary">
                           FIR-{String(fir.id).padStart(4, '0')}
                         </td>
                         <td>
-                          <span className="badge bg-info">{fir.crime_type}</span>
+                          <span className="mgmt-badge info">{fir.crime_type}</span>
                         </td>
                         <td className="fw-bold">{fir.accused}</td>
                         <td>{fir.name}</td>
@@ -224,23 +212,15 @@ const PoliceSentFIRs = () => {
                           {formatDate(fir.created_at || fir.date)}
                         </td>
                         <td>
-                          <Badge bg={getStatusVariant(fir.status)}>{fir.status}</Badge>
+                          <span className={`mgmt-badge ${getStatusVariant(fir.status)}`}>{fir.status}</span>
                         </td>
                         <td>
-                          <div className="d-flex gap-2 align-items-center">
+                          <div className="mgmt-actions">
                             {fir.status === 'Sent' ? (
                               <Form.Select
                                 size="sm"
-                                style={{
-                                  width: '145px',
-                                  fontWeight: '600',
-                                  borderRadius: '8px',
-                                  border: '2px solid #0ea5e9',
-                                  color: '#0ea5e9',
-                                  backgroundColor: '#f0f9ff',
-                                  cursor: 'pointer',
-                                  padding: '0.4rem 0.6rem'
-                                }}
+                                className="mgmt-filter"
+                                style={{ width: '140px', padding: '0.3rem 0.5rem', fontSize: '0.73rem' }}
                                 defaultValue=""
                                 disabled={actionLoading === fir.id}
                                 onChange={(e) => {
@@ -254,25 +234,17 @@ const PoliceSentFIRs = () => {
                                 }}
                               >
                                 <option value="" disabled>Action...</option>
-                                <option value="view">👁 View Details</option>
-                                <option value="Approved">✓ Approve</option>
-                                <option value="Rejected">✕ Reject</option>
+                                <option value="view">View Details</option>
+                                <option value="Approved">Approve</option>
+                                <option value="Rejected">Reject</option>
                               </Form.Select>
                             ) : (
-                              <Button
-                                size="sm"
-                                style={{
-                                  borderRadius: '8px',
-                                  border: '2px solid #0ea5e9',
-                                  color: '#0ea5e9',
-                                  backgroundColor: '#f0f9ff',
-                                  fontWeight: '600',
-                                  padding: '0.35rem 1rem'
-                                }}
+                              <button
+                                className="view"
                                 onClick={() => navigate(`/fir/${fir.id}`)}
                               >
                                 <i className="fas fa-eye me-1"></i> View
-                              </Button>
+                              </button>
                             )}
                             {actionLoading === fir.id && (
                               <Spinner animation="border" size="sm" />
@@ -282,11 +254,10 @@ const PoliceSentFIRs = () => {
                       </tr>
                     ))}
                   </tbody>
-                </Table>
+                </table>
+                </div>
               </div>
             )}
-          </Card.Body>
-        </Card>
       </Container>
     </div>
   );

@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-boo
 import { useNavigate } from 'react-router-dom';
 import { stationsAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
+import '../styles/dashboard.css';
 
 const StationsManagement = () => {
   const navigate = useNavigate();
@@ -111,20 +112,18 @@ const StationsManagement = () => {
     <>
       <Sidebar />
       <div className="with-sidebar">
-        <Container fluid className="py-3 px-3">
-      <Row className="mb-2">
-        <Col>
-          <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>Police Station Management</h2>
-        </Col>
-        <Col className="text-end">
-          <Button variant="secondary" size="sm" onClick={() => navigate(-1)} className="me-2">
+        <Container fluid className="mgmt-container page-stagger">
+      <div className="mgmt-header">
+        <h2>Police Station Management</h2>
+        <div className="mgmt-header-actions">
+          <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
             <i className="fas fa-arrow-left me-2"></i>Back
-          </Button>
-          <Button style={{ backgroundColor: '#10b981', borderColor: '#10b981', fontWeight: '600' }} size="sm" onClick={() => setShowForm(true)}>
+          </button>
+          <button className="mgmt-btn-primary" onClick={() => setShowForm(true)}>
             <i className="fas fa-plus me-2"></i>Add Station
-          </Button>
-        </Col>
-      </Row>
+          </button>
+        </div>
+      </div>
 
       <Modal show={showForm} onHide={() => setShowForm(false)} size="lg">
         <Modal.Header closeButton>
@@ -244,19 +243,20 @@ const StationsManagement = () => {
         </Modal.Footer>
       </Modal>
 
-      <Form.Group className="mb-2">
-        <Form.Control
+      <div className="mgmt-controls">
+        <input
           type="text"
-          placeholder="🔍 Search by station name, code, city, or state..."
+          className="mgmt-search"
+          placeholder="&#128269; Search by station name, code, city, or state..."
           value={searchQuery}
           onChange={handleSearch}
-          style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}
         />
-      </Form.Group>
+      </div>
 
-      <div style={{ maxHeight: 'calc(100vh - 260px)', overflowY: 'auto', border: '1px solid #dee2e6', borderRadius: '8px' }}>
-      <Table striped bordered hover responsive className="mb-0" style={{ fontSize: '0.82rem' }}>
-        <thead className="bg-dark text-white" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+      <div className="mgmt-table-wrap">
+        <div className="mgmt-table-scroll">
+      <table className="mgmt-table">
+        <thead>
           <tr>
             <th>Station Name</th>
             <th>Code</th>
@@ -278,33 +278,27 @@ const StationsManagement = () => {
                 <td>{station.phone}</td>
                 <td>{station.email}</td>
                 <td>
-                  <Button
-                    variant="info"
-                    size="sm"
-                    className="me-2"
-                    onClick={() => handleViewStation(station)}
-                  >
-                    <i className="fas fa-eye me-1"></i>View
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDelete(station.id)}
-                  >
-                    <i className="fas fa-trash me-1"></i>Delete
-                  </Button>
+                  <div className="mgmt-actions">
+                    <button className="view" onClick={() => handleViewStation(station)}>
+                      <i className="fas fa-eye me-1"></i>View
+                    </button>
+                    <button className="delete" onClick={() => handleDelete(station.id)}>
+                      <i className="fas fa-trash me-1"></i>Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="text-center">
+              <td colSpan="7" className="mgmt-empty">
                 No stations found
               </td>
             </tr>
           )}
         </tbody>
-      </Table>
+      </table>
+      </div>
       </div>
 
       <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="md" dialogClassName="fir-view-modal">

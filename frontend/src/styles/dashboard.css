@@ -24,6 +24,261 @@
   overflow-y: auto;
 }
 
+/* ── Management page container — unified spacing ── */
+.mgmt-container {
+  background-color: #ffffff;
+  min-height: calc(100vh - var(--banner-height, 38px) - 50px);
+  padding: var(--grid-gap) var(--grid-gap) 60px;
+  font-family: var(--font-stack);
+  animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) both;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Management page header — flex row with actions ── */
+.mgmt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--grid-gap);
+  gap: 12px;
+  flex-wrap: wrap;
+  animation: fadeIn 0.35s cubic-bezier(0.4,0,0.2,1) both;
+}
+.mgmt-header h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+.mgmt-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ── Management controls bar — search + filters ── */
+.mgmt-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: var(--grid-gap);
+  flex-wrap: wrap;
+  animation: fadeIn 0.35s cubic-bezier(0.4,0,0.2,1) 0.05s both;
+}
+.mgmt-controls .mgmt-search {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.5rem 0.85rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  background: #fff;
+  color: #0f172a;
+  outline: none;
+}
+.mgmt-controls .mgmt-search:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.10);
+}
+.mgmt-controls .mgmt-filter {
+  min-width: 160px;
+  padding: 0.5rem 0.85rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  background: #fff;
+  color: #0f172a;
+  outline: none;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  cursor: pointer;
+}
+.mgmt-controls .mgmt-filter:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.10);
+}
+
+/* ── Condensed data table ── */
+.mgmt-table-wrap {
+  flex: 1;
+  border-radius: var(--card-radius);
+  border: 1.5px solid #e2e8f0;
+  box-shadow: var(--shadow-rest);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) 0.08s both;
+  transition: box-shadow var(--transition-base);
+}
+.mgmt-table-wrap:hover {
+  box-shadow: var(--shadow-hover);
+}
+.mgmt-table-scroll {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 260px);
+}
+.mgmt-table-scroll::-webkit-scrollbar { width: 5px; }
+.mgmt-table-scroll::-webkit-scrollbar-track { background: transparent; }
+.mgmt-table-scroll::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.2); border-radius: 3px; }
+.mgmt-table-scroll::-webkit-scrollbar-thumb:hover { background: rgba(16,185,129,0.35); }
+
+.mgmt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin: 0;
+}
+.mgmt-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.mgmt-table thead th {
+  padding: 9px 14px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: #0f172a;
+  color: #e2e8f0;
+  border: none;
+}
+.mgmt-table tbody td {
+  padding: 7px 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  font-weight: 500;
+}
+.mgmt-table tbody tr {
+  transition: background var(--transition-base), transform 0.15s ease;
+  background: #fff;
+}
+.mgmt-table tbody tr:hover {
+  background: #f0fdf4;
+}
+.mgmt-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Action button cluster inside tables ── */
+.mgmt-actions {
+  display: flex;
+  gap: 5px;
+  flex-wrap: nowrap;
+}
+.mgmt-actions button,
+.mgmt-actions .btn {
+  padding: 3px 10px;
+  font-size: 0.73rem;
+  border-radius: 7px;
+  font-weight: 600;
+  gap: 4px;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.15s var(--transition-spring), opacity 0.15s ease;
+}
+.mgmt-actions button:hover { transform: scale(1.06); }
+.mgmt-actions button:active { transform: scale(0.95); }
+.mgmt-actions .view {
+  background: rgba(6, 182, 212, 0.12);
+  color: #0891b2;
+}
+.mgmt-actions .view:hover { background: rgba(6, 182, 212, 0.22); }
+.mgmt-actions .delete {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+.mgmt-actions .delete:hover { background: rgba(239, 68, 68, 0.22); }
+.mgmt-actions .edit {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+}
+.mgmt-actions .edit:hover { background: rgba(245, 158, 11, 0.22); }
+
+/* ── Compact badge for tables ── */
+.mgmt-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.mgmt-badge.success { background: rgba(16,185,129,0.12); color: #059669; }
+.mgmt-badge.danger  { background: rgba(239,68,68,0.12);  color: #dc2626; }
+.mgmt-badge.info    { background: rgba(6,182,212,0.12);   color: #0891b2; }
+.mgmt-badge.warning { background: rgba(245,158,11,0.12);  color: #d97706; }
+
+/* ── Primary action button (Add New) ── */
+.mgmt-btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 9px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  box-shadow: 0 2px 8px rgba(16,185,129,0.25);
+}
+.mgmt-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16,185,129,0.35);
+}
+.mgmt-btn-primary:active {
+  transform: translateY(0) scale(0.97);
+}
+.mgmt-btn-back {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1.5px solid #e2e8f0;
+  padding: 5px 12px;
+  border-radius: 9px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-base);
+}
+.mgmt-btn-back:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  transform: translateX(-2px);
+}
+
+/* ── Empty state inside table ── */
+.mgmt-empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.mgmt-empty i {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 8px;
+  opacity: 0.3;
+}
+
 /* ── Bento grid layout ── */
 .bento-grid {
   display: grid;

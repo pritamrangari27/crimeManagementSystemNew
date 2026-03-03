@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { firsAPI } from '../api/client';
 import '../styles/forms.css';
+import '../styles/dashboard.css';
 
 const UserFIRList = () => {
   const navigate = useNavigate();
@@ -118,34 +119,22 @@ const UserFIRList = () => {
   return (
     <div className="d-flex">
       <Sidebar />
-      <Container fluid className="main-content py-3 px-3">
+      <Container fluid className="mgmt-container page-stagger">
         {/* Header */}
-        <Row className="mb-2">
-          <Col>
-            <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>
-              <i className="fas fa-list me-2"></i> My FIRs
-            </h2>
+        <div className="mgmt-header">
+          <div>
+            <h2><i className="fas fa-list me-2"></i> My FIRs</h2>
             <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>View and track all your filed FIRs</p>
-          </Col>
-          <Col className="text-end">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => navigate(-1)}
-              className="me-2"
-            >
+          </div>
+          <div className="mgmt-header-actions">
+            <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
               <i className="fas fa-arrow-left me-2"></i> Back
-            </Button>
-            <Button
-              style={{ backgroundColor: '#10b981', borderColor: '#10b981', fontWeight: '600' }}
-              size="sm"
-              onClick={() => navigate('/fir/form')}
-              className="fw-bold"
-            >
+            </button>
+            <button className="mgmt-btn-primary" onClick={() => navigate('/fir/form')}>
               <i className="fas fa-plus me-2"></i> File New FIR
-            </Button>
-          </Col>
-        </Row>
+            </button>
+          </div>
+        </div>
 
         {/* Statistics Cards */}
         <Row className="mb-2">
@@ -223,12 +212,7 @@ const UserFIRList = () => {
         </Card>
 
         {/* FIR Table */}
-        <Card className="border-0 shadow-sm">
-          <Card.Header style={{ backgroundColor: '#0ea5e9', color: 'white' }} className="fw-bold py-2" >
-            <i className="fas fa-table me-2"></i> FIR Records
-          </Card.Header>
-          <Card.Body className="p-0">
-            {loading ? (
+        {loading ? (
               <div className="text-center py-3">
                 <Spinner animation="border" size="sm" role="status">
                   <span className="visually-hidden">Loading...</span>
@@ -245,27 +229,28 @@ const UserFIRList = () => {
                 <p className="mt-2 text-muted small">No FIRs found</p>
               </div>
             ) : (
-              <div className="table-responsive" style={{ maxHeight: 'calc(100vh - 370px)', overflowY: 'auto' }}>
-                <Table hover className="mb-0 table-sm" style={{ fontSize: '0.82rem' }}>
-                  <thead style={{ backgroundColor: '#e0f2fe', position: 'sticky', top: 0, zIndex: 1 }}>
+              <div className="mgmt-table-wrap">
+                <div className="mgmt-table-scroll">
+                <table className="mgmt-table">
+                  <thead>
                     <tr>
-                      <th className="fw-bold">FIR ID</th>
-                      <th className="fw-bold">Crime Type</th>
-                      <th className="fw-bold">Accused</th>
-                      <th className="fw-bold">Station</th>
-                      <th className="fw-bold">Filed Date</th>
-                      <th className="fw-bold">Status</th>
-                      <th className="fw-bold">Actions</th>
+                      <th>FIR ID</th>
+                      <th>Crime Type</th>
+                      <th>Accused</th>
+                      <th>Station</th>
+                      <th>Filed Date</th>
+                      <th>Status</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredFirs.map(fir => (
-                      <tr key={fir.id} className="align-middle">
+                      <tr key={fir.id}>
                         <td className="fw-bold text-primary">
                           FIR-{String(fir.id).padStart(4, '0')}
                         </td>
                         <td>
-                          <span className="badge bg-secondary" style={{ fontSize: '12px' }}>
+                          <span className="mgmt-badge info">
                             {fir.crime_type}
                           </span>
                         </td>
@@ -277,29 +262,28 @@ const UserFIRList = () => {
                           {formatDate(fir.created_at || fir.date)}
                         </td>
                         <td>
-                          <Badge bg={getStatusVariant(fir.status)}>
+                          <span className={`mgmt-badge ${getStatusVariant(fir.status)}`}>
                             <i className={`fas ${getStatusIcon(fir.status)} me-1`}></i>
                             {fir.status}
-                          </Badge>
+                          </span>
                         </td>
                         <td>
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            onClick={() => navigate(`/fir/${fir.id}`)}
-                            className="fw-bold"
-                          >
-                            <i className="fas fa-eye me-1"></i> View
-                          </Button>
+                          <div className="mgmt-actions">
+                            <button
+                              className="view"
+                              onClick={() => navigate(`/fir/${fir.id}`)}
+                            >
+                              <i className="fas fa-eye me-1"></i> View
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
                   </tbody>
-                </Table>
+                </table>
+                </div>
               </div>
             )}
-          </Card.Body>
-        </Card>
 
         {/* Pagination Info */}
         {filteredFirs.length > 0 && (
