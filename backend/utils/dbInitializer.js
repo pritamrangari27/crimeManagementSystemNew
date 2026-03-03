@@ -36,7 +36,8 @@ async function initializeDatabase(db) {
 }
 
 async function runMigrations(db, isPg) {
-  return new Promise((resolve) => {
+  // Migration 1: Add user_id column if missing
+  await new Promise((resolve) => {
     if (isPg) {
       db.get(
         `SELECT column_name FROM information_schema.columns WHERE table_name = 'firs' AND column_name = 'user_id'`,
@@ -63,6 +64,19 @@ async function runMigrations(db, isPg) {
         } else { resolve(); }
       });
     }
+  });
+
+  // Migration 2: Fix legacy FIR statuses → 'Sent'
+  await new Promise((resolve) => {
+    const sql = `UPDATE firs SET status = 'Sent' WHERE status NOT IN ('Sent', 'Approved', 'Rejected')`;
+    db.run(sql, [], (err) => {
+      if (err) {
+        console.error('Status migration error:', err.message || err);
+      } else {
+        console.log('✓ Migrated legacy FIR statuses to Sent');
+      }
+      resolve();
+    });
   });
 }
 
@@ -176,11 +190,11 @@ async function insertTestData(db, isPg) {
     ].map(c => ({ sql: `${oi} criminals ${crimCols} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)${oc}`, params: c })),
 
     // FIRs
-    ...[ ['FIR001/2026','1','Central Police Station','Testuser123','8888888888','Theft','Mobile phone stolen','2026-02-18','19:30','Bandra East, Mumbai','CCTV footage','Registered','POL001',2],
-         ['FIR002/2026','1','Central Police Station','Testuser123','8888888888','Robbery','Bag snatched','2026-02-19','22:00','Dadar, Mumbai','Eyewitness','Under Investigation','POL002',2],
-         ['FIR003/2026','2','North Police Station','User002','8888888887','Burglary','House break-in','2026-02-15','02:00','Bhal North, Mumbai','Fingerprints','Registered','POL003',6],
-         ['FIR004/2026','3','South Police Station','User003','8888888886','Assault','Physical altercation','2026-02-17','17:15','Fort, Mumbai','Medical report','Under Investigation','POL004',7],
-         ['FIR005/2026','4','East Police Station','Testuser123','8888888888','Fraud','Online money fraud','2026-02-16','11:00','Online','Bank records','Registered','POL005',2]
+    ...[ ['FIR001/2026','1','Central Police Station','Testuser123','8888888888','Theft','Mobile phone stolen','2026-02-18','19:30','Bandra East, Mumbai','CCTV footage','Sent','POL001',2],
+         ['FIR002/2026','1','Central Police Station','Testuser123','8888888888','Robbery','Bag snatched','2026-02-19','22:00','Dadar, Mumbai','Eyewitness','Approved','POL002',2],
+         ['FIR003/2026','2','North Police Station','User002','8888888887','Burglary','House break-in','2026-02-15','02:00','Bhal North, Mumbai','Fingerprints','Sent','POL003',6],
+         ['FIR004/2026','3','South Police Station','User003','8888888886','Assault','Physical altercation','2026-02-17','17:15','Fort, Mumbai','Medical report','Rejected','POL004',7],
+         ['FIR005/2026','4','East Police Station','Testuser123','8888888888','Fraud','Online money fraud','2026-02-16','11:00','Online','Bank records','Sent','POL005',2]
     ].map(f => ({ sql: `${oi} firs (fir_number,station_id,station_name,complainant_name,complainant_phone,crime_type,crime_description,crime_date,crime_time,location,evidence,status,assigned_police_id,user_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)${oc}`, params: f }))
   ];
 

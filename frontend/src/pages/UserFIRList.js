@@ -232,7 +232,7 @@ const UserFIRList = () => {
 
         {/* FIR Table */}
         <Card className="border-0 shadow-sm">
-          <Card.Header style={{ backgroundColor: '#0bd92a', color: 'white' }} className="fw-bold">
+          <Card.Header style={{ backgroundColor: '#0ea5e9', color: 'white' }} className="fw-bold">
             <i className="fas fa-table me-2"></i> FIR Records
           </Card.Header>
           <Card.Body className="p-0">
@@ -255,7 +255,7 @@ const UserFIRList = () => {
             ) : (
               <div className="table-responsive">
                 <Table hover className="mb-0">
-                  <thead className="table-success">
+                  <thead style={{ backgroundColor: '#e0f2fe' }}>
                     <tr>
                       <th className="fw-bold">FIR ID</th>
                       <th className="fw-bold">Crime Type</th>

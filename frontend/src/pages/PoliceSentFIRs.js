@@ -164,7 +164,7 @@ const PoliceSentFIRs = () => {
 
         {/* FIR Table */}
         <Card className="border-0 shadow-sm">
-          <Card.Header className="bg-primary text-white fw-bold">
+          <Card.Header style={{ background: '#0ea5e9' }} className="text-white fw-bold">
             <i className="fas fa-list me-2"></i> Station FIRs ({firs.length})
           </Card.Header>
           <Card.Body className="p-0">
@@ -187,7 +187,7 @@ const PoliceSentFIRs = () => {
             ) : (
               <div className="table-responsive">
                 <Table hover className="mb-0">
-                  <thead className="table-light">
+                  <thead style={{ backgroundColor: '#e0f2fe' }}>
                     <tr>
                       <th className="fw-bold">FIR ID</th>
                       <th className="fw-bold">Crime Type</th>
