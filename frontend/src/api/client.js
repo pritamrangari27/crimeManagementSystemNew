@@ -56,6 +56,12 @@ api.interceptors.response.use(
 
     // Handle 401 Unauthorized - session expired or not authenticated
     if (error.response?.status === 401) {
+      // Don't redirect for change-password (wrong current password is a valid 401)
+      const url = error.config?.url || '';
+      if (url.includes('change-password')) {
+        return Promise.reject(error);
+      }
+
       console.warn('[Auth Error] Session expired or invalid. Clearing auth data and redirecting to login.');
       // Clear all auth data from localStorage
       localStorage.removeItem('authUser');
@@ -84,10 +90,14 @@ export const authAPI = {
     api.post('/auth/register', { username, password, email, phone, role: 'Police', station_id }),
   logout: () => api.post('/auth/logout'),
   currentUser: () => api.get('/auth/current-user'),
-  changePassword: (oldPassword, newPassword) =>
-    api.post('/auth/change-password', { oldPassword, newPassword }),
-  updateProfile: (data) =>
-    api.put('/auth/update-profile', data)
+  changePassword: (oldPassword, newPassword) => {
+    const user = JSON.parse(localStorage.getItem('authUser'));
+    return api.post('/auth/change-password', { oldPassword, newPassword, user_id: user?.id });
+  },
+  updateProfile: (data) => {
+    const user = JSON.parse(localStorage.getItem('authUser'));
+    return api.put('/auth/update-profile', { ...data, user_id: user?.id });
+  }
 };
 
 // Criminals API

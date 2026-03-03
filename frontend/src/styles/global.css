@@ -491,3 +491,40 @@ body {
   }
 }
 
+/* ===== Password Toggle Eye Icon ===== */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper .form-control {
+  padding-right: 42px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 15px;
+  padding: 4px 6px;
+  z-index: 2;
+  transition: color 0.25s ease;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle:hover {
+  color: #0ea5e9;
+}
+
+.password-toggle:focus {
+  outline: none;
+  color: #0ea5e9;
+}
+

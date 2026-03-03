@@ -38,7 +38,20 @@ const LoginModern = () => {
   const [modalError, setModalError] = useState('');
   const [modalSuccess, setModalSuccess] = useState('');
   const [stations, setStations] = useState([]);
+  const [showPasswords, setShowPasswords] = useState({
+    userLogin: false,
+    adminLogin: false,
+    policeLogin: false,
+    userRegPass: false,
+    userRegConfirm: false,
+    policeRegPass: false,
+    policeRegConfirm: false
+  });
   const navigate = useNavigate();
+
+  const togglePassword = (field) => {
+    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
+  };
 
   // Fetch stations
   useEffect(() => {
@@ -357,14 +370,19 @@ const LoginModern = () => {
 
                   <div className="form-group">
                     <label className="form-label">Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Enter your password"
-                      value={userLogin.password}
-                      onChange={(e) => setUserLogin({ ...userLogin, password: e.target.value })}
-                      required
-                    />
+                    <div className="password-wrapper">
+                      <input
+                        type={showPasswords.userLogin ? 'text' : 'password'}
+                        className="form-control"
+                        placeholder="Enter your password"
+                        value={userLogin.password}
+                        onChange={(e) => setUserLogin({ ...userLogin, password: e.target.value })}
+                        required
+                      />
+                      <button type="button" className="password-toggle" onClick={() => togglePassword('userLogin')} tabIndex={-1}>
+                        <i className={`fas ${showPasswords.userLogin ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                      </button>
+                    </div>
                   </div>
 
                   <button type="submit" className="btn btn-primary" disabled={loading}>
@@ -405,14 +423,19 @@ const LoginModern = () => {
 
                   <div className="form-group">
                     <label className="form-label">Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Enter admin password"
-                      value={adminLogin.password}
-                      onChange={(e) => setAdminLogin({ ...adminLogin, password: e.target.value })}
-                      required
-                    />
+                    <div className="password-wrapper">
+                      <input
+                        type={showPasswords.adminLogin ? 'text' : 'password'}
+                        className="form-control"
+                        placeholder="Enter admin password"
+                        value={adminLogin.password}
+                        onChange={(e) => setAdminLogin({ ...adminLogin, password: e.target.value })}
+                        required
+                      />
+                      <button type="button" className="password-toggle" onClick={() => togglePassword('adminLogin')} tabIndex={-1}>
+                        <i className={`fas ${showPasswords.adminLogin ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                      </button>
+                    </div>
                   </div>
 
                   <button type="submit" className="btn btn-primary" disabled={loading}>
@@ -446,14 +469,19 @@ const LoginModern = () => {
 
                   <div className="form-group">
                     <label className="form-label">Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Enter your password"
-                      value={policeLogin.password}
-                      onChange={(e) => setPoliceLogin({ ...policeLogin, password: e.target.value })}
-                      required
-                    />
+                    <div className="password-wrapper">
+                      <input
+                        type={showPasswords.policeLogin ? 'text' : 'password'}
+                        className="form-control"
+                        placeholder="Enter your password"
+                        value={policeLogin.password}
+                        onChange={(e) => setPoliceLogin({ ...policeLogin, password: e.target.value })}
+                        required
+                      />
+                      <button type="button" className="password-toggle" onClick={() => togglePassword('policeLogin')} tabIndex={-1}>
+                        <i className={`fas ${showPasswords.policeLogin ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                      </button>
+                    </div>
                   </div>
 
                   <button type="submit" className="btn btn-primary" disabled={loading}>
@@ -518,15 +546,25 @@ const LoginModern = () => {
                   <div className="register-modal-row">
                     <div className="form-group">
                       <label className="form-label">Password</label>
-                      <input type="password" className="form-control" placeholder="Create a password"
-                        value={userRegister.password}
-                        onChange={(e) => setUserRegister({ ...userRegister, password: e.target.value })} required />
+                      <div className="password-wrapper">
+                        <input type={showPasswords.userRegPass ? 'text' : 'password'} className="form-control" placeholder="Create a password"
+                          value={userRegister.password}
+                          onChange={(e) => setUserRegister({ ...userRegister, password: e.target.value })} required />
+                        <button type="button" className="password-toggle" onClick={() => togglePassword('userRegPass')} tabIndex={-1}>
+                          <i className={`fas ${showPasswords.userRegPass ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                        </button>
+                      </div>
                     </div>
                     <div className="form-group">
                       <label className="form-label">Confirm Password</label>
-                      <input type="password" className="form-control" placeholder="Confirm password"
-                        value={userRegister.confirmPassword}
-                        onChange={(e) => setUserRegister({ ...userRegister, confirmPassword: e.target.value })} required />
+                      <div className="password-wrapper">
+                        <input type={showPasswords.userRegConfirm ? 'text' : 'password'} className="form-control" placeholder="Confirm password"
+                          value={userRegister.confirmPassword}
+                          onChange={(e) => setUserRegister({ ...userRegister, confirmPassword: e.target.value })} required />
+                        <button type="button" className="password-toggle" onClick={() => togglePassword('userRegConfirm')} tabIndex={-1}>
+                          <i className={`fas ${showPasswords.userRegConfirm ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <button type="submit" className="btn btn-primary" disabled={loading}>
@@ -571,15 +609,25 @@ const LoginModern = () => {
                   <div className="register-modal-row">
                     <div className="form-group">
                       <label className="form-label">Password</label>
-                      <input type="password" className="form-control" placeholder="Create a password"
-                        value={policeRegister.password}
-                        onChange={(e) => setPoliceRegister({ ...policeRegister, password: e.target.value })} required />
+                      <div className="password-wrapper">
+                        <input type={showPasswords.policeRegPass ? 'text' : 'password'} className="form-control" placeholder="Create a password"
+                          value={policeRegister.password}
+                          onChange={(e) => setPoliceRegister({ ...policeRegister, password: e.target.value })} required />
+                        <button type="button" className="password-toggle" onClick={() => togglePassword('policeRegPass')} tabIndex={-1}>
+                          <i className={`fas ${showPasswords.policeRegPass ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                        </button>
+                      </div>
                     </div>
                     <div className="form-group">
                       <label className="form-label">Confirm Password</label>
-                      <input type="password" className="form-control" placeholder="Confirm password"
-                        value={policeRegister.confirmPassword}
-                        onChange={(e) => setPoliceRegister({ ...policeRegister, confirmPassword: e.target.value })} required />
+                      <div className="password-wrapper">
+                        <input type={showPasswords.policeRegConfirm ? 'text' : 'password'} className="form-control" placeholder="Confirm password"
+                          value={policeRegister.confirmPassword}
+                          onChange={(e) => setPoliceRegister({ ...policeRegister, confirmPassword: e.target.value })} required />
+                        <button type="button" className="password-toggle" onClick={() => togglePassword('policeRegConfirm')} tabIndex={-1}>
+                          <i className={`fas ${showPasswords.policeRegConfirm ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <button type="submit" className="btn btn-primary" disabled={loading}>

@@ -17,6 +17,15 @@ const ChangePassword = () => {
     newPassword: '',
     confirmPassword: ''
   });
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false
+  });
+
+  const togglePassword = (field) => {
+    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
+  };
 
   // Verify user is logged in
   useEffect(() => {
@@ -90,7 +99,7 @@ const ChangePassword = () => {
         setError(data.message || 'Failed to change password');
       }
     } catch (err) {
-      setError('Error changing password');
+      setError(err.response?.data?.message || 'Error changing password');
     } finally {
       setLoading(false);
     }
@@ -135,42 +144,57 @@ const ChangePassword = () => {
                     <Form.Label className="fw-bold">
                       Current Password *
                     </Form.Label>
-                    <Form.Control
-                      type="password"
-                      name="currentPassword"
-                      placeholder="Enter your current password"
-                      value={formData.currentPassword}
-                      onChange={handleChange}
-                      required
-                    />
+                    <div className="password-wrapper">
+                      <Form.Control
+                        type={showPasswords.current ? 'text' : 'password'}
+                        name="currentPassword"
+                        placeholder="Enter your current password"
+                        value={formData.currentPassword}
+                        onChange={handleChange}
+                        required
+                      />
+                      <button type="button" className="password-toggle" onClick={() => togglePassword('current')} tabIndex={-1}>
+                        <i className={`fas ${showPasswords.current ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                      </button>
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="mb-4">
                     <Form.Label className="fw-bold">
                       New Password *
                     </Form.Label>
-                    <Form.Control
-                      type="password"
-                      name="newPassword"
-                      placeholder="Enter new password"
-                      value={formData.newPassword}
-                      onChange={handleChange}
-                      required
-                    />
+                    <div className="password-wrapper">
+                      <Form.Control
+                        type={showPasswords.new ? 'text' : 'password'}
+                        name="newPassword"
+                        placeholder="Enter new password"
+                        value={formData.newPassword}
+                        onChange={handleChange}
+                        required
+                      />
+                      <button type="button" className="password-toggle" onClick={() => togglePassword('new')} tabIndex={-1}>
+                        <i className={`fas ${showPasswords.new ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                      </button>
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="mb-4">
                     <Form.Label className="fw-bold">
                       Confirm Password *
                     </Form.Label>
-                    <Form.Control
-                      type="password"
-                      name="confirmPassword"
-                      placeholder="Confirm your new password"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      required
-                    />
+                    <div className="password-wrapper">
+                      <Form.Control
+                        type={showPasswords.confirm ? 'text' : 'password'}
+                        name="confirmPassword"
+                        placeholder="Confirm your new password"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        required
+                      />
+                      <button type="button" className="password-toggle" onClick={() => togglePassword('confirm')} tabIndex={-1}>
+                        <i className={`fas ${showPasswords.confirm ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                      </button>
+                    </div>
                   </Form.Group>
 
                   <div className="d-flex gap-2">

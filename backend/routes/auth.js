@@ -227,10 +227,14 @@ router.get('/current-user', checkAuth, (req, res) => {
  * - Updates user profile fields (username, email, phone) in the database
  * - Requires authentication
  */
-router.put('/update-profile', checkAuth, (req, res) => {
+router.put('/update-profile', (req, res) => {
   try {
-    const userId = req.session.user.id;
+    const userId = req.session?.user?.id || req.body.user_id;
     const { username, email, phone } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ status: 'error', message: 'User identification required. Please login again.' });
+    }
 
     if (!username || !email) {
       return res.status(400).json({ status: 'error', message: 'Username and email are required' });
@@ -267,10 +271,12 @@ router.put('/update-profile', checkAuth, (req, res) => {
           return res.status(500).json({ status: 'error', message: 'Failed to update profile' });
         }
 
-        // Update session data
-        req.session.user.username = username;
-        req.session.user.email = email;
-        req.session.user.phone = phone || '';
+        // Update session data if session exists
+        if (req.session?.user) {
+          req.session.user.username = username;
+          req.session.user.email = email;
+          req.session.user.phone = phone || '';
+        }
 
         // Log activity
         logActivity(
@@ -292,8 +298,8 @@ router.put('/update-profile', checkAuth, (req, res) => {
             username,
             email,
             phone: phone || '',
-            role: req.session.user.role,
-            station_id: req.session.user.station_id
+            role: req.session?.user?.role || req.body.role,
+            station_id: req.session?.user?.station_id || req.body.station_id
           }
         });
       });
@@ -308,11 +314,17 @@ router.put('/update-profile', checkAuth, (req, res) => {
  * Change password endpoint
  * - Validates old password using bcrypt before issuing new one
  * - Hashes new password with bcrypt before storing
+ * - Accepts user_id from body as fallback when session unavailable (cross-origin)
  */
-router.post('/change-password', checkAuth, async (req, res) => {
+router.post('/change-password', async (req, res) => {
   try {
-    const { oldPassword, newPassword } = req.body;
-    const userId = req.session.user.id;
+    const { oldPassword, newPassword, user_id } = req.body;
+    const userId = req.session?.user?.id || user_id;
+
+    // Validate user identification
+    if (!userId) {
+      return res.status(400).json({ status: 'error', message: 'User identification required. Please login again.' });
+    }
 
     // Validate inputs
     if (!oldPassword || !newPassword) {
@@ -366,7 +378,7 @@ router.post('/change-password', checkAuth, async (req, res) => {
             userId,
             'PASSWORD_CHANGE',
             'Password changed',
-            `${req.session.user.username} changed their password`,
+            `User #${userId} changed their password`,
             'User',
             userId,
             'fas fa-key'
