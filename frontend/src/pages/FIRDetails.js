@@ -325,12 +325,12 @@ const FIRDetails = () => {
                 </Card.Body>
               </Card>
 
-              {/* Action Buttons for Admin */}
-              {role === 'Admin' && fir.status === 'Sent' && (
+              {/* Action Buttons for Police */}
+              {role === 'Police' && fir.status === 'Sent' && (
                 <Card className="border-0 shadow-sm mt-4">
                   <Card.Body>
                     <h6 className="mb-3 fw-bold">
-                      <i className="fas fa-tasks me-2 text-primary"></i> Admin Actions
+                      <i className="fas fa-tasks me-2 text-primary"></i> Officer Actions
                     </h6>
                     <Row className="g-3">
                       <Col sm={6}>

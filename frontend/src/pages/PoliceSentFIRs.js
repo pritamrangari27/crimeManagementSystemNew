@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Table, Card, Badge, Button, Spinner, Alert, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Table, Card, Badge, Button, Spinner, Alert, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { firsAPI } from '../api/client';
@@ -12,8 +12,11 @@ const PoliceSentFIRs = () => {
   const role = localStorage.getItem('userRole');
   
   const [firs, setFirs] = useState([]);
+  const [allFirs, setAllFirs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
+  const [actionLoading, setActionLoading] = useState(null);
 
   // Verify user is Police role
   useEffect(() => {
@@ -23,39 +26,75 @@ const PoliceSentFIRs = () => {
     }
   }, [role, navigate]);
 
+  const fetchFIRs = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      let response;
+      if (stationId) {
+        response = await firsAPI.getByStation(stationId);
+      } else {
+        response = await firsAPI.getAll();
+      }
+      const data = response.data;
+      
+      if (data.status === 'success' && Array.isArray(data.data)) {
+        setAllFirs(data.data);
+        if (filterStatus) {
+          setFirs(data.data.filter(f => f.status === filterStatus));
+        } else {
+          setFirs(data.data);
+        }
+      } else {
+        setAllFirs([]);
+        setFirs([]);
+      }
+    } catch (err) {
+      setError('Failed to load FIRs. Please try again later.');
+      console.error('Error fetching FIRs:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Fetch FIRs for the station
   useEffect(() => {
-    const fetchFIRs = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        let response;
-        if (stationId) {
-          response = await firsAPI.getByStation(stationId);
-        } else {
-          response = await firsAPI.getAll();
-        }
-        const data = response.data;
-        
-        if (data.status === 'success' && Array.isArray(data.data)) {
-          // Filter for only "Sent" status
-          const sentFirs = data.data.filter(f => f.status === 'Sent');
-          setFirs(sentFirs);
-        } else {
-          setFirs([]);
-        }
-      } catch (err) {
-        setError('Failed to load FIRs. Please try again later.');
-        console.error('Error fetching FIRs:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (stationId) {
       fetchFIRs();
     }
   }, [stationId]);
+
+  // Filter FIRs when filter changes
+  useEffect(() => {
+    if (filterStatus) {
+      setFirs(allFirs.filter(f => f.status === filterStatus));
+    } else {
+      setFirs(allFirs);
+    }
+  }, [filterStatus, allFirs]);
+
+  // Handle status change via dropdown
+  const handleStatusChange = async (firId, newStatus) => {
+    if (!newStatus) return;
+    const action = newStatus === 'Approved' ? 'approve' : 'reject';
+    if (!window.confirm(`Are you sure you want to ${action} this FIR?`)) return;
+
+    setActionLoading(firId);
+    try {
+      if (newStatus === 'Approved') {
+        await firsAPI.approve(firId, user?.id || null);
+      } else {
+        await firsAPI.reject(firId, `Rejected by officer ${user?.username || ''}`);
+      }
+      alert(`FIR ${newStatus.toLowerCase()} successfully!`);
+      fetchFIRs();
+    } catch (err) {
+      alert(`Error: Could not ${action} FIR`);
+      console.error(err);
+    } finally {
+      setActionLoading(null);
+    }
+  };
 
   // Format date
   const formatDate = (dateString) => {
@@ -67,6 +106,16 @@ const PoliceSentFIRs = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  // Status badge variant
+  const getStatusVariant = (status) => {
+    switch (status) {
+      case 'Sent': return 'info';
+      case 'Approved': return 'success';
+      case 'Rejected': return 'danger';
+      default: return 'secondary';
+    }
   };
 
   if (role !== 'Police') {
@@ -81,9 +130,9 @@ const PoliceSentFIRs = () => {
         <Row className="mb-4">
           <Col>
             <h2 className="fw-bold">
-              <i className="fas fa-inbox me-2"></i> New FIRs (Sent)
+              <i className="fas fa-file-alt me-2"></i> FIR Management
             </h2>
-            <p className="text-muted">Review and process FIRs sent to your station</p>
+            <p className="text-muted">Review and manage FIRs sent to your station</p>
           </Col>
           <Col className="text-end">
             <Button
@@ -97,10 +146,26 @@ const PoliceSentFIRs = () => {
           </Col>
         </Row>
 
+        {/* Filter Row */}
+        <Row className="mb-3">
+          <Col md={4}>
+            <Form.Select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.6rem' }}
+            >
+              <option value="">All FIRs ({allFirs.length})</option>
+              <option value="Sent">Sent ({allFirs.filter(f => f.status === 'Sent').length})</option>
+              <option value="Approved">Approved ({allFirs.filter(f => f.status === 'Approved').length})</option>
+              <option value="Rejected">Rejected ({allFirs.filter(f => f.status === 'Rejected').length})</option>
+            </Form.Select>
+          </Col>
+        </Row>
+
         {/* FIR Table */}
         <Card className="border-0 shadow-sm">
           <Card.Header className="bg-primary text-white fw-bold">
-            <i className="fas fa-list me-2"></i> New FIRs - Sent ({firs.length})
+            <i className="fas fa-list me-2"></i> Station FIRs ({firs.length})
           </Card.Header>
           <Card.Body className="p-0">
             {loading ? (
@@ -116,8 +181,8 @@ const PoliceSentFIRs = () => {
               </Alert>
             ) : firs.length === 0 ? (
               <div className="text-center py-5">
-                <i className="fas fa-check-circle text-success" style={{ fontSize: '48px' }}></i>
-                <p className="mt-3 text-muted">No new FIRs at this moment</p>
+                <i className="fas fa-folder-open text-muted" style={{ fontSize: '48px' }}></i>
+                <p className="mt-3 text-muted">No FIRs found{filterStatus ? ` with status "${filterStatus}"` : ''}</p>
               </div>
             ) : (
               <div className="table-responsive">
@@ -129,6 +194,7 @@ const PoliceSentFIRs = () => {
                       <th className="fw-bold">Accused</th>
                       <th className="fw-bold">Complainant</th>
                       <th className="fw-bold">Filed Date</th>
+                      <th className="fw-bold">Status</th>
                       <th className="fw-bold">Actions</th>
                     </tr>
                   </thead>
@@ -147,7 +213,10 @@ const PoliceSentFIRs = () => {
                           {formatDate(fir.created_at || fir.date)}
                         </td>
                         <td>
-                          <div className="d-flex gap-2">
+                          <Badge bg={getStatusVariant(fir.status)}>{fir.status}</Badge>
+                        </td>
+                        <td>
+                          <div className="d-flex gap-2 align-items-center">
                             <Button
                               variant="outline-info"
                               size="sm"
@@ -156,6 +225,22 @@ const PoliceSentFIRs = () => {
                             >
                               <i className="fas fa-eye me-1"></i> View
                             </Button>
+                            {fir.status === 'Sent' && (
+                              <Form.Select
+                                size="sm"
+                                style={{ width: '130px', fontWeight: '600' }}
+                                defaultValue=""
+                                disabled={actionLoading === fir.id}
+                                onChange={(e) => handleStatusChange(fir.id, e.target.value)}
+                              >
+                                <option value="" disabled>Action...</option>
+                                <option value="Approved">✓ Approve</option>
+                                <option value="Rejected">✕ Reject</option>
+                              </Form.Select>
+                            )}
+                            {actionLoading === fir.id && (
+                              <Spinner animation="border" size="sm" />
+                            )}
                           </div>
                         </td>
                       </tr>
