@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { firsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import Sidebar from '../components/Sidebar';
 
 const FIRManagement = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [firs, setFirs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterStatus, setFilterStatus] = useState('');
+  const [filterStatus, setFilterStatus] = useState(searchParams.get('status') || '');
   const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);

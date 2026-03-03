@@ -126,7 +126,7 @@ const AdminDashboard = () => {
                   <Button
                     variant="outline-success"
                     size="sm"
-                    onClick={() => navigate('/admin/firs')}
+                    onClick={() => navigate('/admin/firs?status=Approved')}
                     className="w-100"
                   >
                     <i className="fas fa-arrow-right me-1"></i> View Details
@@ -143,7 +143,7 @@ const AdminDashboard = () => {
                   <Button
                     variant="outline-info"
                     size="sm"
-                    onClick={() => navigate('/admin/firs')}
+                    onClick={() => navigate('/admin/firs?status=Sent')}
                     className="w-100"
                   >
                     <i className="fas fa-arrow-right me-1"></i> View Details
@@ -160,7 +160,7 @@ const AdminDashboard = () => {
                   <Button
                     variant="outline-danger"
                     size="sm"
-                    onClick={() => navigate('/admin/firs')}
+                    onClick={() => navigate('/admin/firs?status=Rejected')}
                     className="w-100"
                   >
                     <i className="fas fa-arrow-right me-1"></i> View Details
