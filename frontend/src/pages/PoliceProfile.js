@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Form, Alert, Spinner, Badge, Table } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Container, Row, Col, Card, Button, Form, Alert, Spinner, Badge } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, getUserRole, updateAuthUser } from '../utils/authService';
 import { authAPI } from '../api/client';
@@ -24,10 +24,7 @@ const PoliceProfile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -35,12 +32,10 @@ const PoliceProfile = () => {
     setLoading(true);
     setError('');
     setSuccess('');
-
     try {
       const response = await authAPI.updateProfile(formData);
       const data = response.data;
       if (data.status === 'success') {
-        // Update auth service with new data
         updateAuthUser(formData);
         setSuccess('Profile updated successfully!');
         setIsEditing(false);
@@ -54,333 +49,336 @@ const PoliceProfile = () => {
     }
   };
 
-  const getInitials = () => {
-    return (user?.username || 'P')
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
+  const getInitials = () =>
+    (user?.username || 'P').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+
+  if (role !== 'Police') return null;
+
+  /* ---- shared inline style objects ---- */
+  const infoItemStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '10px 14px',
+    borderRadius: '10px',
+    background: '#f8fafc',
+    border: '1px solid #e2e8f0',
+    transition: 'all 0.25s ease',
   };
 
-  if (role !== 'Police') {
-    return null;
-  }
+  const iconCircleStyle = (color) => ({
+    width: 34,
+    height: 34,
+    borderRadius: '50%',
+    background: `${color}15`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    color,
+    fontSize: '0.85rem',
+  });
 
   return (
     <div className="d-flex">
       <Sidebar />
       <Container fluid className="main-content py-3 px-3" style={{ background: '#ffffff' }}>
-        {/* Header */}
-        <Row className="mb-3">
-          <Col>
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <h2 className="fw-bold mb-1" style={{ color: '#1a1a1a', fontSize: '1.4rem' }}>
-                  <i className="fas fa-police me-2" style={{ color: '#0ea5e9' }}></i> Officer Profile
-                </h2>
-                <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>Manage your police officer account and settings</p>
-              </div>
-              <Button 
-                variant="outline-secondary" 
-                size="sm" 
-                onClick={() => navigate(-1)}
-                className="fw-bold"
-              >
-                <i className="fas fa-arrow-left me-2"></i>Back
-              </Button>
-            </div>
-          </Col>
-        </Row>
 
-        {/* Profile Header Card */}
-        <Card 
-          className="border-0 shadow-lg mb-3 overflow-hidden"
+        {/* ── Page header ── */}
+        <div
+          className="d-flex justify-content-between align-items-center mb-3"
+          style={{ animation: 'fadeIn 0.35s cubic-bezier(.4,0,.2,1) both' }}
+        >
+          <div>
+            <h2 className="fw-bold mb-0" style={{ color: '#1a1a1a', fontSize: '1.3rem' }}>
+              <i className="fas fa-user-shield me-2" style={{ color: '#0ea5e9' }}></i>
+              Officer Profile
+            </h2>
+            <p className="text-muted mb-0" style={{ fontSize: '0.8rem' }}>Manage your account and settings</p>
+          </div>
+          <Button variant="outline-secondary" size="sm" onClick={() => navigate(-1)} className="fw-bold">
+            <i className="fas fa-arrow-left me-1"></i>Back
+          </Button>
+        </div>
+
+        {/* ── Alerts ── */}
+        {error && (
+          <Alert variant="danger" dismissible onClose={() => setError('')} className="py-2 mb-2"
+            style={{ fontSize: '0.85rem', animation: 'fadeInDown 0.3s ease both' }}>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert variant="success" dismissible onClose={() => setSuccess('')} className="py-2 mb-2"
+            style={{ fontSize: '0.85rem', animation: 'fadeInDown 0.3s ease both' }}>
+            {success}
+          </Alert>
+        )}
+
+        {/* ── Single unified profile card ── */}
+        <Card
+          className="border-0 overflow-hidden"
           style={{
-            background: '#0ea5e9',
+            borderRadius: '16px',
+            boxShadow: '0 4px 24px rgba(14,165,233,0.10)',
+            animation: 'fadeInUp 0.45s cubic-bezier(.4,0,.2,1) both',
           }}
         >
-          <Card.Body className="p-3 text-white">
-            <Row className="align-items-center">
-              <Col md={2} className="text-center mb-2 mb-md-0">
-                <div
-                  style={{
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '50%',
-                    background: 'rgba(255,255,255,0.2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto',
-                    fontSize: '32px',
-                    fontWeight: 'bold',
-                    border: '3px solid white'
-                  }}
-                >
-                  {getInitials()}
-                </div>
-              </Col>
-              <Col md={10}>
-                <h2 className="fw-bold mb-2">{user?.username}</h2>
-                <p className="mb-3 fs-6">
-                  <i className="fas fa-envelope me-2"></i> {user?.email}
-                </p>
-                <div className="d-flex gap-3 flex-wrap">
-                  <Badge bg="light" text="dark" className="p-2 fs-6">
-                    <i className="fas fa-id-badge me-2"></i> Badge: {user?.badge_number || 'N/A'}
-                  </Badge>
-                  <Badge bg="success" text="dark" className="p-2 fs-6">
-                    <i className="fas fa-check-circle me-2"></i> On Duty
-                  </Badge>
-                </div>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
+          {/* ── Gradient banner + avatar ── */}
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%)',
+              padding: '28px 28px 48px',
+              position: 'relative',
+            }}
+          >
+            {/* decorative circles */}
+            <div style={{
+              position: 'absolute', top: -30, right: -30, width: 120, height: 120,
+              borderRadius: '50%', background: 'rgba(255,255,255,0.06)',
+            }} />
+            <div style={{
+              position: 'absolute', bottom: -20, left: '40%', width: 80, height: 80,
+              borderRadius: '50%', background: 'rgba(255,255,255,0.04)',
+            }} />
 
-        {error && <Alert variant="danger" className="mb-4">{error}</Alert>}
-        {success && <Alert variant="success" className="mb-4">{success}</Alert>}
+            <div className="d-flex align-items-center gap-3 position-relative" style={{ zIndex: 1 }}>
+              {/* avatar */}
+              <div style={{
+                width: 72, height: 72, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.18)',
+                border: '3px solid rgba(255,255,255,0.6)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '1.6rem', fontWeight: 700, color: '#fff',
+                flexShrink: 0,
+                animation: 'scaleIn 0.5s cubic-bezier(.34,1.56,.64,1) 0.15s both',
+              }}>
+                {getInitials()}
+              </div>
 
-        {/* Combined Profile Information & Settings Table */}
-        <Card className="border-0 shadow-sm overflow-hidden">
-          <Card.Header className="fw-bold text-white p-4" style={{ background: '#0ea5e9' }}>
-            <i className="fas fa-user-circle me-2"></i> Officer Profile
-          </Card.Header>
-          <Card.Body className="p-0">
-            {isEditing ? (
-              <div className="p-4">
+              <div className="text-white">
+                <h4 className="fw-bold mb-1" style={{ fontSize: '1.2rem', letterSpacing: '-0.3px' }}>
+                  {user?.username}
+                </h4>
+                <span style={{ opacity: 0.85, fontSize: '0.82rem' }}>
+                  <i className="fas fa-envelope me-1"></i> {user?.email}
+                </span>
+                <div className="d-flex gap-2 mt-2 flex-wrap">
+                  <Badge pill style={{ background: 'rgba(255,255,255,0.2)', fontSize: '0.72rem', padding: '5px 10px' }}>
+                    <i className="fas fa-id-badge me-1"></i> {user?.badge_number || 'N/A'}
+                  </Badge>
+                  <Badge pill bg="success" style={{ fontSize: '0.72rem', padding: '5px 10px' }}>
+                    <i className="fas fa-check-circle me-1"></i> On Duty
+                  </Badge>
+                  <Badge pill style={{ background: 'rgba(255,255,255,0.2)', fontSize: '0.72rem', padding: '5px 10px' }}>
+                    <i className="fas fa-shield-alt me-1"></i> Police Officer
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Card body ── */}
+          <Card.Body className="p-0" style={{ marginTop: '-20px', position: 'relative', zIndex: 2 }}>
+            <div style={{
+              background: '#fff', borderRadius: '16px 16px 0 0', padding: '24px 28px 20px',
+            }}>
+
+              {isEditing ? (
+                /* ── EDIT MODE ── */
                 <Form onSubmit={handleSubmit}>
-                  <Form.Group className="mb-4">
-                    <Form.Label className="fw-bold mb-2">
-                      <i className="fas fa-user me-2" style={{ color: '#3498db' }}></i>Full Name
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="username"
-                      value={formData.username}
-                      onChange={handleChange}
-                      required
-                      className="border-2"
-                      style={{ borderColor: '#e0e0e0' }}
-                    />
-                  </Form.Group>
+                  <Row className="g-3">
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label className="fw-semibold small mb-1">
+                          <i className="fas fa-user me-1" style={{ color: '#0ea5e9' }}></i> Full Name
+                        </Form.Label>
+                        <Form.Control size="sm" type="text" name="username" value={formData.username}
+                          onChange={handleChange} required style={{ borderRadius: 8, border: '1.5px solid #e2e8f0' }} />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label className="fw-semibold small mb-1">
+                          <i className="fas fa-envelope me-1" style={{ color: '#0ea5e9' }}></i> Email
+                        </Form.Label>
+                        <Form.Control size="sm" type="email" name="email" value={formData.email}
+                          onChange={handleChange} required style={{ borderRadius: 8, border: '1.5px solid #e2e8f0' }} />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label className="fw-semibold small mb-1">
+                          <i className="fas fa-phone me-1" style={{ color: '#0ea5e9' }}></i> Phone
+                        </Form.Label>
+                        <Form.Control size="sm" type="tel" name="phone" value={formData.phone}
+                          onChange={handleChange} placeholder="Enter phone number"
+                          style={{ borderRadius: 8, border: '1.5px solid #e2e8f0' }} />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label className="fw-semibold small mb-1">
+                          <i className="fas fa-id-badge me-1" style={{ color: '#0ea5e9' }}></i> Badge Number
+                        </Form.Label>
+                        <Form.Control size="sm" type="text" name="badge_number" value={formData.badge_number}
+                          disabled className="bg-light" style={{ borderRadius: 8, border: '1.5px solid #e2e8f0' }} />
+                        <Form.Text className="text-muted" style={{ fontSize: '0.7rem' }}>Cannot be changed</Form.Text>
+                      </Form.Group>
+                    </Col>
+                  </Row>
 
-                  <Form.Group className="mb-4">
-                    <Form.Label className="fw-bold mb-2">
-                      <i className="fas fa-envelope me-2" style={{ color: '#0ea5e9' }}></i>Email Address
-                    </Form.Label>
-                    <Form.Control
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="border-2"
-                      style={{ borderColor: '#e0e0e0' }}
-                    />
-                  </Form.Group>
-
-                  <Form.Group className="mb-4">
-                    <Form.Label className="fw-bold mb-2">
-                      <i className="fas fa-phone me-2" style={{ color: '#3498db' }}></i>Phone Number
-                    </Form.Label>
-                    <Form.Control
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="Enter your phone number"
-                      className="border-2"
-                      style={{ borderColor: '#e0e0e0' }}
-                    />
-                  </Form.Group>
-
-                  <Form.Group className="mb-4">
-                    <Form.Label className="fw-bold mb-2">
-                      <i className="fas fa-id-badge me-2" style={{ color: '#3498db' }}></i>Badge Number
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="badge_number"
-                      value={formData.badge_number}
-                      onChange={handleChange}
-                      disabled
-                      className="bg-light border-2"
-                      style={{ borderColor: '#e0e0e0' }}
-                    />
-                    <Form.Text className="text-muted">Badge number cannot be changed</Form.Text>
-                  </Form.Group>
-
-                  <div className="d-flex gap-2 pt-3">
-                    <Button
-                      style={{ background: '#0ea5e9', border: 'none' }}
-                      type="submit"
-                      disabled={loading}
-                      className="fw-bold"
-                    >
-                      {loading ? <>
-                        <Spinner animation="border" size="sm" className="me-2" />
-                        Saving...
-                      </> : <>
-                        <i className="fas fa-save me-2"></i> Save Changes
-                      </>}
+                  <div className="d-flex gap-2 mt-3 pt-2" style={{ borderTop: '1px solid #f1f5f9' }}>
+                    <Button size="sm" type="submit" disabled={loading} className="fw-bold px-3"
+                      style={{ background: '#0ea5e9', border: 'none', borderRadius: 8 }}>
+                      {loading
+                        ? <><Spinner animation="border" size="sm" className="me-1" /> Saving...</>
+                        : <><i className="fas fa-save me-1"></i> Save Changes</>}
                     </Button>
-                    <Button
-                      variant="outline-secondary"
+                    <Button size="sm" variant="outline-secondary" className="fw-bold px-3"
+                      style={{ borderRadius: 8 }}
                       onClick={() => {
                         setIsEditing(false);
                         setFormData({
-                          username: user?.username || '',
-                          email: user?.email || '',
-                          phone: user?.phone || '',
-                          badge_number: user?.badge_number || ''
+                          username: user?.username || '', email: user?.email || '',
+                          phone: user?.phone || '', badge_number: user?.badge_number || ''
                         });
-                      }}
-                      className="fw-bold"
-                    >
-                      <i className="fas fa-times me-2"></i> Cancel
+                      }}>
+                      <i className="fas fa-times me-1"></i> Cancel
                     </Button>
                   </div>
                 </Form>
-              </div>
-            ) : (
-              <div>
-                <div className="p-4 border-bottom">
-                  <h6 className="fw-bold mb-3">Officer Information</h6>
-                  <Table borderless responsive className="mb-0">
-                    <tbody>
-                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                        <td style={{ width: '35%', paddingBottom: '12px' }}>
-                          <span className="text-muted fw-bold small">
-                            <i className="fas fa-user me-2" style={{ color: '#0ea5e9' }}></i>Full Name
-                          </span>
-                        </td>
-                        <td style={{ paddingBottom: '12px' }}>
-                          <span className="fw-bold">{user.username}</span>
-                        </td>
-                      </tr>
-                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
-                          <span className="text-muted fw-bold small">
-                            <i className="fas fa-id-badge me-2" style={{ color: '#0ea5e9' }}></i>Badge Number
-                          </span>
-                        </td>
-                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
-                          <span className="fw-bold">{user.badge_number || 'N/A'}</span>
-                        </td>
-                      </tr>
-                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
-                          <span className="text-muted fw-bold small">
-                            <i className="fas fa-envelope me-2" style={{ color: '#0ea5e9' }}></i>Email
-                          </span>
-                        </td>
-                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
-                          <span className="fw-bold">{user.email}</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ paddingTop: '8px', verticalAlign: 'top' }}>
-                          <span className="text-muted fw-bold small">
-                            <i className="fas fa-phone me-2" style={{ color: '#0ea5e9' }}></i>Phone Number
-                          </span>
-                        </td>
-                        <td style={{ paddingTop: '8px' }}>
-                          <span className="fw-bold">{user.phone || <span className="text-muted">Not provided</span>}</span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
+              ) : (
+                /* ── VIEW MODE ── */
+                <>
+                  {/* Info grid */}
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                    gap: '10px',
+                  }}>
+                    {/* Full Name */}
+                    <div style={{ ...infoItemStyle, animationDelay: '0.05s', animation: 'fadeInUp 0.4s cubic-bezier(.4,0,.2,1) both' }}
+                      className="profile-info-item">
+                      <div style={iconCircleStyle('#0ea5e9')}><i className="fas fa-user"></i></div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Full Name</div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1e293b' }}>{user.username}</div>
+                      </div>
+                    </div>
 
-                <div className="p-4 border-bottom">
-                  <h6 className="fw-bold mb-3">Station Assignment</h6>
-                  <Table borderless responsive className="mb-0">
-                    <tbody>
-                      <tr>
-                        <td style={{ width: '35%' }}>
-                          <span className="text-muted fw-bold small">
-                            <i className="fas fa-shield-alt me-2" style={{ color: '#27ae60' }}></i>Assigned Station
-                          </span>
-                        </td>
-                        <td>
-                          <span className="fw-bold">{stationId || <span className="text-muted">Not assigned</span>}</span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
+                    {/* Badge Number */}
+                    <div style={{ ...infoItemStyle, animation: 'fadeInUp 0.4s cubic-bezier(.4,0,.2,1) 0.08s both' }}
+                      className="profile-info-item">
+                      <div style={iconCircleStyle('#8b5cf6')}><i className="fas fa-id-badge"></i></div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Badge Number</div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1e293b' }}>{user.badge_number || 'N/A'}</div>
+                      </div>
+                    </div>
 
-                <div className="p-4 border-bottom">
-                  <h6 className="fw-bold mb-3">Account Status</h6>
-                  <Table borderless responsive className="mb-0">
-                    <tbody>
-                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                        <td style={{ width: '35%', paddingBottom: '12px' }}>
-                          <span className="text-muted fw-bold small">
-                            <i className="fas fa-heartbeat me-2" style={{ color: '#10b981' }}></i>Duty Status
-                          </span>
-                        </td>
-                        <td style={{ paddingBottom: '12px' }}>
-                          <Badge bg="success" className="p-2">
-                            <i className="fas fa-check-circle me-1"></i> On Duty
+                    {/* Email */}
+                    <div style={{ ...infoItemStyle, animation: 'fadeInUp 0.4s cubic-bezier(.4,0,.2,1) 0.16s both' }}
+                      className="profile-info-item">
+                      <div style={iconCircleStyle('#0ea5e9')}><i className="fas fa-envelope"></i></div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email</div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1e293b' }}>{user.email}</div>
+                      </div>
+                    </div>
+
+                    {/* Phone */}
+                    <div style={{ ...infoItemStyle, animation: 'fadeInUp 0.4s cubic-bezier(.4,0,.2,1) 0.24s both' }}
+                      className="profile-info-item">
+                      <div style={iconCircleStyle('#10b981')}><i className="fas fa-phone"></i></div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Phone</div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1e293b' }}>{user.phone || <span style={{ color: '#94a3b8' }}>Not provided</span>}</div>
+                      </div>
+                    </div>
+
+                    {/* Station */}
+                    <div style={{ ...infoItemStyle, animation: 'fadeInUp 0.4s cubic-bezier(.4,0,.2,1) 0.32s both' }}
+                      className="profile-info-item">
+                      <div style={iconCircleStyle('#f59e0b')}><i className="fas fa-building"></i></div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Assigned Station</div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1e293b' }}>{stationId || <span style={{ color: '#94a3b8' }}>Not assigned</span>}</div>
+                      </div>
+                    </div>
+
+                    {/* Role */}
+                    <div style={{ ...infoItemStyle, animation: 'fadeInUp 0.4s cubic-bezier(.4,0,.2,1) 0.40s both' }}
+                      className="profile-info-item">
+                      <div style={iconCircleStyle('#06b6d4')}><i className="fas fa-shield-alt"></i></div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Role</div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1e293b' }}>
+                          <Badge bg="info" style={{ fontSize: '0.72rem', padding: '3px 8px' }}>Police Officer</Badge>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Member Since */}
+                    <div style={{ ...infoItemStyle, animation: 'fadeInUp 0.4s cubic-bezier(.4,0,.2,1) 0.48s both' }}
+                      className="profile-info-item">
+                      <div style={iconCircleStyle('#f59e0b')}><i className="fas fa-calendar-check"></i></div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Member Since</div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1e293b' }}>
+                          {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Duty Status */}
+                    <div style={{ ...infoItemStyle, animation: 'fadeInUp 0.4s cubic-bezier(.4,0,.2,1) 0.56s both' }}
+                      className="profile-info-item">
+                      <div style={iconCircleStyle('#10b981')}><i className="fas fa-heartbeat"></i></div>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Duty Status</div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1e293b' }}>
+                          <Badge bg="success" style={{ fontSize: '0.72rem', padding: '3px 8px' }}>
+                            <i className="fas fa-check-circle me-1"></i>On Duty
                           </Badge>
-                        </td>
-                      </tr>
-                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
-                          <span className="text-muted fw-bold small">
-                            <i className="fas fa-badge me-2" style={{ color: '#06b6d4' }}></i>Role
-                          </span>
-                        </td>
-                        <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
-                          <Badge bg="info" className="p-2">
-                            <i className="fas fa-police me-1"></i> Police Officer
-                          </Badge>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ paddingTop: '8px' }}>
-                          <span className="text-muted fw-bold small">
-                            <i className="fas fa-calendar-check me-2" style={{ color: '#f59e0b' }}></i>Member Since
-                          </span>
-                        </td>
-                        <td style={{ paddingTop: '8px' }}>
-                          <span className="fw-bold">
-                            {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                          </span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-                <div className="p-4">
-                  <h6 className="fw-bold mb-3">Security</h6>
-                  <div className="d-flex gap-2 flex-wrap">
-                    <Button
-                      size="sm"
-                      style={{ background: '#0ea5e9', border: 'none' }}
-                      onClick={() => setIsEditing(true)}
-                      className="fw-bold"
-                    >
-                      <i className="fas fa-edit me-2"></i> Edit Profile
+                  {/* Action buttons */}
+                  <div className="d-flex gap-2 flex-wrap mt-3 pt-3" style={{ borderTop: '1px solid #f1f5f9' }}>
+                    <Button size="sm" className="fw-bold px-3" onClick={() => setIsEditing(true)}
+                      style={{
+                        background: 'linear-gradient(135deg, #0ea5e9, #0284c7)', border: 'none',
+                        borderRadius: 8, fontSize: '0.82rem',
+                        transition: 'all 0.25s ease',
+                      }}>
+                      <i className="fas fa-edit me-1"></i> Edit Profile
                     </Button>
-                    <Button
-                      size="sm"
-                      style={{ background: '#ef4444', border: 'none' }}
-                      onClick={() => navigate('/change-password')}
-                      className="fw-bold"
-                    >
-                      <i className="fas fa-key me-2"></i> Change Password
+                    <Button size="sm" className="fw-bold px-3" onClick={() => navigate('/change-password')}
+                      style={{
+                        background: 'linear-gradient(135deg, #ef4444, #dc2626)', border: 'none',
+                        borderRadius: 8, fontSize: '0.82rem',
+                        transition: 'all 0.25s ease',
+                      }}>
+                      <i className="fas fa-key me-1"></i> Change Password
                     </Button>
                   </div>
-                </div>
-              </div>
-            )}
+                </>
+              )}
+            </div>
           </Card.Body>
         </Card>
+
+        {/* Hover effect style (injected once) */}
+        <style>{`
+          .profile-info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14,165,233,0.10);
+            border-color: #0ea5e9 !important;
+          }
+        `}</style>
       </Container>
     </div>
   );
