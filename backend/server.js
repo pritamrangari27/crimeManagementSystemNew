@@ -2,9 +2,9 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 require('dotenv').config();
+const { connectDatabase } = require('./utils/database');
 const { initializeDatabase } = require('./utils/dbInitializer');
 
 // Routes
@@ -34,24 +34,13 @@ if (NODE_ENV === 'production') {
   if (!process.env.FRONTEND_URL) {
     console.warn('⚠️  FRONTEND_URL not set. Update after Vercel deployment.');
   }
+  if (process.env.DATABASE_URL) {
+    console.log('✓ DATABASE_URL is configured (PostgreSQL)');
+  } else {
+    console.warn('⚠️  DATABASE_URL not set. Using SQLite (data will be ephemeral on Render).');
+  }
   console.log('✓ SESSION_SECRET is configured');
 }
-
-// SQLite DB setup
-const db = new sqlite3.Database('./db_crime.sqlite', async (err) => {
-  if (err) {
-    console.error('Could not connect to SQLite database', err);
-  } else {
-    console.log('✓ Connected to SQLite database');
-    
-    // Initialize database tables and data if needed
-    try {
-      await initializeDatabase(db);
-    } catch (initErr) {
-      console.error('Error initializing database:', initErr);
-    }
-  }
-});
 
 // CORS Configuration
 const allowedOrigins = NODE_ENV === 'production' 
@@ -69,14 +58,10 @@ app.use(bodyParser.json({ limit: '50mb' }));
 // CORS middleware with origin checking
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, curl requests)
     if (!origin) return callback(null, true);
-    
-    // Check if origin is in allowed list or matches Vercel pattern
     const isAllowed = allowedOrigins.includes(origin) || 
                       origin.includes('vercel.app') ||
                       NODE_ENV !== 'production';
-    
     callback(null, isAllowed);
   },
   credentials: true,
@@ -84,13 +69,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Increase request header size limit
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Max-Age', '600');
   next();
 });
 
-app.set('maxHeaderSize', 25 * 1024 * 1024); // 25MB header limit
+app.set('maxHeaderSize', 25 * 1024 * 1024);
 
 // Session configuration
 const sessionSecret = process.env.SESSION_SECRET || 'dev_secret_key_only_for_local_use';
@@ -104,7 +88,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: NODE_ENV === 'production', // HTTPS only in production
+    secure: NODE_ENV === 'production',
     httpOnly: true,
     sameSite: NODE_ENV === 'production' ? 'lax' : 'lax',
     maxAge: 24 * 60 * 60 * 1000
@@ -115,9 +99,9 @@ app.use(session({
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 app.use('/img', express.static(path.join(__dirname, '../Img')));
 
-// Middleware to attach db to requests
+// Middleware to attach db to requests (db is set in startServer)
 app.use((req, res, next) => {
-  req.db = db;
+  req.db = app.locals.db;
   next();
 });
 
@@ -132,7 +116,7 @@ app.use('/api/dashboard', dashboardRouter);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Server is running' });
+  res.json({ status: 'OK', message: 'Server is running', database: process.env.DATABASE_URL ? 'PostgreSQL' : 'SQLite' });
 });
 
 // 404 handler
@@ -146,10 +130,29 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error', message: err.message });
 });
 
-app.listen(PORT, () => {
-  console.log(`\n🚀 Crime Management System Backend`);
-  console.log(`🔗 Running on http://localhost:${PORT}`);
-  console.log(`📊 API: http://localhost:${PORT}/api\n`);
-});
+// Initialize database and start server
+async function startServer() {
+  try {
+    const db = await connectDatabase();
+
+    // Initialize database tables and seed data
+    await initializeDatabase(db);
+
+    // Store db in app.locals so middleware can access it
+    app.locals.db = db;
+
+    app.listen(PORT, () => {
+      console.log(`\n🚀 Crime Management System Backend`);
+      console.log(`🔗 Running on http://localhost:${PORT}`);
+      console.log(`📊 API: http://localhost:${PORT}/api`);
+      console.log(`💾 Database: ${process.env.DATABASE_URL ? 'PostgreSQL' : 'SQLite'}\n`);
+    });
+  } catch (err) {
+    console.error('❌ Failed to start server:', err);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 module.exports = app;

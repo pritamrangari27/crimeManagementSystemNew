@@ -124,7 +124,7 @@ function getActivityFallback(req, res, limit) {
   const sql = `
     SELECT 
       'Criminal' as type, 
-      Criminal_name as name, 
+      "Criminal_name" as name, 
       crime_type as detail, 
       created_at,
       'fas fa-user-secret' as icon

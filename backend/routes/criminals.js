@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { logActivity } = require('../utils/activityLogger');
 
+// Mixed-case columns need quoting for PostgreSQL
+const MIXED_CASE_COLS = ['Prison_name', 'Court_name', 'Criminal_name', 'DateOfBirth'];
+const quoteCol = (col) => MIXED_CASE_COLS.includes(col) ? `"${col}"` : col;
+
 // Add criminal
 router.post('/add', (req, res) => {
   const {
@@ -16,7 +20,7 @@ router.post('/add', (req, res) => {
 
   const sql = `INSERT INTO criminals (
     station_name, station_id, crime_type, crime_date, crime_time,
-    Prison_name, Court_name, Criminal_name, contact, DateOfBirth,
+    "Prison_name", "Court_name", "Criminal_name", contact, "DateOfBirth",
     email, state, city, address, photo
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
@@ -78,7 +82,7 @@ router.put('/:id', (req, res) => {
   const { id } = req.params;
   const updates = req.body;
 
-  const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', ');
+  const setClause = Object.keys(updates).map(key => `${quoteCol(key)} = ?`).join(', ');
   const values = Object.values(updates);
   values.push(id);
 
@@ -113,7 +117,7 @@ router.get('/search/query', (req, res) => {
     return res.status(400).json({ status: 'error', message: 'Search query required' });
   }
 
-  const sql = `SELECT * FROM criminals WHERE criminal_name LIKE ? OR email LIKE ? OR contact LIKE ? 
+  const sql = `SELECT * FROM criminals WHERE LOWER("Criminal_name") LIKE LOWER(?) OR LOWER(email) LIKE LOWER(?) OR LOWER(contact) LIKE LOWER(?) 
                ORDER BY created_at DESC`;
   const searchTerm = `%${query}%`;
 

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authAPI } from '../api/client';
+import { authAPI, stationsAPI } from '../api/client';
 import { setAuthUser } from '../utils/authService';
 import '../styles/auth-modern.css';
 
 const LoginModern = () => {
   const [activeTab, setActiveTab] = useState('user');
-  const [isRegistering, setIsRegistering] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [registerType, setRegisterType] = useState('user');
 
   // Login States
   const [adminLogin, setAdminLogin] = useState({ username: '', password: '' });
@@ -34,18 +35,19 @@ const LoginModern = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [modalError, setModalError] = useState('');
+  const [modalSuccess, setModalSuccess] = useState('');
   const [stations, setStations] = useState([]);
   const navigate = useNavigate();
 
   // Fetch stations
   useEffect(() => {
-    if (activeTab === 'police' && stations.length === 0) {
+    if (stations.length === 0 && (activeTab === 'police' || (showRegisterModal && registerType === 'police'))) {
       const fetchStations = async () => {
         try {
-          const response = await fetch('http://localhost:3000/api/stations/all');
-          const data = await response.json();
-          if (data.status === 'success' && Array.isArray(data.data)) {
-            setStations(data.data);
+          const response = await stationsAPI.getAll();
+          if (response.data.status === 'success' && Array.isArray(response.data.data)) {
+            setStations(response.data.data);
           }
         } catch (err) {
           // Silent fail - stations list optional
@@ -53,17 +55,34 @@ const LoginModern = () => {
       };
       fetchStations();
     }
-  }, [activeTab, stations.length]);
+  }, [activeTab, stations.length, showRegisterModal, registerType]);
 
   const clearErrors = () => {
     setError('');
     setSuccess('');
   };
 
+  const clearModalErrors = () => {
+    setModalError('');
+    setModalSuccess('');
+  };
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setIsRegistering(false);
     clearErrors();
+  };
+
+  const openRegisterModal = (type) => {
+    setRegisterType(type);
+    setShowRegisterModal(true);
+    clearModalErrors();
+  };
+
+  const closeRegisterModal = () => {
+    setShowRegisterModal(false);
+    clearModalErrors();
+    setUserRegister({ username: '', email: '', password: '', confirmPassword: '', phone: '' });
+    setPoliceRegister({ username: '', email: '', password: '', confirmPassword: '', phone: '', station_id: '' });
   };
 
   // ===== LOGIN HANDLERS =====
@@ -191,20 +210,20 @@ const LoginModern = () => {
   // ===== REGISTER HANDLERS =====
   const handleUserRegister = async (e) => {
     e.preventDefault();
-    clearErrors();
+    clearModalErrors();
 
     if (!userRegister.username || !userRegister.email || !userRegister.password) {
-      setError('All fields are required');
+      setModalError('All fields are required');
       return;
     }
 
     if (userRegister.password !== userRegister.confirmPassword) {
-      setError('Passwords do not match');
+      setModalError('Passwords do not match');
       return;
     }
 
     if (userRegister.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setModalError('Password must be at least 6 characters');
       return;
     }
 
@@ -218,19 +237,17 @@ const LoginModern = () => {
         'User'
       );
       if (response.data.status === 'success') {
-        setSuccess(`Welcome ${userRegister.username}! Registration successful. Please login now.`);
-        setIsRegistering(false);
-        setUserRegister({
-          username: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          phone: ''
-        });
-        setUserLogin({ username: userRegister.username, password: '' });
+        setModalSuccess(`Welcome ${userRegister.username}! Registration successful.`);
+        const savedUsername = userRegister.username;
+        setTimeout(() => {
+          closeRegisterModal();
+          setActiveTab('user');
+          setUserLogin({ username: savedUsername, password: '' });
+          setSuccess('Registration successful! Please login with your credentials.');
+        }, 2000);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      setModalError(err.response?.data?.message || 'Registration failed. Please try again.');
       console.error('User register error:', err);
     } finally {
       setLoading(false);
@@ -239,20 +256,20 @@ const LoginModern = () => {
 
   const handlePoliceRegister = async (e) => {
     e.preventDefault();
-    clearErrors();
+    clearModalErrors();
 
     if (!policeRegister.username || !policeRegister.email || !policeRegister.password || !policeRegister.station_id) {
-      setError('All fields are required');
+      setModalError('All fields are required');
       return;
     }
 
     if (policeRegister.password !== policeRegister.confirmPassword) {
-      setError('Passwords do not match');
+      setModalError('Passwords do not match');
       return;
     }
 
     if (policeRegister.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setModalError('Password must be at least 6 characters');
       return;
     }
 
@@ -267,24 +284,18 @@ const LoginModern = () => {
         policeRegister.station_id
       );
       if (response.data.status === 'success') {
-        setSuccess(`Welcome Officer ${policeRegister.username}! Registration successful. Please login now.`);
-        setIsRegistering(false);
-        setPoliceRegister({
-          username: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          phone: '',
-          station_id: ''
-        });
-        setPoliceLogin({ 
-          username: policeRegister.username, 
-          password: '',
-          station_id: policeRegister.station_id
-        });
+        setModalSuccess(`Welcome Officer ${policeRegister.username}! Registration successful.`);
+        const savedUsername = policeRegister.username;
+        const savedStationId = policeRegister.station_id;
+        setTimeout(() => {
+          closeRegisterModal();
+          setActiveTab('police');
+          setPoliceLogin({ username: savedUsername, password: '', station_id: savedStationId });
+          setSuccess('Registration successful! Please login with your credentials.');
+        }, 2000);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      setModalError(err.response?.data?.message || 'Registration failed. Please try again.');
       console.error('Police register error:', err);
     } finally {
       setLoading(false);
@@ -330,132 +341,48 @@ const LoginModern = () => {
             {/* ===== USER TAB ===== */}
             {activeTab === 'user' && (
               <div className="auth-tab-content active">
-                {!isRegistering ? (
-                  <>
-                    <h3 className="auth-card-title">User Login</h3>
-                    <form onSubmit={handleUserLogin}>
-                      <div className="form-group">
-                        <label className="form-label">Username</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Enter your username"
-                          value={userLogin.username}
-                          onChange={(e) => setUserLogin({ ...userLogin, username: e.target.value })}
-                          required
-                        />
-                      </div>
+                <h3 className="auth-card-title">User Login</h3>
+                <form onSubmit={handleUserLogin}>
+                  <div className="form-group">
+                    <label className="form-label">Username</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter your username"
+                      value={userLogin.username}
+                      onChange={(e) => setUserLogin({ ...userLogin, username: e.target.value })}
+                      required
+                    />
+                  </div>
 
-                      <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <input
-                          type="password"
-                          className="form-control"
-                          placeholder="Enter your password"
-                          value={userLogin.password}
-                          onChange={(e) => setUserLogin({ ...userLogin, password: e.target.value })}
-                          required
-                        />
-                      </div>
+                  <div className="form-group">
+                    <label className="form-label">Password</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="Enter your password"
+                      value={userLogin.password}
+                      onChange={(e) => setUserLogin({ ...userLogin, password: e.target.value })}
+                      required
+                    />
+                  </div>
 
-                      <button type="submit" className="btn btn-primary" disabled={loading}>
-                        {loading && <span className="loading-spinner"></span>}
-                        {loading ? 'Logging in...' : 'Login'}
-                      </button>
-                    </form>
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading && <span className="loading-spinner"></span>}
+                    {loading ? 'Logging in...' : 'Login'}
+                  </button>
+                </form>
 
-                    <div className="form-footer">
-                      <p>Don't have an account?</p>
-                      <button
-                        type="button"
-                        className="btn-register-link"
-                        onClick={() => setIsRegistering(true)}
-                      >
-                        🔐 Create New Account
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="auth-card-title">Create User Account</h3>
-                    <form onSubmit={handleUserRegister}>
-                      <div className="form-group">
-                        <label className="form-label">Username</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Choose a username"
-                          value={userRegister.username}
-                          onChange={(e) => setUserRegister({ ...userRegister, username: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">Email</label>
-                        <input
-                          type="email"
-                          className="form-control"
-                          placeholder="Enter your email"
-                          value={userRegister.email}
-                          onChange={(e) => setUserRegister({ ...userRegister, email: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">Phone (Optional)</label>
-                        <input
-                          type="tel"
-                          className="form-control"
-                          placeholder="Enter your phone number"
-                          value={userRegister.phone}
-                          onChange={(e) => setUserRegister({ ...userRegister, phone: e.target.value })}
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <input
-                          type="password"
-                          className="form-control"
-                          placeholder="Create a password"
-                          value={userRegister.password}
-                          onChange={(e) => setUserRegister({ ...userRegister, password: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">Confirm Password</label>
-                        <input
-                          type="password"
-                          className="form-control"
-                          placeholder="Confirm your password"
-                          value={userRegister.confirmPassword}
-                          onChange={(e) => setUserRegister({ ...userRegister, confirmPassword: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <button type="submit" className="btn btn-primary" disabled={loading}>
-                        {loading && <span className="loading-spinner"></span>}
-                        {loading ? 'Registering...' : 'Register'}
-                      </button>
-                    </form>
-
-                    <div className="form-footer">
-                      <p>Already have an account?</p>
-                      <button
-                        type="button"
-                        className="btn-register-link"
-                        onClick={() => setIsRegistering(false)}
-                      >
-                        🔑 Back to Login
-                      </button>
-                    </div>
-                  </>
-                )}
+                <div className="form-footer">
+                  <p>Don't have an account?</p>
+                  <button
+                    type="button"
+                    className="btn-register-link"
+                    onClick={() => openRegisterModal('user')}
+                  >
+                    🔐 Create New Account
+                  </button>
+                </div>
               </div>
             )}
 
@@ -503,150 +430,48 @@ const LoginModern = () => {
             {/* ===== POLICE TAB ===== */}
             {activeTab === 'police' && (
               <div className="auth-tab-content active">
-                {!isRegistering ? (
-                  <>
-                    <h3 className="auth-card-title">Police Login</h3>
-                    <form onSubmit={handlePoliceLogin}>
-                      <div className="form-group">
-                        <label className="form-label">Username</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Enter your username"
-                          value={policeLogin.username}
-                          onChange={(e) => setPoliceLogin({ ...policeLogin, username: e.target.value })}
-                          required
-                        />
-                      </div>
+                <h3 className="auth-card-title">Police Login</h3>
+                <form onSubmit={handlePoliceLogin}>
+                  <div className="form-group">
+                    <label className="form-label">Username</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter your username"
+                      value={policeLogin.username}
+                      onChange={(e) => setPoliceLogin({ ...policeLogin, username: e.target.value })}
+                      required
+                    />
+                  </div>
 
-                      <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <input
-                          type="password"
-                          className="form-control"
-                          placeholder="Enter your password"
-                          value={policeLogin.password}
-                          onChange={(e) => setPoliceLogin({ ...policeLogin, password: e.target.value })}
-                          required
-                        />
-                      </div>
+                  <div className="form-group">
+                    <label className="form-label">Password</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="Enter your password"
+                      value={policeLogin.password}
+                      onChange={(e) => setPoliceLogin({ ...policeLogin, password: e.target.value })}
+                      required
+                    />
+                  </div>
 
-                      <button type="submit" className="btn btn-primary" disabled={loading}>
-                        {loading && <span className="loading-spinner"></span>}
-                        {loading ? 'Logging in...' : 'Login as Officer'}
-                      </button>
-                    </form>
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading && <span className="loading-spinner"></span>}
+                    {loading ? 'Logging in...' : 'Login as Officer'}
+                  </button>
+                </form>
 
-                    <div className="form-footer">
-                      New officer?{' '}
-                      <button
-                        type="button"
-                        className="btn-register-link"
-                        onClick={() => setIsRegistering(true)}
-                      >
-                        🔐 Create New Account
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="auth-card-title">Police Officer Registration</h3>
-                    <form onSubmit={handlePoliceRegister}>
-                      <div className="form-group">
-                        <label className="form-label">Username</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Choose a username"
-                          value={policeRegister.username}
-                          onChange={(e) => setPoliceRegister({ ...policeRegister, username: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">Email</label>
-                        <input
-                          type="email"
-                          className="form-control"
-                          placeholder="Enter your email"
-                          value={policeRegister.email}
-                          onChange={(e) => setPoliceRegister({ ...policeRegister, email: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">Phone</label>
-                        <input
-                          type="tel"
-                          className="form-control"
-                          placeholder="Enter your phone number"
-                          value={policeRegister.phone}
-                          onChange={(e) => setPoliceRegister({ ...policeRegister, phone: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">Police Station</label>
-                        <select
-                          className="form-select"
-                          value={policeRegister.station_id}
-                          onChange={(e) => setPoliceRegister({ ...policeRegister, station_id: e.target.value })}
-                          required
-                        >
-                          <option value="">-- Select Your Station --</option>
-                          {stations.map((station) => (
-                            <option key={station.id} value={station.id}>
-                              {station.station_name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <input
-                          type="password"
-                          className="form-control"
-                          placeholder="Create a password"
-                          value={policeRegister.password}
-                          onChange={(e) => setPoliceRegister({ ...policeRegister, password: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">Confirm Password</label>
-                        <input
-                          type="password"
-                          className="form-control"
-                          placeholder="Confirm your password"
-                          value={policeRegister.confirmPassword}
-                          onChange={(e) => setPoliceRegister({ ...policeRegister, confirmPassword: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <button type="submit" className="btn btn-primary" disabled={loading}>
-                        {loading && <span className="loading-spinner"></span>}
-                        {loading ? 'Registering...' : 'Register as Officer'}
-                      </button>
-                    </form>
-
-                    <div className="form-footer">
-                      Already registered?{' '}
-                      <button
-                        type="button"
-                        className="btn-register-link"
-                        onClick={() => setIsRegistering(false)}
-                      >
-                        🔑 Back to Login
-                      </button>
-                    </div>
-                  </>
-                )}
+                <div className="form-footer">
+                  New officer?{' '}
+                  <button
+                    type="button"
+                    className="btn-register-link"
+                    onClick={() => openRegisterModal('police')}
+                  >
+                    🔐 Create New Account
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -656,6 +481,123 @@ const LoginModern = () => {
           <p>&copy; 2024. All rights reserved.</p>
         </div>
       </div>
+
+      {/* ===== REGISTRATION MODAL ===== */}
+      {showRegisterModal && (
+        <div className="register-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) closeRegisterModal(); }}>
+          <div className="register-modal">
+            <div className="register-modal-header">
+              <h3>{registerType === 'user' ? '👤 Citizen Registration' : '🛡 Officer Registration'}</h3>
+              <button className="register-modal-close" onClick={closeRegisterModal}>&times;</button>
+            </div>
+
+            <div className="register-modal-body">
+              {modalError && <div className="alert alert-danger">{modalError}</div>}
+              {modalSuccess && <div className="alert alert-success">{modalSuccess}</div>}
+
+              {registerType === 'user' ? (
+                <form onSubmit={handleUserRegister}>
+                  <div className="form-group">
+                    <label className="form-label">Username</label>
+                    <input type="text" className="form-control" placeholder="Choose a username"
+                      value={userRegister.username}
+                      onChange={(e) => setUserRegister({ ...userRegister, username: e.target.value })} required />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Email</label>
+                    <input type="email" className="form-control" placeholder="Enter your email"
+                      value={userRegister.email}
+                      onChange={(e) => setUserRegister({ ...userRegister, email: e.target.value })} required />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Phone (Optional)</label>
+                    <input type="tel" className="form-control" placeholder="Enter your phone number"
+                      value={userRegister.phone}
+                      onChange={(e) => setUserRegister({ ...userRegister, phone: e.target.value })} />
+                  </div>
+                  <div className="register-modal-row">
+                    <div className="form-group">
+                      <label className="form-label">Password</label>
+                      <input type="password" className="form-control" placeholder="Create a password"
+                        value={userRegister.password}
+                        onChange={(e) => setUserRegister({ ...userRegister, password: e.target.value })} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Confirm Password</label>
+                      <input type="password" className="form-control" placeholder="Confirm password"
+                        value={userRegister.confirmPassword}
+                        onChange={(e) => setUserRegister({ ...userRegister, confirmPassword: e.target.value })} required />
+                    </div>
+                  </div>
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading && <span className="loading-spinner"></span>}
+                    {loading ? 'Registering...' : 'Create Account'}
+                  </button>
+                </form>
+              ) : (
+                <form onSubmit={handlePoliceRegister}>
+                  <div className="register-modal-row">
+                    <div className="form-group">
+                      <label className="form-label">Username</label>
+                      <input type="text" className="form-control" placeholder="Choose a username"
+                        value={policeRegister.username}
+                        onChange={(e) => setPoliceRegister({ ...policeRegister, username: e.target.value })} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Email</label>
+                      <input type="email" className="form-control" placeholder="Enter your email"
+                        value={policeRegister.email}
+                        onChange={(e) => setPoliceRegister({ ...policeRegister, email: e.target.value })} required />
+                    </div>
+                  </div>
+                  <div className="register-modal-row">
+                    <div className="form-group">
+                      <label className="form-label">Phone</label>
+                      <input type="tel" className="form-control" placeholder="Enter your phone"
+                        value={policeRegister.phone}
+                        onChange={(e) => setPoliceRegister({ ...policeRegister, phone: e.target.value })} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Police Station</label>
+                      <select className="form-select" value={policeRegister.station_id}
+                        onChange={(e) => setPoliceRegister({ ...policeRegister, station_id: e.target.value })} required>
+                        <option value="">-- Select Station --</option>
+                        {stations.map((station) => (
+                          <option key={station.id} value={station.id}>{station.station_name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="register-modal-row">
+                    <div className="form-group">
+                      <label className="form-label">Password</label>
+                      <input type="password" className="form-control" placeholder="Create a password"
+                        value={policeRegister.password}
+                        onChange={(e) => setPoliceRegister({ ...policeRegister, password: e.target.value })} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Confirm Password</label>
+                      <input type="password" className="form-control" placeholder="Confirm password"
+                        value={policeRegister.confirmPassword}
+                        onChange={(e) => setPoliceRegister({ ...policeRegister, confirmPassword: e.target.value })} required />
+                    </div>
+                  </div>
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading && <span className="loading-spinner"></span>}
+                    {loading ? 'Registering...' : 'Register as Officer'}
+                  </button>
+                </form>
+              )}
+
+              <div className="form-footer" style={{ marginTop: '0.75rem' }}>
+                <button type="button" className="btn-register-link" onClick={closeRegisterModal}>
+                  🔑 Back to Login
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

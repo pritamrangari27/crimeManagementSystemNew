@@ -1164,3 +1164,151 @@ textarea:focus {
   outline: 2px solid var(--secondary-color);
   outline-offset: 2px;
 }
+
+/* ===== REGISTRATION MODAL ===== */
+.register-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.register-modal {
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 32px rgba(14, 165, 233, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #0ea5e9;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.register-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(14, 165, 233, 0.2);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+  border-radius: 0.75rem 0.75rem 0 0;
+}
+
+.register-modal-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0ea5e9;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.register-modal-close {
+  background: none;
+  border: 2px solid #0ea5e9;
+  color: #0ea5e9;
+  font-size: 1.4rem;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.register-modal-close:hover {
+  background: #0ea5e9;
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+.register-modal-body {
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.register-modal-body .alert {
+  margin-bottom: 0.75rem;
+}
+
+.register-modal-body .form-group {
+  margin-bottom: 0.6rem;
+}
+
+.register-modal-body .btn {
+  margin-top: 0.5rem;
+}
+
+.register-modal-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.register-modal-body .form-footer {
+  text-align: center;
+  border-top: 1px solid rgba(14, 165, 233, 0.15);
+  padding-top: 0.75rem;
+}
+
+/* Modal scrollbar styling */
+.register-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.register-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.register-modal::-webkit-scrollbar-thumb {
+  background: rgba(14, 165, 233, 0.3);
+  border-radius: 3px;
+}
+
+.register-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(14, 165, 233, 0.5);
+}
+
+/* Modal responsive */
+@media (max-width: 600px) {
+  .register-modal {
+    max-width: 100%;
+    margin: 0.5rem;
+    max-height: 95vh;
+  }
+
+  .register-modal-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .register-modal-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .register-modal-body {
+    padding: 0.75rem 1rem 1rem;
+  }
+}
