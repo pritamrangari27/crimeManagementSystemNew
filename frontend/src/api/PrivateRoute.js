@@ -35,8 +35,9 @@ const PrivateRoute = ({ children }) => {
         break;
 
       case 'Police':
-        // Police can access: /police/*, /profile, /change-password
+        // Police can access: /police/*, /fir/*, /profile, /change-password
         isAllowed = pathname.startsWith('/police/') || 
+                   pathname.startsWith('/fir/') ||
                    pathname === '/police/profile' ||
                    pathname === '/change-password';
         break;

@@ -195,8 +195,13 @@ const PoliceSentFIRs = () => {
               </Alert>
             ) : firs.length === 0 ? (
               <div className="text-center py-5">
-                <i className="fas fa-folder-open text-muted" style={{ fontSize: '48px' }}></i>
-                <p className="mt-3 text-muted">No FIRs found{filterStatus ? ` with status "${filterStatus}"` : ''}</p>
+                <i className={`fas ${filterStatus === 'Approved' ? 'fa-check-circle text-success' : filterStatus === 'Rejected' ? 'fa-times-circle text-danger' : 'fa-folder-open text-muted'}`} style={{ fontSize: '48px' }}></i>
+                <h5 className="mt-3 fw-bold" style={{ color: '#334155' }}>
+                  {filterStatus === 'Approved' ? 'No Approved FIRs Yet' : filterStatus === 'Rejected' ? 'No Rejected FIRs Yet' : filterStatus === 'Sent' ? 'No New FIRs' : 'No FIRs Found'}
+                </h5>
+                <p className="text-muted">
+                  {filterStatus === 'Approved' ? 'FIRs you approve will appear here.' : filterStatus === 'Rejected' ? 'FIRs you reject will appear here.' : filterStatus === 'Sent' ? 'No new FIRs have been sent to your station yet.' : 'There are no FIRs in your station.'}
+                </p>
               </div>
             ) : (
               <div className="table-responsive">
@@ -231,26 +236,51 @@ const PoliceSentFIRs = () => {
                         </td>
                         <td>
                           <div className="d-flex gap-2 align-items-center">
-                            <Button
-                              variant="outline-info"
-                              size="sm"
-                              onClick={() => navigate(`/fir/${fir.id}`)}
-                              className="fw-bold"
-                            >
-                              <i className="fas fa-eye me-1"></i> View
-                            </Button>
-                            {fir.status === 'Sent' && (
+                            {fir.status === 'Sent' ? (
                               <Form.Select
                                 size="sm"
-                                style={{ width: '130px', fontWeight: '600' }}
+                                style={{
+                                  width: '145px',
+                                  fontWeight: '600',
+                                  borderRadius: '8px',
+                                  border: '2px solid #0ea5e9',
+                                  color: '#0ea5e9',
+                                  backgroundColor: '#f0f9ff',
+                                  cursor: 'pointer',
+                                  padding: '0.4rem 0.6rem'
+                                }}
                                 defaultValue=""
                                 disabled={actionLoading === fir.id}
-                                onChange={(e) => handleStatusChange(fir.id, e.target.value)}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (val === 'view') {
+                                    navigate(`/fir/${fir.id}`);
+                                  } else if (val) {
+                                    handleStatusChange(fir.id, val);
+                                  }
+                                  e.target.value = '';
+                                }}
                               >
                                 <option value="" disabled>Action...</option>
+                                <option value="view">👁 View Details</option>
                                 <option value="Approved">✓ Approve</option>
                                 <option value="Rejected">✕ Reject</option>
                               </Form.Select>
+                            ) : (
+                              <Button
+                                size="sm"
+                                style={{
+                                  borderRadius: '8px',
+                                  border: '2px solid #0ea5e9',
+                                  color: '#0ea5e9',
+                                  backgroundColor: '#f0f9ff',
+                                  fontWeight: '600',
+                                  padding: '0.35rem 1rem'
+                                }}
+                                onClick={() => navigate(`/fir/${fir.id}`)}
+                              >
+                                <i className="fas fa-eye me-1"></i> View
+                              </Button>
                             )}
                             {actionLoading === fir.id && (
                               <Spinner animation="border" size="sm" />
