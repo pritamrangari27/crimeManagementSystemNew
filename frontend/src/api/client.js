@@ -85,7 +85,9 @@ export const authAPI = {
   logout: () => api.post('/auth/logout'),
   currentUser: () => api.get('/auth/current-user'),
   changePassword: (oldPassword, newPassword) =>
-    api.post('/auth/change-password', { oldPassword, newPassword })
+    api.post('/auth/change-password', { oldPassword, newPassword }),
+  updateProfile: (data) =>
+    api.put('/auth/update-profile', data)
 };
 
 // Criminals API

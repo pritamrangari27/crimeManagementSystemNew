@@ -223,31 +223,106 @@ router.get('/current-user', checkAuth, (req, res) => {
 });
 
 /**
- * Change password endpoint
- * - Validates old password before issuing new one
- * - Updates password hash with timestamp
- * SECURITY: In production, use bcrypt for password comparison and hashing
- * Current implementation uses plain text for backwards compatibility with existing DB
- * Migration path: Use bcrypt.hash() for new passwords, verify with bcrypt.compare()
+ * Update profile endpoint
+ * - Updates user profile fields (username, email, phone) in the database
+ * - Requires authentication
  */
-router.post('/change-password', checkAuth, (req, res) => {
+router.put('/update-profile', checkAuth, (req, res) => {
   try {
-    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const userId = req.session.user.id;
+    const { username, email, phone } = req.body;
+
+    if (!username || !email) {
+      return res.status(400).json({ status: 'error', message: 'Username and email are required' });
+    }
+
+    // Validate username
+    const usernameValidation = validateUsername(username);
+    if (!usernameValidation.valid) {
+      return res.status(400).json({ status: 'error', message: usernameValidation.message });
+    }
+
+    // Validate email
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.valid) {
+      return res.status(400).json({ status: 'error', message: emailValidation.message });
+    }
+
+    // Check if username or email is taken by another user
+    const checkSql = `SELECT id FROM users WHERE (username = ? OR email = ?) AND id != ?`;
+    req.db.get(checkSql, [username, email, userId], (err, existing) => {
+      if (err) {
+        console.error('Profile update check error:', err);
+        return res.status(500).json({ status: 'error', message: 'Profile update service unavailable' });
+      }
+
+      if (existing) {
+        return res.status(409).json({ status: 'error', message: 'Username or email already taken by another user' });
+      }
+
+      const updateSql = `UPDATE users SET username = ?, email = ?, phone = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
+      req.db.run(updateSql, [username, email, phone || '', userId], function(err) {
+        if (err) {
+          console.error('Profile update database error:', err);
+          return res.status(500).json({ status: 'error', message: 'Failed to update profile' });
+        }
+
+        // Update session data
+        req.session.user.username = username;
+        req.session.user.email = email;
+        req.session.user.phone = phone || '';
+
+        // Log activity
+        logActivity(
+          req.db,
+          userId,
+          'PROFILE_UPDATE',
+          'Profile updated',
+          `${username} updated their profile information`,
+          'User',
+          userId,
+          'fas fa-user-edit'
+        );
+
+        res.json({
+          status: 'success',
+          message: 'Profile updated successfully',
+          user: {
+            id: userId,
+            username,
+            email,
+            phone: phone || '',
+            role: req.session.user.role,
+            station_id: req.session.user.station_id
+          }
+        });
+      });
+    });
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.status(500).json({ status: 'error', message: 'An unexpected error occurred' });
+  }
+});
+
+/**
+ * Change password endpoint
+ * - Validates old password using bcrypt before issuing new one
+ * - Hashes new password with bcrypt before storing
+ */
+router.post('/change-password', checkAuth, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
     const userId = req.session.user.id;
 
     // Validate inputs
-    if (!oldPassword || !newPassword || !confirmPassword) {
-      return res.status(400).json({ status: 'error', message: 'All password fields are required' });
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ status: 'error', message: 'Current password and new password are required' });
     }
 
     // Validate new password format
-    if (!validatePassword(newPassword)) {
-      return res.status(400).json({ status: 'error', message: 'Password must be at least 6 characters' });
-    }
-
-    // Verify passwords match
-    if (newPassword !== confirmPassword) {
-      return res.status(400).json({ status: 'error', message: 'New passwords do not match' });
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.valid) {
+      return res.status(400).json({ status: 'error', message: passwordValidation.message });
     }
 
     // Prevent same password
@@ -255,32 +330,57 @@ router.post('/change-password', checkAuth, (req, res) => {
       return res.status(400).json({ status: 'error', message: 'New password must be different from current password' });
     }
 
-    // Verify old password
-    const checkSql = `SELECT id FROM users WHERE id = ? AND password = ?`;
-    req.db.get(checkSql, [userId, oldPassword], (err, user) => {
+    // Fetch the stored hashed password
+    const checkSql = `SELECT id, password FROM users WHERE id = ?`;
+    req.db.get(checkSql, [userId], async (err, user) => {
       if (err) {
         console.error('Password verification database error:', err);
         return res.status(500).json({ status: 'error', message: 'Password verification service unavailable' });
       }
 
       if (!user) {
-        // Generic message for security (don't reveal if password is correct)
-        return res.status(401).json({ status: 'error', message: 'Current password is incorrect' });
+        return res.status(404).json({ status: 'error', message: 'User not found' });
       }
 
-      // Update password
-      const updateSql = `UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
-      req.db.run(updateSql, [newPassword, userId], (err) => {
-        if (err) {
-          console.error('Password update database error:', err);
-          return res.status(500).json({ status: 'error', message: 'Password update failed' });
+      try {
+        // Compare old password with stored bcrypt hash
+        const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+        if (!isPasswordValid) {
+          return res.status(401).json({ status: 'error', message: 'Current password is incorrect' });
         }
 
-        res.json({ 
-          status: 'success', 
-          message: 'Password changed successfully' 
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update password in database
+        const updateSql = `UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
+        req.db.run(updateSql, [hashedPassword, userId], (err) => {
+          if (err) {
+            console.error('Password update database error:', err);
+            return res.status(500).json({ status: 'error', message: 'Password update failed' });
+          }
+
+          // Log activity
+          logActivity(
+            req.db,
+            userId,
+            'PASSWORD_CHANGE',
+            'Password changed',
+            `${req.session.user.username} changed their password`,
+            'User',
+            userId,
+            'fas fa-key'
+          );
+
+          res.json({
+            status: 'success',
+            message: 'Password changed successfully'
+          });
         });
-      });
+      } catch (bcryptErr) {
+        console.error('Password comparison/hashing error:', bcryptErr);
+        return res.status(500).json({ status: 'error', message: 'Password update service error' });
+      }
     });
   } catch (error) {
     console.error('Change password error:', error);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, Alert, Spinner, Badge, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, getUserRole, updateAuthUser } from '../utils/authService';
+import { authAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
 import '../styles/forms.css';
 
@@ -42,16 +43,8 @@ const UserProfile = () => {
     setSuccess('');
 
     try {
-      const response = await fetch(`http://localhost:5000/api/auth/update-profile`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: user.id,
-          ...formData
-        })
-      });
-
-      const data = await response.json();
+      const response = await authAPI.updateProfile(formData);
+      const data = response.data;
       if (data.status === 'success') {
         // Update auth service with new data
         updateAuthUser(formData);
@@ -61,7 +54,7 @@ const UserProfile = () => {
         setError(data.message || 'Failed to update profile');
       }
     } catch (err) {
-      setError('Error updating profile');
+      setError(err.response?.data?.message || 'Error updating profile');
     } finally {
       setLoading(false);
     }
