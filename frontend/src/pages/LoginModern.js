@@ -656,14 +656,6 @@ const LoginModern = () => {
           <p>&copy; 2024. All rights reserved.</p>
         </div>
       </div>
-
-      {/* Professional Footer */}
-      <footer className="auth-footer">
-        <div className="auth-footer-content">
-          <p className="auth-footer-text">Crime Management System © 2026</p>
-          <p className="auth-footer-credit">Made by <span className="developer-name">Pritam Rangari</span></p>
-        </div>
-      </footer>
     </div>
   );
 };
