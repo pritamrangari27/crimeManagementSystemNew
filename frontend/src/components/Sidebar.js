@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Nav, Modal, Button, Table, Badge, Form } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser, getUserRole, clearAuth, updateAuthUser } from '../utils/authService';
+import { dashboardAPI } from '../api/client';
 import '../styles/sidebar.css';
 
 const Sidebar = () => {
@@ -22,6 +23,29 @@ const Sidebar = () => {
   const [passwordError, setPasswordError] = useState('');
   const user = getCurrentUser();
   const userRole = getUserRole();
+  const [activities, setActivities] = useState([]);
+  const [showActivitiesModal, setShowActivitiesModal] = useState(false);
+  const [actSlideIndex, setActSlideIndex] = useState(0);
+
+  // Fetch recent activities for Admin
+  useEffect(() => {
+    if (userRole !== 'Admin') return;
+
+    const fetchActivities = async () => {
+      try {
+        const response = await dashboardAPI.getActivity(15);
+        if (response.data.status === 'success') {
+          setActivities(response.data.activities || []);
+        }
+      } catch (error) {
+        console.error('Error fetching activities:', error);
+      }
+    };
+
+    fetchActivities();
+    const interval = setInterval(fetchActivities, 30000);
+    return () => clearInterval(interval);
+  }, [userRole]);
 
   // Close popup when clicking outside
   useEffect(() => {
@@ -116,6 +140,131 @@ const Sidebar = () => {
           ))}
         </Nav>
 
+        {/* Recent Activities - Admin Only */}
+        {userRole === 'Admin' && (
+          <div className="sidebar-activities">
+            <div className="sidebar-activities-header">
+              <i className="fas fa-history me-2"></i>
+              <span>Recent Activities</span>
+              {activities.length > 0 && (
+                <button
+                  className="view-all-btn"
+                  onClick={() => { setActSlideIndex(0); setShowActivitiesModal(true); }}
+                >
+                  View All
+                </button>
+              )}
+            </div>
+            <div className="sidebar-activities-list">
+              {activities.length > 0 ? (
+                activities.map((activity, idx) => (
+                  <div key={idx} className="sidebar-activity-item">
+                    <div className="activity-icon-small">
+                      <i className={activity.icon || 'fas fa-info-circle'}></i>
+                    </div>
+                    <div className="activity-details">
+                      <p className="activity-action">{activity.action}</p>
+                      <p className="activity-desc">{activity.description}</p>
+                      <span className="activity-time">
+                        <i className="fas fa-clock me-1"></i>{activity.timestamp}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-3" style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
+                  <i className="fas fa-inbox mb-2" style={{ fontSize: '1.2rem', opacity: 0.4 }}></i>
+                  <p className="mb-0">No recent activities</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Activities Slider Modal */}
+        <Modal show={showActivitiesModal} onHide={() => setShowActivitiesModal(false)} centered size="md" dialogClassName="activities-modal">
+          <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', borderBottom: 'none', padding: '14px 20px' }}>
+            <Modal.Title style={{ color: 'white', fontSize: '1rem', fontWeight: 700 }}>
+              <i className="fas fa-history me-2" style={{ color: '#10b981' }}></i>
+              Recent Activities
+              <span style={{ background: 'rgba(16,185,129,0.2)', color: '#10b981', padding: '2px 10px', borderRadius: '12px', fontSize: '0.72rem', marginLeft: '10px', fontWeight: 600 }}>
+                {actSlideIndex + 1} / {activities.length}
+              </span>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{ background: '#f8fafc', padding: 0, position: 'relative', minHeight: '180px' }}>
+            {activities.length > 0 && (
+              <>
+                <div style={{ overflow: 'hidden' }}>
+                  <div style={{
+                    display: 'flex',
+                    transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
+                    transform: `translateX(-${actSlideIndex * 100}%)`
+                  }}>
+                    {activities.map((activity, idx) => (
+                      <div key={idx} style={{ minWidth: '100%', padding: '28px 32px', boxSizing: 'border-box' }}>
+                        <div className="d-flex align-items-start">
+                          <div style={{
+                            width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            borderRadius: '12px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                            color: 'white', fontSize: '1.1rem', flexShrink: 0,
+                            boxShadow: '0 4px 12px rgba(16,185,129,0.3)'
+                          }}>
+                            <i className={activity.icon || 'fas fa-info-circle'}></i>
+                          </div>
+                          <div className="ms-3 flex-grow-1">
+                            <h6 className="mb-1 fw-bold" style={{ color: '#0f172a', fontSize: '1rem' }}>{activity.action}</h6>
+                            <p className="mb-2" style={{ color: '#475569', fontSize: '0.88rem', lineHeight: 1.5 }}>{activity.description}</p>
+                            <span style={{ background: '#e2e8f0', color: '#64748b', padding: '3px 10px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 500 }}>
+                              <i className="fas fa-clock me-1"></i>{activity.timestamp}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {activities.length > 1 && (
+                  <>
+                    <button onClick={() => setActSlideIndex((actSlideIndex - 1 + activities.length) % activities.length)} style={{
+                      position: 'absolute', top: '50%', left: '8px', transform: 'translateY(-50%)',
+                      width: '32px', height: '32px', borderRadius: '50%', border: '2px solid #10b981',
+                      background: 'rgba(255,255,255,0.95)', color: '#10b981', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem',
+                      zIndex: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', transition: 'all 0.2s'
+                    }}>
+                      <i className="fas fa-arrow-left"></i>
+                    </button>
+                    <button onClick={() => setActSlideIndex((actSlideIndex + 1) % activities.length)} style={{
+                      position: 'absolute', top: '50%', right: '8px', transform: 'translateY(-50%)',
+                      width: '32px', height: '32px', borderRadius: '50%', border: '2px solid #10b981',
+                      background: 'rgba(255,255,255,0.95)', color: '#10b981', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem',
+                      zIndex: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', transition: 'all 0.2s'
+                    }}>
+                      <i className="fas fa-arrow-right"></i>
+                    </button>
+                  </>
+                )}
+              </>
+            )}
+          </Modal.Body>
+          {activities.length > 1 && (
+            <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', justifyContent: 'center', padding: '10px' }}>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {activities.map((_, idx) => (
+                  <button key={idx} onClick={() => setActSlideIndex(idx)} style={{
+                    width: actSlideIndex === idx ? '22px' : '8px', height: '8px', borderRadius: '4px',
+                    border: 'none', background: actSlideIndex === idx ? '#10b981' : '#cbd5e1',
+                    cursor: 'pointer', transition: 'all 0.3s ease', padding: 0
+                  }} />
+                ))}
+              </div>
+            </Modal.Footer>
+          )}
+        </Modal>
+
         {/* Sidebar Footer - User Profile Dropdown */}
         <div className="sidebar-footer" ref={popupRef}>
           <div className="sidebar-user-dropdown" style={{ paddingTop: '12px' }}>
@@ -164,7 +313,7 @@ const Sidebar = () => {
         </div>
 
         {/* Profile Modal */}
-        <Modal show={showProfileModal} onHide={() => setShowProfileModal(false)} centered size="md">
+        <Modal show={showProfileModal} onHide={() => setShowProfileModal(false)} centered size="md" dialogClassName="profile-modal">
           <Modal.Header closeButton style={{ backgroundColor: '#0ea5e9', borderColor: '#0284c7', padding: '12px 16px' }}>
             <Modal.Title style={{ color: 'white', fontSize: '1.1rem' }}>
               <i className="fas fa-id-card me-2"></i>
@@ -456,6 +605,7 @@ const Sidebar = () => {
           }}
           centered
           backdrop="static"
+          dialogClassName="password-modal"
         >
           <Modal.Header closeButton style={{ borderBottom: '1px solid #e0e0e0' }}>
             <Modal.Title style={{ color: '#0ea5e9', fontWeight: 'bold' }}>

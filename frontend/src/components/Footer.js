@@ -5,11 +5,10 @@ const Footer = () => {
   return (
     <footer className="app-footer">
       <div className="footer-content">
-        <p className="footer-year">© 2026 Crime Management System</p>
-        <div className="footer-divider">
-          <div></div>
-          <div></div>
-        </div>
+        <p className="footer-year">
+          <i className="fas fa-shield-alt me-1"></i>
+          © 2026 Crime Management System
+        </p>
         <p className="footer-credit">
           Made by{' '}
           <a 
