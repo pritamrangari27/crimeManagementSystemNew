@@ -34,6 +34,8 @@
   --shadow-xl:  0 20px 60px rgba(14,165,233,0.15), 0 8px 24px rgba(0,0,0,0.06);
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --auth-transition: 0.3s ease-in-out;
+  --auth-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* --- Reset & Base --- */
@@ -106,6 +108,12 @@ body {
   margin-bottom: 1.75rem;
   position: relative;
   z-index: 1;
+  animation: authTitleIn 0.55s var(--ease) both;
+}
+
+@keyframes authTitleIn {
+  from { opacity: 0; transform: translateY(-14px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .auth-page-title h1 {
@@ -132,6 +140,12 @@ body {
   max-width: 460px;
   position: relative;
   z-index: 1;
+  animation: authWrapperIn 0.6s var(--ease) 0.08s both;
+}
+
+@keyframes authWrapperIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* ============================================================
@@ -145,6 +159,13 @@ body {
   animation: cardEntry 0.5s var(--ease) both;
   border: 1px solid var(--border);
   position: relative;
+  transition: transform var(--auth-transition), box-shadow var(--auth-transition), border-color var(--auth-transition);
+}
+
+.auth-card:hover {
+  transform: translateY(-3px) scale(1.005);
+  box-shadow: 0 24px 64px rgba(14,165,233,0.18), 0 8px 28px rgba(0,0,0,0.07);
+  border-color: var(--border-sky);
 }
 
 /* top gradient accent line */
@@ -162,6 +183,20 @@ body {
   from { opacity: 0; transform: translateY(16px) scale(0.98); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+/* bento-style gradient overlay on hover */
+.auth-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  background: linear-gradient(135deg, rgba(14,165,233,0.035) 0%, transparent 60%);
+  transition: opacity var(--auth-transition);
+  pointer-events: none;
+  z-index: 0;
+}
+.auth-card:hover::after { opacity: 1; }
 
 /* Card header (hidden — using tabs instead) */
 .auth-card-header {
@@ -205,7 +240,7 @@ body {
   font-weight: 700;
   font-size: 0.7rem;
   color: var(--text-muted);
-  transition: color 0.25s var(--ease), border-color 0.25s var(--ease), background 0.25s var(--ease);
+  transition: color 0.25s var(--ease), border-color 0.25s var(--ease), background 0.25s var(--ease), transform 0.2s var(--ease);
   border-bottom: 3px solid transparent;
   text-transform: uppercase;
   letter-spacing: 0.8px;
@@ -217,6 +252,11 @@ body {
 .auth-tab:hover {
   color: var(--sky);
   background: var(--sky-10);
+  transform: translateY(-1px);
+}
+
+.auth-tab:active {
+  transform: scale(0.97);
 }
 
 .auth-tab.active {
@@ -252,6 +292,12 @@ body {
   margin-bottom: 1.15rem;
   position: relative;
   padding-bottom: 0.65rem;
+  animation: authCardTitleIn 0.4s var(--ease) both;
+}
+
+@keyframes authCardTitleIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 .auth-card-title::after {
   content: '';
@@ -268,6 +314,37 @@ body {
   font-size: 0.78rem;
   color: var(--text-muted);
   margin-top: 0.15rem;
+}
+
+/* ============================================================
+   STAGGERED FIELD ENTRANCE (bento-grid pattern)
+   ============================================================ */
+.auth-stagger > * {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: authFieldSlide 0.4s var(--ease) forwards;
+}
+.auth-stagger > *:nth-child(1) { animation-delay: 0.06s; }
+.auth-stagger > *:nth-child(2) { animation-delay: 0.13s; }
+.auth-stagger > *:nth-child(3) { animation-delay: 0.20s; }
+.auth-stagger > *:nth-child(4) { animation-delay: 0.27s; }
+.auth-stagger > *:nth-child(5) { animation-delay: 0.34s; }
+.auth-stagger > *:nth-child(6) { animation-delay: 0.41s; }
+
+@keyframes authFieldSlide {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* footer entrance (delayed after fields) */
+.auth-tab-content.active > .form-footer {
+  opacity: 0;
+  animation: authFieldSlide 0.4s var(--ease) 0.38s forwards;
+}
+
+/* copyright text entrance */
+.auth-copyright {
+  opacity: 0;
+  animation: authFieldSlide 0.4s var(--ease) 0.5s forwards;
 }
 
 /* ============================================================
@@ -297,7 +374,7 @@ body {
   font-weight: 400;
   color: var(--text);
   background: var(--white);
-  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease), background 0.25s var(--ease);
+  transition: border-color var(--auth-transition), box-shadow var(--auth-transition), background var(--auth-transition), transform 0.2s var(--ease);
   outline: none;
 }
 
@@ -310,6 +387,7 @@ body {
   border-color: var(--sky);
   background: var(--white);
   box-shadow: 0 0 0 3.5px var(--sky-10), var(--shadow-sm);
+  transform: scale(1.01);
 }
 
 .form-control::placeholder {
@@ -417,8 +495,8 @@ body {
 
 .btn-primary:hover:not(:disabled) {
   background: linear-gradient(135deg, var(--sky-hover) 0%, var(--sky-deep) 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px var(--sky-30);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 28px var(--sky-30);
 }
 
 .btn-primary:active:not(:disabled) {

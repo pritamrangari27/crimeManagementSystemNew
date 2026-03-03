@@ -355,7 +355,7 @@ const LoginModern = () => {
             {activeTab === 'user' && (
               <div className="auth-tab-content active">
                 <h3 className="auth-card-title">User Login</h3>
-                <form onSubmit={handleUserLogin}>
+                <form onSubmit={handleUserLogin} className="auth-stagger">
                   <div className="form-group">
                     <label className="form-label">Username</label>
                     <input
@@ -408,7 +408,7 @@ const LoginModern = () => {
             {activeTab === 'admin' && (
               <div className="auth-tab-content active">
                 <h3 className="auth-card-title">Admin Login</h3>
-                <form onSubmit={handleAdminLogin}>
+                <form onSubmit={handleAdminLogin} className="auth-stagger">
                   <div className="form-group">
                     <label className="form-label">Username</label>
                     <input
@@ -454,7 +454,7 @@ const LoginModern = () => {
             {activeTab === 'police' && (
               <div className="auth-tab-content active">
                 <h3 className="auth-card-title">Police Login</h3>
-                <form onSubmit={handlePoliceLogin}>
+                <form onSubmit={handlePoliceLogin} className="auth-stagger">
                   <div className="form-group">
                     <label className="form-label">Username</label>
                     <input
@@ -505,7 +505,7 @@ const LoginModern = () => {
           </div>
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: '1.25rem', color: '#94a3b8', fontSize: '0.72rem', fontWeight: 500, letterSpacing: '0.3px' }}>
+        <div className="auth-copyright" style={{ textAlign: 'center', marginTop: '1.25rem', color: '#94a3b8', fontSize: '0.72rem', fontWeight: 500, letterSpacing: '0.3px' }}>
           <p>&copy; {new Date().getFullYear()} Crime Management System. All rights reserved.</p>
         </div>
       </div>
@@ -524,7 +524,7 @@ const LoginModern = () => {
               {modalSuccess && <div className="alert alert-success">{modalSuccess}</div>}
 
               {registerType === 'user' ? (
-                <form onSubmit={handleUserRegister}>
+                <form onSubmit={handleUserRegister} className="auth-stagger">
                   <div className="form-group">
                     <label className="form-label">Username</label>
                     <input type="text" className="form-control" placeholder="Choose a username"
@@ -573,7 +573,7 @@ const LoginModern = () => {
                   </button>
                 </form>
               ) : (
-                <form onSubmit={handlePoliceRegister}>
+                <form onSubmit={handlePoliceRegister} className="auth-stagger">
                   <div className="register-modal-row">
                     <div className="form-group">
                       <label className="form-label">Username</label>
