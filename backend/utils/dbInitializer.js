@@ -112,6 +112,7 @@ function createTables(db, callback) {
       evidence TEXT,
       status TEXT DEFAULT 'Registered',
       assigned_police_id TEXT,
+      user_id INTEGER,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`, (err) => {
