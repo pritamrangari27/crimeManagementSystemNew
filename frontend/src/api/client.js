@@ -1,6 +1,18 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Dynamically determine API URL based on environment
+let API_BASE_URL = process.env.REACT_APP_API_URL;
+
+// If not set, use production URL if on Vercel, else localhost
+if (!API_BASE_URL) {
+  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel')) {
+    API_BASE_URL = 'https://crime-management-api.onrender.com/api';
+  } else {
+    API_BASE_URL = 'http://localhost:5000/api';
+  }
+}
+
+console.log('[API Config] Using API URL:', API_BASE_URL);
 
 const api = axios.create({
   baseURL: API_BASE_URL,
