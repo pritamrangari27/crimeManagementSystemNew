@@ -100,7 +100,7 @@ db.serialize(() => {
     relation TEXT,
     purpose TEXT,
     file TEXT,
-    status TEXT DEFAULT 'Sent' CHECK(status IN ('Sent', 'Pending', 'Approved', 'Rejected', 'Investigating', 'Closed')),
+    status TEXT DEFAULT 'Sent' CHECK(status IN ('Sent', 'Approved', 'Rejected')),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)

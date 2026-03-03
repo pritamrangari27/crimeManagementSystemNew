@@ -188,7 +188,7 @@ const addSampleData = async () => {
           { type: 'Blackmail', accused: 'Extortionist', name: 'Vikas Sharma', age: 36, number: '9876543239', address: '2424 Office', relation: 'Self', purpose: 'Threatening messages' }
         ];
 
-        const statuses = ['Sent', 'Received', 'Approved', 'Rejected', 'Under Investigation', 'Completed'];
+        const statuses = ['Sent', 'Approved', 'Rejected'];
 
         // Get user IDs for FIR insertion
         db.all('SELECT id FROM users WHERE role="User" LIMIT 20', [], (err, userRows) => {

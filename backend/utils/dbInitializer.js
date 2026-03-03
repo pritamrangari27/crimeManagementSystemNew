@@ -106,7 +106,7 @@ async function createTables(db, isPg) {
       crime_type TEXT NOT NULL, crime_description TEXT, crime_date TEXT, crime_time TEXT,
       location TEXT, evidence TEXT, accused TEXT, name TEXT, age INTEGER, number TEXT,
       address TEXT, relation TEXT, purpose TEXT, file TEXT, assigned_police_id TEXT,
-      status TEXT DEFAULT 'Registered',
+      status TEXT DEFAULT 'Sent',
       created_at ${ts} DEFAULT CURRENT_TIMESTAMP, updated_at ${ts} DEFAULT CURRENT_TIMESTAMP
     )`,
     `CREATE TABLE IF NOT EXISTS activity_log (
