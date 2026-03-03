@@ -11,7 +11,8 @@
   left: var(--sidebar-width, 260px);
   right: 0;
   width: auto;
-  z-index: 100;
+  z-index: 1000;
+  height: var(--footer-height, 42px);
   display: flex;
   align-items: center;
   justify-content: center;

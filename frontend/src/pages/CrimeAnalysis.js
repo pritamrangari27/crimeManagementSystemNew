@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Alert, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import { dashboardAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import '../styles/dashboard.css';
@@ -67,15 +68,16 @@ const CrimeAnalysis = () => {
 
   if (loading) {
     return (
-      <div className="d-flex">
+      <>
         <Sidebar />
-        <div className="with-sidebar w-100">
+        <div className="with-sidebar">
           <div className="text-center py-5">
             <Spinner animation="border" />
             <p className="text-muted mt-3">Loading crime analysis...</p>
           </div>
         </div>
-      </div>
+        <Footer />
+      </>
     );
   }
 
@@ -285,6 +287,7 @@ const CrimeAnalysis = () => {
           </Row>
         </Container>
       </div>
+      <Footer />
     </>
   );
 };

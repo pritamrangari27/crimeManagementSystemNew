@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Table, Card, Badge, Button, Spinner, Alert, Form } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import { firsAPI } from '../api/client';
 import '../styles/forms.css';
 import '../styles/dashboard.css';
@@ -130,8 +131,9 @@ const PoliceSentFIRs = () => {
   }
 
   return (
-    <div className="d-flex">
+    <>
       <Sidebar />
+      <div className="with-sidebar">
       <Container fluid className="mgmt-container page-stagger">
         {/* Header */}
         <div className="mgmt-header">
@@ -259,7 +261,9 @@ const PoliceSentFIRs = () => {
               </div>
             )}
       </Container>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 };
 

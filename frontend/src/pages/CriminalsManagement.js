@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { criminalsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import '../styles/dashboard.css';
 
 const CriminalsManagement = () => {
@@ -407,6 +408,7 @@ const CriminalsManagement = () => {
       </div>
         </Container>
       </div>
+      <Footer />
     </>
   );
 };

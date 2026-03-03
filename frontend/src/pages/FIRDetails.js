@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Badge, Button, Spinner, Alert, Table } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import { firsAPI } from '../api/client';
 import '../styles/forms.css';
 
@@ -108,9 +109,10 @@ const FIRDetails = () => {
   }
 
   return (
-    <div className="d-flex">
+    <>
       <Sidebar />
-      <Container fluid className="main-content py-3 px-3">
+      <div className="with-sidebar">
+      <Container fluid className="mgmt-container">
         {/* Header */}
         <Row className="mb-2">
           <Col>
@@ -458,7 +460,9 @@ const FIRDetails = () => {
           </Row>
         )}
       </Container>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 };
 

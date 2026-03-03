@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { firsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import '../styles/dashboard.css';
 
 const FIRManagement = () => {
@@ -419,6 +420,7 @@ const FIRManagement = () => {
       </Modal>
         </Container>
       </div>
+      <Footer />
     </>
   );
 };

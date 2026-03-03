@@ -5,6 +5,7 @@
 :root {
   --sidebar-width: 260px;
   --banner-height: 38px;
+  --footer-height: 42px;
   --sidebar-bg: linear-gradient(135deg, #ffffff 0%, #f8f7ff 100%);
   --sidebar-text: #10b981;
   --sidebar-hover: #d1fae5;
@@ -424,6 +425,9 @@
   transition: margin-left 0.3s ease;
   margin-top: 0;
   padding-top: var(--banner-height);
+  padding-bottom: var(--footer-height);
+  min-height: 100vh;
+  position: relative;
 }
 
 /* Main Content Container */
@@ -431,8 +435,9 @@
   margin-left: var(--sidebar-width);
   transition: margin-left 0.3s ease;
   background-color: #f8fafc;
-  min-height: calc(100vh - var(--banner-height, 38px));
+  min-height: 100vh;
   padding-top: var(--banner-height);
+  padding-bottom: var(--footer-height);
 }
 
 /* ============================================

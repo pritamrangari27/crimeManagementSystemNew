@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { criminalsAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 
 const CriminalDetails = () => {
   const { id } = useParams();
@@ -89,6 +90,7 @@ const CriminalDetails = () => {
       </Row>
         </Container>
       </div>
+      <Footer />
     </>
   );
 };

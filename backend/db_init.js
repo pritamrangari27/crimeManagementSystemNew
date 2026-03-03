@@ -178,7 +178,7 @@ db.serialize(() => {
     }
   })();
 
-  // Insert police stations
+  // Insert police stations (15 stations)
   const insertStations = [
     { station_name: 'Central Police Station', station_code: 'PS001', city: 'Delhi', state: 'Delhi', address: '123 Main Street, Delhi', phone: '011-2342-5678', email: 'central.ps@delhi.police.in', in_charge: 'Rajesh Kumar' },
     { station_name: 'North Police Station', station_code: 'PS002', city: 'Delhi', state: 'Delhi', address: '456 North Avenue, Delhi', phone: '011-2356-7890', email: 'north.ps@delhi.police.in', in_charge: 'Priya Singh' },
@@ -187,7 +187,14 @@ db.serialize(() => {
     { station_name: 'West Police Station', station_code: 'PS005', city: 'Delhi', state: 'Delhi', address: '654 West Boulevard, Delhi', phone: '011-2378-9012', email: 'west.ps@delhi.police.in', in_charge: 'Vikram Sharma' },
     { station_name: 'Mumbai Central Police Station', station_code: 'PS006', city: 'Mumbai', state: 'Maharashtra', address: '111 Marine Drive, Mumbai', phone: '022-2265-8901', email: 'central.ps@mumbai.police.in', in_charge: 'Suresh Desai' },
     { station_name: 'Bangalore Police Station', station_code: 'PS007', city: 'Bangalore', state: 'Karnataka', address: '222 Brigade Road, Bangalore', phone: '080-4125-6789', email: 'brigade.ps@bangalore.police.in', in_charge: 'Arun Nair' },
-    { station_name: 'Hyderabad Police Station', station_code: 'PS008', city: 'Hyderabad', state: 'Telangana', address: '333 Secunderabad Road, Hyderabad', phone: '040-6789-0123', email: 'cyber.ps@hyderabad.police.in', in_charge: 'Sanjay Reddy' }
+    { station_name: 'Hyderabad Police Station', station_code: 'PS008', city: 'Hyderabad', state: 'Telangana', address: '333 Secunderabad Road, Hyderabad', phone: '040-6789-0123', email: 'cyber.ps@hyderabad.police.in', in_charge: 'Sanjay Reddy' },
+    { station_name: 'Chennai Central Police Station', station_code: 'PS009', city: 'Chennai', state: 'Tamil Nadu', address: '444 Anna Salai, Chennai', phone: '044-2567-8901', email: 'central.ps@chennai.police.in', in_charge: 'Murugan Rajan' },
+    { station_name: 'Kolkata Park Street Station', station_code: 'PS010', city: 'Kolkata', state: 'West Bengal', address: '555 Park Street, Kolkata', phone: '033-2245-6789', email: 'parkst.ps@kolkata.police.in', in_charge: 'Subhash Chatterjee' },
+    { station_name: 'Pune Camp Police Station', station_code: 'PS011', city: 'Pune', state: 'Maharashtra', address: '666 Camp Area, Pune', phone: '020-2678-9012', email: 'camp.ps@pune.police.in', in_charge: 'Deepak Jadhav' },
+    { station_name: 'Ahmedabad Satellite Station', station_code: 'PS012', city: 'Ahmedabad', state: 'Gujarat', address: '777 SG Highway, Ahmedabad', phone: '079-2789-0123', email: 'satellite.ps@ahmedabad.police.in', in_charge: 'Hitesh Shah' },
+    { station_name: 'Jaipur City Police Station', station_code: 'PS013', city: 'Jaipur', state: 'Rajasthan', address: '888 MI Road, Jaipur', phone: '0141-2890-1234', email: 'city.ps@jaipur.police.in', in_charge: 'Mahendra Shekhawat' },
+    { station_name: 'Lucknow Hazratganj Station', station_code: 'PS014', city: 'Lucknow', state: 'Uttar Pradesh', address: '999 Hazratganj, Lucknow', phone: '0522-2901-2345', email: 'hazratganj.ps@lucknow.police.in', in_charge: 'Akhilesh Yadav' },
+    { station_name: 'Chandigarh Sector 17 Station', station_code: 'PS015', city: 'Chandigarh', state: 'Chandigarh', address: '1010 Sector 17, Chandigarh', phone: '0172-3012-3456', email: 'sector17.ps@chandigarh.police.in', in_charge: 'Gurpreet Sandhu' }
   ];
 
   insertStations.forEach(station => {

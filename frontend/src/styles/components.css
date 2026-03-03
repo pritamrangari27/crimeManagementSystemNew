@@ -6,7 +6,7 @@
   min-height: 56px;
   margin-left: var(--sidebar-width, 260px);
   position: sticky;
-  top: 0;
+  top: var(--banner-height, 38px);
   z-index: 999;
   transition: margin-left 0.3s ease;
   border-bottom: 1px solid #0ea5e9;

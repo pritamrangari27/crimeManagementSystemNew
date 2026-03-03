@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-boo
 import { useNavigate } from 'react-router-dom';
 import { policeAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import '../styles/dashboard.css';
 
 const PoliceManagement = () => {
@@ -331,6 +332,7 @@ const PoliceManagement = () => {
       </div>
         </Container>
       </div>
+      <Footer />
     </>
   );
 };

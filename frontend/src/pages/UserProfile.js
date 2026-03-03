@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, getUserRole, updateAuthUser } from '../utils/authService';
 import { authAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import '../styles/forms.css';
 
 const UserProfile = () => {
@@ -67,9 +68,10 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="d-flex">
+    <>
       <Sidebar />
-      <Container fluid className="main-content py-3 px-3" style={{ background: '#ffffff' }}>
+      <div className="with-sidebar">
+      <Container fluid className="mgmt-container" style={{ background: '#ffffff' }}>
         {/* Header */}
         <Row className="mb-3">
           <Col>
@@ -361,7 +363,9 @@ const UserProfile = () => {
           </Card.Body>
         </Card>
       </Container>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 };
 

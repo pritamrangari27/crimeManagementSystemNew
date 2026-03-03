@@ -3,9 +3,9 @@
 /* Main Container */
 .management-container {
   background-color: #ffffff;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--banner-height, 38px) - var(--footer-height, 42px));
   padding: var(--grid-gap, 14px);
-  padding-bottom: 60px;
+  padding-bottom: calc(var(--footer-height, 42px) + 16px);
   font-family: var(--font-stack);
   animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) both;
 }

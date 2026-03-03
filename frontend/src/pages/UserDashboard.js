@@ -33,24 +33,26 @@ const UserDashboard = () => {
   }, [user?.id]);
 
   if (loading) return (
-    <div className="d-flex">
+    <>
       <Sidebar />
-      <div className="with-sidebar w-100">
+      <div className="with-sidebar">
         <div className="text-center py-5">Loading dashboard...</div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 
   if (error) return (
-    <div className="d-flex">
+    <>
       <Sidebar />
-      <div className="with-sidebar w-100">
+      <div className="with-sidebar">
         <div className="text-center py-5 text-danger">
           <p>{error}</p>
           <button className="btn btn-primary" onClick={() => navigate('/user/dashboard')}>Retry</button>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 
   const sentFIRs = myFIRs.filter(f => f.status === 'Sent').length;

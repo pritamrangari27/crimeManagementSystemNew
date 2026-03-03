@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import { firsAPI, stationsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import '../styles/forms.css';
@@ -159,9 +160,10 @@ const UserFIRForm = () => {
   };
 
   return (
-    <div className="d-flex">
+    <>
       <Sidebar />
-      <Container fluid className="main-content py-3 px-3">
+      <div className="with-sidebar">
+      <Container fluid className="mgmt-container">
         <Row className="mb-2">
           <Col>
             <div className="d-flex justify-content-between align-items-start">
@@ -414,7 +416,9 @@ const UserFIRForm = () => {
           </Col>
         </Row>
       </Container>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 };
 

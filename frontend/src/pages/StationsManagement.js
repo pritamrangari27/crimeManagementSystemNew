@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-boo
 import { useNavigate } from 'react-router-dom';
 import { stationsAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import '../styles/dashboard.css';
 
 const StationsManagement = () => {
@@ -356,6 +357,7 @@ const StationsManagement = () => {
       </Modal>
         </Container>
       </div>
+      <Footer />
     </>
   );
 };
