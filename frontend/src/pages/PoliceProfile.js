@@ -70,20 +70,20 @@ const PoliceProfile = () => {
   return (
     <div className="d-flex">
       <Sidebar />
-      <Container fluid className="main-content py-5 px-4" style={{ background: '#ffffff' }}>
+      <Container fluid className="main-content py-3 px-3" style={{ background: '#ffffff' }}>
         {/* Header */}
-        <Row className="mb-5">
+        <Row className="mb-3">
           <Col>
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <h1 className="fw-bold mb-2" style={{ color: '#1a1a1a' }}>
-                  <i className="fas fa-police me-3" style={{ color: '#0ea5e9' }}></i> Officer Profile
-                </h1>
-                <p className="text-muted fs-5">Manage your police officer account and settings</p>
+                <h2 className="fw-bold mb-1" style={{ color: '#1a1a1a', fontSize: '1.4rem' }}>
+                  <i className="fas fa-police me-2" style={{ color: '#0ea5e9' }}></i> Officer Profile
+                </h2>
+                <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>Manage your police officer account and settings</p>
               </div>
               <Button 
                 variant="outline-secondary" 
-                size="lg" 
+                size="sm" 
                 onClick={() => navigate(-1)}
                 className="fw-bold"
               >
@@ -95,27 +95,27 @@ const PoliceProfile = () => {
 
         {/* Profile Header Card */}
         <Card 
-          className="border-0 shadow-lg mb-5 overflow-hidden"
+          className="border-0 shadow-lg mb-3 overflow-hidden"
           style={{
             background: '#0ea5e9',
           }}
         >
-          <Card.Body className="p-5 text-white">
+          <Card.Body className="p-3 text-white">
             <Row className="align-items-center">
-              <Col md={2} className="text-center mb-4 mb-md-0">
+              <Col md={2} className="text-center mb-2 mb-md-0">
                 <div
                   style={{
-                    width: '120px',
-                    height: '120px',
+                    width: '80px',
+                    height: '80px',
                     borderRadius: '50%',
                     background: 'rgba(255,255,255,0.2)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto',
-                    fontSize: '48px',
+                    fontSize: '32px',
                     fontWeight: 'bold',
-                    border: '4px solid white'
+                    border: '3px solid white'
                   }}
                 >
                   {getInitials()}

@@ -84,17 +84,17 @@ const CrimeAnalysis = () => {
       <Sidebar />
       
       <div className="with-sidebar">
-        <Container fluid className="dashboard-container py-5 px-4">
+        <Container fluid className="dashboard-container py-3 px-3">
           {/* Page Header */}
-          <Row className="mb-5">
+          <Row className="mb-3">
             <Col>
-              <div className="d-flex justify-content-between align-items-center mb-4">
+              <div className="d-flex justify-content-between align-items-center mb-2">
                 <div>
-                  <h2 className="fw-bold mb-1" style={{ fontSize: '2rem', color: '#1a202c' }}>
-                    <i className="fas fa-chart-pie me-3" style={{ color: '#667eea' }}></i>
+                  <h2 className="fw-bold mb-1" style={{ fontSize: '1.4rem', color: '#1a202c' }}>
+                    <i className="fas fa-chart-pie me-2" style={{ color: '#667eea' }}></i>
                     Crime Analysis Dashboard
                   </h2>
-                  <p className="text-muted mb-0" style={{ fontSize: '0.95rem' }}>
+                  <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>
                     <i className="fas fa-info-circle me-2"></i>Real-time crime statistics and comprehensive analysis
                   </p>
                 </div>
@@ -105,76 +105,76 @@ const CrimeAnalysis = () => {
             </Col>
           </Row>
 
-          {error && <Alert variant="danger" className="mb-4" style={{ borderRadius: '10px', borderLeft: '4px solid #e74c3c' }}>{error}</Alert>}
+          {error && <Alert variant="danger" className="mb-2" style={{ borderRadius: '10px', borderLeft: '4px solid #e74c3c', fontSize: '0.85rem' }}>{error}</Alert>}
 
           {/* Summary Cards */}
-          <Row className="mb-5">
-            <Col lg={3} md={6} className="mb-4">
-              <div className="bg-white p-4 rounded-3 shadow-sm" style={{ borderLeft: '5px solid #e74c3c', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-                <div className="d-flex justify-content-between align-items-start mb-3">
+          <Row className="mb-3">
+            <Col lg={3} md={6} className="mb-2">
+              <div className="bg-white p-3 rounded-3 shadow-sm" style={{ borderLeft: '5px solid #e74c3c', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                <div className="d-flex justify-content-between align-items-start mb-1">
                   <div>
-                    <h6 className="text-muted text-uppercase fw-bold mb-2" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>Total Crimes</h6>
-                    <h3 className="fw-bold mb-0" style={{ fontSize: '2.5rem', color: '#e74c3c' }}>{totalCrimes}</h3>
+                    <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Total Crimes</h6>
+                    <h3 className="fw-bold mb-0" style={{ fontSize: '1.5rem', color: '#e74c3c' }}>{totalCrimes}</h3>
                   </div>
-                  <i className="fas fa-exclamation-triangle" style={{ fontSize: '2.5rem', opacity: 0.1, color: '#e74c3c' }}></i>
+                  <i className="fas fa-exclamation-triangle" style={{ fontSize: '1.5rem', opacity: 0.1, color: '#e74c3c' }}></i>
                 </div>
-                <small className="text-muted">Registered crimes in system</small>
+                <small className="text-muted" style={{ fontSize: '0.7rem' }}>Registered crimes in system</small>
               </div>
             </Col>
 
-            <Col lg={3} md={6} className="mb-4">
-              <div className="bg-white p-4 rounded-3 shadow-sm" style={{ borderLeft: '5px solid #4e73df', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-                <div className="d-flex justify-content-between align-items-start mb-3">
+            <Col lg={3} md={6} className="mb-2">
+              <div className="bg-white p-3 rounded-3 shadow-sm" style={{ borderLeft: '5px solid #4e73df', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                <div className="d-flex justify-content-between align-items-start mb-1">
                   <div>
-                    <h6 className="text-muted text-uppercase fw-bold mb-2" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>Total FIRs</h6>
-                    <h3 className="fw-bold mb-0" style={{ fontSize: '2.5rem', color: '#4e73df' }}>{totalFIRs}</h3>
+                    <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Total FIRs</h6>
+                    <h3 className="fw-bold mb-0" style={{ fontSize: '1.5rem', color: '#4e73df' }}>{totalFIRs}</h3>
                   </div>
-                  <i className="fas fa-file-alt" style={{ fontSize: '2.5rem', opacity: 0.1, color: '#4e73df' }}></i>
+                  <i className="fas fa-file-alt" style={{ fontSize: '1.5rem', opacity: 0.1, color: '#4e73df' }}></i>
                 </div>
-                <small className="text-muted">First Information Reports filed</small>
+                <small className="text-muted" style={{ fontSize: '0.7rem' }}>First Information Reports filed</small>
               </div>
             </Col>
 
-            <Col lg={3} md={6} className="mb-4">
-              <div className="bg-white p-4 rounded-3 shadow-sm" style={{ borderLeft: '5px solid #f6c23e', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-                <div className="d-flex justify-content-between align-items-start mb-3">
+            <Col lg={3} md={6} className="mb-2">
+              <div className="bg-white p-3 rounded-3 shadow-sm" style={{ borderLeft: '5px solid #f6c23e', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                <div className="d-flex justify-content-between align-items-start mb-1">
                   <div>
-                    <h6 className="text-muted text-uppercase fw-bold mb-2" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>Avg Crime Rate</h6>
-                    <h3 className="fw-bold mb-0" style={{ fontSize: '2.5rem', color: '#f6c23e' }}>{totalCrimes > 0 ? (totalCrimes / 12).toFixed(1) : 0}</h3>
-                    <small className="text-muted">/month</small>
+                    <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Avg Crime Rate</h6>
+                    <h3 className="fw-bold mb-0" style={{ fontSize: '1.5rem', color: '#f6c23e' }}>{totalCrimes > 0 ? (totalCrimes / 12).toFixed(1) : 0}</h3>
+                    <small className="text-muted" style={{ fontSize: '0.7rem' }}>/month</small>
                   </div>
-                  <i className="fas fa-chart-line" style={{ fontSize: '2.5rem', opacity: 0.1, color: '#f6c23e' }}></i>
+                  <i className="fas fa-chart-line" style={{ fontSize: '1.5rem', opacity: 0.1, color: '#f6c23e' }}></i>
                 </div>
               </div>
             </Col>
 
-            <Col lg={3} md={6} className="mb-4">
-              <div className="bg-white p-4 rounded-3 shadow-sm" style={{ borderLeft: '5px solid #1cc88a', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-                <div className="d-flex justify-content-between align-items-start mb-3">
+            <Col lg={3} md={6} className="mb-2">
+              <div className="bg-white p-3 rounded-3 shadow-sm" style={{ borderLeft: '5px solid #1cc88a', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                <div className="d-flex justify-content-between align-items-start mb-1">
                   <div>
-                    <h6 className="text-muted text-uppercase fw-bold mb-2" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>Case Resolution</h6>
-                    <h3 className="fw-bold mb-0" style={{ fontSize: '2.5rem', color: '#1cc88a' }}>{totalFIRs > 0 ? ((firStatus.find(f => f.status === 'Approved')?.count || 0) / totalFIRs * 100).toFixed(1) : 0}%</h3>
+                    <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Case Resolution</h6>
+                    <h3 className="fw-bold mb-0" style={{ fontSize: '1.5rem', color: '#1cc88a' }}>{totalFIRs > 0 ? ((firStatus.find(f => f.status === 'Approved')?.count || 0) / totalFIRs * 100).toFixed(1) : 0}%</h3>
                   </div>
-                  <i className="fas fa-check-circle" style={{ fontSize: '2.5rem', opacity: 0.1, color: '#1cc88a' }}></i>
+                  <i className="fas fa-check-circle" style={{ fontSize: '1.5rem', opacity: 0.1, color: '#1cc88a' }}></i>
                 </div>
-                <small className="text-muted">Approved cases rate</small>
+                <small className="text-muted" style={{ fontSize: '0.7rem' }}>Approved cases rate</small>
               </div>
             </Col>
           </Row>
 
           {/* Charts Section */}
-          <Row className="mb-5">
+          <Row className="mb-3">
             <Col lg={7}>
-              <div className="bg-white p-5 rounded-3 shadow-sm" style={{ height: '100%' }}>
-                <div className="mb-4">
-                  <h5 className="fw-bold mb-3" style={{ fontSize: '1.2rem', color: '#1a202c' }}>
+              <div className="bg-white p-3 rounded-3 shadow-sm" style={{ height: '100%' }}>
+                <div className="mb-2">
+                  <h6 className="fw-bold mb-2" style={{ fontSize: '0.95rem', color: '#1a202c' }}>
                     <i className="fas fa-chart-bar me-2" style={{ color: '#667eea' }}></i>Crimes by Type Distribution
-                  </h5>
-                  <Form.Group className="mb-4">
+                  </h6>
+                  <Form.Group className="mb-2">
                     <Form.Select
                       value={selectedCrimeType}
                       onChange={(e) => setSelectedCrimeType(e.target.value)}
-                      style={{ maxWidth: '350px', borderRadius: '8px', border: '2px solid #e0e0e0' }}
+                      style={{ maxWidth: '300px', borderRadius: '8px', border: '2px solid #e0e0e0', fontSize: '0.85rem', padding: '0.4rem 0.6rem' }}
                     >
                       <option value="">📊 View All Crime Types</option>
                       {CRIME_TYPES.map((crime) => (
@@ -187,27 +187,27 @@ const CrimeAnalysis = () => {
                 </div>
 
                 {crimesByType.length > 0 ? (
-                  <div style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '10px' }}>
+                  <div style={{ maxHeight: '300px', overflowY: 'auto', paddingRight: '8px' }}>
                     {crimesByType.map((crime, idx) => {
                       const percentage = (crime.count / totalCrimes) * 100;
                       const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe', '#43e97b', '#fa709a', '#fee140'];
                       return (
-                        <div key={idx} className="mb-4">
-                          <div className="d-flex justify-content-between align-items-center mb-2">
-                            <span className="fw-bold" style={{ fontSize: '0.95rem', color: '#333' }}>{crime.crime_type}</span>
-                            <span className="badge" style={{ backgroundColor: colors[idx % colors.length], padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}>{crime.count} cases</span>
+                        <div key={idx} className="mb-2">
+                          <div className="d-flex justify-content-between align-items-center mb-1">
+                            <span className="fw-bold" style={{ fontSize: '0.8rem', color: '#333' }}>{crime.crime_type}</span>
+                            <span className="badge" style={{ backgroundColor: colors[idx % colors.length], padding: '0.3rem 0.5rem', fontSize: '0.72rem' }}>{crime.count} cases</span>
                           </div>
-                          <div className="progress" style={{ height: '30px', borderRadius: '8px', backgroundColor: '#f0f0f0' }}>
+                          <div className="progress" style={{ height: '20px', borderRadius: '6px', backgroundColor: '#f0f0f0' }}>
                             <div
                               className="progress-bar"
                               role="progressbar"
                               style={{
                                 width: `${percentage}%`,
                                 background: `linear-gradient(90deg, ${colors[idx % colors.length]} 0%, ${colors[(idx + 1) % colors.length]} 100%)`,
-                                fontSize: '0.9rem',
+                                fontSize: '0.75rem',
                                 fontWeight: 'bold',
                                 color: 'white',
-                                borderRadius: '8px',
+                                borderRadius: '6px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
@@ -224,43 +224,43 @@ const CrimeAnalysis = () => {
                     })}
                   </div>
                 ) : (
-                  <p className="text-muted text-center py-5">📊 No crime data available</p>
+                  <p className="text-muted text-center py-3" style={{ fontSize: '0.85rem' }}>📊 No crime data available</p>
                 )}
               </div>
             </Col>
 
             {/* FIR Status Analysis */}
             <Col lg={5}>
-              <div className="bg-white p-5 rounded-3 shadow-sm h-100">
-                <h5 className="fw-bold mb-4" style={{ fontSize: '1.2rem', color: '#1a202c' }}>
+              <div className="bg-white p-3 rounded-3 shadow-sm h-100">
+                <h6 className="fw-bold mb-2" style={{ fontSize: '0.95rem', color: '#1a202c' }}>
                   <i className="fas fa-tasks me-2" style={{ color: '#667eea' }}></i>FIR Status Summary
-                </h5>
+                </h6>
 
                 {firStatus.length > 0 ? (
-                  <div style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '10px' }}>
+                  <div style={{ maxHeight: '300px', overflowY: 'auto', paddingRight: '8px' }}>
                     {firStatus.map((status, idx) => {
                       const percentage = (status.count / totalFIRs) * 100;
                       const statusColor = status.status === 'Approved' ? '#10b981' : status.status === 'Rejected' ? '#ef4444' : '#f59e0b';
                       const statusIcon = status.status === 'Approved' ? '✓' : status.status === 'Rejected' ? '✕' : '⟳';
                       return (
-                        <div key={idx} className="mb-4 p-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '10px', borderLeft: `4px solid ${statusColor}` }}>
-                          <div className="d-flex justify-content-between align-items-center mb-3">
+                        <div key={idx} className="mb-2 p-2" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px', borderLeft: `4px solid ${statusColor}` }}>
+                          <div className="d-flex justify-content-between align-items-center mb-2">
                             <div>
-                              <span className="badge me-2" style={{ backgroundColor: statusColor, padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}>{statusIcon}</span>
-                              <span className="fw-bold" style={{ color: '#333' }}>{status.status}</span>
+                              <span className="badge me-2" style={{ backgroundColor: statusColor, padding: '0.3rem 0.5rem', fontSize: '0.75rem' }}>{statusIcon}</span>
+                              <span className="fw-bold" style={{ color: '#333', fontSize: '0.85rem' }}>{status.status}</span>
                             </div>
-                            <strong style={{ fontSize: '1.3rem', color: statusColor }}>{status.count}</strong>
+                            <strong style={{ fontSize: '1.1rem', color: statusColor }}>{status.count}</strong>
                           </div>
-                          <div className="progress" style={{ height: '25px', borderRadius: '8px', backgroundColor: '#e0e0e0' }}>
+                          <div className="progress" style={{ height: '18px', borderRadius: '6px', backgroundColor: '#e0e0e0' }}>
                             <div
                               className="progress-bar"
                               role="progressbar"
                               style={{
                                 width: `${percentage}%`,
                                 backgroundColor: statusColor,
-                                fontSize: '0.8rem',
+                                fontSize: '0.72rem',
                                 fontWeight: 'bold',
-                                borderRadius: '8px',
+                                borderRadius: '6px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -278,7 +278,7 @@ const CrimeAnalysis = () => {
                     })}
                   </div>
                 ) : (
-                  <p className="text-muted text-center py-5">📋 No FIR data available</p>
+                  <p className="text-muted text-center py-3" style={{ fontSize: '0.85rem' }}>📋 No FIR data available</p>
                 )}
               </div>
             </Col>

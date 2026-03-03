@@ -62,9 +62,11 @@
 
 html, body, #root {
   height: 100%;
+  overflow-x: hidden;
 }
 
 body {
+  overflow-y: auto;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background-color: var(--light-bg);
   color: var(--gray-700);

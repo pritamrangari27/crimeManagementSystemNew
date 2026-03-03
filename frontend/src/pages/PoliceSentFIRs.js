@@ -131,14 +131,14 @@ const PoliceSentFIRs = () => {
   return (
     <div className="d-flex">
       <Sidebar />
-      <Container fluid className="main-content py-4">
+      <Container fluid className="main-content py-3 px-3">
         {/* Header */}
-        <Row className="mb-4">
+        <Row className="mb-2">
           <Col>
-            <h2 className="fw-bold">
+            <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>
               <i className="fas fa-file-alt me-2"></i> FIR Management
             </h2>
-            <p className="text-muted">Review and manage FIRs sent to your station</p>
+            <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>Review and manage FIRs sent to your station</p>
           </Col>
           <Col className="text-end">
             <Button
@@ -170,35 +170,35 @@ const PoliceSentFIRs = () => {
 
         {/* FIR Table */}
         <Card className="border-0 shadow-sm">
-          <Card.Header style={{ background: '#0ea5e9' }} className="text-white fw-bold">
+          <Card.Header style={{ background: '#0ea5e9' }} className="text-white fw-bold py-2" style={{ fontSize: '0.85rem' }}>
             <i className="fas fa-list me-2"></i> Station FIRs ({firs.length})
           </Card.Header>
           <Card.Body className="p-0">
             {loading ? (
-              <div className="text-center py-5">
-                <Spinner animation="border" role="status">
+              <div className="text-center py-3">
+                <Spinner animation="border" size="sm" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </Spinner>
-                <p className="mt-3 text-muted">Loading FIRs...</p>
+                <p className="mt-2 text-muted small">Loading FIRs...</p>
               </div>
             ) : error ? (
-              <Alert variant="danger" className="m-3">
+              <Alert variant="danger" className="m-2">
                 {error}
               </Alert>
             ) : firs.length === 0 ? (
-              <div className="text-center py-5">
-                <i className={`fas ${filterStatus === 'Approved' ? 'fa-check-circle text-success' : filterStatus === 'Rejected' ? 'fa-times-circle text-danger' : 'fa-folder-open text-muted'}`} style={{ fontSize: '48px' }}></i>
-                <h5 className="mt-3 fw-bold" style={{ color: '#334155' }}>
+              <div className="text-center py-3">
+                <i className={`fas ${filterStatus === 'Approved' ? 'fa-check-circle text-success' : filterStatus === 'Rejected' ? 'fa-times-circle text-danger' : 'fa-folder-open text-muted'}`} style={{ fontSize: '36px' }}></i>
+                <h6 className="mt-2 fw-bold" style={{ color: '#334155' }}>
                   {filterStatus === 'Approved' ? 'No Approved FIRs Yet' : filterStatus === 'Rejected' ? 'No Rejected FIRs Yet' : filterStatus === 'Sent' ? 'No New FIRs' : 'No FIRs Found'}
-                </h5>
-                <p className="text-muted">
+                </h6>
+                <p className="text-muted small">
                   {filterStatus === 'Approved' ? 'FIRs you approve will appear here.' : filterStatus === 'Rejected' ? 'FIRs you reject will appear here.' : filterStatus === 'Sent' ? 'No new FIRs have been sent to your station yet.' : 'There are no FIRs in your station.'}
                 </p>
               </div>
             ) : (
-              <div className="table-responsive">
-                <Table hover className="mb-0">
-                  <thead style={{ backgroundColor: '#e0f2fe' }}>
+              <div className="table-responsive" style={{ maxHeight: 'calc(100vh - 300px)', overflowY: 'auto' }}>
+                <Table hover className="mb-0 table-sm" style={{ fontSize: '0.82rem' }}>
+                  <thead style={{ backgroundColor: '#e0f2fe', position: 'sticky', top: 0, zIndex: 1 }}>
                     <tr>
                       <th className="fw-bold">FIR ID</th>
                       <th className="fw-bold">Crime Type</th>

@@ -74,11 +74,11 @@ const UserDashboard = () => {
       <Sidebar />
       
       <div className="with-sidebar">
-        <Container fluid className="dashboard-container py-5 px-4">
-      <Row className="mb-4">
+        <Container fluid className="dashboard-container py-3 px-3">
+      <Row className="mb-2">
         <Col>
-          <h2 className="fw-bold">User Dashboard</h2>
-          <p className="text-muted">Welcome back! Manage your FIRs and track their status.</p>
+          <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>User Dashboard</h2>
+          <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>Welcome back! Manage your FIRs and track their status.</p>
         </Col>
         <Col md={3} className="text-end">
           <Button 
@@ -93,48 +93,48 @@ const UserDashboard = () => {
       </Row>
 
       <Row>
-        <Col md={3} className="mb-4">
+        <Col md={3} className="mb-2">
           <Card className="shadow-sm border-0">
-            <Card.Body>
-              <h6 className="text-muted text-uppercase fw-bold">My FIRs</h6>
-              <h3 className="fw-bold">{myFIRs.length}</h3>
+            <Card.Body className="py-2 px-3">
+              <h6 className="text-muted text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>My FIRs</h6>
+              <h3 className="fw-bold mb-0" style={{ fontSize: '1.3rem' }}>{myFIRs.length}</h3>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3} className="mb-4">
+        <Col md={3} className="mb-2">
           <Card className="shadow-sm border-0">
-            <Card.Body>
-              <h6 className="text-muted text-uppercase fw-bold">Sent</h6>
-              <h3 className="fw-bold text-info">{sentFIRs}</h3>
+            <Card.Body className="py-2 px-3">
+              <h6 className="text-muted text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>Sent</h6>
+              <h3 className="fw-bold text-info mb-0" style={{ fontSize: '1.3rem' }}>{sentFIRs}</h3>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3} className="mb-4">
+        <Col md={3} className="mb-2">
           <Card className="shadow-sm border-0">
-            <Card.Body>
-              <h6 className="text-muted text-uppercase fw-bold">Approved</h6>
-              <h3 className="fw-bold text-success">{approvedFIRs}</h3>
+            <Card.Body className="py-2 px-3">
+              <h6 className="text-muted text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>Approved</h6>
+              <h3 className="fw-bold text-success mb-0" style={{ fontSize: '1.3rem' }}>{approvedFIRs}</h3>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3} className="mb-4">
+        <Col md={3} className="mb-2">
           <Card className="shadow-sm border-0">
-            <Card.Body>
-              <h6 className="text-muted text-uppercase fw-bold">Rejected</h6>
-              <h3 className="fw-bold text-danger">{rejectedFIRs}</h3>
+            <Card.Body className="py-2 px-3">
+              <h6 className="text-muted text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>Rejected</h6>
+              <h3 className="fw-bold text-danger mb-0" style={{ fontSize: '1.3rem' }}>{rejectedFIRs}</h3>
             </Card.Body>
           </Card>
         </Col>
       </Row>
 
       <Card className="shadow-sm">
-        <Card.Header className="bg-primary text-white fw-bold">
+        <Card.Header className="bg-primary text-white fw-bold py-2" style={{ fontSize: '0.85rem' }}>
           Recent FIRs
         </Card.Header>
-        <Card.Body>
+        <Card.Body className="p-0">
           {myFIRs.length > 0 ? (
-            <div className="table-responsive">
-              <table className="table">
+            <div className="table-responsive" style={{ maxHeight: 'calc(100vh - 380px)', overflowY: 'auto' }}>
+              <table className="table table-sm mb-0" style={{ fontSize: '0.82rem' }}>
                 <thead>
                   <tr>
                     <th>FIR Number</th>

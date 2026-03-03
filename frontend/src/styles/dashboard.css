@@ -2,12 +2,13 @@
 
 .dashboard-container {
   background-color: #ffffff;
-  min-height: 100vh;
-  padding: 2rem;
+  min-height: calc(100vh - var(--banner-height, 38px) - 50px);
+  padding: 1.2rem;
   font-family: var(--font-stack);
-  padding-top: 2.5rem;
-  padding-bottom: 120px;
+  padding-top: 1.5rem;
+  padding-bottom: 60px;
   animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) both;
+  overflow-y: auto;
 }
 
 .dashboard-header {

@@ -115,10 +115,10 @@ const FIRManagement = () => {
     <>
       <Sidebar />
       <div className="with-sidebar">
-        <Container fluid className="py-4">
-      <Row className="mb-4">
+        <Container fluid className="py-3 px-3">
+      <Row className="mb-2">
         <Col>
-          <h2 className="fw-bold">FIR Management</h2>
+          <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>FIR Management</h2>
         </Col>
         <Col className="text-end">
           <Button variant="secondary" size="sm" onClick={() => navigate(-1)} className="me-2">
@@ -265,7 +265,7 @@ const FIRManagement = () => {
         </Modal.Footer>
       </Modal>
 
-      <Row className="mb-4">
+      <Row className="mb-2">
         <Col md={6}>
           <Form.Group>
             <Form.Control
@@ -273,7 +273,7 @@ const FIRManagement = () => {
               placeholder="🔍 Search by crime type, victim name, accused name..."
               value={searchQuery}
               onChange={handleSearch}
-              style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.75rem', fontSize: '0.95rem' }}
+              style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}
             />
           </Form.Group>
         </Col>
@@ -283,7 +283,7 @@ const FIRManagement = () => {
               as="select"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.75rem' }}
+              style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}
             >
               <option value="">📋 All FIRs</option>
               <option value="Sent">📤 Sent</option>
@@ -294,8 +294,9 @@ const FIRManagement = () => {
         </Col>
       </Row>
 
-      <Table striped bordered hover responsive>
-        <thead className="bg-dark text-white">
+      <div style={{ maxHeight: 'calc(100vh - 280px)', overflowY: 'auto', border: '1px solid #dee2e6', borderRadius: '8px' }}>
+      <Table striped bordered hover responsive className="mb-0" style={{ fontSize: '0.82rem' }}>
+        <thead className="bg-dark text-white" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
           <tr>
             <th>FIR Number</th>
             <th>Crime Type</th>
@@ -350,6 +351,7 @@ const FIRManagement = () => {
           )}
         </tbody>
       </Table>
+      </div>
 
       <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="md" dialogClassName="fir-view-modal">
         <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', padding: '12px 18px', borderBottom: 'none' }}>

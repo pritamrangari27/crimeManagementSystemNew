@@ -57,7 +57,7 @@ function AppLayout() {
           justifyContent: 'center',
         }}>
           <span style={{ marginRight: 8 }}>&#9888;</span>
-          A system building process is in progress
+          A system building is in progress
           <span style={{ marginLeft: 8 }}>&#9888;</span>
         </div>
       )}

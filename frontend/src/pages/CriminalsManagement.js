@@ -118,10 +118,10 @@ const CriminalsManagement = () => {
     <>
       <Sidebar />
       <div className="with-sidebar">
-        <Container fluid className="py-4">
-      <Row className="mb-4">
+        <Container fluid className="py-3 px-3">
+      <Row className="mb-2">
         <Col>
-          <h2 className="fw-bold">Criminal Management</h2>
+          <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>Criminal Management</h2>
         </Col>
         <Col className="text-end">
           <Button variant="secondary" size="sm" onClick={() => navigate(-1)} className="me-2">
@@ -352,17 +352,19 @@ const CriminalsManagement = () => {
         </Modal.Footer>
       </Modal>
 
-      <Form.Group className="mb-4">
+      <Form.Group className="mb-2">
         <Form.Control
           type="text"
           placeholder="Search by name, email, or contact..."
           value={searchQuery}
           onChange={handleSearch}
+          style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}
         />
       </Form.Group>
 
-      <Table striped bordered hover responsive>
-        <thead className="bg-dark text-white">
+      <div style={{ maxHeight: 'calc(100vh - 260px)', overflowY: 'auto', border: '1px solid #dee2e6', borderRadius: '8px' }}>
+      <Table striped bordered hover responsive className="mb-0" style={{ fontSize: '0.82rem' }}>
+        <thead className="bg-dark text-white" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
           <tr>
             <th>Name</th>
             <th>Crime Type</th>
@@ -409,6 +411,7 @@ const CriminalsManagement = () => {
           )}
         </tbody>
       </Table>
+      </div>
         </Container>
       </div>
     </>

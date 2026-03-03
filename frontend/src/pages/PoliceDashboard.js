@@ -64,11 +64,11 @@ const PoliceDashboard = () => {
       <Sidebar />
       
       <div className="with-sidebar">
-        <Container fluid className="dashboard-container py-5 px-4">
-        <Row className="mb-4">
+        <Container fluid className="dashboard-container py-3 px-3">
+        <Row className="mb-2">
           <Col>
-            <h2 className="fw-bold">Police Dashboard</h2>
-            <p className="text-muted">Welcome back, {user?.username || 'Officer'}!</p>
+            <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>Police Dashboard</h2>
+            <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>Welcome back, {user?.username || 'Officer'}!</p>
           </Col>
           <Col md={3} className="text-end">
             <Button 
@@ -82,66 +82,66 @@ const PoliceDashboard = () => {
         </Row>
 
         {/* Stats Cards */}
-        <Row className="mb-4">
-          <Col md={6} lg={3} className="mb-4">
+        <Row className="mb-2">
+          <Col md={6} lg={3} className="mb-2">
             <Card className="stat-card border-0 shadow-sm">
-              <Card.Body>
+              <Card.Body className="py-2 px-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
-                    <h6 className="text-muted text-uppercase fw-bold mb-2">New FIRs</h6>
-                    <h3 className="fw-bold" style={{ color: '#f6c23e' }}>
+                    <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>New FIRs</h6>
+                    <h3 className="fw-bold mb-0" style={{ color: '#f6c23e', fontSize: '1.3rem' }}>
                       {stats?.sent_firs || 0}
                     </h3>
                   </div>
-                  <i className="fas fa-file-alt fa-3x" style={{ color: '#f6c23e', opacity: 0.3 }}></i>
+                  <i className="fas fa-file-alt fa-2x" style={{ color: '#f6c23e', opacity: 0.3 }}></i>
                 </div>
               </Card.Body>
             </Card>
           </Col>
 
-          <Col md={6} lg={3} className="mb-4">
+          <Col md={6} lg={3} className="mb-2">
             <Card className="stat-card border-0 shadow-sm">
-              <Card.Body>
+              <Card.Body className="py-2 px-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
-                    <h6 className="text-muted text-uppercase fw-bold mb-2">Approved</h6>
-                    <h3 className="fw-bold" style={{ color: '#1cc88a' }}>
+                    <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>Approved</h6>
+                    <h3 className="fw-bold mb-0" style={{ color: '#1cc88a', fontSize: '1.3rem' }}>
                       {stats?.approved_firs || 0}
                     </h3>
                   </div>
-                  <i className="fas fa-check-circle fa-3x" style={{ color: '#1cc88a', opacity: 0.3 }}></i>
+                  <i className="fas fa-check-circle fa-2x" style={{ color: '#1cc88a', opacity: 0.3 }}></i>
                 </div>
               </Card.Body>
             </Card>
           </Col>
 
-          <Col md={6} lg={3} className="mb-4">
+          <Col md={6} lg={3} className="mb-2">
             <Card className="stat-card border-0 shadow-sm">
-              <Card.Body>
+              <Card.Body className="py-2 px-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
-                    <h6 className="text-muted text-uppercase fw-bold mb-2">Rejected</h6>
-                    <h3 className="fw-bold" style={{ color: '#e74a3b' }}>
+                    <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>Rejected</h6>
+                    <h3 className="fw-bold mb-0" style={{ color: '#e74a3b', fontSize: '1.3rem' }}>
                       {stats?.rejected_firs || 0}
                     </h3>
                   </div>
-                  <i className="fas fa-times-circle fa-3x" style={{ color: '#e74a3b', opacity: 0.3 }}></i>
+                  <i className="fas fa-times-circle fa-2x" style={{ color: '#e74a3b', opacity: 0.3 }}></i>
                 </div>
               </Card.Body>
             </Card>
           </Col>
 
-          <Col md={6} lg={3} className="mb-4">
+          <Col md={6} lg={3} className="mb-2">
             <Card className="stat-card border-0 shadow-sm">
-              <Card.Body>
+              <Card.Body className="py-2 px-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
-                    <h6 className="text-muted text-uppercase fw-bold mb-2">Total FIRs</h6>
-                    <h3 className="fw-bold" style={{ color: '#4e73df' }}>
+                    <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>Total FIRs</h6>
+                    <h3 className="fw-bold mb-0" style={{ color: '#4e73df', fontSize: '1.3rem' }}>
                       {stats?.total_firs || 0}
                     </h3>
                   </div>
-                  <i className="fas fa-chart-bar fa-3x" style={{ color: '#4e73df', opacity: 0.3 }}></i>
+                  <i className="fas fa-chart-bar fa-2x" style={{ color: '#4e73df', opacity: 0.3 }}></i>
                 </div>
               </Card.Body>
             </Card>
@@ -149,17 +149,17 @@ const PoliceDashboard = () => {
         </Row>
 
         {/* Quick Actions */}
-        <Row className="mb-4">
+        <Row className="mb-2">
           <Col md={6}>
             <Card className="border-0 shadow-sm">
-              <Card.Header className="bg-primary text-white fw-bold">
+              <Card.Header className="bg-primary text-white fw-bold py-2" style={{ fontSize: '0.85rem' }}>
                 <i className="fas fa-bolt me-2"></i> Quick Actions
               </Card.Header>
-              <Card.Body>
+              <Card.Body className="py-2">
                 <div className="d-grid gap-2">
                   <Button
                     variant="outline-primary"
-                    size="lg"
+                    size="sm"
                     className="text-start"
                     onClick={() => navigate('/police/firs/sent')}
                   >
@@ -171,7 +171,7 @@ const PoliceDashboard = () => {
                   </Button>
                   <Button
                     variant="outline-success"
-                    size="lg"
+                    size="sm"
                     className="text-start"
                     onClick={() => navigate('/police/firs/approved')}
                   >
@@ -188,10 +188,10 @@ const PoliceDashboard = () => {
 
           <Col md={6}>
             <Card className="border-0 shadow-sm">
-              <Card.Header className="bg-info text-white fw-bold">
+              <Card.Header className="bg-info text-white fw-bold py-2" style={{ fontSize: '0.85rem' }}>
                 <i className="fas fa-info-circle me-2"></i> Station Information
               </Card.Header>
-              <Card.Body>
+              <Card.Body className="py-2" style={{ fontSize: '0.85rem' }}>
                 <p className="mb-2">
                   <strong>Station ID:</strong> {stationId}
                 </p>

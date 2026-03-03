@@ -431,7 +431,7 @@
   margin-left: var(--sidebar-width);
   transition: margin-left 0.3s ease;
   background-color: #f8fafc;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--banner-height, 38px));
   padding-top: var(--banner-height);
 }
 

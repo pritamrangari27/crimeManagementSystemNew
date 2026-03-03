@@ -105,15 +105,15 @@ const ChangePassword = () => {
   return (
     <div className="d-flex">
       <Sidebar />
-      <Container fluid className="main-content py-4">
-        <Row className="mb-4">
+      <Container fluid className="main-content py-3 px-3">
+        <Row className="mb-2">
           <Col>
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <h2 className="fw-bold">
+                <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>
                   <i className="fas fa-lock me-2"></i> Change Password
                 </h2>
-                <p className="text-muted">Update your account password</p>
+                <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>Update your account password</p>
               </div>
               <Button variant="secondary" size="sm" onClick={() => navigate(-1)}>
                 <i className="fas fa-arrow-left me-2"></i>Back

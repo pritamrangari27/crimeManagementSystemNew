@@ -110,21 +110,21 @@ const FIRDetails = () => {
   return (
     <div className="d-flex">
       <Sidebar />
-      <Container fluid className="main-content py-4">
+      <Container fluid className="main-content py-3 px-3">
         {/* Header */}
-        <Row className="mb-4">
+        <Row className="mb-2">
           <Col>
             <Button
               variant="outline-secondary"
               size="sm"
               onClick={() => navigate(-1)}
-              className="mb-3"
+              className="mb-2"
             >
               <i className="fas fa-arrow-left me-2"></i> Back
             </Button>
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <h2 className="fw-bold mb-2">
+                <h2 className="fw-bold mb-1" style={{ fontSize: '1.4rem' }}>
                   <i className="fas fa-file-contract me-2"></i> FIR Details
                 </h2>
                 {!loading && fir && (

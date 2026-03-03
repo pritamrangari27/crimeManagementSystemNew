@@ -118,14 +118,14 @@ const UserFIRList = () => {
   return (
     <div className="d-flex">
       <Sidebar />
-      <Container fluid className="main-content py-4">
+      <Container fluid className="main-content py-3 px-3">
         {/* Header */}
-        <Row className="mb-4">
+        <Row className="mb-2">
           <Col>
-            <h2 className="fw-bold">
+            <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>
               <i className="fas fa-list me-2"></i> My FIRs
             </h2>
-            <p className="text-muted">View and track all your filed FIRs</p>
+            <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>View and track all your filed FIRs</p>
           </Col>
           <Col className="text-end">
             <Button
@@ -148,44 +148,44 @@ const UserFIRList = () => {
         </Row>
 
         {/* Statistics Cards */}
-        <Row className="mb-4">
-          <Col md={3} className="mb-3">
+        <Row className="mb-2">
+          <Col md={3} className="mb-2">
             <Card className="border-0 shadow-sm text-center">
-              <Card.Body>
-                <h5 className="text-muted mb-2">Total FIRs</h5>
-                <h2 className="fw-bold text-primary">{stats.total}</h2>
+              <Card.Body className="py-2 px-3">
+                <h6 className="text-muted mb-1" style={{ fontSize: '0.7rem' }}>Total FIRs</h6>
+                <h3 className="fw-bold text-primary mb-0" style={{ fontSize: '1.3rem' }}>{stats.total}</h3>
               </Card.Body>
             </Card>
           </Col>
-          <Col md={3} className="mb-3">
+          <Col md={3} className="mb-2">
             <Card className="border-0 shadow-sm text-center">
-              <Card.Body>
-                <h5 className="text-muted mb-2">Sent</h5>
-                <h2 className="fw-bold text-info">{stats.sent}</h2>
+              <Card.Body className="py-2 px-3">
+                <h6 className="text-muted mb-1" style={{ fontSize: '0.7rem' }}>Sent</h6>
+                <h3 className="fw-bold text-info mb-0" style={{ fontSize: '1.3rem' }}>{stats.sent}</h3>
               </Card.Body>
             </Card>
           </Col>
-          <Col md={3} className="mb-3">
+          <Col md={3} className="mb-2">
             <Card className="border-0 shadow-sm text-center">
-              <Card.Body>
-                <h5 className="text-muted mb-2">Approved</h5>
-                <h2 className="fw-bold text-success">{stats.approved}</h2>
+              <Card.Body className="py-2 px-3">
+                <h6 className="text-muted mb-1" style={{ fontSize: '0.7rem' }}>Approved</h6>
+                <h3 className="fw-bold text-success mb-0" style={{ fontSize: '1.3rem' }}>{stats.approved}</h3>
               </Card.Body>
             </Card>
           </Col>
-          <Col md={3} className="mb-3">
+          <Col md={3} className="mb-2">
             <Card className="border-0 shadow-sm text-center">
-              <Card.Body>
-                <h5 className="text-muted mb-2">Rejected</h5>
-                <h2 className="fw-bold text-danger">{stats.rejected}</h2>
+              <Card.Body className="py-2 px-3">
+                <h6 className="text-muted mb-1" style={{ fontSize: '0.7rem' }}>Rejected</h6>
+                <h3 className="fw-bold text-danger mb-0" style={{ fontSize: '1.3rem' }}>{stats.rejected}</h3>
               </Card.Body>
             </Card>
           </Col>
         </Row>
 
         {/* Filters and Sorting */}
-        <Card className="border-0 shadow-sm mb-4">
-          <Card.Body>
+        <Card className="border-0 shadow-sm mb-2">
+          <Card.Body className="py-2 px-3">
             <Row className="align-items-end">
               <Col md={6}>
                 <Form.Group>
@@ -224,30 +224,30 @@ const UserFIRList = () => {
 
         {/* FIR Table */}
         <Card className="border-0 shadow-sm">
-          <Card.Header style={{ backgroundColor: '#0ea5e9', color: 'white' }} className="fw-bold">
+          <Card.Header style={{ backgroundColor: '#0ea5e9', color: 'white' }} className="fw-bold py-2" >
             <i className="fas fa-table me-2"></i> FIR Records
           </Card.Header>
           <Card.Body className="p-0">
             {loading ? (
-              <div className="text-center py-5">
-                <Spinner animation="border" role="status">
+              <div className="text-center py-3">
+                <Spinner animation="border" size="sm" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </Spinner>
-                <p className="mt-3 text-muted">Loading your FIRs...</p>
+                <p className="mt-2 text-muted small">Loading your FIRs...</p>
               </div>
             ) : error ? (
-              <Alert variant="danger" className="m-3">
+              <Alert variant="danger" className="m-2">
                 {error}
               </Alert>
             ) : filteredFirs.length === 0 ? (
-              <div className="text-center py-5">
-                <i className="fas fa-inbox text-muted" style={{ fontSize: '48px' }}></i>
-                <p className="mt-3 text-muted">No FIRs found</p>
+              <div className="text-center py-3">
+                <i className="fas fa-inbox text-muted" style={{ fontSize: '36px' }}></i>
+                <p className="mt-2 text-muted small">No FIRs found</p>
               </div>
             ) : (
-              <div className="table-responsive">
-                <Table hover className="mb-0">
-                  <thead style={{ backgroundColor: '#e0f2fe' }}>
+              <div className="table-responsive" style={{ maxHeight: 'calc(100vh - 370px)', overflowY: 'auto' }}>
+                <Table hover className="mb-0 table-sm" style={{ fontSize: '0.82rem' }}>
+                  <thead style={{ backgroundColor: '#e0f2fe', position: 'sticky', top: 0, zIndex: 1 }}>
                     <tr>
                       <th className="fw-bold">FIR ID</th>
                       <th className="fw-bold">Crime Type</th>

@@ -161,15 +161,15 @@ const UserFIRForm = () => {
   return (
     <div className="d-flex">
       <Sidebar />
-      <Container fluid className="main-content py-4">
-        <Row className="mb-4">
+      <Container fluid className="main-content py-3 px-3">
+        <Row className="mb-2">
           <Col>
             <div className="d-flex justify-content-between align-items-start">
               <div>
-                <h2 className="fw-bold">
+                <h2 className="fw-bold" style={{ fontSize: '1.4rem' }}>
                   <i className="fas fa-file-contract me-2"></i> File New FIR
                 </h2>
-                <p className="text-muted">Submit a First Information Report about a crime</p>
+                <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>Submit a First Information Report about a crime</p>
               </div>
               <Button 
                 variant="outline-secondary" 

@@ -37,16 +37,16 @@ const AdminDashboard = () => {
   }, []);
 
   const StatCard = ({ title, value, icon, color }) => (
-    <Col md={6} lg={3} className="mb-4">
+    <Col md={6} lg={3} className="mb-2">
       <Card className={`stat-card border-0 shadow-sm ${color}`}>
-        <Card.Body className="p-4">
+        <Card.Body className="py-2 px-3">
           <div className="d-flex justify-content-between align-items-start">
             <div>
-              <p className="text-muted mb-1 small fw-bold text-uppercase">{title}</p>
-              <h3 className="fw-bold mb-0">{value || 0}</h3>
+              <p className="text-muted mb-0 fw-bold text-uppercase" style={{ fontSize: '0.7rem' }}>{title}</p>
+              <h3 className="fw-bold mb-0" style={{ fontSize: '1.3rem' }}>{value || 0}</h3>
             </div>
             <div className={`stat-icon ${color}`}>
-              <i className={`${icon} fa-2x`}></i>
+              <i className={`${icon} fa-lg`}></i>
             </div>
           </div>
         </Card.Body>
@@ -72,24 +72,24 @@ const AdminDashboard = () => {
       <Sidebar />
       
       <div className="with-sidebar">
-        <Container fluid className="dashboard-container py-5 px-4">
+        <Container fluid className="dashboard-container py-3 px-3">
           {/* Page Header */}
-          <Row className="mb-5">
+          <Row className="mb-3">
             <Col>
               <div className="d-flex justify-content-between align-items-center">
                 <div>
-                  <h2 className="fw-bold mb-1">
+                  <h2 className="fw-bold mb-1" style={{ fontSize: '1.4rem' }}>
                     <i className="fas fa-chart-line me-2" style={{ color: '#10b981' }}></i>
                     Admin Dashboard
                   </h2>
-                  <p className="text-muted mb-0">Welcome back! Here's an overview of your system.</p>
+                  <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>Welcome back! Here's an overview of your system.</p>
                 </div>
               </div>
             </Col>
           </Row>
 
           {/* Stat Cards */}
-          <Row className="mb-5">
+          <Row className="mb-3">
             <StatCard
               title="Total Police Officers"
               value={stats.totalPolice}
@@ -117,12 +117,12 @@ const AdminDashboard = () => {
           </Row>
 
           {/* Second Row - Status Overview */}
-          <Row className="mb-5">
-            <Col lg={4} className="mb-4">
+          <Row className="mb-3">
+            <Col lg={4} className="mb-2">
               <Card className="border-0 shadow-sm stat-card success">
-                <Card.Body className="text-center p-4">
-                  <h6 className="text-muted small fw-bold text-uppercase mb-2">Approved FIRs</h6>
-                  <h2 className="fw-bold text-success mb-2">{stats.approvedFIRs || 0}</h2>
+                <Card.Body className="text-center py-3 px-3">
+                  <h6 className="text-muted small fw-bold text-uppercase mb-1" style={{ fontSize: '0.7rem' }}>Approved FIRs</h6>
+                  <h2 className="fw-bold text-success mb-2" style={{ fontSize: '1.5rem' }}>{stats.approvedFIRs || 0}</h2>
                   <Button
                     variant="outline-success"
                     size="sm"
@@ -135,11 +135,11 @@ const AdminDashboard = () => {
               </Card>
             </Col>
 
-            <Col lg={4} className="mb-4">
+            <Col lg={4} className="mb-2">
               <Card className="border-0 shadow-sm stat-card info">
-                <Card.Body className="text-center p-4">
-                  <h6 className="text-muted small fw-bold text-uppercase mb-2">Sent FIRs</h6>
-                  <h2 className="fw-bold text-info mb-2">{stats.pendingFIRs || 0}</h2>
+                <Card.Body className="text-center py-3 px-3">
+                  <h6 className="text-muted small fw-bold text-uppercase mb-1" style={{ fontSize: '0.7rem' }}>Sent FIRs</h6>
+                  <h2 className="fw-bold text-info mb-2" style={{ fontSize: '1.5rem' }}>{stats.pendingFIRs || 0}</h2>
                   <Button
                     variant="outline-info"
                     size="sm"
@@ -152,11 +152,11 @@ const AdminDashboard = () => {
               </Card>
             </Col>
 
-            <Col lg={4} className="mb-4">
+            <Col lg={4} className="mb-2">
               <Card className="border-0 shadow-sm stat-card danger">
-                <Card.Body className="text-center p-4">
-                  <h6 className="text-muted small fw-bold text-uppercase mb-2">Rejected FIRs</h6>
-                  <h2 className="fw-bold text-danger mb-2">{stats.rejectedFIRs || 0}</h2>
+                <Card.Body className="text-center py-3 px-3">
+                  <h6 className="text-muted small fw-bold text-uppercase mb-1" style={{ fontSize: '0.7rem' }}>Rejected FIRs</h6>
+                  <h2 className="fw-bold text-danger mb-2" style={{ fontSize: '1.5rem' }}>{stats.rejectedFIRs || 0}</h2>
                   <Button
                     variant="outline-danger"
                     size="sm"

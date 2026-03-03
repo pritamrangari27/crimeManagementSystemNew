@@ -6,7 +6,6 @@ const Footer = () => {
     <footer className="app-footer">
       <div className="footer-content">
         <p className="footer-year">
-          <i className="fas fa-shield-alt me-1"></i>
           © 2026 Crime Management System
         </p>
         <p className="footer-credit">
