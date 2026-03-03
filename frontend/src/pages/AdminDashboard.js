@@ -72,7 +72,8 @@ const AdminDashboard = () => {
       <Sidebar />
       
       <div className="with-sidebar">
-        <Container fluid className="dashboard-container py-3 px-3">
+        <Container fluid className="dashboard-container py-3 px-3 d-flex flex-column justify-content-center" style={{ minHeight: 'calc(100vh - var(--banner-height, 38px) - 50px)' }}>
+          <div style={{ maxWidth: '1100px', width: '100%', margin: '0 auto' }}>
           {/* Page Header */}
           <Row className="mb-3">
             <Col>
@@ -169,6 +170,7 @@ const AdminDashboard = () => {
               </Card>
             </Col>
           </Row>
+          </div>
         </Container>
       </div>
       <Footer />
