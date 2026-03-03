@@ -45,7 +45,7 @@ const executeDatabaseQuery = (db, sql, params, res, isRun = false) => {
 router.post('/', (req, res) => {
   const {
     user_id, station_id, crime_type, accused, name, age, number, address,
-    relation, purpose, file, status = 'Sent'
+    relation, purpose, file, crime_location, status = 'Sent'
   } = req.body;
 
   // Validate required fields
@@ -58,12 +58,12 @@ router.post('/', (req, res) => {
 
   const sql = `INSERT INTO firs (
     user_id, station_id, crime_type, accused, name, age, number, address,
-    relation, purpose, file, status, created_at, updated_at
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+    relation, purpose, file, crime_location, status, created_at, updated_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
 
   req.db.run(sql, [
     user_id, station_id, crime_type, accused, name, age, number, address,
-    relation || '', purpose || '', file || null, status
+    relation || '', purpose || '', file || null, crime_location || null, status
   ], function(err) {
     if (err) {
       console.error('Database error:', err);

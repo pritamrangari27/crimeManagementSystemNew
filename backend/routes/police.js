@@ -5,7 +5,7 @@ const { logActivity } = require('../utils/activityLogger');
 // Add police officer
 router.post('/add', (req, res) => {
   const {
-    police_id, name, crime_type, station_name, station_id, email, phone, address
+    police_id, name, crime_type, position, station_name, station_id, email, phone, address
   } = req.body;
 
   if (!police_id || !name) {
@@ -13,11 +13,11 @@ router.post('/add', (req, res) => {
   }
 
   const sql = `INSERT INTO police (
-    police_id, name, crime_type, station_name, station_id, email, phone, address
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    police_id, name, crime_type, position, station_name, station_id, email, phone, address
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   req.db.run(sql, [
-    police_id, name, crime_type, station_name, station_id, email, phone, address
+    police_id, name, crime_type, position || null, station_name, station_id, email, phone, address
   ], function(err) {
     if (err) {
       if (err.message.includes('UNIQUE')) {

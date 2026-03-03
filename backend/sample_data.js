@@ -65,40 +65,45 @@ const addSampleData = async () => {
           });
         }
 
-        // ============ POLICE OFFICERS (15 officers) ============
-        // Correct schema: police_id, name, crime_type, station_name, station_id, email, phone, address
+        // ============ POLICE OFFICERS (20 officers) ============
+        // Schema: police_id, name, crime_type, position, station_name, station_id, email, phone, address
         console.log('\n👮 Adding Police Officers...');
 
         const policeOfficers = [
-          { police_id: 'POL001', name: 'Arjun Singh', crime_type: 'Robbery', email: 'arjun.singh@police.in', phone: '9800010001', address: '12 Sector 4, Delhi' },
-          { police_id: 'POL002', name: 'Neha Desai', crime_type: 'Cyber Crime', email: 'neha.desai@police.in', phone: '9800010002', address: '34 MG Road, Mumbai' },
-          { police_id: 'POL003', name: 'Ravi Kumar', crime_type: 'Theft', email: 'ravi.kumar@police.in', phone: '9800010003', address: '56 Koramangala, Bangalore' },
-          { police_id: 'POL004', name: 'Priya Sharma', crime_type: 'Fraud', email: 'priya.sharma@police.in', phone: '9800010004', address: '78 Jubilee Hills, Hyderabad' },
-          { police_id: 'POL005', name: 'Sanjay Reddy', crime_type: 'Drug Trafficking', email: 'sanjay.reddy@police.in', phone: '9800010005', address: '90 Anna Nagar, Chennai' },
-          { police_id: 'POL006', name: 'Isha Patel', crime_type: 'Assault', email: 'isha.patel@police.in', phone: '9800010006', address: '23 Park Street, Kolkata' },
-          { police_id: 'POL007', name: 'Amit Verma', crime_type: 'Kidnapping', email: 'amit.verma@police.in', phone: '9800010007', address: '45 Camp Area, Pune' },
-          { police_id: 'POL008', name: 'Divya Gupta', crime_type: 'Extortion', email: 'divya.gupta@police.in', phone: '9800010008', address: '67 SG Highway, Ahmedabad' },
-          { police_id: 'POL009', name: 'Nitin Joshi', crime_type: 'Murder', email: 'nitin.joshi@police.in', phone: '9800010009', address: '89 MI Road, Jaipur' },
-          { police_id: 'POL010', name: 'Kavya Menon', crime_type: 'Burglary', email: 'kavya.menon@police.in', phone: '9800010010', address: '101 Hazratganj, Lucknow' },
-          { police_id: 'POL011', name: 'Harpreet Kaur', crime_type: 'Harassment', email: 'harpreet.kaur@police.in', phone: '9800010011', address: '121 Sector 17, Chandigarh' },
-          { police_id: 'POL012', name: 'Rajesh Nair', crime_type: 'Smuggling', email: 'rajesh.nair@police.in', phone: '9800010012', address: '141 North Avenue, Delhi' },
-          { police_id: 'POL013', name: 'Shreya Verma', crime_type: 'DUI', email: 'shreya.verma@police.in', phone: '9800010013', address: '161 South Road, Delhi' },
-          { police_id: 'POL014', name: 'Vikram Patel', crime_type: 'Vandalism', email: 'vikram.patel@police.in', phone: '9800010014', address: '181 East Lane, Delhi' },
-          { police_id: 'POL015', name: 'Anita Gupta', crime_type: 'Forgery', email: 'anita.gupta@police.in', phone: '9800010015', address: '201 West Blvd, Delhi' }
+          { police_id: 'POL001', name: 'Arjun Singh', crime_type: 'Robbery', position: 'Inspector', email: 'arjun.singh@police.in', phone: '9800010001', address: '12 Sector 4, Connaught Place, Delhi' },
+          { police_id: 'POL002', name: 'Neha Desai', crime_type: 'Cyber Crime', position: 'Sub-Inspector', email: 'neha.desai@police.in', phone: '9800010002', address: '34 MG Road, Bandra West, Mumbai' },
+          { police_id: 'POL003', name: 'Ravi Kumar', crime_type: 'Theft', position: 'Constable', email: 'ravi.kumar@police.in', phone: '9800010003', address: '56 Koramangala 4th Block, Bangalore' },
+          { police_id: 'POL004', name: 'Priya Sharma', crime_type: 'Fraud', position: 'Inspector', email: 'priya.sharma@police.in', phone: '9800010004', address: '78 Jubilee Hills Road No 5, Hyderabad' },
+          { police_id: 'POL005', name: 'Sanjay Reddy', crime_type: 'Drug Trafficking', position: 'Senior Inspector', email: 'sanjay.reddy@police.in', phone: '9800010005', address: '90 Anna Nagar East, Chennai' },
+          { police_id: 'POL006', name: 'Isha Patel', crime_type: 'Assault', position: 'Sub-Inspector', email: 'isha.patel@police.in', phone: '9800010006', address: '23 Park Street, Salt Lake, Kolkata' },
+          { police_id: 'POL007', name: 'Amit Verma', crime_type: 'Kidnapping', position: 'Inspector', email: 'amit.verma@police.in', phone: '9800010007', address: '45 Camp Area, Deccan, Pune' },
+          { police_id: 'POL008', name: 'Divya Gupta', crime_type: 'Extortion', position: 'Constable', email: 'divya.gupta@police.in', phone: '9800010008', address: '67 SG Highway, Prahlad Nagar, Ahmedabad' },
+          { police_id: 'POL009', name: 'Nitin Joshi', crime_type: 'Murder', position: 'Senior Inspector', email: 'nitin.joshi@police.in', phone: '9800010009', address: '89 MI Road, C-Scheme, Jaipur' },
+          { police_id: 'POL010', name: 'Kavya Menon', crime_type: 'Burglary', position: 'Inspector', email: 'kavya.menon@police.in', phone: '9800010010', address: '101 Hazratganj, Gomti Nagar, Lucknow' },
+          { police_id: 'POL011', name: 'Harpreet Kaur', crime_type: 'Harassment', position: 'Sub-Inspector', email: 'harpreet.kaur@police.in', phone: '9800010011', address: '121 Sector 17-C, Chandigarh' },
+          { police_id: 'POL012', name: 'Rajesh Nair', crime_type: 'Smuggling', position: 'Senior Inspector', email: 'rajesh.nair@police.in', phone: '9800010012', address: '141 North Avenue, Civil Lines, Delhi' },
+          { police_id: 'POL013', name: 'Shreya Verma', crime_type: 'DUI', position: 'Constable', email: 'shreya.verma@police.in', phone: '9800010013', address: '161 South Extension Part 2, Delhi' },
+          { police_id: 'POL014', name: 'Vikram Patel', crime_type: 'Vandalism', position: 'Inspector', email: 'vikram.patel@police.in', phone: '9800010014', address: '181 East Kidwai Nagar, Delhi' },
+          { police_id: 'POL015', name: 'Anita Gupta', crime_type: 'Forgery', position: 'Sub-Inspector', email: 'anita.gupta@police.in', phone: '9800010015', address: '201 West Patel Nagar, Delhi' },
+          { police_id: 'POL016', name: 'Suresh Yadav', crime_type: 'Domestic Violence', position: 'Inspector', email: 'suresh.yadav@police.in', phone: '9800010016', address: '15 Karol Bagh, Rajendra Place, Delhi' },
+          { police_id: 'POL017', name: 'Meera Iyer', crime_type: 'Human Trafficking', position: 'Senior Inspector', email: 'meera.iyer@police.in', phone: '9800010017', address: '88 Adyar, Besant Nagar, Chennai' },
+          { police_id: 'POL018', name: 'Deepak Chauhan', crime_type: 'Robbery', position: 'Constable', email: 'deepak.chauhan@police.in', phone: '9800010018', address: '44 Andheri East, Marol, Mumbai' },
+          { police_id: 'POL019', name: 'Pooja Rani', crime_type: 'Cyber Crime', position: 'Sub-Inspector', email: 'pooja.rani@police.in', phone: '9800010019', address: '72 Electronic City Phase 1, Bangalore' },
+          { police_id: 'POL020', name: 'Manish Tiwari', crime_type: 'Corruption', position: 'Senior Inspector', email: 'manish.tiwari@police.in', phone: '9800010020', address: '33 Aliganj, Lucknow' }
         ];
 
-        const policeSql = `INSERT OR IGNORE INTO police (police_id, name, crime_type, station_name, station_id, email, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        const policeSql = `INSERT OR IGNORE INTO police (police_id, name, crime_type, position, station_name, station_id, email, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
         for (let i = 0; i < policeOfficers.length; i++) {
           const officer = policeOfficers[i];
           const sIdx = i % stationIds.length;
 
           db.run(policeSql, [
-            officer.police_id, officer.name, officer.crime_type,
+            officer.police_id, officer.name, officer.crime_type, officer.position,
             stationNames[sIdx], stationIds[sIdx],
             officer.email, officer.phone, officer.address
           ], function(err) {
-            if (!err && this.changes > 0) console.log(`  ✓ Police added: ${officer.name} (${officer.police_id})`);
+            if (!err && this.changes > 0) console.log(`  ✓ Police added: ${officer.name} (${officer.position})`);
           });
         }
 
@@ -152,45 +157,35 @@ const addSampleData = async () => {
           });
         }
 
-        // ============ FIRs (30 FIRs) ============
+        // ============ FIRs (20 FIRs with ALL attributes) ============
         console.log('\n📋 Adding First Information Reports (FIRs)...');
 
         const firSql = `INSERT OR IGNORE INTO firs (
           user_id, station_name, station_id, crime_type, accused, name, age, number,
-          address, relation, purpose, file, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+          address, relation, purpose, file, crime_location, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
         const firData = [
-          { crime_type: 'Robbery', accused: 'Mohit Chauhan', name: 'Rajesh Kumar', age: 45, number: '9876543210', address: '123 Main St, Delhi', relation: 'Self', purpose: 'Robbery near market area at night' },
-          { crime_type: 'Assault', accused: 'Ramesh Singh', name: 'Priya Sharma', age: 32, number: '9876543211', address: '456 Park Road, Mumbai', relation: 'Victim', purpose: 'Physical assault outside office' },
-          { crime_type: 'Theft', accused: 'Unknown', name: 'Rama Krishnan', age: 38, number: '9876543212', address: '789 Commerce Lane, Bangalore', relation: 'Self', purpose: 'Bike theft from parking lot' },
-          { crime_type: 'Fraud', accused: 'Vikram Reddy', name: 'Neha Gupta', age: 29, number: '9876543213', address: '321 Tech Park, Hyderabad', relation: 'Self', purpose: 'Online banking fraud - Rs 50000' },
-          { crime_type: 'Drug Possession', accused: 'Simran Bedi', name: 'Amit Patel', age: 27, number: '9876543214', address: '654 Downtown, Chennai', relation: 'Self', purpose: 'Substance found during search' },
-          { crime_type: 'DUI', accused: 'Ramesh Singh', name: 'Sanjay Verma', age: 35, number: '9876543215', address: '987 Highway, Kolkata', relation: 'Self', purpose: 'Drunk driving accident' },
-          { crime_type: 'Burglary', accused: 'Sanjay Kapoor', name: 'Urmila Das', age: 50, number: '9876543216', address: '111 Residential, Pune', relation: 'Victim', purpose: 'House break-in and valuables stolen' },
-          { crime_type: 'Cyber Crime', accused: 'Kavita Nair', name: 'Vikram Rajput', age: 31, number: '9876543217', address: '222 Cyber City, Ahmedabad', relation: 'Self', purpose: 'Website hacking and data theft' },
-          { crime_type: 'Extortion', accused: 'Rohit Sharma', name: 'Ravi Nair', age: 42, number: '9876543218', address: '333 Business, Jaipur', relation: 'Self', purpose: 'Business extortion demands' },
-          { crime_type: 'Kidnapping', accused: 'Amit Gupta', name: 'Keya Sharma', age: 28, number: '9876543219', address: '444 Area, Lucknow', relation: 'Relative', purpose: 'Child kidnapping from school' },
-          { crime_type: 'Forgery', accused: 'Deepa Krishnan', name: 'Harpreet Singh', age: 55, number: '9876543220', address: '555 Market, Chandigarh', relation: 'Self', purpose: 'Forged property documents' },
-          { crime_type: 'Harassment', accused: 'Kavya Singh', name: 'Anita Verma', age: 26, number: '9876543221', address: '666 Locality, Delhi', relation: 'Self', purpose: 'Workplace harassment complaint' },
-          { crime_type: 'Vehicle Theft', accused: 'Sanjay Kapoor', name: 'Deepak Sharma', age: 40, number: '9876543222', address: '777 Parking, Mumbai', relation: 'Self', purpose: 'Car stolen from mall parking' },
-          { crime_type: 'Shoplifting', accused: 'Rani Kumari', name: 'Pooja Desai', age: 33, number: '9876543223', address: '888 Mall, Bangalore', relation: 'Witness', purpose: 'Electronics theft from store' },
-          { crime_type: 'Identity Theft', accused: 'Neha Verma', name: 'Suresh Kumar', age: 47, number: '9876543224', address: '999 Bank, Hyderabad', relation: 'Self', purpose: 'Cloned bank cards used' },
-          { crime_type: 'Robbery', accused: 'Mohit Chauhan', name: 'Vivek Singh', age: 44, number: '9876543225', address: '1010 Street, Chennai', relation: 'Self', purpose: 'Jewelry shop robbery' },
-          { crime_type: 'Assault', accused: 'Unknown', name: 'Sneha Patel', age: 36, number: '9876543226', address: '1111 Road, Kolkata', relation: 'Victim', purpose: 'Bar fight injuries' },
-          { crime_type: 'Fraud', accused: 'Shreya Das', name: 'Manish Nair', age: 39, number: '9876543227', address: '1212 Avenue, Pune', relation: 'Self', purpose: 'Investment scheme fraud' },
-          { crime_type: 'Drug Possession', accused: 'Unknown', name: 'Aarav Gupta', age: 24, number: '9876543228', address: '1313 Lane, Ahmedabad', relation: 'Self', purpose: 'Drug peddling near school' },
-          { crime_type: 'Corruption', accused: 'Unknown Govt Official', name: 'Rajesh Desai', age: 56, number: '9876543229', address: '1414 Civic, Jaipur', relation: 'Self', purpose: 'Bribery by government official' },
-          { crime_type: 'Human Trafficking', accused: 'Harpreet Malik', name: 'Rekha Singh', age: 31, number: '9876543230', address: '1515 Metro, Lucknow', relation: 'Victim', purpose: 'Cross-border trafficking ring' },
-          { crime_type: 'Hacking', accused: 'Ananya Gupta', name: 'Arjun Kumar', age: 29, number: '9876543231', address: '1616 Tech, Chandigarh', relation: 'Self', purpose: 'Email and social media hacking' },
-          { crime_type: 'Attempted Murder', accused: 'Vikram Thakur', name: 'Harsha Sharma', age: 43, number: '9876543232', address: '1717 Hospital, Delhi', relation: 'Victim', purpose: 'Stabbing incident at market' },
-          { crime_type: 'Smuggling', accused: 'Rajesh Nair', name: 'Prakash Sharma', age: 52, number: '9876543233', address: '1818 Port, Mumbai', relation: 'Witness', purpose: 'Illegal goods at port area' },
-          { crime_type: 'Rape', accused: 'Unknown', name: 'Neha Singh', age: 24, number: '9876543234', address: '1919 Shelter, Bangalore', relation: 'Victim', purpose: 'Sexual assault complaint' },
-          { crime_type: 'Abduction', accused: 'Unknown', name: 'Rani Patel', age: 27, number: '9876543235', address: '2020 Station, Hyderabad', relation: 'Victim', purpose: 'Forced abduction from home' },
-          { crime_type: 'Counterfeiting', accused: 'Unknown', name: 'Naren Verma', age: 44, number: '9876543236', address: '2121 Currency Office, Chennai', relation: 'Self', purpose: 'Fake currency notes in circulation' },
-          { crime_type: 'Vandalism', accused: 'Youth Gang', name: 'Raman Kumar', age: 38, number: '9876543237', address: '2222 Public, Kolkata', relation: 'Witness', purpose: 'Public property damage' },
-          { crime_type: 'Embezzlement', accused: 'Company Employee', name: 'Sheela Desai', age: 41, number: '9876543238', address: '2323 Company, Pune', relation: 'Self', purpose: 'Company funds misappropriation' },
-          { crime_type: 'Blackmail', accused: 'Unknown Extortionist', name: 'Vikas Sharma', age: 36, number: '9876543239', address: '2424 Office, Ahmedabad', relation: 'Self', purpose: 'Threatening messages and calls' }
+          { crime_type: 'Robbery', accused: 'Mohit Chauhan', name: 'Rajesh Kumar', age: 45, number: '9876543210', address: '123 Chandni Chowk, Old Delhi, Delhi', relation: 'Self', purpose: 'Gold chain snatched while walking through market at 10 PM', crime_location: 'Chandni Chowk Market, Old Delhi', status: 'Approved' },
+          { crime_type: 'Assault', accused: 'Ramesh Singh', name: 'Priya Sharma', age: 32, number: '9876543211', address: '456 Andheri West, Mumbai, Maharashtra', relation: 'Victim', purpose: 'Physical assault by neighbour during parking dispute', crime_location: 'Andheri West Society Parking, Mumbai', status: 'Approved' },
+          { crime_type: 'Theft', accused: 'Unknown', name: 'Rama Krishnan', age: 38, number: '9876543212', address: '789 Indiranagar, Bangalore, Karnataka', relation: 'Self', purpose: 'Laptop and wallet stolen from parked car at night', crime_location: 'Indiranagar 100 Feet Road, Bangalore', status: 'Rejected' },
+          { crime_type: 'Fraud', accused: 'Vikram Reddy', name: 'Neha Gupta', age: 29, number: '9876543213', address: '321 HITEC City, Hyderabad, Telangana', relation: 'Self', purpose: 'Online banking fraud - Rs 2,50,000 debited via phishing link', crime_location: 'HITEC City, Madhapur, Hyderabad', status: 'Approved' },
+          { crime_type: 'Drug Possession', accused: 'Simran Bedi', name: 'Amit Patel', age: 27, number: '9876543214', address: '654 T. Nagar, Chennai, Tamil Nadu', relation: 'Self', purpose: 'Suspicious substances found during routine vehicle check', crime_location: 'T. Nagar Bus Stand, Chennai', status: 'Approved' },
+          { crime_type: 'DUI', accused: 'Ramesh Singh', name: 'Sanjay Verma', age: 35, number: '9876543215', address: '987 EM Bypass, Kolkata, West Bengal', relation: 'Self', purpose: 'Drunk driving accident causing damage to parked vehicles', crime_location: 'EM Bypass near Science City, Kolkata', status: 'Rejected' },
+          { crime_type: 'Burglary', accused: 'Sanjay Kapoor', name: 'Urmila Das', age: 50, number: '9876543216', address: '111 Kothrud, Pune, Maharashtra', relation: 'Victim', purpose: 'House break-in at night, jewelry and cash worth Rs 5 lakh stolen', crime_location: 'Kothrud Residential Colony, Pune', status: 'Approved' },
+          { crime_type: 'Cyber Crime', accused: 'Kavita Nair', name: 'Vikram Rajput', age: 31, number: '9876543217', address: '222 SG Highway, Ahmedabad, Gujarat', relation: 'Self', purpose: 'Company server hacked, confidential data leaked online', crime_location: 'SG Highway IT Park, Ahmedabad', status: 'Approved' },
+          { crime_type: 'Extortion', accused: 'Rohit Sharma', name: 'Ravi Nair', age: 42, number: '9876543218', address: '333 MI Road, Jaipur, Rajasthan', relation: 'Self', purpose: 'Threatening calls demanding Rs 10 lakh protection money', crime_location: 'MI Road Market Area, Jaipur', status: 'Rejected' },
+          { crime_type: 'Kidnapping', accused: 'Amit Gupta', name: 'Keya Sharma', age: 28, number: '9876543219', address: '444 Gomti Nagar, Lucknow, Uttar Pradesh', relation: 'Relative', purpose: 'Minor child abducted from school premises by unknown person', crime_location: 'DPS School, Gomti Nagar, Lucknow', status: 'Approved' },
+          { crime_type: 'Forgery', accused: 'Deepa Krishnan', name: 'Harpreet Singh', age: 55, number: '9876543220', address: '555 Sector 22, Chandigarh', relation: 'Self', purpose: 'Forged property sale deed used to claim ownership of ancestral land', crime_location: 'Sub-Registrar Office, Sector 17, Chandigarh', status: 'Approved' },
+          { crime_type: 'Harassment', accused: 'Kavya Singh', name: 'Anita Verma', age: 26, number: '9876543221', address: '666 Dwarka Sector 12, Delhi', relation: 'Self', purpose: 'Continuous workplace harassment and threatening messages from colleague', crime_location: 'Cyber Hub Office, Dwarka, Delhi', status: 'Rejected' },
+          { crime_type: 'Vehicle Theft', accused: 'Sanjay Kapoor', name: 'Deepak Sharma', age: 40, number: '9876543222', address: '777 Bandra East, Mumbai, Maharashtra', relation: 'Self', purpose: 'Car (Honda City MH-02-AB-1234) stolen from mall parking lot', crime_location: 'Phoenix Mall Parking, Bandra, Mumbai', status: 'Approved' },
+          { crime_type: 'Shoplifting', accused: 'Rani Kumari', name: 'Pooja Desai', age: 33, number: '9876543223', address: '888 Whitefield, Bangalore, Karnataka', relation: 'Witness', purpose: 'Electronics worth Rs 75,000 stolen from showroom caught on CCTV', crime_location: 'Forum Mall, Whitefield, Bangalore', status: 'Approved' },
+          { crime_type: 'Identity Theft', accused: 'Neha Verma', name: 'Suresh Kumar', age: 47, number: '9876543224', address: '999 Banjara Hills, Hyderabad, Telangana', relation: 'Self', purpose: 'Cloned Aadhaar card used to take Rs 3 lakh loan in victim name', crime_location: 'SBI Branch, Banjara Hills, Hyderabad', status: 'Rejected' },
+          { crime_type: 'Human Trafficking', accused: 'Harpreet Malik', name: 'Rekha Singh', age: 31, number: '9876543230', address: '1515 Aliganj, Lucknow, Uttar Pradesh', relation: 'Victim', purpose: 'Cross-border trafficking ring operating from industrial area', crime_location: 'Aliganj Industrial Area, Lucknow', status: 'Approved' },
+          { crime_type: 'Attempted Murder', accused: 'Vikram Thakur', name: 'Harsha Sharma', age: 43, number: '9876543232', address: '1717 Karol Bagh, Delhi', relation: 'Victim', purpose: 'Stabbed twice by assailant with knife during road rage incident', crime_location: 'Karol Bagh Crossing, Delhi', status: 'Approved' },
+          { crime_type: 'Smuggling', accused: 'Rajesh Nair', name: 'Prakash Sharma', age: 52, number: '9876543233', address: '1818 Colaba, Mumbai, Maharashtra', relation: 'Witness', purpose: 'Illegal electronic goods worth Rs 25 lakh seized at port warehouse', crime_location: 'Mumbai Port Trust, Gateway Dock, Mumbai', status: 'Approved' },
+          { crime_type: 'Corruption', accused: 'Unknown Govt Official', name: 'Rajesh Desai', age: 56, number: '9876543229', address: '1414 Vaishali Nagar, Jaipur, Rajasthan', relation: 'Self', purpose: 'Municipal officer demanding Rs 50,000 bribe for building permit', crime_location: 'Municipal Corporation Office, Jaipur', status: 'Rejected' },
+          { crime_type: 'Embezzlement', accused: 'Sunil Mehra', name: 'Sheela Desai', age: 41, number: '9876543238', address: '2323 Camp Area, Pune, Maharashtra', relation: 'Self', purpose: 'Company CFO embezzled Rs 1.5 crore over 2 years using fake vendors', crime_location: 'Tech Park Tower B, Hinjewadi, Pune', status: 'Approved' }
         ];
 
         const statuses = ['Sent', 'Approved', 'Rejected'];
@@ -201,30 +196,30 @@ const addSampleData = async () => {
             console.log('⚠️ No users found. Creating sample FIRs with user_id 2');
             for (let i = 0; i < firData.length; i++) {
               const fir = firData[i];
-              const status = statuses[i % statuses.length];
               const sIdx = i % stationIds.length;
 
               db.run(firSql, [
                 2, stationNames[sIdx], stationIds[sIdx],
                 fir.crime_type, fir.accused, fir.name, fir.age,
-                fir.number, fir.address, fir.relation, fir.purpose, null, status
+                fir.number, fir.address, fir.relation, fir.purpose, null,
+                fir.crime_location, fir.status
               ], function(err) {
-                if (!err && this.changes > 0) console.log(`  ✓ FIR added: ${fir.crime_type} against ${fir.accused} (${status})`);
+                if (!err && this.changes > 0) console.log(`  ✓ FIR added: ${fir.crime_type} at ${fir.crime_location} (${fir.status})`);
               });
             }
           } else {
             for (let i = 0; i < firData.length; i++) {
               const fir = firData[i];
-              const status = statuses[i % statuses.length];
               const userId = userRows[i % userRows.length].id;
               const sIdx = i % stationIds.length;
 
               db.run(firSql, [
                 userId, stationNames[sIdx], stationIds[sIdx],
                 fir.crime_type, fir.accused, fir.name, fir.age,
-                fir.number, fir.address, fir.relation, fir.purpose, null, status
+                fir.number, fir.address, fir.relation, fir.purpose, null,
+                fir.crime_location, fir.status
               ], function(err) {
-                if (!err && this.changes > 0) console.log(`  ✓ FIR added: ${fir.crime_type} against ${fir.accused} (${status})`);
+                if (!err && this.changes > 0) console.log(`  ✓ FIR added: ${fir.crime_type} at ${fir.crime_location} (${fir.status})`);
               });
             }
           }
@@ -301,9 +296,9 @@ const addSampleData = async () => {
           console.log('\n✅ Sample data insertion completed!');
           console.log('\n📊 Sample Data Summary:');
           console.log('   - 15 Regular Users');
-          console.log('   - 15 Police Officers');
-          console.log('   - 20 Criminals');
-          console.log('   - 30 First Information Reports (FIRs)');
+          console.log('   - 20 Police Officers (with position)');
+          console.log('   - 20 Criminals (with name & location)');
+          console.log('   - 20 FIRs (with all attributes & crime_location)');
           console.log('   - 20 Crime Analysis Records');
           console.log('   - 20 Activity Log Entries');
 
