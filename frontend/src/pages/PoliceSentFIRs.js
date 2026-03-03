@@ -1,22 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Table, Card, Badge, Button, Spinner, Alert, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { firsAPI } from '../api/client';
 import '../styles/forms.css';
 
 const PoliceSentFIRs = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = JSON.parse(localStorage.getItem('authUser'));
   const stationId = user?.station_id;
   const role = localStorage.getItem('userRole');
-  
+
+  // Derive initial filter from URL path
+  const getInitialFilter = () => {
+    if (location.pathname.includes('/approved')) return 'Approved';
+    if (location.pathname.includes('/rejected')) return 'Rejected';
+    if (location.pathname.includes('/sent')) return 'Sent';
+    return '';
+  };
+
   const [firs, setFirs] = useState([]);
   const [allFirs, setAllFirs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
+  const [filterStatus, setFilterStatus] = useState(getInitialFilter());
   const [actionLoading, setActionLoading] = useState(null);
+
+  // Sync filter when URL changes (sidebar click)
+  useEffect(() => {
+    setFilterStatus(getInitialFilter());
+  }, [location.pathname]);
 
   // Verify user is Police role
   useEffect(() => {

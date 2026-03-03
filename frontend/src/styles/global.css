@@ -528,3 +528,167 @@ body {
   color: #0ea5e9;
 }
 
+/* ============================================================
+   GLOBAL MODAL — Smooth Animations & Premium Styling
+   Applies to ALL Bootstrap React modals project-wide
+   ============================================================ */
+
+/* Backdrop: blurred glassmorphism */
+.modal-backdrop.show {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  background-color: rgba(15, 23, 42, 0.40) !important;
+}
+
+/* Modal dialog: smooth entrance */
+.modal.show .modal-dialog {
+  animation: globalModalIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes globalModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Modal content: accent bar + shadow + rounded */
+.modal-content {
+  border: none !important;
+  border-radius: 1rem !important;
+  box-shadow:
+    0 20px 60px rgba(14, 165, 233, 0.12),
+    0 8px 24px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(14, 165, 233, 0.10) !important;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Sky blue gradient accent bar at top */
+.modal-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #0ea5e9, #06b6d4);
+  z-index: 10;
+  border-radius: 1rem 1rem 0 0;
+}
+
+/* Modal header: premium styling */
+.modal-header {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+  border-bottom: none !important;
+  padding: 1.15rem 1.5rem !important;
+  border-radius: 1rem 1rem 0 0 !important;
+}
+
+.modal-header .modal-title {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+}
+
+/* Close button in modal header */
+.modal-header .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+.modal-header .btn-close:hover {
+  opacity: 1;
+  transform: rotate(90deg);
+}
+
+/* Modal body: clean background */
+.modal-body {
+  padding: 1.5rem !important;
+  background: #ffffff;
+}
+
+/* Modal footer: subtle border */
+.modal-footer {
+  border-top: 1px solid #e2e8f0 !important;
+  padding: 1rem 1.5rem !important;
+  background: #f8fafc;
+  border-radius: 0 0 1rem 1rem !important;
+}
+
+/* Form controls inside modals */
+.modal-body .form-control,
+.modal-body .form-select {
+  border: 2px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.95rem;
+}
+
+.modal-body .form-control:focus,
+.modal-body .form-select:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+.modal-body .form-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #334155;
+  margin-bottom: 0.35rem;
+}
+
+/* Stagger animation for form groups inside modals */
+.modal-body .form-group,
+.modal-body .mb-3,
+.modal-body .mb-2 {
+  animation: modalFieldFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.modal-body .mb-3:nth-child(1),
+.modal-body .mb-2:nth-child(1) { animation-delay: 0.05s; }
+.modal-body .mb-3:nth-child(2),
+.modal-body .mb-2:nth-child(2) { animation-delay: 0.10s; }
+.modal-body .mb-3:nth-child(3),
+.modal-body .mb-2:nth-child(3) { animation-delay: 0.15s; }
+.modal-body .mb-3:nth-child(4),
+.modal-body .mb-2:nth-child(4) { animation-delay: 0.20s; }
+.modal-body .mb-3:nth-child(5),
+.modal-body .mb-2:nth-child(5) { animation-delay: 0.25s; }
+.modal-body .mb-3:nth-child(6),
+.modal-body .mb-2:nth-child(6) { animation-delay: 0.30s; }
+
+@keyframes modalFieldFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal scrollbar */
+.modal-body::-webkit-scrollbar { width: 5px; }
+.modal-body::-webkit-scrollbar-track { background: transparent; }
+.modal-body::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.2); border-radius: 3px; }
+.modal-body::-webkit-scrollbar-thumb:hover { background: rgba(14, 165, 233, 0.35); }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .modal.show .modal-dialog {
+    animation: none;
+  }
+  .modal-body .form-group,
+  .modal-body .mb-3,
+  .modal-body .mb-2 {
+    animation: none;
+  }
+}
+

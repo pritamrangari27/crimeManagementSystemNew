@@ -167,6 +167,22 @@ function AppLayout() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/police/firs/approved"
+            element={
+              <PrivateRoute>
+                <PoliceSentFIRs />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/police/firs/rejected"
+            element={
+              <PrivateRoute>
+                <PoliceSentFIRs />
+              </PrivateRoute>
+            }
+          />
 
           {/* Profile Routes */}
           <Route
