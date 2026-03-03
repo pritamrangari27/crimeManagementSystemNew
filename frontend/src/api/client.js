@@ -153,7 +153,7 @@ export const dashboardAPI = {
   getCrimesByType: () => api.get('/dashboard/crimes-by-type'),
   getFIRStatus: () => api.get('/dashboard/fir-status'),
   getCrimesByLocation: () => api.get('/dashboard/crimes-by-location'),
-  getActivity: (limit = 10) => api.get(`/dashboard/activity?limit=${limit}`)
+  getActivity: (limit = 10, filter = '') => api.get(`/dashboard/activity?limit=${limit}${filter ? `&filter=${filter}` : ''}`)
 };
 
 export default api;

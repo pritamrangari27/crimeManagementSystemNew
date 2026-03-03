@@ -79,6 +79,10 @@ router.get('/crimes-by-location', (req, res) => {
 // Get recent activity
 router.get('/activity', (req, res) => {
   const limit = req.query.limit || 10;
+  const timeFilter = req.query.filter;
+
+  // Build time condition
+  const timeCondition = timeFilter === '1hour' ? "WHERE al.created_at >= datetime('now', '-1 hour')" : '';
 
   // First try activity_log table
   const activityLogSql = `
@@ -91,7 +95,7 @@ router.get('/activity', (req, res) => {
       COALESCE(u.username, 'System') as user
     FROM activity_log al
     LEFT JOIN users u ON al.user_id = u.id
-    WHERE al.created_at >= datetime('now', '-1 hour')
+    ${timeCondition}
     ORDER BY al.created_at DESC 
     LIMIT ?
   `;
@@ -100,7 +104,7 @@ router.get('/activity', (req, res) => {
     if (err) {
       console.error('Activity log error:', err);
       // Fallback to old method if no activity_log table
-      return getActivityFallback(req, res, limit);
+      return getActivityFallback(req, res, limit, timeFilter);
     }
 
     if (logRows && logRows.length > 0) {
@@ -117,12 +121,13 @@ router.get('/activity', (req, res) => {
     }
 
     // Fallback if no records in activity_log
-    getActivityFallback(req, res, limit);
+    getActivityFallback(req, res, limit, timeFilter);
   });
 });
 
 // Fallback activity method
-function getActivityFallback(req, res, limit) {
+function getActivityFallback(req, res, limit, timeFilter) {
+  const timeWhere = timeFilter === '1hour' ? "WHERE created_at >= datetime('now', '-1 hour')" : '';
   const sql = `
     SELECT 
       'Criminal' as type, 
@@ -131,7 +136,7 @@ function getActivityFallback(req, res, limit) {
       created_at,
       'fas fa-user-secret' as icon
     FROM criminals 
-    WHERE created_at >= datetime('now', '-1 hour')
+    ${timeWhere}
     UNION ALL
     SELECT 
       'FIR' as type, 
@@ -140,7 +145,7 @@ function getActivityFallback(req, res, limit) {
       created_at,
       'fas fa-file-alt' as icon
     FROM firs 
-    WHERE created_at >= datetime('now', '-1 hour')
+    ${timeWhere}
     UNION ALL
     SELECT 
       'Police' as type, 
@@ -149,7 +154,7 @@ function getActivityFallback(req, res, limit) {
       created_at,
       'fas fa-users-cog' as icon
     FROM police 
-    WHERE created_at >= datetime('now', '-1 hour')
+    ${timeWhere}
     ORDER BY created_at DESC 
     LIMIT ?
   `;

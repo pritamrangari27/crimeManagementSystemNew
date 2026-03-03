@@ -24,6 +24,7 @@ const Sidebar = () => {
   const user = getCurrentUser();
   const userRole = getUserRole();
   const [activities, setActivities] = useState([]);
+  const [popupActivities, setPopupActivities] = useState([]);
   const [showActivitiesModal, setShowActivitiesModal] = useState(false);
   const [actSlideIndex, setActSlideIndex] = useState(0);
 
@@ -33,7 +34,7 @@ const Sidebar = () => {
 
     const fetchActivities = async () => {
       try {
-        const response = await dashboardAPI.getActivity(15);
+        const response = await dashboardAPI.getActivity(2);
         if (response.data.status === 'success') {
           setActivities(response.data.activities || []);
         }
@@ -149,7 +150,16 @@ const Sidebar = () => {
               {activities.length > 0 && (
                 <button
                   className="view-all-btn"
-                  onClick={() => { setActSlideIndex(0); setShowActivitiesModal(true); }}
+                  onClick={async () => {
+                    setActSlideIndex(0);
+                    try {
+                      const response = await dashboardAPI.getActivity(15, '1hour');
+                      if (response.data.status === 'success') {
+                        setPopupActivities(response.data.activities || []);
+                      }
+                    } catch (e) { console.error(e); }
+                    setShowActivitiesModal(true);
+                  }}
                 >
                   View All
                 </button>
@@ -157,7 +167,7 @@ const Sidebar = () => {
             </div>
             <div className="sidebar-activities-list">
               {activities.length > 0 ? (
-                activities.slice(0, 2).map((activity, idx) => (
+                activities.map((activity, idx) => (
                   <div key={idx} className="sidebar-activity-item">
                     <div className="activity-icon-small">
                       <i className={activity.icon || 'fas fa-info-circle'}></i>
@@ -188,12 +198,12 @@ const Sidebar = () => {
               <i className="fas fa-history me-2" style={{ color: '#10b981' }}></i>
               Recent Activities
               <span style={{ background: 'rgba(16,185,129,0.2)', color: '#10b981', padding: '2px 10px', borderRadius: '12px', fontSize: '0.72rem', marginLeft: '10px', fontWeight: 600 }}>
-                {actSlideIndex + 1} / {activities.length}
+                {popupActivities.length > 0 ? `${actSlideIndex + 1} / ${popupActivities.length}` : '0'}
               </span>
             </Modal.Title>
           </Modal.Header>
           <Modal.Body style={{ background: '#f8fafc', padding: 0, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '220px' }}>
-            {activities.length > 0 && (
+            {popupActivities.length > 0 && (
               <>
                 <div style={{ overflow: 'hidden', width: '100%' }}>
                   <div style={{
@@ -201,7 +211,7 @@ const Sidebar = () => {
                     transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
                     transform: `translateX(-${actSlideIndex * 100}%)`
                   }}>
-                    {activities.map((activity, idx) => (
+                    {popupActivities.map((activity, idx) => (
                       <div key={idx} style={{ minWidth: '100%', padding: '32px 48px', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', width: '100%', maxWidth: '360px' }}>
                           <div style={{
@@ -223,9 +233,9 @@ const Sidebar = () => {
                   </div>
                 </div>
 
-                {activities.length > 1 && (
+                {popupActivities.length > 1 && (
                   <>
-                    <button onClick={() => setActSlideIndex((actSlideIndex - 1 + activities.length) % activities.length)} style={{
+                    <button onClick={() => setActSlideIndex((actSlideIndex - 1 + popupActivities.length) % popupActivities.length)} style={{
                       position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)',
                       width: '34px', height: '34px', borderRadius: '50%', border: '2px solid #10b981',
                       background: 'rgba(255,255,255,0.95)', color: '#10b981', cursor: 'pointer',
@@ -234,7 +244,7 @@ const Sidebar = () => {
                     }}>
                       <i className="fas fa-arrow-left"></i>
                     </button>
-                    <button onClick={() => setActSlideIndex((actSlideIndex + 1) % activities.length)} style={{
+                    <button onClick={() => setActSlideIndex((actSlideIndex + 1) % popupActivities.length)} style={{
                       position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)',
                       width: '34px', height: '34px', borderRadius: '50%', border: '2px solid #10b981',
                       background: 'rgba(255,255,255,0.95)', color: '#10b981', cursor: 'pointer',
@@ -247,17 +257,17 @@ const Sidebar = () => {
                 )}
               </>
             )}
-            {activities.length === 0 && (
+            {popupActivities.length === 0 && (
               <div style={{ textAlign: 'center', color: '#94a3b8', padding: '40px 20px' }}>
                 <i className="fas fa-inbox fa-2x mb-3" style={{ opacity: 0.5 }}></i>
                 <p className="mb-0" style={{ fontSize: '0.9rem' }}>No activities in the last 1 hour</p>
               </div>
             )}
           </Modal.Body>
-          {activities.length > 1 && (
+          {popupActivities.length > 1 && (
             <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', justifyContent: 'center', padding: '10px', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
               <div style={{ display: 'flex', gap: '6px' }}>
-                {activities.map((_, idx) => (
+                {popupActivities.map((_, idx) => (
                   <button key={idx} onClick={() => setActSlideIndex(idx)} style={{
                     width: actSlideIndex === idx ? '22px' : '8px', height: '8px', borderRadius: '4px',
                     border: 'none', background: actSlideIndex === idx ? '#10b981' : '#cbd5e1',
@@ -271,7 +281,7 @@ const Sidebar = () => {
               </span>
             </Modal.Footer>
           )}
-          {activities.length <= 1 && (
+          {popupActivities.length <= 1 && (
             <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', justifyContent: 'center', padding: '10px' }}>
               <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 500 }}>
                 <i className="fas fa-clock me-1" style={{ fontSize: '0.6rem' }}></i>
