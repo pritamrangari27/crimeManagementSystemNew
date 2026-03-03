@@ -220,99 +220,55 @@ const PoliceManagement = () => {
       </Modal>
 
       {/* View Police Modal */}
-      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} size="lg" centered backdrop="static">
-        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: '8px 8px 0 0' }}>
-          <Modal.Title style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>
-            <i className="fas fa-shield me-3"></i>Police Officer Details
+      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} size="md" centered dialogClassName="fir-view-modal">
+        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', padding: '12px 18px', borderBottom: 'none' }}>
+          <Modal.Title style={{ color: 'white', fontSize: '1rem', fontWeight: 700 }}>
+            <i className="fas fa-shield-halved me-2" style={{ color: '#10b981' }}></i>
+            Police Officer Details
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ backgroundColor: '#f8f9fa', padding: '2rem' }}>
+        <Modal.Body style={{ padding: '16px 20px', background: '#ffffff' }}>
           {selectedPolice && (
-            <div>
-              {/* Officer Name Section */}
-              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h5 className="fw-bold mb-3" style={{ color: '#333', fontSize: '1.3rem' }}>
-                  <i className="fas fa-user-tie me-2" style={{ color: '#667eea' }}></i>{selectedPolice.name}
-                </h5>
-                <p className="text-muted mb-0">
-                  <span className="badge bg-primary" style={{ padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}>ID: {selectedPolice.police_id}</span>
-                </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 16px', fontSize: '0.85rem' }}>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Officer Name</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-user-tie me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{selectedPolice.name}</p>
               </div>
-
-              {/* Contact Information */}
-              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
-                  <i className="fas fa-phone-alt me-2" style={{ color: '#e74c3c' }}></i>Contact Information
-                </h6>
-                <Row>
-                  <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Email</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
-                      <i className="fas fa-envelope me-2" style={{ color: '#3498db' }}></i>{selectedPolice.email}
-                    </p>
-                  </Col>
-                  <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Phone</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <i className="fas fa-mobile-alt me-2" style={{ color: '#27ae60' }}></i>{selectedPolice.phone}
-                    </p>
-                  </Col>
-                </Row>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Police ID</span>
+                <p style={{ margin: '2px 0 0' }}><span className="badge bg-primary" style={{ fontSize: '0.75rem', padding: '3px 8px' }}>{selectedPolice.police_id}</span></p>
               </div>
-
-              {/* Assignment Information */}
-              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
-                  <i className="fas fa-building me-2" style={{ color: '#f39c12' }}></i>Station Assignment
-                </h6>
-                <Row>
-                  <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Station Name</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <i className="fas fa-map-location-dot me-2" style={{ color: '#1abc9c' }}></i>{selectedPolice.station_name}
-                    </p>
-                  </Col>
-                  <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Station ID</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <span className="badge bg-secondary">{selectedPolice.station_id}</span>
-                    </p>
-                  </Col>
-                </Row>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a', wordBreak: 'break-word' }}><i className="fas fa-envelope me-1" style={{ color: '#3b82f6', fontSize: '0.8rem' }}></i>{selectedPolice.email}</p>
               </div>
-
-              {/* Specialization & Address */}
-              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
-                  <i className="fas fa-briefcase me-2" style={{ color: '#9b59b6' }}></i>Professional Details
-                </h6>
-                <Row>
-                  <Col md={12} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Specialization</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <span className="badge bg-danger">{selectedPolice.crime_type}</span>
-                    </p>
-                  </Col>
-                  <Col md={12} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Address</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
-                      <i className="fas fa-location-dot me-2" style={{ color: '#e67e22' }}></i>{selectedPolice.address}
-                    </p>
-                  </Col>
-                  <Col md={12} className="mb-0">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Date Joined</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <i className="far fa-calendar me-2" style={{ color: '#2980b9' }}></i>{selectedPolice.created_at ? new Date(selectedPolice.created_at).toLocaleDateString() : 'N/A'}
-                    </p>
-                  </Col>
-                </Row>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Phone</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-phone me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{selectedPolice.phone}</p>
+              </div>
+              <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Station Name</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-building me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{selectedPolice.station_name}</p>
+              </div>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Specialization</span>
+                <p style={{ margin: '2px 0 0' }}><span className="badge bg-danger" style={{ fontSize: '0.75rem', padding: '3px 8px' }}>{selectedPolice.crime_type}</span></p>
+              </div>
+              <div style={{ gridColumn: '1 / -1', background: '#f8fafc', borderRadius: '8px', padding: '8px 12px', borderLeft: '3px solid #10b981' }}>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Address</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 500, color: '#334155', lineHeight: 1.4, fontSize: '0.84rem' }}><i className="fas fa-location-dot me-1" style={{ color: '#ef4444', fontSize: '0.8rem' }}></i>{selectedPolice.address}</p>
+              </div>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date Joined</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="far fa-calendar me-1" style={{ color: '#3b82f6', fontSize: '0.8rem' }}></i>{selectedPolice.created_at ? new Date(selectedPolice.created_at).toLocaleDateString() : 'N/A'}</p>
               </div>
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer style={{ backgroundColor: '#f8f9fa', borderTop: '1px solid #dee2e6', padding: '1rem' }}>
-          <Button variant="secondary" onClick={() => setShowViewModal(false)} style={{ borderRadius: '6px', padding: '0.5rem 1.5rem' }}>
-            <i className="fas fa-times me-2"></i>Close
+        <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px', justifyContent: 'center' }}>
+          <Button variant="outline-secondary" size="sm" onClick={() => setShowViewModal(false)} style={{ borderRadius: '8px', padding: '5px 20px', fontWeight: 600 }}>
+            <i className="fas fa-times me-1"></i>Close
           </Button>
         </Modal.Footer>
       </Modal>

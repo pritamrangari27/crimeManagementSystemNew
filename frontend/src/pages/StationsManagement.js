@@ -305,89 +305,56 @@ const StationsManagement = () => {
         </tbody>
       </Table>
 
-      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="lg" backdrop="static">
-        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: '8px 8px 0 0' }}>
-          <Modal.Title style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>
-            <i className="fas fa-police me-3"></i>Police Station Details
+      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="md" dialogClassName="fir-view-modal">
+        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', padding: '12px 18px', borderBottom: 'none' }}>
+          <Modal.Title style={{ color: 'white', fontSize: '1rem', fontWeight: 700 }}>
+            <i className="fas fa-building-shield me-2" style={{ color: '#10b981' }}></i>
+            Police Station Details
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ backgroundColor: '#f8f9fa', padding: '2rem' }}>
+        <Modal.Body style={{ padding: '16px 20px', background: '#ffffff' }}>
           {selectedStation && (
-            <div>
-              {/* Station Name Section */}
-              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h5 className="fw-bold mb-3" style={{ color: '#333', fontSize: '1.3rem' }}>
-                  <i className="fas fa-building me-2" style={{ color: '#667eea' }}></i>{selectedStation.station_name}
-                </h5>
-                <p className="text-muted mb-0">
-                  <span className="badge bg-primary" style={{ padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}>{selectedStation.station_code}</span>
-                </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 16px', fontSize: '0.85rem' }}>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Station Name</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-building me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{selectedStation.station_name}</p>
               </div>
-
-              {/* Contact Information */}
-              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
-                  <i className="fas fa-phone-alt me-2" style={{ color: '#e74c3c' }}></i>Contact Information
-                </h6>
-                <Row>
-                  <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Phone</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <i className="fas fa-mobile-alt me-2" style={{ color: '#27ae60' }}></i>{selectedStation.phone}
-                    </p>
-                  </Col>
-                  <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Email</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
-                      <i className="fas fa-envelope me-2" style={{ color: '#3498db' }}></i>{selectedStation.email}
-                    </p>
-                  </Col>
-                </Row>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Station Code</span>
+                <p style={{ margin: '2px 0 0' }}><span className="badge bg-primary" style={{ fontSize: '0.75rem', padding: '3px 8px' }}>{selectedStation.station_code}</span></p>
               </div>
-
-              {/* Location Information */}
-              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
-                  <i className="fas fa-map-location-dot me-2" style={{ color: '#f39c12' }}></i>Location
-                </h6>
-                <Row>
-                  <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>State</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <span className="badge bg-info">{selectedStation.state}</span>
-                    </p>
-                  </Col>
-                  <Col md={6} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>City</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <span className="badge bg-info">{selectedStation.city}</span>
-                    </p>
-                  </Col>
-                  <Col md={12} className="mb-3">
-                    <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>Full Address</p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600', wordBreak: 'break-word' }}>
-                      <i className="fas fa-location-dot me-2" style={{ color: '#1abc9c' }}></i>{selectedStation.address}
-                    </p>
-                  </Col>
-                </Row>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Phone</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-phone me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{selectedStation.phone}</p>
               </div>
-
-              {/* In-Charge Officer */}
-              <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '10px', marginBottom: '1.5rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <h6 className="fw-bold mb-3 pb-2" style={{ borderBottom: '2px solid #667eea', color: '#333' }}>
-                  <i className="fas fa-user-tie me-2" style={{ color: '#9b59b6' }}></i>Management
-                </h6>
-                <p className="text-muted mb-1" style={{ fontSize: '0.85rem' }}>In-Charge Officer</p>
-                <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                  <i className="fas fa-user-shield me-2" style={{ color: '#2980b9' }}></i>{selectedStation.in_charge}
-                </p>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a', wordBreak: 'break-word' }}><i className="fas fa-envelope me-1" style={{ color: '#3b82f6', fontSize: '0.8rem' }}></i>{selectedStation.email}</p>
+              </div>
+              <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>State</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}>{selectedStation.state}</p>
+              </div>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>City</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}>{selectedStation.city}</p>
+              </div>
+              <div style={{ gridColumn: '1 / -1', background: '#f8fafc', borderRadius: '8px', padding: '8px 12px', borderLeft: '3px solid #10b981' }}>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Full Address</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 500, color: '#334155', lineHeight: 1.4, fontSize: '0.84rem' }}><i className="fas fa-location-dot me-1" style={{ color: '#ef4444', fontSize: '0.8rem' }}></i>{selectedStation.address}</p>
+              </div>
+              <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>In-Charge Officer</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-user-shield me-1" style={{ color: '#8b5cf6', fontSize: '0.8rem' }}></i>{selectedStation.in_charge}</p>
               </div>
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer style={{ backgroundColor: '#f8f9fa', borderTop: '1px solid #dee2e6', padding: '1rem' }}>
-          <Button variant="secondary" onClick={() => setShowViewModal(false)} style={{ borderRadius: '6px', padding: '0.5rem 1.5rem' }}>
-            <i className="fas fa-times me-2"></i>Close
+        <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px', justifyContent: 'center' }}>
+          <Button variant="outline-secondary" size="sm" onClick={() => setShowViewModal(false)} style={{ borderRadius: '8px', padding: '5px 20px', fontWeight: 600 }}>
+            <i className="fas fa-times me-1"></i>Close
           </Button>
         </Modal.Footer>
       </Modal>
