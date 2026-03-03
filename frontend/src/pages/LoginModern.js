@@ -318,7 +318,7 @@ const LoginModern = () => {
                 className={`auth-tab ${activeTab === 'user' ? 'active' : ''}`}
                 onClick={() => handleTabChange('user')}
               >
-                ✓ Citizen
+                ✓ User
               </button>
               <button
                 className={`auth-tab ${activeTab === 'admin' ? 'active' : ''}`}
@@ -330,7 +330,7 @@ const LoginModern = () => {
                 className={`auth-tab ${activeTab === 'police' ? 'active' : ''}`}
                 onClick={() => handleTabChange('police')}
               >
-                🛡 Law Officer
+                🛡 Police
               </button>
             </div>
 
@@ -487,7 +487,7 @@ const LoginModern = () => {
         <div className="register-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) closeRegisterModal(); }}>
           <div className="register-modal">
             <div className="register-modal-header">
-              <h3>{registerType === 'user' ? '👤 Citizen Registration' : '🛡 Officer Registration'}</h3>
+              <h3>{registerType === 'user' ? '👤 User Registration' : '🛡 Police Registration'}</h3>
               <button className="register-modal-close" onClick={closeRegisterModal}>&times;</button>
             </div>
 
