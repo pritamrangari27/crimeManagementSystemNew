@@ -192,33 +192,31 @@ const Sidebar = () => {
               </span>
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body style={{ background: '#f8fafc', padding: 0, position: 'relative', minHeight: '180px' }}>
+          <Modal.Body style={{ background: '#f8fafc', padding: 0, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '220px' }}>
             {activities.length > 0 && (
               <>
-                <div style={{ overflow: 'hidden' }}>
+                <div style={{ overflow: 'hidden', width: '100%' }}>
                   <div style={{
                     display: 'flex',
                     transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
                     transform: `translateX(-${actSlideIndex * 100}%)`
                   }}>
                     {activities.map((activity, idx) => (
-                      <div key={idx} style={{ minWidth: '100%', padding: '28px 32px', boxSizing: 'border-box' }}>
-                        <div className="d-flex align-items-start">
+                      <div key={idx} style={{ minWidth: '100%', padding: '32px 48px', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', width: '100%', maxWidth: '360px' }}>
                           <div style={{
-                            width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            borderRadius: '12px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                            color: 'white', fontSize: '1.1rem', flexShrink: 0,
-                            boxShadow: '0 4px 12px rgba(16,185,129,0.3)'
+                            width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            borderRadius: '16px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                            color: 'white', fontSize: '1.4rem', marginBottom: '16px',
+                            boxShadow: '0 6px 20px rgba(16,185,129,0.35)'
                           }}>
                             <i className={activity.icon || 'fas fa-info-circle'}></i>
                           </div>
-                          <div className="ms-3 flex-grow-1">
-                            <h6 className="mb-1 fw-bold" style={{ color: '#0f172a', fontSize: '1rem' }}>{activity.action}</h6>
-                            <p className="mb-2" style={{ color: '#475569', fontSize: '0.88rem', lineHeight: 1.5 }}>{activity.description}</p>
-                            <span style={{ background: '#e2e8f0', color: '#64748b', padding: '3px 10px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 500 }}>
-                              <i className="fas fa-clock me-1"></i>{activity.timestamp}
-                            </span>
-                          </div>
+                          <h6 className="mb-2 fw-bold" style={{ color: '#0f172a', fontSize: '1.05rem' }}>{activity.action}</h6>
+                          <p className="mb-3" style={{ color: '#475569', fontSize: '0.88rem', lineHeight: 1.5 }}>{activity.description}</p>
+                          <span style={{ background: '#e2e8f0', color: '#64748b', padding: '4px 14px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 500 }}>
+                            <i className="fas fa-clock me-1"></i>{activity.timestamp}
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -228,8 +226,8 @@ const Sidebar = () => {
                 {activities.length > 1 && (
                   <>
                     <button onClick={() => setActSlideIndex((actSlideIndex - 1 + activities.length) % activities.length)} style={{
-                      position: 'absolute', top: '50%', left: '8px', transform: 'translateY(-50%)',
-                      width: '32px', height: '32px', borderRadius: '50%', border: '2px solid #10b981',
+                      position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)',
+                      width: '34px', height: '34px', borderRadius: '50%', border: '2px solid #10b981',
                       background: 'rgba(255,255,255,0.95)', color: '#10b981', cursor: 'pointer',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem',
                       zIndex: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', transition: 'all 0.2s'
@@ -237,8 +235,8 @@ const Sidebar = () => {
                       <i className="fas fa-arrow-left"></i>
                     </button>
                     <button onClick={() => setActSlideIndex((actSlideIndex + 1) % activities.length)} style={{
-                      position: 'absolute', top: '50%', right: '8px', transform: 'translateY(-50%)',
-                      width: '32px', height: '32px', borderRadius: '50%', border: '2px solid #10b981',
+                      position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)',
+                      width: '34px', height: '34px', borderRadius: '50%', border: '2px solid #10b981',
                       background: 'rgba(255,255,255,0.95)', color: '#10b981', cursor: 'pointer',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem',
                       zIndex: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', transition: 'all 0.2s'
@@ -248,6 +246,12 @@ const Sidebar = () => {
                   </>
                 )}
               </>
+            )}
+            {activities.length === 0 && (
+              <div style={{ textAlign: 'center', color: '#94a3b8', padding: '40px 20px' }}>
+                <i className="fas fa-inbox fa-2x mb-3" style={{ opacity: 0.5 }}></i>
+                <p className="mb-0" style={{ fontSize: '0.9rem' }}>No activities in the last 1 hour</p>
+              </div>
             )}
           </Modal.Body>
           {activities.length > 1 && (
