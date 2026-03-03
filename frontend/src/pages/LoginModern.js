@@ -113,7 +113,7 @@ const LoginModern = () => {
       if (!err.response) {
         errorMessage += 'Cannot reach backend. Check if it\'s running on port 3000.';
       } else if (err.response?.status === 401) {
-        errorMessage = 'Invalid admin credentials';
+        errorMessage = 'Incorrect username or password';
       } else {
         errorMessage += err.response?.data?.message || err.message;
       }
@@ -155,7 +155,7 @@ const LoginModern = () => {
       } else if (!err.response) {
         errorMessage += 'Cannot reach backend server. Check if it\'s running on port 3000.';
       } else if (err.response?.status === 401) {
-        errorMessage = 'Invalid username or password';
+        errorMessage = 'Incorrect username or password';
       } else if (err.response?.status === 400) {
         errorMessage = err.response?.data?.message || 'Invalid request';
       } else if (err.response?.status >= 500) {
@@ -197,7 +197,7 @@ const LoginModern = () => {
       if (!err.response) {
         errorMessage += 'Cannot reach backend. Check if it\'s running on port 3000.';
       } else if (err.response?.status === 401) {
-        errorMessage = 'Invalid police credentials';
+        errorMessage = 'Incorrect username or password';
       } else {
         errorMessage += err.response?.data?.message || err.message;
       }
