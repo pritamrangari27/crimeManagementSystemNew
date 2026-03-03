@@ -477,8 +477,8 @@ const LoginModern = () => {
           </div>
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: '20px', color: 'white', fontSize: '12px' }}>
-          <p>&copy; 2024. All rights reserved.</p>
+        <div style={{ textAlign: 'center', marginTop: '1.25rem', color: '#94a3b8', fontSize: '0.72rem', fontWeight: 500, letterSpacing: '0.3px' }}>
+          <p>&copy; {new Date().getFullYear()} Crime Management System. All rights reserved.</p>
         </div>
       </div>
 
