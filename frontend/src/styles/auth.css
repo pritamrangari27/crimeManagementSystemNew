@@ -1,0 +1,158 @@
+/* Authentication Page Styles - Modern SaaS Design */
+.auth-container {
+  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: var(--font-stack);
+}
+
+.auth-container .card {
+  border: 2px solid #0ea5e9;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 30px rgba(14, 165, 233, 0.15);
+  max-width: 450px;
+  width: 100%;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.auth-container .card-header {
+  background-color: #0ea5e9;
+  color: #ffffff;
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: none;
+}
+
+.auth-container .card-header h2 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.auth-container .card-body {
+  padding: 2rem;
+}
+
+.auth-container .form-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.auth-container .nav-tabs {
+  display: flex;
+  border-bottom: 2px solid #0ea5e9;
+  margin-bottom: 1.5rem;
+}
+
+.auth-container .nav-link {
+  padding: 0.75rem 1rem;
+  border: none;
+  color: #666666;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  flex: 1;
+  text-align: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: -2px;
+}
+
+.auth-container .nav-link:hover {
+  color: #0ea5e9;
+}
+
+.auth-container .nav-link.active {
+  color: #0ea5e9;
+  border-bottom-color: #0ea5e9;
+  background-color: #f0f9ff;
+}
+
+.auth-container .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.auth-container .form-group label {
+  color: #1a1a1a;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 0.95rem;
+}
+
+.auth-container .form-control,
+.auth-container .form-select {
+  border-radius: 0.5rem;
+  border: 2px solid #0ea5e9;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+
+.auth-container .form-control:focus,
+.auth-container .form-select:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+
+.auth-container .btn {
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-weight: 600;
+  background-color: #0ea5e9;
+  border: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  color: #ffffff;
+}
+
+.auth-container .btn:hover {
+  background-color: #0284c7;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.2);
+}
+
+.auth-container .form-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #666666;
+  font-size: 0.95rem;
+}
+
+.auth-container .form-link {
+  color: #0ea5e9;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-container .form-link:hover {
+  color: #0284c7;
+  text-decoration: underline;
+}
+
+/* Alert Styles */
+.alert {
+  border-radius: 0.5rem;
+  border: 1px solid #0ea5e9;
+  background-color: rgba(14, 165, 233, 0.05);
+}
+
+.alert-danger {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}

@@ -1,0 +1,336 @@
+/* ============================================
+   SIDEBAR STYLING - MODERN SAAS DESIGN
+   ============================================ */
+
+:root {
+  --sidebar-width: 260px;
+  --sidebar-bg: linear-gradient(135deg, #ffffff 0%, #f8f7ff 100%);
+  --sidebar-text: #10b981;
+  --sidebar-hover: #d1fae5;
+  --sidebar-active: #059669;
+  --sidebar-active-bg: #d1fae5;
+  --primary-color: #10b981;
+  --accent-green: #10b981;
+  --accent-light-green: #ecfdf5;
+}
+
+/* Main Sidebar Container */
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: var(--sidebar-bg);
+  padding: 24px 16px;
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 1001;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border-right: 2px solid #d1fae5;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 0 0 20px 0;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #d1fae5;
+  padding-bottom: 20px;
+}
+
+.sidebar-header h5 {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-header i {
+  font-size: 1.25rem;
+  color: #10b981;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+  filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.2));
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 8px 0;
+}
+
+.sidebar-link {
+  color: var(--sidebar-text) !important;
+  padding: 12px 14px !important;
+  margin-bottom: 6px;
+  border-radius: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  white-space: nowrap;
+  border-left: 4px solid transparent;
+  border-right: 2px solid transparent;
+  font-size: 0.9375rem;
+  position: relative;
+}
+
+.sidebar-link:hover {
+  background-color: var(--sidebar-hover);
+  color: #059669 !important;
+  border-left-color: #10b981;
+  border-right-color: #10b981;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+
+.sidebar-link.active {
+  background-color: var(--sidebar-active-bg);
+  color: #059669 !important;
+  border-left-color: #10b981;
+  border-right-color: #10b981;
+  font-weight: 700;
+  box-shadow: inset -2px 0 0 #10b981;
+}
+
+.sidebar-link i {
+  width: 20px;
+  text-align: center;
+  margin-right: 12px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-link:hover i {
+  color: #10b981;
+  transform: scale(1.1);
+}
+
+.sidebar-link.active i {
+  color: #10b981;
+  transform: scale(1.15);
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding-top: 16px;
+  margin-top: auto;
+  border-top: 2px solid #d1fae5;
+  padding-top: 16px;
+}
+
+.logout-link {
+  color: #ef4444 !important;
+}
+
+.logout-link:hover {
+  color: #dc2626 !important;
+  background-color: rgba(239, 68, 68, 0.08) !important;
+  border-left-color: #ef4444 !important;
+}
+
+/* User Dropdown Popup Card */
+.user-popup-card {
+  position: fixed;
+  bottom: 25px;
+  left: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px 0 rgba(16, 185, 129, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+  min-width: 240px;
+  z-index: 1100;
+  overflow: hidden;
+  animation: slideUp 0.2s ease;
+  border: 1px solid #d1fae5;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-popup-button {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: #10b981;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-popup-button:hover {
+  background-color: #d1fae5;
+  color: #059669;
+  transform: translateX(2px);
+}
+
+.user-popup-button.logout {
+  color: #ef4444;
+  border-top: 1px solid #d1fae5;
+}
+
+.user-popup-button.logout:hover {
+  background-color: rgba(239, 68, 68, 0.08);
+}
+
+/* Sidebar Toggle for Mobile */
+.sidebar-toggle-mobile {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1050;
+  display: none !important;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/* Main Content Area with Sidebar */
+.with-sidebar {
+  margin-left: var(--sidebar-width);
+  transition: margin-left 0.3s ease;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Main Content Container */
+.main-content {
+  margin-left: var(--sidebar-width);
+  transition: margin-left 0.3s ease;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 992px) {
+  .sidebar {
+    width: 240px;
+    --sidebar-width: 240px;
+    padding: 20px 12px;
+  }
+
+  .with-sidebar {
+    margin-left: 240px;
+  }
+
+  .main-content {
+    margin-left: 240px;
+  }
+
+  .sidebar-link {
+    padding: 9px 10px !important;
+    font-size: 0.9rem;
+  }
+
+  .sidebar-header h5 {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile (767px and down) */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    width: 260px;
+    --sidebar-width: 260px;
+    left: -260px;
+    height: 100vh;
+    transition: left 0.3s ease;
+    border-radius: 0;
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+
+  .with-sidebar {
+    margin-left: 0;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .sidebar-toggle-mobile {
+    display: block !important;
+  }
+
+  .sidebar-toggle-mobile .btn {
+    background-color: #7c3aed;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 0.5rem;
+  }
+
+  .sidebar-toggle-mobile .btn:hover {
+    background-color: #6d28d9;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    --sidebar-width: 100%;
+    left: -100%;
+  }
+
+  .sidebar-link {
+    padding: 12px 15px !important;
+  }
+
+  .sidebar-header {
+    padding: 20px 0;
+  }
+}
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
