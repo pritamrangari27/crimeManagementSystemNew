@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Table, Card, Badge, Button, Spinner, Alert, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import { firsAPI } from '../api/client';
 import '../styles/forms.css';
 
 const PoliceSentFIRs = () => {
@@ -13,10 +14,6 @@ const PoliceSentFIRs = () => {
   const [firs, setFirs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedFIR, setSelectedFIR] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [actioning, setActioning] = useState(false);
-  const [action, setAction] = useState(''); // 'approve' or 'reject'
 
   // Verify user is Police role
   useEffect(() => {
@@ -32,12 +29,13 @@ const PoliceSentFIRs = () => {
       try {
         setLoading(true);
         setError('');
-        const endpoint = stationId 
-          ? `http://localhost:3000/api/firs/station/${stationId}`
-          : `http://localhost:3000/api/firs`;
-        
-        const response = await fetch(endpoint);
-        const data = await response.json();
+        let response;
+        if (stationId) {
+          response = await firsAPI.getByStation(stationId);
+        } else {
+          response = await firsAPI.getAll();
+        }
+        const data = response.data;
         
         if (data.status === 'success' && Array.isArray(data.data)) {
           // Filter for only "Sent" status
@@ -58,43 +56,6 @@ const PoliceSentFIRs = () => {
       fetchFIRs();
     }
   }, [stationId]);
-
-  // Open modal for action
-  const openActionModal = (fir, actionType) => {
-    setSelectedFIR(fir);
-    setAction(actionType);
-    setShowModal(true);
-  };
-
-  // Handle action (approve/reject)
-  const handleAction = async () => {
-    if (!selectedFIR) return;
-
-    setActioning(true);
-    try {
-      const status = action === 'approve' ? 'Approved' : 'Rejected';
-      const response = await fetch(`http://localhost:3000/api/firs/${selectedFIR.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
-      });
-
-      const data = await response.json();
-      if (data.status === 'success') {
-        // Remove from list
-        setFirs(firs.filter(f => f.id !== selectedFIR.id));
-        setShowModal(false);
-        setSelectedFIR(null);
-        alert(`FIR ${status.toLowerCase()} successfully!`);
-      } else {
-        alert('Failed to process FIR');
-      }
-    } catch (err) {
-      alert('Error processing FIR');
-    } finally {
-      setActioning(false);
-    }
-  };
 
   // Format date
   const formatDate = (dateString) => {
@@ -139,7 +100,7 @@ const PoliceSentFIRs = () => {
         {/* FIR Table */}
         <Card className="border-0 shadow-sm">
           <Card.Header className="bg-primary text-white fw-bold">
-            <i className="fas fa-list me-2"></i> Pending FIRs ({firs.length})
+            <i className="fas fa-list me-2"></i> New FIRs - Sent ({firs.length})
           </Card.Header>
           <Card.Body className="p-0">
             {loading ? (
@@ -156,7 +117,7 @@ const PoliceSentFIRs = () => {
             ) : firs.length === 0 ? (
               <div className="text-center py-5">
                 <i className="fas fa-check-circle text-success" style={{ fontSize: '48px' }}></i>
-                <p className="mt-3 text-muted">No pending FIRs at this moment</p>
+                <p className="mt-3 text-muted">No new FIRs at this moment</p>
               </div>
             ) : (
               <div className="table-responsive">
@@ -195,22 +156,6 @@ const PoliceSentFIRs = () => {
                             >
                               <i className="fas fa-eye me-1"></i> View
                             </Button>
-                            <Button
-                              variant="success"
-                              size="sm"
-                              onClick={() => openActionModal(fir, 'approve')}
-                              className="fw-bold"
-                            >
-                              <i className="fas fa-check me-1"></i> Approve
-                            </Button>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={() => openActionModal(fir, 'reject')}
-                              className="fw-bold"
-                            >
-                              <i className="fas fa-times me-1"></i> Reject
-                            </Button>
                           </div>
                         </td>
                       </tr>
@@ -221,66 +166,6 @@ const PoliceSentFIRs = () => {
             )}
           </Card.Body>
         </Card>
-
-        {/* Confirmation Modal */}
-        <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-          <Modal.Header closeButton>
-            <Modal.Title>
-              <i className={`fas fa-${action === 'approve' ? 'check-circle text-success' : 'times-circle text-danger'} me-2`}></i>
-              {action === 'approve' ? 'Approve' : 'Reject'} FIR
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {selectedFIR && (
-              <div>
-                <p className="mb-3">
-                  Are you sure you want to <strong>{action}</strong> this FIR?
-                </p>
-                <div className="bg-light p-3 rounded">
-                  <p className="mb-2">
-                    <strong>FIR ID:</strong> FIR-{String(selectedFIR.id).padStart(4, '0')}
-                  </p>
-                  <p className="mb-2">
-                    <strong>Crime:</strong> {selectedFIR.crime_type}
-                  </p>
-                  <p className="mb-2">
-                    <strong>Accused:</strong> {selectedFIR.accused}
-                  </p>
-                  <p className="mb-0">
-                    <strong>Complainant:</strong> {selectedFIR.name}
-                  </p>
-                </div>
-                <Alert variant={action === 'approve' ? 'success' : 'warning'} className="mt-3 mb-0">
-                  {action === 'approve'
-                    ? 'The complainant will be notified of the approval.'
-                    : 'The complainant will be notified of the rejection.'}
-                </Alert>
-              </div>
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Cancel
-            </Button>
-            <Button
-              variant={action === 'approve' ? 'success' : 'danger'}
-              onClick={handleAction}
-              disabled={actioning}
-            >
-              {actioning ? (
-                <>
-                  <Spinner animation="border" size="sm" className="me-2" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <i className={`fas fa-${action === 'approve' ? 'check' : 'times'} me-2`}></i>
-                  {action === 'approve' ? 'Approve' : 'Reject'}
-                </>
-              )}
-            </Button>
-          </Modal.Footer>
-        </Modal>
       </Container>
     </div>
   );

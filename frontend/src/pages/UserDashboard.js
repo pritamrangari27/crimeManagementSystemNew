@@ -65,8 +65,9 @@ const UserDashboard = () => {
     </div>
   );
 
-  const pendingFIRs = myFIRs.filter(f => f.status === 'Pending').length;
+  const sentFIRs = myFIRs.filter(f => f.status === 'Sent').length;
   const approvedFIRs = myFIRs.filter(f => f.status === 'Approved').length;
+  const rejectedFIRs = myFIRs.filter(f => f.status === 'Rejected').length;
 
   return (
     <>
@@ -92,7 +93,7 @@ const UserDashboard = () => {
       </Row>
 
       <Row>
-        <Col md={4} className="mb-4">
+        <Col md={3} className="mb-4">
           <Card className="shadow-sm border-0">
             <Card.Body>
               <h6 className="text-muted text-uppercase fw-bold">My FIRs</h6>
@@ -100,19 +101,27 @@ const UserDashboard = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={4} className="mb-4">
+        <Col md={3} className="mb-4">
           <Card className="shadow-sm border-0">
             <Card.Body>
-              <h6 className="text-muted text-uppercase fw-bold">Pending</h6>
-              <h3 className="fw-bold text-warning">{pendingFIRs}</h3>
+              <h6 className="text-muted text-uppercase fw-bold">Sent</h6>
+              <h3 className="fw-bold text-info">{sentFIRs}</h3>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={4} className="mb-4">
+        <Col md={3} className="mb-4">
           <Card className="shadow-sm border-0">
             <Card.Body>
               <h6 className="text-muted text-uppercase fw-bold">Approved</h6>
               <h3 className="fw-bold text-success">{approvedFIRs}</h3>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={3} className="mb-4">
+          <Card className="shadow-sm border-0">
+            <Card.Body>
+              <h6 className="text-muted text-uppercase fw-bold">Rejected</h6>
+              <h3 className="fw-bold text-danger">{rejectedFIRs}</h3>
             </Card.Body>
           </Card>
         </Col>
@@ -147,7 +156,7 @@ const UserDashboard = () => {
                               ? 'success'
                               : fir.status === 'Rejected'
                               ? 'danger'
-                              : 'warning'
+                              : 'info'
                           }`}
                         >
                           {fir.status}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import { authAPI } from '../api/client';
 import '../styles/forms.css';
 
 const ChangePassword = () => {
@@ -62,17 +63,12 @@ const ChangePassword = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:3000/api/auth/change-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: user.id,
-          currentPassword: formData.currentPassword,
-          newPassword: formData.newPassword
-        })
-      });
+      const response = await authAPI.changePassword(
+        formData.currentPassword,
+        formData.newPassword
+      );
 
-      const data = await response.json();
+      const data = response.data;
       if (data.status === 'success') {
         setSuccess('Password changed successfully!');
         setFormData({

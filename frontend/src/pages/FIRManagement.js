@@ -14,6 +14,7 @@ const FIRManagement = () => {
   const [showForm, setShowForm] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [viewingFIR, setViewingFIR] = useState(null);
+  const [actionLoading, setActionLoading] = useState(null);
   const [formData, setFormData] = useState({
     crime_type: '',
     crime_date: '',
@@ -104,6 +105,34 @@ const FIRManagement = () => {
   const handleViewFIR = (fir) => {
     setViewingFIR(fir);
     setShowViewModal(true);
+  };
+
+  const handleApproveFIR = async (firId) => {
+    if (!window.confirm('Are you sure you want to approve this FIR?')) return;
+    setActionLoading(firId);
+    try {
+      await firsAPI.approve(firId, null);
+      alert('FIR approved successfully!');
+      fetchFIRs();
+    } catch (error) {
+      alert('Error approving FIR');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleRejectFIR = async (firId) => {
+    if (!window.confirm('Are you sure you want to reject this FIR?')) return;
+    setActionLoading(firId);
+    try {
+      await firsAPI.reject(firId, 'Rejected by admin');
+      alert('FIR rejected successfully!');
+      fetchFIRs();
+    } catch (error) {
+      alert('Error rejecting FIR');
+    } finally {
+      setActionLoading(null);
+    }
   };
 
   if (loading) return <div className="text-center py-5">Loading...</div>;
@@ -283,11 +312,9 @@ const FIRManagement = () => {
               style={{ borderRadius: '8px', border: '2px solid #e0e0e0', padding: '0.75rem' }}
             >
               <option value="">📋 All FIRs</option>
-              <option value="Pending">⟳ Pending</option>
+              <option value="Sent">📤 Sent</option>
               <option value="Approved">✓ Approved</option>
               <option value="Rejected">✕ Rejected</option>
-              <option value="Investigating">🔍 Investigating</option>
-              <option value="Closed">✔ Closed</option>
             </Form.Control>
           </Form.Group>
         </Col>
@@ -320,7 +347,7 @@ const FIRManagement = () => {
                         ? 'success'
                         : fir.status === 'Rejected'
                         ? 'danger'
-                        : 'warning'
+                        : 'info'
                     }`}
                   >
                     {fir.status}
@@ -328,13 +355,35 @@ const FIRManagement = () => {
                 </td>
                 <td>High</td>
                 <td>
-                  <Button
-                    onClick={() => handleViewFIR(fir)}
-                    variant="info"
-                    size="sm"
-                  >
-                    <i className="fas fa-eye"></i> View
-                  </Button>
+                  <div className="d-flex gap-1">
+                    <Button
+                      onClick={() => handleViewFIR(fir)}
+                      variant="info"
+                      size="sm"
+                    >
+                      <i className="fas fa-eye"></i>
+                    </Button>
+                    {fir.status === 'Sent' && (
+                      <>
+                        <Button
+                          onClick={() => handleApproveFIR(fir.id)}
+                          variant="success"
+                          size="sm"
+                          disabled={actionLoading === fir.id}
+                        >
+                          <i className="fas fa-check"></i>
+                        </Button>
+                        <Button
+                          onClick={() => handleRejectFIR(fir.id)}
+                          variant="danger"
+                          size="sm"
+                          disabled={actionLoading === fir.id}
+                        >
+                          <i className="fas fa-times"></i>
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))
@@ -367,8 +416,8 @@ const FIRManagement = () => {
                     <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>First Information Report - Case Details</p>
                   </Col>
                   <Col md={4} className="text-end">
-                    <span className={`badge bg-${viewingFIR.status === 'Approved' ? 'success' : viewingFIR.status === 'Rejected' ? 'danger' : 'warning'}`} style={{ padding: '0.75rem 1rem', fontSize: '0.95rem' }}>
-                      {viewingFIR.status === 'Approved' ? '✓ Approved' : viewingFIR.status === 'Rejected' ? '✕ Rejected' : viewingFIR.status === 'Investigating' ? '🔍 Investigating' : '⟳ Pending'}
+                    <span className={`badge bg-${viewingFIR.status === 'Approved' ? 'success' : viewingFIR.status === 'Rejected' ? 'danger' : 'info'}`} style={{ padding: '0.75rem 1rem', fontSize: '0.95rem' }}>
+                      {viewingFIR.status === 'Approved' ? '✓ Approved' : viewingFIR.status === 'Rejected' ? '✕ Rejected' : '📤 Sent'}
                     </span>
                   </Col>
                 </Row>
@@ -468,7 +517,7 @@ const FIRManagement = () => {
                   <Col md={6} className="mb-3">
                     <p className="text-muted mb-1" style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>FIR Status</p>
                     <p style={{ fontSize: '1rem', fontWeight: '600' }}>
-                      <span className={`badge bg-${viewingFIR.status === 'Approved' ? 'success' : viewingFIR.status === 'Rejected' ? 'danger' : 'warning'}`} style={{ padding: '0.4rem 0.6rem', fontSize: '0.8rem' }}>
+                      <span className={`badge bg-${viewingFIR.status === 'Approved' ? 'success' : viewingFIR.status === 'Rejected' ? 'danger' : 'info'}`} style={{ padding: '0.4rem 0.6rem', fontSize: '0.8rem' }}>
                         {viewingFIR.status}
                       </span>
                     </p>

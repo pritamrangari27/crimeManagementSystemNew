@@ -84,8 +84,6 @@ const UserFIRList = () => {
         return 'success';
       case 'Rejected':
         return 'danger';
-      case 'Pending':
-        return 'warning';
       default:
         return 'secondary';
     }
@@ -100,8 +98,6 @@ const UserFIRList = () => {
         return 'fa-check-circle';
       case 'Rejected':
         return 'fa-times-circle';
-      case 'Pending':
-        return 'fa-hourglass-half';
       default:
         return 'fa-circle';
     }
@@ -212,7 +208,6 @@ const UserFIRList = () => {
                     <option value="Sent">Sent</option>
                     <option value="Approved">Approved</option>
                     <option value="Rejected">Rejected</option>
-                    <option value="Pending">Pending</option>
                   </Form.Select>
                 </Form.Group>
               </Col>

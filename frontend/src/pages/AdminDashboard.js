@@ -160,12 +160,12 @@ const AdminDashboard = () => {
             </Col>
 
             <Col lg={4} className="mb-4">
-              <Card className="border-0 shadow-sm stat-card warning">
+              <Card className="border-0 shadow-sm stat-card info">
                 <Card.Body className="text-center p-4">
-                  <h6 className="text-muted small fw-bold text-uppercase mb-2">Pending FIRs</h6>
-                  <h2 className="fw-bold text-warning mb-2">{stats.pendingFIRs || 0}</h2>
+                  <h6 className="text-muted small fw-bold text-uppercase mb-2">Sent FIRs</h6>
+                  <h2 className="fw-bold text-info mb-2">{stats.pendingFIRs || 0}</h2>
                   <Button
-                    variant="outline-warning"
+                    variant="outline-info"
                     size="sm"
                     onClick={() => navigate('/admin/firs')}
                     className="w-100"

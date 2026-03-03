@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authAPI } from '../api/client';
+import { authAPI, stationsAPI } from '../api/client';
 import '../styles/auth-modern.css';
 
 const Register = () => {
@@ -25,8 +25,8 @@ const Register = () => {
       const fetchStations = async () => {
         try {
           setStationsLoading(true);
-          const response = await fetch('http://localhost:3000/api/stations/all');
-          const data = await response.json();
+          const response = await stationsAPI.getAll();
+          const data = response.data;
           if (data.status === 'success' && Array.isArray(data.data)) {
             setStations(data.data);
           }

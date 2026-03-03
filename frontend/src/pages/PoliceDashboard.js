@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
+import { firsAPI } from '../api/client';
 import '../styles/dashboard.css';
 
 const PoliceDashboard = () => {
@@ -26,10 +27,8 @@ const PoliceDashboard = () => {
       try {
         setLoading(true);
         // Fetch FIR count by status for this police station
-        const response = await fetch(
-          `http://localhost:3000/api/firs/station/${stationId}`
-        );
-        const data = await response.json();
+        const response = await firsAPI.getByStation(stationId);
+        const data = response.data;
 
         if (data.status === 'success' && Array.isArray(data.data)) {
           const firs = data.data;

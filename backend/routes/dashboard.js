@@ -8,8 +8,9 @@ router.get('/stats', (req, res) => {
     totalCriminals: `SELECT COUNT(*) as count FROM criminals`,
     totalStations: `SELECT COUNT(*) as count FROM police_station`,
     totalFIRs: `SELECT COUNT(*) as count FROM firs`,
-    pendingFIRs: `SELECT COUNT(*) as count FROM firs WHERE status = 'Pending'`,
+    pendingFIRs: `SELECT COUNT(*) as count FROM firs WHERE status = 'Sent'`,
     approvedFIRs: `SELECT COUNT(*) as count FROM firs WHERE status = 'Approved'`,
+    rejectedFIRs: `SELECT COUNT(*) as count FROM firs WHERE status = 'Rejected'`,
     totalUsers: `SELECT COUNT(*) as count FROM users WHERE role = 'User'`
   };
 

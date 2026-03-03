@@ -104,11 +104,15 @@ export const firsAPI = {
   getById: (id) => api.get(`/firs/${id}`),
   getByUser: (userId) => api.get(`/firs/user/${userId}`),
   getByStatus: (status) => api.get(`/firs/status/${status}`),
-  create: (data) => api.post('/firs/create', data),
+  create: (data) => api.post('/firs', data),
+  getByStation: (stationId) => api.get(`/firs/station/${stationId}`),
+  search: (query) => api.get(`/firs/all`),
+  update: (id, data) => api.put(`/firs/${id}`, data),
   approve: (id, assigned_officer_id) =>
     api.put(`/firs/${id}/approve`, { assigned_officer_id }),
   reject: (id, rejection_reason) =>
-    api.put(`/firs/${id}/reject`, { rejection_reason })
+    api.put(`/firs/${id}/reject`, { rejection_reason }),
+  delete: (id) => api.delete(`/firs/${id}`)
 };
 
 // Police API

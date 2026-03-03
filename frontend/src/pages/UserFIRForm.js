@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { firsAPI } from '../api/client';
+import { firsAPI, stationsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import '../styles/forms.css';
 
@@ -43,8 +43,8 @@ const UserFIRForm = () => {
     const fetchStations = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3000/api/stations/all');
-        const data = await response.json();
+        const response = await stationsAPI.getAll();
+        const data = response.data;
         if (data.status === 'success' && Array.isArray(data.data)) {
           setStations(data.data);
         }
@@ -136,13 +136,8 @@ const UserFIRForm = () => {
         status: 'Sent'
       };
 
-      const response = await fetch('http://localhost:3000/api/firs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(firData)
-      });
-
-      const data = await response.json();
+      const response = await firsAPI.create(firData);
+      const data = response.data;
       if (data.status === 'success') {
         setSuccess(`FIR filed successfully! FIR ID: ${data.id}`);
         // Reset form
