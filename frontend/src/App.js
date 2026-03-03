@@ -37,6 +37,25 @@ function AppLayout() {
 
   return (
     <>
+      {!isAuthPage && (
+        <div style={{
+          width: '100%',
+          background: 'linear-gradient(90deg, #ff9800 0%, #f44336 100%)',
+          color: '#fff',
+          textAlign: 'center',
+          padding: '10px 0',
+          fontWeight: 600,
+          fontSize: '15px',
+          letterSpacing: '0.5px',
+          zIndex: 9999,
+          position: 'relative',
+          borderBottom: '2px solid rgba(0,0,0,0.1)',
+        }}>
+          <span style={{ marginRight: 8 }}>&#9888;</span>
+          A system building process is in progress
+          <span style={{ marginLeft: 8 }}>&#9888;</span>
+        </div>
+      )}
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<LoginModern />} />

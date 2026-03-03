@@ -17,6 +17,14 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [stations, setStations] = useState([]);
   const [stationsLoading, setStationsLoading] = useState(false);
+  const [showPasswords, setShowPasswords] = useState({
+    password: false,
+    confirmPassword: false
+  });
+
+  const togglePassword = (field) => {
+    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
+  };
   const navigate = useNavigate();
 
   // Fetch stations when role changes to Police
@@ -207,28 +215,38 @@ const Register = () => {
 
                 <div className="form-group">
                   <label className="form-label">Password</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    placeholder="Enter password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
+                  <div className="password-wrapper">
+                    <input
+                      type={showPasswords.password ? 'text' : 'password'}
+                      className="form-control"
+                      name="password"
+                      placeholder="Enter password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                    />
+                    <button type="button" className="password-toggle" onClick={() => togglePassword('password')} tabIndex={-1}>
+                      <i className={`fas ${showPasswords.password ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                    </button>
+                  </div>
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Confirm Password</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    name="confirmPassword"
-                    placeholder="Confirm password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    required
-                  />
+                  <div className="password-wrapper">
+                    <input
+                      type={showPasswords.confirmPassword ? 'text' : 'password'}
+                      className="form-control"
+                      name="confirmPassword"
+                      placeholder="Confirm password"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required
+                    />
+                    <button type="button" className="password-toggle" onClick={() => togglePassword('confirmPassword')} tabIndex={-1}>
+                      <i className={`fas ${showPasswords.confirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                    </button>
+                  </div>
                 </div>
 
                 <button

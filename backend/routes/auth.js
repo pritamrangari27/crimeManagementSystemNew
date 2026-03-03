@@ -58,6 +58,7 @@ router.post('/login', async (req, res) => {
           id: user.id,
           username: user.username,
           email: user.email,
+          phone: user.phone,
           role: user.role,
           station_id: user.station_id,
           profile_pic: user.profile_pic
@@ -82,6 +83,7 @@ router.post('/login', async (req, res) => {
             id: user.id,
             username: user.username,
             email: user.email,
+            phone: user.phone,
             role: user.role,
             station_id: user.station_id,
             profile_pic: user.profile_pic
