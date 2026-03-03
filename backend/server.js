@@ -21,18 +21,19 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Validate required environment variables in production
 if (NODE_ENV === 'production') {
-  const requiredVars = ['FRONTEND_URL', 'SESSION_SECRET'];
+  const requiredVars = ['SESSION_SECRET'];
   const missing = requiredVars.filter(v => !process.env[v]);
   
   if (missing.length > 0) {
     console.error('❌ FATAL: Missing required environment variables:', missing.join(', '));
-    console.error('   Required for production:');
-    console.error('   - FRONTEND_URL: Your Vercel frontend URL');
     console.error('   - SESSION_SECRET: Strong random string (32+ chars)');
     process.exit(1);
   }
   
-  console.log('✓ All required environment variables are set');
+  if (!process.env.FRONTEND_URL) {
+    console.warn('⚠️  FRONTEND_URL not set. Update after Vercel deployment.');
+  }
+  console.log('✓ SESSION_SECRET is configured');
 }
 
 // SQLite DB setup
