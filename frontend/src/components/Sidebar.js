@@ -157,7 +157,7 @@ const Sidebar = () => {
             </div>
             <div className="sidebar-activities-list">
               {activities.length > 0 ? (
-                activities.map((activity, idx) => (
+                activities.slice(0, 2).map((activity, idx) => (
                   <div key={idx} className="sidebar-activity-item">
                     <div className="activity-icon-small">
                       <i className={activity.icon || 'fas fa-info-circle'}></i>

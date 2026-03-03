@@ -197,9 +197,8 @@
 }
 
 .sidebar-activities-list {
-  flex: 1;
-  overflow-y: auto;
   padding-right: 2px;
+  overflow: hidden;
 }
 
 .sidebar-activities-list::-webkit-scrollbar {
