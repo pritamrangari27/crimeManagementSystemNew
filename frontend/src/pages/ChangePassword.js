@@ -27,13 +27,6 @@ const ChangePassword = () => {
     setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
   };
 
-  // Verify user is logged in
-  useEffect(() => {
-    if (!user || !role) {
-      navigate('/login');
-    }
-  }, [user, role, navigate]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({

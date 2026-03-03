@@ -16,14 +16,6 @@ const FIRDetails = () => {
   const [approving, setApproving] = useState(false);
   const [rejecting, setRejecting] = useState(false);
 
-  // Verify user is logged in
-  useEffect(() => {
-    if (!user || !role) {
-      navigate('/login');
-      return;
-    }
-  }, [user, role, navigate]);
-
   // Fetch FIR details
   useEffect(() => {
     const fetchFIR = async () => {

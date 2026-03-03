@@ -30,14 +30,6 @@ const UserFIRForm = () => {
     purpose: ''
   });
 
-  // Verify user is User role
-  useEffect(() => {
-    if (role !== 'User') {
-      navigate('/login');
-      return;
-    }
-  }, [role, navigate]);
-
   // Fetch stations and crime types
   useEffect(() => {
     const fetchStations = async () => {

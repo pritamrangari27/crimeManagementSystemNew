@@ -21,13 +21,6 @@ const AdminProfile = () => {
     department: user?.department || ''
   });
 
-  // Verify user is Admin role
-  useEffect(() => {
-    if (role !== 'Admin') {
-      navigate('/login');
-    }
-  }, [role, navigate]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({

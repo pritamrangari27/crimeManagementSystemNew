@@ -32,14 +32,6 @@ const PoliceSentFIRs = () => {
     setFilterStatus(getInitialFilter());
   }, [location.pathname]);
 
-  // Verify user is Police role
-  useEffect(() => {
-    if (role !== 'Police') {
-      navigate('/login');
-      return;
-    }
-  }, [role, navigate]);
-
   const fetchFIRs = async () => {
     try {
       setLoading(true);

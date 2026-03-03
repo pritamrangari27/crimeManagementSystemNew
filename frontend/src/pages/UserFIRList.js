@@ -16,14 +16,6 @@ const UserFIRList = () => {
   const [statusFilter, setStatusFilter] = useState('All');
   const [sortBy, setSortBy] = useState('date');
 
-  // Verify user is User role
-  useEffect(() => {
-    if (role !== 'User') {
-      navigate('/login');
-      return;
-    }
-  }, [role, navigate]);
-
   // Fetch FIRs
   useEffect(() => {
     const fetchFIRs = async () => {

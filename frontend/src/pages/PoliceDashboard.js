@@ -14,14 +14,6 @@ const PoliceDashboard = () => {
   const stationId = user?.station_id;
   const role = localStorage.getItem('userRole');
 
-  // Verify user is Police
-  useEffect(() => {
-    if (role !== 'Police') {
-      navigate('/login');
-      return;
-    }
-  }, [role, navigate]);
-
   useEffect(() => {
     const fetchStats = async () => {
       try {

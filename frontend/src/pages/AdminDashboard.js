@@ -218,10 +218,10 @@ const AdminDashboard = () => {
           </Row>
 
           {/* Recent Activities Slider & System Overview */}
-          <Row>
+          <Row className="align-items-stretch">
             {/* Recent Activities - Modern Slider */}
-            <Col lg={7} className="mb-4">
-              <Card className="border-0 shadow-sm" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+            <Col lg={7} className="mb-4 d-flex">
+              <Card className="border-0 shadow-sm w-100" style={{ borderRadius: '16px', overflow: 'hidden' }}>
                 <Card.Header className="border-0 p-4 d-flex justify-content-between align-items-center" style={{
                   background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
                 }}>
@@ -295,24 +295,28 @@ const AdminDashboard = () => {
                       {activities.length > 1 && (
                         <>
                           <button onClick={goPrev} style={{
-                            position: 'absolute', top: '50%', left: '8px', transform: 'translateY(-50%)',
-                            width: '34px', height: '34px', borderRadius: '50%', border: 'none',
-                            background: 'rgba(15,23,42,0.7)', color: '#fff', cursor: 'pointer',
+                            position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)',
+                            width: '36px', height: '36px', borderRadius: '50%',
+                            border: '2px solid #10b981', background: 'rgba(255,255,255,0.95)',
+                            color: '#10b981', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '0.85rem', backdropFilter: 'blur(4px)', zIndex: 2,
-                            transition: 'background 0.2s'
+                            fontSize: '1rem', zIndex: 2,
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+                            transition: 'all 0.2s'
                           }}>
-                            <i className="fas fa-chevron-left"></i>
+                            <i className="fas fa-arrow-left"></i>
                           </button>
                           <button onClick={goNext} style={{
-                            position: 'absolute', top: '50%', right: '8px', transform: 'translateY(-50%)',
-                            width: '34px', height: '34px', borderRadius: '50%', border: 'none',
-                            background: 'rgba(15,23,42,0.7)', color: '#fff', cursor: 'pointer',
+                            position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)',
+                            width: '36px', height: '36px', borderRadius: '50%',
+                            border: '2px solid #10b981', background: 'rgba(255,255,255,0.95)',
+                            color: '#10b981', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '0.85rem', backdropFilter: 'blur(4px)', zIndex: 2,
-                            transition: 'background 0.2s'
+                            fontSize: '1rem', zIndex: 2,
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+                            transition: 'all 0.2s'
                           }}>
-                            <i className="fas fa-chevron-right"></i>
+                            <i className="fas fa-arrow-right"></i>
                           </button>
                         </>
                       )}
@@ -349,16 +353,16 @@ const AdminDashboard = () => {
             </Col>
 
             {/* System Overview */}
-            <Col lg={5} className="mb-4">
-              <Card className="border-0 shadow-sm" style={{ borderRadius: '16px', overflow: 'hidden' }}>
-                <Card.Header className="border-0 p-4" style={{
+            <Col lg={5} className="mb-4 d-flex">
+              <Card className="border-0 shadow-sm w-100" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                <Card.Header className="border-0 p-3 px-4" style={{
                   background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
                 }}>
                   <h5 className="mb-0 fw-bold text-white" style={{ fontSize: '1.1rem' }}>
                     <i className="fas fa-server me-2" style={{ color: '#10b981' }}></i> System Overview
                   </h5>
                 </Card.Header>
-                <Card.Body className="p-4" style={{ background: '#f8fafc' }}>
+                <Card.Body className="p-3" style={{ background: '#f8fafc' }}>
                   {[
                     { label: 'Police Officers', value: stats.totalPolice, icon: 'fas fa-user-shield', color: '#3b82f6' },
                     { label: 'Criminals Registered', value: stats.totalCriminals, icon: 'fas fa-user-secret', color: '#ef4444' },
@@ -369,10 +373,10 @@ const AdminDashboard = () => {
                     { label: 'Rejected FIRs', value: stats.rejectedFIRs, icon: 'fas fa-times-circle', color: '#ef4444' },
                   ].map((item, idx) => (
                     <div key={idx} className="d-flex align-items-center justify-content-between" style={{
-                      padding: '12px 16px',
-                      marginBottom: idx < 6 ? '8px' : 0,
+                      padding: '8px 12px',
+                      marginBottom: idx < 6 ? '5px' : 0,
                       background: '#ffffff',
-                      borderRadius: '12px',
+                      borderRadius: '10px',
                       border: '1px solid #e2e8f0',
                       transition: 'box-shadow 0.2s, transform 0.2s',
                     }}
@@ -381,19 +385,19 @@ const AdminDashboard = () => {
                     >
                       <div className="d-flex align-items-center">
                         <div style={{
-                          width: '36px', height: '36px', borderRadius: '10px',
+                          width: '30px', height: '30px', borderRadius: '8px',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           background: `${item.color}15`, color: item.color,
-                          fontSize: '0.95rem', marginRight: '12px', flexShrink: 0
+                          fontSize: '0.85rem', marginRight: '10px', flexShrink: 0
                         }}>
                           <i className={item.icon}></i>
                         </div>
-                        <span style={{ color: '#475569', fontWeight: 500, fontSize: '0.92rem' }}>{item.label}</span>
+                        <span style={{ color: '#475569', fontWeight: 500, fontSize: '0.85rem' }}>{item.label}</span>
                       </div>
                       <span style={{
-                        fontWeight: 700, fontSize: '1.1rem', color: '#0f172a',
-                        background: '#f1f5f9', padding: '4px 14px', borderRadius: '8px',
-                        minWidth: '42px', textAlign: 'center'
+                        fontWeight: 700, fontSize: '0.95rem', color: '#0f172a',
+                        background: '#f1f5f9', padding: '3px 12px', borderRadius: '8px',
+                        minWidth: '38px', textAlign: 'center'
                       }}>
                         {item.value || 0}
                       </span>

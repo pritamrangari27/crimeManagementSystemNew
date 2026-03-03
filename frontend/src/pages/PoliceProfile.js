@@ -22,13 +22,6 @@ const PoliceProfile = () => {
     badge_number: user?.badge_number || ''
   });
 
-  // Verify user is Police role
-  useEffect(() => {
-    if (role !== 'Police') {
-      navigate('/login');
-    }
-  }, [role, navigate]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({

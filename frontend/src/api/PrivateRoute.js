@@ -6,6 +6,7 @@ const PrivateRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -21,6 +22,7 @@ const PrivateRoute = ({ children }) => {
     }
 
     setIsAuthenticated(true);
+    setUserRole(role);
 
     // Role-based access control
     const pathname = location.pathname;
@@ -65,7 +67,14 @@ const PrivateRoute = ({ children }) => {
   }
 
   if (!isAuthorized) {
-    return <Navigate to="/login" />;
+    // Redirect to the user's own dashboard instead of login
+    const dashboardMap = {
+      Admin: '/admin/dashboard',
+      Police: '/police/dashboard',
+      User: '/user/dashboard'
+    };
+    const redirectTo = dashboardMap[userRole] || '/login';
+    return <Navigate to={redirectTo} />;
   }
 
   return children;

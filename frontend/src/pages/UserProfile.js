@@ -21,13 +21,6 @@ const UserProfile = () => {
     address: user?.address || ''
   });
 
-  // Verify user is logged in
-  useEffect(() => {
-    if (!user || !role) {
-      navigate('/login');
-    }
-  }, [user, role, navigate]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({

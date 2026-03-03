@@ -59,7 +59,7 @@ const UserDashboard = () => {
       <div className="with-sidebar w-100">
         <div className="text-center py-5 text-danger">
           <p>{error}</p>
-          <button className="btn btn-primary" onClick={() => navigate('/login')}>Go to Login</button>
+          <button className="btn btn-primary" onClick={() => navigate('/user/dashboard')}>Retry</button>
         </div>
       </div>
     </div>

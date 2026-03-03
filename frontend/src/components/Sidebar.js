@@ -48,7 +48,6 @@ const Sidebar = () => {
     { path: '/admin/police', label: 'Manage Police', icon: 'fas fa-users-cog' },
     { path: '/admin/stations', label: 'Manage Stations', icon: 'fas fa-building' },
     { path: '/admin/firs', label: 'FIR Management', icon: 'fas fa-file-alt' },
-    { path: '/admin/crime-analysis', label: 'Crime Analysis', icon: 'fas fa-chart-bar' },
   ];
 
   const policeMenuItems = [
