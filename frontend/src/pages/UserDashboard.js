@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Button, Modal, Badge } from 'react-bootstrap';
+import { Container, Button, Modal, Badge, Form, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
-import { firsAPI } from '../api/client';
+import { firsAPI, stationsAPI } from '../api/client';
+import { CRIME_TYPES } from '../constants/crimeTypes';
 import '../styles/dashboard.css';
 
 const UserDashboard = () => {
@@ -14,8 +15,155 @@ const UserDashboard = () => {
   const [error, setError] = useState(null);
   const [viewingFIR, setViewingFIR] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [showFIRModal, setShowFIRModal] = useState(false);
+  const [stations, setStations] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [firError, setFirError] = useState('');
+  const [firSuccess, setFirSuccess] = useState('');
+  const [firForm, setFirForm] = useState({
+    station_id: '',
+    crime_type: '',
+    accused: '',
+    name: user?.username || '',
+    age: '',
+    number: '',
+    address: '',
+    relation: '',
+    purpose: ''
+  });
 
   const handleViewFIR = (fir) => { setViewingFIR(fir); setShowViewModal(true); };
+
+  // Fetch stations when modal opens
+  const fetchStations = async () => {
+    try {
+      const response = await stationsAPI.getAll();
+      if (response.data.status === 'success' && Array.isArray(response.data.data)) {
+        setStations(response.data.data);
+      }
+    } catch (err) {
+      console.error('Error fetching stations:', err);
+    }
+  };
+
+  const handleOpenFIRModal = () => {
+    fetchStations();
+    setShowFIRModal(true);
+    setFirError('');
+    setFirSuccess('');
+  };
+
+  const handleCloseFIRModal = () => {
+    setShowFIRModal(false);
+    setFirForm({
+      station_id: '',
+      crime_type: '',
+      accused: '',
+      name: user?.username || '',
+      age: '',
+      number: '',
+      address: '',
+      relation: '',
+      purpose: ''
+    });
+    setFirError('');
+    setFirSuccess('');
+  };
+
+  const handleFIRInputChange = (e) => {
+    const { name, value } = e.target;
+    setFirForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const validateFIRForm = () => {
+    if (!firForm.station_id) {
+      setFirError('Please select a police station');
+      return false;
+    }
+    if (!firForm.crime_type) {
+      setFirError('Please select a crime type');
+      return false;
+    }
+    if (!firForm.accused.trim()) {
+      setFirError('Please enter accused name/description');
+      return false;
+    }
+    if (!firForm.name.trim()) {
+      setFirError('Please enter your full name');
+      return false;
+    }
+    if (!firForm.age || firForm.age < 1 || firForm.age > 120) {
+      setFirError('Please enter valid age (1-120)');
+      return false;
+    }
+    if (!firForm.number || !/^\d{10,15}$/.test(firForm.number)) {
+      setFirError('Please enter valid phone number (10-15 digits)');
+      return false;
+    }
+    if (!firForm.address.trim()) {
+      setFirError('Please enter address');
+      return false;
+    }
+    if (!firForm.relation.trim()) {
+      setFirError('Please enter relation to accused');
+      return false;
+    }
+    if (!firForm.purpose.trim()) {
+      setFirError('Please enter purpose of FIR');
+      return false;
+    }
+    return true;
+  };
+
+  const handleFIRSubmit = async (e) => {
+    e.preventDefault();
+    setFirError('');
+    setFirSuccess('');
+
+    if (!validateFIRForm()) {
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const firData = {
+        user_id: user.id,
+        station_id: firForm.station_id,
+        crime_type: firForm.crime_type,
+        accused: firForm.accused,
+        name: firForm.name,
+        age: parseInt(firForm.age),
+        number: firForm.number,
+        address: firForm.address,
+        relation: firForm.relation,
+        purpose: firForm.purpose,
+        status: 'Sent'
+      };
+
+      const response = await firsAPI.create(firData);
+      if (response.data.status === 'success') {
+        setFirSuccess(`✓ FIR filed successfully! FIR ID: ${response.data.id}`);
+        setTimeout(async () => {
+          handleCloseFIRModal();
+          // Refresh FIRs list
+          try {
+            const firsRes = await firsAPI.getByUser(user.id);
+            if (firsRes.data.status === 'success') {
+              setMyFIRs(firsRes.data.data || []);
+            }
+          } catch (err) {
+            console.error('Error refreshing FIRs:', err);
+          }
+        }, 1500);
+      } else {
+        setFirError(response.data.message || 'Failed to file FIR');
+      }
+    } catch (err) {
+      setFirError(err.response?.data?.message || err.message || 'Error filing FIR');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,7 +229,7 @@ const UserDashboard = () => {
               <p>Welcome back! Manage your FIRs and track their status.</p>
             </div>
             <Button size="sm" className="fw-bold" style={{ backgroundColor: '#10b981', borderColor: '#10b981', borderRadius: 8 }}
-              onClick={() => navigate('/fir/form')}>
+              onClick={handleOpenFIRModal}>
               <i className="fas fa-file-medical me-1"></i> File New FIR
             </Button>
           </div>
@@ -156,7 +304,7 @@ const UserDashboard = () => {
                 <i className="fas fa-file-invoice me-2" style={{ color: '#10b981' }}></i>
                 FIR Details
                 {viewingFIR && (
-                  <Badge bg={statusColor(viewingFIR.status)} className="ms-2"
+                  <Badge bg={viewingFIR.status === 'Approved' ? 'success' : viewingFIR.status === 'Rejected' ? 'danger' : 'info'} className="ms-2"
                     style={{ fontSize: '0.7rem', padding: '4px 8px', verticalAlign: 'middle' }}>
                     {viewingFIR.status}
                   </Badge>
@@ -209,6 +357,212 @@ const UserDashboard = () => {
             <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px', justifyContent: 'center' }}>
               <Button variant="outline-secondary" size="sm" onClick={() => setShowViewModal(false)} style={{ borderRadius: '8px', padding: '5px 20px', fontWeight: 600 }}>
                 <i className="fas fa-times me-1"></i>Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* ── File New FIR Modal ── */}
+          <Modal show={showFIRModal} onHide={handleCloseFIRModal} centered size="lg" dialogClassName="fir-form-modal" backdrop="static">
+            <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', padding: '14px 20px', borderBottom: 'none' }}>
+              <Modal.Title style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700 }}>
+                <i className="fas fa-file-contract me-2"></i>File New FIR
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body style={{ padding: '24px', background: '#ffffff' }}>
+              {firError && (
+                <Alert variant="danger" onClose={() => setFirError('')} dismissible>
+                  <i className="fas fa-exclamation-circle me-2"></i>{firError}
+                </Alert>
+              )}
+              {firSuccess && (
+                <Alert variant="success" onClose={() => setFirSuccess('')} dismissible>
+                  <i className="fas fa-check-circle me-2"></i>{firSuccess}
+                </Alert>
+              )}
+
+              <Form onSubmit={handleFIRSubmit}>
+                {/* Row 1: Station and Crime Type */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      <i className="fas fa-building me-2" style={{ color: '#10b981' }}></i>Police Station *
+                    </Form.Label>
+                    <Form.Select
+                      name="station_id"
+                      value={firForm.station_id}
+                      onChange={handleFIRInputChange}
+                      required
+                      style={{ borderRadius: '8px', fontSize: '0.9rem', borderColor: '#e2e8f0' }}
+                    >
+                      <option value="">-- Select Police Station --</option>
+                      {stations.map(station => (
+                        <option key={station.id} value={station.station_code || station.station_id || station.id}>
+                          {station.station_name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      <i className="fas fa-exclamation-triangle me-2" style={{ color: '#ef4444' }}></i>Crime Type *
+                    </Form.Label>
+                    <Form.Select
+                      name="crime_type"
+                      value={firForm.crime_type}
+                      onChange={handleFIRInputChange}
+                      required
+                      style={{ borderRadius: '8px', fontSize: '0.9rem', borderColor: '#e2e8f0' }}
+                    >
+                      <option value="">-- Select Crime Type --</option>
+                      {CRIME_TYPES.map((crime) => (
+                        <option key={crime.value} value={crime.value}>
+                          {crime.label}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </div>
+
+                {/* Accused Information */}
+                <div style={{ background: '#f8fafc', padding: '12px 16px', borderRadius: '8px', borderLeft: '3px solid #10b981', marginBottom: '16px' }}>
+                  <h6 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a', marginBottom: '0' }}>
+                    <i className="fas fa-user-secret me-2"></i>Accused Information
+                  </h6>
+                </div>
+
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                    Accused Name/Description *
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="accused"
+                    value={firForm.accused}
+                    onChange={handleFIRInputChange}
+                    placeholder="Enter name or description of accused"
+                    required
+                    style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                  />
+                </Form.Group>
+
+                {/* Row 2: Name and Age */}
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      Full Name *
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="name"
+                      value={firForm.name}
+                      onChange={handleFIRInputChange}
+                      placeholder="Your full name"
+                      required
+                      style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                    />
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      Age *
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="age"
+                      value={firForm.age}
+                      onChange={handleFIRInputChange}
+                      placeholder="18"
+                      min="1"
+                      max="120"
+                      required
+                      style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                    />
+                  </Form.Group>
+                </div>
+
+                {/* Row 3: Phone and Address */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      <i className="fas fa-phone me-1" style={{ color: '#3b82f6' }}></i>Phone Number *
+                    </Form.Label>
+                    <Form.Control
+                      type="tel"
+                      name="number"
+                      value={firForm.number}
+                      onChange={handleFIRInputChange}
+                      placeholder="10-15 digits"
+                      required
+                      style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                    />
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      <i className="fas fa-map-pin me-1" style={{ color: '#f59e0b' }}></i>Address *
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="address"
+                      value={firForm.address}
+                      onChange={handleFIRInputChange}
+                      placeholder="Your address"
+                      required
+                      style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                    />
+                  </Form.Group>
+                </div>
+
+                {/* Row 4: Relation and Purpose */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      Relation to Accused *
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="relation"
+                      value={firForm.relation}
+                      onChange={handleFIRInputChange}
+                      placeholder="e.g., Friend, Neighbor, Stranger"
+                      required
+                      style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                    />
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      Purpose of FIR *
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="purpose"
+                      value={firForm.purpose}
+                      onChange={handleFIRInputChange}
+                      placeholder="e.g., Legal action, Investigation"
+                      required
+                      style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                    />
+                  </Form.Group>
+                </div>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '12px 20px', gap: '8px' }}>
+              <Button variant="outline-secondary" size="sm" onClick={handleCloseFIRModal} disabled={submitting} style={{ borderRadius: '8px', fontWeight: 600 }}>
+                <i className="fas fa-times me-1"></i>Cancel
+              </Button>
+              <Button variant="success" size="sm" onClick={handleFIRSubmit} disabled={submitting} style={{ borderRadius: '8px', fontWeight: 600, background: '#10b981', border: 'none' }}>
+                {submitting ? (
+                  <>
+                    <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />
+                    Filing FIR...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-paper-plane me-1"></i>File FIR
+                  </>
+                )}
               </Button>
             </Modal.Footer>
           </Modal>

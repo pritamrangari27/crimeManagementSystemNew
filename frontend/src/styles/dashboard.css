@@ -1352,3 +1352,142 @@
     font-size: 2.5rem;
   }
 }
+/* ──────────────────────────────────────────────────────────────── */
+/* FIR Modal Animations                                              */
+/* ──────────────────────────────────────────────────────────────── */
+
+/* Modal backdrop animation */
+.fir-form-modal.modal.show .modal-dialog,
+.fir-view-modal.modal.show .modal-dialog {
+  animation: modalSlideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Modal backdrop fade in */
+.fir-form-modal.modal,
+.fir-view-modal.modal {
+  animation: backdropFade 0.35s ease-in-out both;
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(0, 20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes backdropFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal close animation */
+.fir-form-modal.modal.hide .modal-dialog,
+.fir-view-modal.modal.hide .modal-dialog {
+  animation: modalSlideDown 0.25s ease-in-out both;
+}
+
+@keyframes modalSlideDown {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(0, 15px) scale(0.98);
+  }
+}
+
+/* Modal header gradient effect */
+.fir-form-modal .modal-header,
+.fir-view-modal .modal-header {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Modal body form input focus effects */
+.fir-form-modal .form-control:focus,
+.fir-form-modal .form-select:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+  transition: all 0.2s ease;
+}
+
+.fir-form-modal .form-control,
+.fir-form-modal .form-select {
+  transition: all 0.2s ease;
+}
+
+.fir-form-modal .form-control:hover,
+.fir-form-modal .form-select:hover {
+  border-color: #10b981;
+}
+
+/* Alert animations */
+.fir-form-modal .alert {
+  animation: slideInDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  border-radius: 8px;
+  border: none;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button hover effects */
+.fir-form-modal .btn {
+  transition: all 0.2s ease;
+}
+
+.fir-form-modal .btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
+}
+
+.fir-form-modal .btn-outline-secondary:hover {
+  transform: translateY(-2px);
+}
+
+/* Form group label animations */
+.fir-form-modal .form-label {
+  animation: fadeIn 0.3s ease-in-out both;
+}
+
+.fir-form-modal .form-group:nth-child(1) { animation-delay: 0.05s; }
+.fir-form-modal .form-group:nth-child(2) { animation-delay: 0.10s; }
+.fir-form-modal .form-group:nth-child(3) { animation-delay: 0.15s; }
+.fir-form-modal .form-group:nth-child(4) { animation-delay: 0.20s; }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+  .fir-form-modal.modal-lg .modal-dialog {
+    max-width: 95vw;
+  }
+  
+  .fir-form-modal .form-control,
+  .fir-form-modal .form-select {
+    font-size: 16px; /* Prevent mobile zoom on input focus */
+  }
+}
