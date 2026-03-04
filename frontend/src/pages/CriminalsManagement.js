@@ -369,6 +369,7 @@ const CriminalsManagement = () => {
             <th>Name</th>
             <th>Crime Type</th>
             <th>Location</th>
+            <th>Address</th>
             <th>Email</th>
             <th>Contact</th>
             <th>Actions</th>
@@ -381,6 +382,7 @@ const CriminalsManagement = () => {
                 <td>{criminal.criminal_name}</td>
                 <td>{criminal.crime_type}</td>
                 <td>{criminal.crime_location}</td>
+                <td>{criminal.address || '-'}</td>
                 <td>{criminal.email}</td>
                 <td>{criminal.contact}</td>
                 <td>
@@ -397,7 +399,7 @@ const CriminalsManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="mgmt-empty">
+              <td colSpan="7" className="mgmt-empty">
                 No criminals found
               </td>
             </tr>

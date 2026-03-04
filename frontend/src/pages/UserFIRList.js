@@ -238,7 +238,10 @@ const UserFIRList = () => {
                     <tr>
                       <th>FIR ID</th>
                       <th>Crime Type</th>
+                      <th>Location</th>
                       <th>Accused</th>
+                      <th>Complainant</th>
+                      <th>Address</th>
                       <th>Station</th>
                       <th>Filed Date</th>
                       <th>Status</th>
@@ -256,7 +259,10 @@ const UserFIRList = () => {
                             {fir.crime_type}
                           </span>
                         </td>
+                        <td>{fir.location || '-'}</td>
                         <td>{fir.accused}</td>
+                        <td>{fir.name || fir.complainant_name || '-'}</td>
+                        <td>{fir.address || '-'}</td>
                         <td>
                           <small className="text-muted">{fir.station_id}</small>
                         </td>

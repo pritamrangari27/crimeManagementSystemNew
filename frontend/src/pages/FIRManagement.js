@@ -293,6 +293,9 @@ const FIRManagement = () => {
             <th>FIR Number</th>
             <th>Crime Type</th>
             <th>Location</th>
+            <th>Accused</th>
+            <th>Complainant</th>
+            <th>Address</th>
             <th>Date Filed</th>
             <th>Status</th>
             <th>Priority</th>
@@ -305,6 +308,9 @@ const FIRManagement = () => {
               <tr key={fir.id}>
                 <td>FIR-{String(fir.id).padStart(4, '0')}</td>
                 <td>{fir.crime_type}</td>
+                <td>{fir.location || '-'}</td>
+                <td>{fir.accused || '-'}</td>
+                <td>{fir.name || fir.complainant_name || '-'}</td>
                 <td>{fir.address || '-'}</td>
                 <td>{new Date(fir.created_at).toLocaleDateString()}</td>
                 <td>
@@ -335,7 +341,7 @@ const FIRManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="mgmt-empty">
+              <td colSpan="10" className="mgmt-empty">
                 No FIRs found
               </td>
             </tr>

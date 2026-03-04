@@ -192,8 +192,10 @@ const PoliceSentFIRs = () => {
                     <tr>
                       <th>FIR ID</th>
                       <th>Crime Type</th>
+                      <th>Location</th>
                       <th>Accused</th>
                       <th>Complainant</th>
+                      <th>Address</th>
                       <th>Filed Date</th>
                       <th>Status</th>
                       <th>Actions</th>
@@ -208,8 +210,10 @@ const PoliceSentFIRs = () => {
                         <td>
                           <span className="mgmt-badge info">{fir.crime_type}</span>
                         </td>
+                        <td>{fir.location || '-'}</td>
                         <td className="fw-bold">{fir.accused}</td>
                         <td>{fir.name}</td>
+                        <td>{fir.address || '-'}</td>
                         <td className="small text-muted">
                           {formatDate(fir.created_at || fir.date)}
                         </td>
