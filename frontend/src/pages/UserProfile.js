@@ -50,8 +50,16 @@ const UserProfile = () => {
 
   // Refresh data on component mount
   useEffect(() => {
+    if (!user || !role) {
+      navigate('/login', { replace: true });
+      return;
+    }
+    if (role !== 'User') {
+      navigate('/user/dashboard', { replace: true });
+      return;
+    }
     refreshUserData();
-  }, []);
+  }, [user, role, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,8 +104,9 @@ const UserProfile = () => {
       .substring(0, 2);
   };
 
-  if (!user || role !== 'User') {
-    return null;
+  // Show loading while checking auth
+  if (!user || !role) {
+    return <div className="text-center py-5">Verifying authentication...</div>;
   }
 
   return (

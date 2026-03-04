@@ -51,8 +51,16 @@ const PoliceProfile = () => {
 
   // Refresh data on component mount
   useEffect(() => {
+    if (!user || !role) {
+      navigate('/login', { replace: true });
+      return;
+    }
+    if (role !== 'Police') {
+      navigate('/police/dashboard', { replace: true });
+      return;
+    }
     refreshUserData();
-  }, []);
+  }, [user, role, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,7 +94,10 @@ const PoliceProfile = () => {
   const getInitials = () =>
     (user?.username || 'P').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
 
-  if (role !== 'Police') return null;
+  // Show loading while checking auth
+  if (!user || !role) {
+    return <div className="text-center py-5">Verifying authentication...</div>;
+  }
 
   /* ---- shared inline style objects ---- */
   const infoItemStyle = {

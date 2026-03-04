@@ -50,8 +50,16 @@ const AdminProfile = () => {
 
   // Refresh data on component mount
   useEffect(() => {
+    if (!user || !role) {
+      navigate('/login', { replace: true });
+      return;
+    }
+    if (role !== 'Admin') {
+      navigate('/admin/dashboard', { replace: true });
+      return;
+    }
     refreshUserData();
-  }, []);
+  }, [user, role, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,8 +104,9 @@ const AdminProfile = () => {
       .substring(0, 2);
   };
 
-  if (role !== 'Admin') {
-    return null;
+  // Show loading while checking auth
+  if (!user || !role) {
+    return <div className="text-center py-5">Verifying authentication...</div>;
   }
 
   return (
