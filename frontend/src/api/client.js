@@ -17,7 +17,7 @@ console.log('[API Config] Using API URL:', API_BASE_URL);
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
-  timeout: 10000,
+  timeout: 60000, // 60s timeout - Render free tier cold starts can take 30-50s
   headers: {
     'Content-Type': 'application/json'
   }

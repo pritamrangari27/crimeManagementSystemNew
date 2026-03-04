@@ -162,11 +162,11 @@ const LoginModern = () => {
       let errorMessage = 'Login failed. ';
       
       if (err.code === 'ECONNABORTED') {
-        errorMessage += 'Request timeout. Backend may be slow or not responding.';
+        errorMessage += 'Request timeout. The server may be waking up — please try again in a few seconds.';
       } else if (err.code === 'ERR_NETWORK') {
-        errorMessage += 'Network error. Is the backend running on port 3000?';
+        errorMessage += 'Network error. The server may be starting up — please try again shortly.';
       } else if (!err.response) {
-        errorMessage += 'Cannot reach backend server. Check if it\'s running on port 3000.';
+        errorMessage += 'Cannot reach backend server. It may be waking up — please retry in a moment.';
       } else if (err.response?.status === 401) {
         errorMessage = 'Incorrect username or password';
       } else if (err.response?.status === 400) {
