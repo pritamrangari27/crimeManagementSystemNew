@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ status: 'error', message: 'Invalid role selected' });
     }
 
-    const sql = `SELECT id, username, email, phone, role, station_id, profile_pic, password FROM users 
+    const sql = `SELECT id, username, email, phone, address, badge_number, role, station_id, profile_pic, password FROM users 
                  WHERE username = ? AND role = ?`;
     
     req.db.get(sql, [username, role], async (err, user) => {
@@ -59,6 +59,8 @@ router.post('/login', async (req, res) => {
           username: user.username,
           email: user.email,
           phone: user.phone,
+          address: user.address,
+          badge_number: user.badge_number,
           role: user.role,
           station_id: user.station_id,
           profile_pic: user.profile_pic
@@ -84,6 +86,8 @@ router.post('/login', async (req, res) => {
             username: user.username,
             email: user.email,
             phone: user.phone,
+            address: user.address,
+            badge_number: user.badge_number,
             role: user.role,
             station_id: user.station_id,
             profile_pic: user.profile_pic
@@ -213,6 +217,8 @@ router.get('/current-user', checkAuth, (req, res) => {
         username: user.username,
         email: user.email,
         phone: user.phone,
+        address: user.address,
+        badge_number: user.badge_number,
         role: user.role,
         station_id: user.station_id,
         profile_pic: user.profile_pic
@@ -232,7 +238,7 @@ router.get('/current-user', checkAuth, (req, res) => {
 router.put('/update-profile', (req, res) => {
   try {
     const userId = req.session?.user?.id || req.body.user_id;
-    const { username, email, phone } = req.body;
+    const { username, email, phone, address, badge_number } = req.body;
 
     if (!userId) {
       return res.status(400).json({ status: 'error', message: 'User identification required. Please login again.' });
@@ -266,8 +272,8 @@ router.put('/update-profile', (req, res) => {
         return res.status(409).json({ status: 'error', message: 'Username or email already taken by another user' });
       }
 
-      const updateSql = `UPDATE users SET username = ?, email = ?, phone = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
-      req.db.run(updateSql, [username, email, phone || '', userId], function(err) {
+      const updateSql = `UPDATE users SET username = ?, email = ?, phone = ?, address = ?, badge_number = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
+      req.db.run(updateSql, [username, email, phone || '', address || '', badge_number || '', userId], function(err) {
         if (err) {
           console.error('Profile update database error:', err);
           return res.status(500).json({ status: 'error', message: 'Failed to update profile' });
@@ -278,6 +284,8 @@ router.put('/update-profile', (req, res) => {
           req.session.user.username = username;
           req.session.user.email = email;
           req.session.user.phone = phone || '';
+          req.session.user.address = address || '';
+          req.session.user.badge_number = badge_number || '';
         }
 
         // Log activity
@@ -300,6 +308,8 @@ router.put('/update-profile', (req, res) => {
             username,
             email,
             phone: phone || '',
+            address: address || '',
+            badge_number: badge_number || '',
             role: req.session?.user?.role || req.body.role,
             station_id: req.session?.user?.station_id || req.body.station_id
           }

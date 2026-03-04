@@ -78,6 +78,66 @@ async function runMigrations(db, isPg) {
       resolve();
     });
   });
+
+  // Migration 3: Add address column to users if missing
+  await new Promise((resolve) => {
+    if (isPg) {
+      db.get(
+        `SELECT column_name FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'address'`,
+        [],
+        (err, row) => {
+          if (err || row) { resolve(); return; }
+          console.log('Adding address column to users table...');
+          db.run('ALTER TABLE users ADD COLUMN address TEXT', [], (err) => {
+            if (!err) console.log('✓ Added address column to users table');
+            resolve();
+          });
+        }
+      );
+    } else {
+      db.all("PRAGMA table_info(users)", (err, columns) => {
+        if (err) { resolve(); return; }
+        const hasAddressColumn = columns && columns.some(col => col.name === 'address');
+        if (!hasAddressColumn) {
+          console.log('Adding address column to users table...');
+          db.run('ALTER TABLE users ADD COLUMN address TEXT', [], (err) => {
+            if (!err) console.log('✓ Added address column to users table');
+            resolve();
+          });
+        } else { resolve(); }
+      });
+    }
+  });
+
+  // Migration 4: Add badge_number column to users if missing
+  await new Promise((resolve) => {
+    if (isPg) {
+      db.get(
+        `SELECT column_name FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'badge_number'`,
+        [],
+        (err, row) => {
+          if (err || row) { resolve(); return; }
+          console.log('Adding badge_number column to users table...');
+          db.run('ALTER TABLE users ADD COLUMN badge_number TEXT', [], (err) => {
+            if (!err) console.log('✓ Added badge_number column to users table');
+            resolve();
+          });
+        }
+      );
+    } else {
+      db.all("PRAGMA table_info(users)", (err, columns) => {
+        if (err) { resolve(); return; }
+        const hasBadgeNumberColumn = columns && columns.some(col => col.name === 'badge_number');
+        if (!hasBadgeNumberColumn) {
+          console.log('Adding badge_number column to users table...');
+          db.run('ALTER TABLE users ADD COLUMN badge_number TEXT', [], (err) => {
+            if (!err) console.log('✓ Added badge_number column to users table');
+            resolve();
+          });
+        } else { resolve(); }
+      });
+    }
+  });
 }
 
 async function createTables(db, isPg) {
@@ -93,8 +153,8 @@ async function createTables(db, isPg) {
   const tables = [
     `CREATE TABLE IF NOT EXISTS users (
       id ${autoKey}, username TEXT UNIQUE NOT NULL, email TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL, phone TEXT, role TEXT NOT NULL CHECK(role IN ('Admin', 'Police', 'User')),
-      station_id INTEGER, profile_pic TEXT,
+      password TEXT NOT NULL, phone TEXT, address TEXT, role TEXT NOT NULL CHECK(role IN ('Admin', 'Police', 'User')),
+      station_id INTEGER, badge_number TEXT, profile_pic TEXT,
       created_at ${ts} DEFAULT CURRENT_TIMESTAMP, updated_at ${ts} DEFAULT CURRENT_TIMESTAMP
     )`,
     `CREATE TABLE IF NOT EXISTS police (
