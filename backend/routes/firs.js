@@ -45,7 +45,7 @@ const executeDatabaseQuery = (db, sql, params, res, isRun = false) => {
 router.post('/', (req, res) => {
   const {
     user_id, station_id, crime_type, accused, name, age, number, address,
-    relation, purpose, file, crime_location, status = 'Sent'
+    relation, purpose, file, status = 'Sent'
   } = req.body;
 
   // Validate required fields
@@ -56,18 +56,27 @@ router.post('/', (req, res) => {
     });
   }
 
+  // Use station_id as station_name if needed (from form it's just station_code)
+  const station_name = station_id;
+
   const sql = `INSERT INTO firs (
-    user_id, station_id, crime_type, accused, name, age, number, address,
-    relation, purpose, file, crime_location, status, created_at, updated_at
+    user_id, station_id, station_name, crime_type, accused, name, age, number, address,
+    relation, purpose, file, status, created_at, updated_at
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
 
   req.db.run(sql, [
-    user_id, station_id, crime_type, accused, name, age, number, address,
-    relation || '', purpose || '', file || null, crime_location || null, status
+    user_id, station_id, station_name, crime_type, accused, name, age, number, address,
+    relation || '', purpose || '', file || null, status
   ], function(err) {
     if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      console.error('FIR creation database error:', err);
+      console.error('SQL:', sql);
+      console.error('Params:', [user_id, station_id, crime_type, accused, name, age, number, address, relation || '', purpose || '', file || null, crime_location || null, status]);
+      return res.status(500).json({ 
+        status: 'error', 
+        message: 'Database error: ' + (err.message || 'Failed to create FIR'),
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
     }
     
     // Log the FIR creation activity
