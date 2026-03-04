@@ -12,6 +12,7 @@ const UserProfile = () => {
   const user = getCurrentUser();
   const role = getUserRole();
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -21,6 +22,36 @@ const UserProfile = () => {
     phone: user?.phone || '',
     address: user?.address || ''
   });
+
+  // Fetch fresh user data from backend
+  const refreshUserData = async () => {
+    setRefreshing(true);
+    try {
+      const response = await authAPI.currentUser();
+      if (response.data.status === 'success') {
+        const freshUser = response.data.user;
+        updateAuthUser(freshUser);
+        setFormData({
+          username: freshUser.username || '',
+          email: freshUser.email || '',
+          phone: freshUser.phone || '',
+          address: freshUser.address || ''
+        });
+        setSuccess('Profile refreshed from database ✓');
+        setTimeout(() => setSuccess(''), 3000);
+      }
+    } catch (err) {
+      console.error('Error refreshing profile:', err);
+      setError('Failed to refresh profile from database');
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  // Refresh data on component mount
+  useEffect(() => {
+    refreshUserData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,8 +73,10 @@ const UserProfile = () => {
       if (data.status === 'success') {
         // Update auth service with new data
         updateAuthUser(formData);
-        setSuccess('Profile updated successfully!');
+        setSuccess('✓ Profile saved to database! Changes will persist when you log in again.');
         setIsEditing(false);
+        // Refresh from backend to confirm
+        setTimeout(() => refreshUserData(), 1500);
       } else {
         setError(data.message || 'Failed to update profile');
       }
@@ -75,21 +108,42 @@ const UserProfile = () => {
         {/* Header */}
         <Row className="mb-3">
           <Col>
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-between align-items-center gap-2 flex-wrap">
               <div>
                 <h2 className="fw-bold mb-1" style={{ color: '#1a1a1a', fontSize: '1.4rem' }}>
                   <i className="fas fa-user-circle me-2" style={{ color: '#0ea5e9' }}></i> My Profile
                 </h2>
                 <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>Manage your account settings and personal information</p>
               </div>
-              <Button 
-                variant="outline-secondary" 
-                size="sm" 
-                onClick={() => navigate(-1)}
-                className="fw-bold"
-              >
-                <i className="fas fa-arrow-left me-2"></i>Back
-              </Button>
+              <div className="d-flex gap-2">
+                <Button 
+                  variant="outline-primary" 
+                  size="sm" 
+                  onClick={refreshUserData}
+                  disabled={refreshing}
+                  className="fw-bold"
+                  title="Fetch latest data from database"
+                >
+                  {refreshing ? (
+                    <>
+                      <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-1" />
+                      Refreshing...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-sync-alt me-1"></i>Refresh
+                    </>
+                  )}
+                </Button>
+                <Button 
+                  variant="outline-secondary" 
+                  size="sm" 
+                  onClick={() => navigate(-1)}
+                  className="fw-bold"
+                >
+                  <i className="fas fa-arrow-left me-2"></i>Back
+                </Button>
+              </div>
             </div>
           </Col>
         </Row>

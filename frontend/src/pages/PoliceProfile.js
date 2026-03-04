@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, Alert, Spinner, Badge } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, getUserRole, updateAuthUser } from '../utils/authService';
@@ -13,6 +13,7 @@ const PoliceProfile = () => {
   const stationId = user?.station_id;
   const role = getUserRole();
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -22,6 +23,36 @@ const PoliceProfile = () => {
     phone: user?.phone || '',
     badge_number: user?.badge_number || ''
   });
+
+  // Fetch fresh user data from backend
+  const refreshUserData = async () => {
+    setRefreshing(true);
+    try {
+      const response = await authAPI.currentUser();
+      if (response.data.status === 'success') {
+        const freshUser = response.data.user;
+        updateAuthUser(freshUser);
+        setFormData({
+          username: freshUser.username || '',
+          email: freshUser.email || '',
+          phone: freshUser.phone || '',
+          badge_number: freshUser.badge_number || ''
+        });
+        setSuccess('Profile refreshed from database ✓');
+        setTimeout(() => setSuccess(''), 3000);
+      }
+    } catch (err) {
+      console.error('Error refreshing profile:', err);
+      setError('Failed to refresh profile from database');
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  // Refresh data on component mount
+  useEffect(() => {
+    refreshUserData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,8 +69,10 @@ const PoliceProfile = () => {
       const data = response.data;
       if (data.status === 'success') {
         updateAuthUser(formData);
-        setSuccess('Profile updated successfully!');
+        setSuccess('✓ Profile saved to database! Changes will persist when you log in again.');
         setIsEditing(false);
+        // Refresh from backend to confirm
+        setTimeout(() => refreshUserData(), 1500);
       } else {
         setError(data.message || 'Failed to update profile');
       }
@@ -88,7 +121,7 @@ const PoliceProfile = () => {
 
         {/* ── Page header ── */}
         <div
-          className="d-flex justify-content-between align-items-center mb-3"
+          className="d-flex justify-content-between align-items-center mb-3 gap-2 flex-wrap"
           style={{ animation: 'fadeIn 0.35s cubic-bezier(.4,0,.2,1) both' }}
         >
           <div>
@@ -98,9 +131,30 @@ const PoliceProfile = () => {
             </h2>
             <p className="text-muted mb-0" style={{ fontSize: '0.8rem' }}>Manage your account and settings</p>
           </div>
-          <Button variant="outline-secondary" size="sm" onClick={() => navigate(-1)} className="fw-bold">
-            <i className="fas fa-arrow-left me-1"></i>Back
-          </Button>
+          <div className="d-flex gap-2">
+            <Button 
+              variant="outline-primary" 
+              size="sm" 
+              onClick={refreshUserData}
+              disabled={refreshing}
+              className="fw-bold"
+              title="Fetch latest data from database"
+            >
+              {refreshing ? (
+                <>
+                  <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-1" />
+                  Refreshing...
+                </>
+              ) : (
+                <>
+                  <i className="fas fa-sync-alt me-1"></i>Refresh
+                </>
+              )}
+            </Button>
+            <Button variant="outline-secondary" size="sm" onClick={() => navigate(-1)} className="fw-bold">
+              <i className="fas fa-arrow-left me-1"></i>Back
+            </Button>
+          </div>
         </div>
 
         {/* ── Alerts ── */}
