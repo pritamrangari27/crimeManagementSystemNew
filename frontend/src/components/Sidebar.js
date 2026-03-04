@@ -313,7 +313,9 @@ const Sidebar = () => {
                 <button
                   className="user-popup-button"
                   onClick={() => {
-                    setShowProfileModal(true);
+                    if (userRole === 'Admin') navigate('/admin/profile');
+                    else if (userRole === 'Police') navigate('/police/profile');
+                    else navigate('/profile');
                     setShowUserDropdown(false);
                   }}
                 >
