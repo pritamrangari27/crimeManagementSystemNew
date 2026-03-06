@@ -121,9 +121,9 @@ const ExportReports = () => {
   // If preview data is available, show the preview page
   if (previewData) {
     return (
-      <div style={{ display: 'flex', minHeight: '100vh', paddingTop: '38px' }}>
+      <>
         <Sidebar />
-        <div style={{ flex: 1, overflowX: 'hidden' }}>
+        <div className="with-sidebar">
           <Container fluid className="py-4 px-4 page-stagger">
             <div className="d-flex align-items-center justify-content-between mb-4" style={{ animation: 'fadeInDown 0.3s ease' }}>
               <div className="d-flex align-items-center gap-3">
@@ -182,14 +182,14 @@ const ExportReports = () => {
           </Container>
           <Footer />
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', paddingTop: '38px' }}>
+    <>
       <Sidebar />
-      <div style={{ flex: 1, overflowX: 'hidden' }}>
+      <div className="with-sidebar">
         <Container fluid className="py-4 px-4 page-stagger">
           <div className="d-flex align-items-center gap-3 mb-4" style={{ animation: 'fadeInDown 0.3s ease' }}>
             <Button variant="outline-secondary" size="sm" style={{ borderRadius: 8, fontWeight: 600 }}
@@ -298,7 +298,7 @@ const ExportReports = () => {
         </Container>
         <Footer />
       </div>
-    </div>
+    </>
   );
 };
 
