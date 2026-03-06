@@ -235,6 +235,8 @@ const UserDashboard = () => {
     </>
   );
 
+  const [showContact, setShowContact] = useState(false);
+
   const sentFIRs = myFIRs.filter(f => f.status === 'Sent').length;
   const approvedFIRs = myFIRs.filter(f => f.status === 'Approved').length;
   const rejectedFIRs = myFIRs.filter(f => f.status === 'Rejected').length;
@@ -260,10 +262,16 @@ const UserDashboard = () => {
               <h2><i className="fas fa-tachometer-alt me-2" style={{ color: '#10b981' }}></i>User Dashboard</h2>
               <p>Welcome back! Manage your FIRs and track their status.</p>
             </div>
-            <Button size="sm" className="fw-bold" style={{ backgroundColor: '#10b981', borderColor: '#10b981', borderRadius: 8 }}
-              onClick={handleOpenFIRModal}>
-              <i className="fas fa-file-medical me-1"></i> File New FIR
-            </Button>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <Button size="sm" className="fw-bold" style={{ backgroundColor: '#6366f1', borderColor: '#6366f1', borderRadius: 8 }}
+                onClick={() => setShowContact(true)}>
+                <i className="fas fa-envelope me-1"></i> Contact
+              </Button>
+              <Button size="sm" className="fw-bold" style={{ backgroundColor: '#10b981', borderColor: '#10b981', borderRadius: 8 }}
+                onClick={handleOpenFIRModal}>
+                <i className="fas fa-file-medical me-1"></i> File New FIR
+              </Button>
+            </div>
           </div>
 
           {/* ── Stat cards (4-col bento) ── */}
@@ -677,6 +685,75 @@ const UserDashboard = () => {
 
         </Container>
         <ToastContainer position="top-right" autoClose={3000} />
+
+          {/* Contact Popup */}
+          {showContact && (
+            <div onClick={() => setShowContact(false)} style={{
+              position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+              background: 'rgba(15,23,42,0.5)', backdropFilter: 'blur(6px)',
+              zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              animation: 'fadeIn 0.25s ease'
+            }}>
+              <div onClick={e => e.stopPropagation()} style={{
+                background: '#fff', borderRadius: '20px', width: '340px', maxWidth: '90vw',
+                boxShadow: '0 25px 60px rgba(0,0,0,0.25)', overflow: 'hidden',
+                animation: 'slideUp 0.35s cubic-bezier(0.16,1,0.3,1)'
+              }}>
+                {/* Header */}
+                <div style={{
+                  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                  padding: '28px 24px 22px', textAlign: 'center', position: 'relative'
+                }}>
+                  <div style={{
+                    position: 'absolute', top: '12px', right: '14px', cursor: 'pointer',
+                    color: 'rgba(255,255,255,0.8)', fontSize: '1.1rem'
+                  }} onClick={() => setShowContact(false)}>
+                    <i className="fas fa-times"></i>
+                  </div>
+                  <div style={{
+                    width: '80px', height: '80px', borderRadius: '50%', margin: '0 auto 12px',
+                    border: '3px solid rgba(255,255,255,0.3)', overflow: 'hidden',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.2)'
+                  }}>
+                    <img
+                      src="https://pritamrangari.me/assets/img/profile-img.jpg"
+                      alt="Pritam Rangari"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      onError={e => { e.target.style.display = 'none'; e.target.parentNode.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.15);color:#fff;font-size:1.8rem;font-weight:700">PR</div>'; }}
+                    />
+                  </div>
+                  <h5 style={{ color: '#fff', fontWeight: 700, fontSize: '1.1rem', margin: '0 0 2px' }}>Pritam Rangari</h5>
+                  <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.78rem', fontWeight: 500 }}>Full Stack Developer</span>
+                </div>
+                {/* Body */}
+                <div style={{ padding: '20px 24px 24px' }}>
+                  <a href="mailto:pritamrangari125@gmail.com" style={{
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 14px',
+                    background: '#f8fafc', borderRadius: '12px', textDecoration: 'none',
+                    color: '#334155', fontSize: '0.88rem', fontWeight: 500,
+                    transition: 'all 0.2s', border: '1px solid #e2e8f0'
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#eef2ff'; e.currentTarget.style.borderColor = '#c7d2fe'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
+                  >
+                    <div style={{
+                      width: '36px', height: '36px', borderRadius: '10px',
+                      background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      color: '#fff', fontSize: '0.9rem', flexShrink: 0
+                    }}>
+                      <i className="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email</div>
+                      <div style={{ fontWeight: 600, color: '#1e293b' }}>pritamrangari125@gmail.com</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+
       </div>
       <Footer />
     </>

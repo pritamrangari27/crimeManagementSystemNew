@@ -350,9 +350,9 @@ const UserFIRList = () => {
                           </span>
                         </td>
                         <td>{fir.location || '-'}</td>
-                        <td>{fir.accused}</td>
+                        <td>{fir.accused || 'Unknown'}</td>
                         <td>{fir.name || fir.complainant_name || '-'}</td>
-                        <td>{fir.address || '-'}</td>
+                        <td>{fir.address || fir.location || '-'}</td>
                         <td>
                           <small className="text-muted">{fir.station_id}</small>
                         </td>

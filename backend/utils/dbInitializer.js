@@ -656,6 +656,22 @@ async function insertTestData(db) {
     params: [e[1], e[2], e[3], e[0]]
   })));
 
+  // Fill accused/address for any FIRs still missing them (e.g. user-filed FIRs from older data)
+  await runBatch([
+    {
+      sql: `UPDATE firs SET accused = COALESCE(NULLIF(accused,''), 'Unknown') WHERE accused IS NULL OR accused = ''`,
+      params: []
+    },
+    {
+      sql: `UPDATE firs SET address = COALESCE(NULLIF(address,''), location, 'Not Provided') WHERE address IS NULL OR address = ''`,
+      params: []
+    },
+    {
+      sql: `UPDATE firs SET relation = COALESCE(NULLIF(relation,''), 'Not Specified') WHERE relation IS NULL OR relation = ''`,
+      params: []
+    }
+  ]);
+
   // ─── CRIMINAL NETWORK LINKS (15) ───
   const networkData = [
     [1,2,'Associate',null,'Known robbery partners in Colaba area',3],
