@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Button, Modal, Table, Spinner, Badge } from 'react-bootstrap';
+import { Container, Button, Modal, Table, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { dashboardAPI } from '../api/client';
+import { dashboardAPI, firsAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import '../styles/dashboard.css';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('authUser'));
   const [stats, setStats] = useState({
     totalPolice: 0,
     totalCriminals: 0,
@@ -21,29 +22,35 @@ const AdminDashboard = () => {
   const [showActivitiesModal, setShowActivitiesModal] = useState(false);
   const [activities, setActivities] = useState([]);
   const [activitiesLoading, setActivitiesLoading] = useState(false);
+  const [recentFIRs, setRecentFIRs] = useState([]);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchData = async () => {
       try {
-        const response = await dashboardAPI.getStats();
-        if (response.data.status === 'success') {
-          setStats(response.data.data);
+        const [statsRes, firsRes] = await Promise.all([
+          dashboardAPI.getStats(),
+          firsAPI.search('')
+        ]);
+        if (statsRes.data.status === 'success') setStats(statsRes.data.data);
+        if (firsRes.data.status === 'success' && Array.isArray(firsRes.data.data)) {
+          const sorted = firsRes.data.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          setRecentFIRs(sorted.slice(0, 6));
         }
       } catch (error) {
-        console.error('Error fetching stats:', error);
+        console.error('Error fetching dashboard data:', error);
       }
       setLoading(false);
     };
-    fetchStats();
+    fetchData();
   }, []);
 
   const handleShowRecentActivities = async () => {
     setShowActivitiesModal(true);
     setActivitiesLoading(true);
     try {
-      const response = await dashboardAPI.getActivity(10, '1hour');
+      const response = await dashboardAPI.getActivity(10, '');
       if (response.data.status === 'success') {
-        setActivities(response.data.data || []);
+        setActivities(response.data.activities || response.data.data || []);
       }
     } catch (error) {
       console.error('Error fetching activities:', error);
@@ -55,57 +62,67 @@ const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <div className="with-sidebar d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
-        <div className="text-center">
-          <div className="spinner-border text-primary mb-3" role="status">
-            <span className="visually-hidden">Loading...</span>
+      <>
+        <Sidebar />
+        <div className="with-sidebar d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
+          <div className="text-center">
+            <div className="page-loader"><div className="spinner"></div></div>
+            <p className="text-muted mt-2" style={{ fontSize: '0.85rem' }}>Loading dashboard...</p>
           </div>
-          <p className="text-muted">Loading dashboard...</p>
         </div>
-      </div>
+      </>
     );
   }
 
   const statCards = [
-    { label: 'Total Police Officers', value: stats.totalPolice, icon: 'fas fa-users-cog', color: '#10b981', bg: 'rgba(16,185,129,0.10)' },
-    { label: 'Total Criminals',       value: stats.totalCriminals, icon: 'fas fa-user-secret', color: '#ef4444', bg: 'rgba(239,68,68,0.10)' },
-    { label: 'Total Stations',        value: stats.totalStations,  icon: 'fas fa-building',    color: '#06b6d4', bg: 'rgba(6,182,212,0.10)' },
-    { label: 'Total FIRs',            value: stats.totalFIRs,      icon: 'fas fa-file-alt',    color: '#f59e0b', bg: 'rgba(245,158,11,0.10)' },
+    { label: 'Police Officers', value: stats.totalPolice, icon: 'fas fa-users-cog', color: '#10b981', bg: 'rgba(16,185,129,0.10)', route: '/admin/police' },
+    { label: 'Criminals',       value: stats.totalCriminals, icon: 'fas fa-user-secret', color: '#ef4444', bg: 'rgba(239,68,68,0.10)', route: '/admin/criminals' },
+    { label: 'Stations',        value: stats.totalStations,  icon: 'fas fa-building',    color: '#06b6d4', bg: 'rgba(6,182,212,0.10)', route: '/admin/stations' },
+    { label: 'Total FIRs',      value: stats.totalFIRs,      icon: 'fas fa-file-alt',    color: '#f59e0b', bg: 'rgba(245,158,11,0.10)', route: '/admin/firs' },
   ];
 
-  const statusCards = [
-    { label: 'Approved FIRs', value: stats.approvedFIRs, color: '#10b981', route: '/admin/firs?status=Approved', variant: 'success' },
-    { label: 'Sent FIRs',     value: stats.pendingFIRs,  color: '#06b6d4', route: '/admin/firs?status=Sent',     variant: 'info',    pulse: true },
-    { label: 'Rejected FIRs', value: stats.rejectedFIRs, color: '#ef4444', route: '/admin/firs?status=Rejected', variant: 'danger',  pulse: stats.rejectedFIRs > 0 },
-  ];
+
+
+
+  const statusColor = (s) => s === 'Approved' ? '#10b981' : s === 'Rejected' ? '#ef4444' : '#06b6d4';
+  const statusBg = (s) => s === 'Approved' ? 'rgba(16,185,129,0.12)' : s === 'Rejected' ? 'rgba(239,68,68,0.12)' : 'rgba(6,182,212,0.12)';
 
   return (
     <>
       <Sidebar />
       <div className="with-sidebar">
-        <Container fluid className="dashboard-container" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: 'calc(100vh - var(--banner-height, 38px) - 50px)' }}>
+        <Container fluid className="dashboard-container" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - var(--banner-height, 38px) - 50px)' }}>
           <div style={{ maxWidth: 1100, width: '100%', margin: '0 auto' }}>
 
             {/* ── Header ── */}
-            <div className="dash-header">
+            <div className="dash-header" style={{ marginBottom: 18 }}>
               <div>
-                <h2><i className="fas fa-chart-line me-2" style={{ color: '#10b981' }}></i>Admin Dashboard</h2>
-                <p>Welcome back! Here's an overview of your system.</p>
+                <h2 style={{ fontSize: '1.35rem' }}>
+                  <i className="fas fa-chart-line me-2" style={{ color: '#10b981' }}></i>Admin Dashboard
+                </h2>
+                <p style={{ margin: 0 }}>Welcome back, <strong>{user?.username || 'Admin'}</strong>! Here's your system overview.</p>
               </div>
-              <Button 
-                size="sm" 
-                className="fw-bold" 
-                style={{ backgroundColor: '#06b6d4', borderColor: '#06b6d4', borderRadius: 8 }}
-                onClick={handleShowRecentActivities}
-              >
-                <i className="fas fa-history me-1"></i> Recent 1 Hour
-              </Button>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <Button size="sm" className="fw-bold" style={{ backgroundColor: '#06b6d4', borderColor: '#06b6d4', borderRadius: 8 }}
+                  onClick={handleShowRecentActivities}>
+                  <i className="fas fa-history me-1"></i> Activity Log
+                </Button>
+                <Button size="sm" variant="outline-dark" className="fw-bold" style={{ borderRadius: 8 }}
+                  onClick={() => navigate('/admin/analytics')}>
+                  <i className="fas fa-chart-pie me-1"></i> Analytics
+                </Button>
+                <Button size="sm" className="fw-bold" style={{ backgroundColor: '#10b981', borderColor: '#10b981', borderRadius: 8 }}
+                  onClick={() => navigate('/admin/export')}>
+                  <i className="fas fa-download me-1"></i> Export Reports
+                </Button>
+              </div>
             </div>
 
             {/* ── Primary stat cards (4-col bento) ── */}
             <div className="bento-grid cols-4 stagger-enter" style={{ marginBottom: 'var(--grid-gap)' }}>
               {statCards.map((s, i) => (
-                <div key={i} className="bento-card" style={{ padding: 'var(--card-pad-sm)' }}>
+                <div key={i} className="bento-card" style={{ padding: 'var(--card-pad-sm)', cursor: 'pointer' }}
+                  onClick={() => navigate(s.route)}>
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
                       <div className="bento-stat-label">{s.label}</div>
@@ -119,28 +136,43 @@ const AdminDashboard = () => {
               ))}
             </div>
 
-            {/* ── Status overview (3-col bento) ── */}
-            <div className="bento-grid cols-3 stagger-enter">
-              {statusCards.map((s, i) => (
-                <div key={i} className="bento-card" style={{ textAlign: 'center', padding: 'var(--card-pad)' }}>
-                  <div className="bento-stat-label" style={{ marginBottom: 6 }}>
-                    {s.pulse && <span className="pulse-dot" style={{ background: s.color, color: s.color }}></span>}
-                    {s.label}
-                  </div>
-                  <div className="status-card-value" style={{ color: s.color, marginBottom: 10 }}>
-                    {s.value || 0}
-                  </div>
-                  <Button
-                    variant={`outline-${s.variant}`}
-                    size="sm"
-                    className="w-100 fw-bold"
-                    style={{ borderRadius: 8, fontSize: '0.78rem' }}
-                    onClick={() => navigate(s.route)}
-                  >
-                    <i className="fas fa-arrow-right me-1"></i> View Details
-                  </Button>
+            {/* ── Recent FIRs ── */}
+            <div className="bento-grid cols-1 stagger-enter">
+              <div className="bento-card" style={{ padding: 0, overflow: 'hidden' }}>
+                <div style={{ padding: '10px 16px', fontWeight: 700, fontSize: '0.8rem', borderBottom: '1.5px solid #e2e8f0', color: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span><i className="fas fa-file-alt me-2" style={{ color: '#f59e0b' }}></i>Recent FIRs</span>
+                  <button onClick={() => navigate('/admin/firs')} style={{ background: 'none', border: 'none', color: '#06b6d4', fontWeight: 700, fontSize: '0.72rem', cursor: 'pointer' }}>
+                    View All <i className="fas fa-arrow-right ms-1"></i>
+                  </button>
                 </div>
-              ))}
+                <div style={{ padding: '6px 0', maxHeight: 280, overflowY: 'auto' }}>
+                  {recentFIRs.length > 0 ? recentFIRs.map((fir, idx) => (
+                    <div key={fir.id || idx}
+                      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 16px', borderBottom: idx < recentFIRs.length - 1 ? '1px solid #f1f5f9' : 'none', transition: 'background 0.2s ease', cursor: 'pointer' }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                      <div style={{ width: 32, height: 32, borderRadius: '50%', background: statusBg(fir.status), color: statusColor(fir.status), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', flexShrink: 0 }}>
+                        <i className="fas fa-file-alt"></i>
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.8rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#0f172a' }}>
+                          {fir.fir_number || `FIR-${String(fir.id).padStart(4, '0')}`}
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
+                          {fir.crime_type} {fir.created_at ? `• ${new Date(fir.created_at).toLocaleDateString()}` : ''}
+                        </div>
+                      </div>
+                      <span style={{ background: statusBg(fir.status), color: statusColor(fir.status), borderRadius: 20, padding: '2px 10px', fontSize: '0.68rem', fontWeight: 700, flexShrink: 0 }}>
+                        {fir.status}
+                      </span>
+                    </div>
+                  )) : (
+                    <div style={{ textAlign: 'center', color: '#94a3b8', fontSize: '0.82rem', padding: '24px 0' }}>
+                      <i className="fas fa-inbox me-2" style={{ opacity: 0.5 }}></i>No recent FIRs
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
           </div>
@@ -149,7 +181,7 @@ const AdminDashboard = () => {
           <Modal show={showActivitiesModal} onHide={() => setShowActivitiesModal(false)} centered size="lg" dialogClassName="activities-modal">
             <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', padding: '14px 20px', borderBottom: 'none' }}>
               <Modal.Title style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700 }}>
-                <i className="fas fa-history me-2"></i>Last 1 Hour Activities (Last 10)
+                <i className="fas fa-history me-2"></i>Recent Activities (Last 10)
               </Modal.Title>
             </Modal.Header>
             <Modal.Body style={{ padding: '0', background: '#ffffff', maxHeight: '600px', overflowY: 'auto' }}>
@@ -175,17 +207,12 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody>
                     {activities.map((activity, index) => (
-                      <tr key={index} style={{ 
-                        borderBottom: '1px solid #e2e8f0',
-                        transition: 'background 0.2s ease',
-                        fontSize: '0.85rem'
-                      }} onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={(e) => e.currentTarget.style.background = 'white'}>
+                      <tr key={index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease', fontSize: '0.85rem' }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'white'}>
                         <td style={{ padding: '12px 16px', color: '#0f172a', fontWeight: 600 }}>
                           {activity.user ? (
-                            <>
-                              <i className="fas fa-user-circle me-2" style={{ color: '#06b6d4' }}></i>
-                              {activity.user}
-                            </>
+                            <><i className="fas fa-user-circle me-2" style={{ color: '#06b6d4' }}></i>{activity.user}</>
                           ) : (
                             <span style={{ color: '#94a3b8' }}>System</span>
                           )}
@@ -206,7 +233,7 @@ const AdminDashboard = () => {
               ) : (
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', color: '#94a3b8', fontSize: '0.9rem' }}>
                   <i className="fas fa-inbox me-2" style={{ fontSize: '1.5rem', opacity: 0.5 }}></i>
-                  No activities in the last hour
+                  No recent activities
                 </div>
               )}
             </Modal.Body>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, Alert, Spinner, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
-import { firsAPI, stationsAPI } from '../api/client';
+import { firsAPI, stationsAPI, advancedAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import '../styles/forms.css';
 
@@ -17,6 +17,10 @@ const UserFIRForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [classifying, setClassifying] = useState(false);
+  const [aiResult, setAiResult] = useState(null);
+  const [similarFIRs, setSimilarFIRs] = useState([]);
+  const [checkingSimilarity, setCheckingSimilarity] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -28,7 +32,9 @@ const UserFIRForm = () => {
     number: '',
     address: '',
     relation: '',
-    purpose: ''
+    purpose: '',
+    latitude: '',
+    longitude: ''
   });
 
   // Fetch stations and crime types
@@ -58,6 +64,31 @@ const UserFIRForm = () => {
       ...prev,
       [name]: value
     }));
+  };
+
+  // AI Crime Type Detection
+  const handleClassify = async () => {
+    if (!formData.purpose || formData.purpose.trim().length < 5) {
+      setError('Please describe the incident (minimum 5 characters) before using AI detection');
+      return;
+    }
+    setClassifying(true);
+    setAiResult(null);
+    setError('');
+    try {
+      const res = await firsAPI.classify(formData.purpose);
+      if (res.data.status === 'success') {
+        const { crime_type, confidence, all_scores } = res.data.data;
+        setAiResult({ crime_type, confidence, all_scores });
+        setFormData(prev => ({ ...prev, crime_type }));
+      } else {
+        setError(res.data.message || 'AI classification failed');
+      }
+    } catch (err) {
+      setError('AI service unavailable. Please select crime type manually.');
+    } finally {
+      setClassifying(false);
+    }
   };
 
   // Validate form
@@ -98,6 +129,14 @@ const UserFIRForm = () => {
       setError('Please enter purpose of FIR');
       return false;
     }
+    if (formData.latitude && (isNaN(formData.latitude) || formData.latitude < -90 || formData.latitude > 90)) {
+      setError('Please enter a valid latitude (-90 to 90)');
+      return false;
+    }
+    if (formData.longitude && (isNaN(formData.longitude) || formData.longitude < -180 || formData.longitude > 180)) {
+      setError('Please enter a valid longitude (-180 to 180)');
+      return false;
+    }
     return true;
   };
 
@@ -126,6 +165,8 @@ const UserFIRForm = () => {
         address: formData.address,
         relation: formData.relation,
         purpose: formData.purpose,
+        latitude: formData.latitude ? parseFloat(formData.latitude) : null,
+        longitude: formData.longitude ? parseFloat(formData.longitude) : null,
         status: 'Sent'
       };
 
@@ -143,7 +184,9 @@ const UserFIRForm = () => {
           number: '',
           address: '',
           relation: '',
-          purpose: ''
+          purpose: '',
+          latitude: '',
+          longitude: ''
         });
         // Redirect after 2 seconds
         setTimeout(() => {
@@ -217,10 +260,109 @@ const UserFIRForm = () => {
                     </Form.Select>
                   </Form.Group>
 
+                  {/* AI Crime Detection Section */}
+                  <Card className="mb-4 border" style={{ borderColor: '#667eea', borderRadius: '10px', background: 'linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%)' }}>
+                    <Card.Body className="py-3">
+                      <div className="d-flex align-items-center mb-2">
+                        <i className="fas fa-robot me-2" style={{ color: '#667eea', fontSize: '1.1rem' }}></i>
+                        <span className="fw-bold" style={{ fontSize: '0.95rem', color: '#1a202c' }}>AI Crime Type Detection</span>
+                        <Badge bg="info" className="ms-2" style={{ fontSize: '0.65rem' }}>Beta</Badge>
+                      </div>
+                      <p className="text-muted mb-2" style={{ fontSize: '0.78rem' }}>
+                        Describe what happened and our AI will automatically detect the crime type.
+                      </p>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        name="purpose"
+                        placeholder="e.g. Someone stole my bike near the railway station..."
+                        value={formData.purpose}
+                        onChange={handleChange}
+                        style={{ borderRadius: '8px', border: '2px solid #e0e0e0', fontSize: '0.9rem' }}
+                      />
+                      <div className="d-flex align-items-center mt-2 gap-2 flex-wrap">
+                        <Button
+                          size="sm"
+                          onClick={handleClassify}
+                          disabled={classifying || !formData.purpose || formData.purpose.trim().length < 5}
+                          style={{
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            border: 'none', borderRadius: '6px', fontWeight: 600, fontSize: '0.8rem',
+                            padding: '0.4rem 1rem',
+                          }}
+                        >
+                          {classifying ? (
+                            <><Spinner animation="border" size="sm" className="me-1" /> Analyzing...</>
+                          ) : (
+                            <><i className="fas fa-magic me-1"></i> Detect Crime Type</>
+                          )}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline-warning"
+                          onClick={async () => {
+                            if (!formData.purpose || formData.purpose.trim().length < 10) return;
+                            setCheckingSimilarity(true);
+                            try {
+                              const res = await advancedAPI.checkSimilarity(formData.purpose, formData.crime_type);
+                              setSimilarFIRs(res.data?.data?.similar_firs || []);
+                            } catch { setSimilarFIRs([]); }
+                            finally { setCheckingSimilarity(false); }
+                          }}
+                          disabled={checkingSimilarity || !formData.purpose || formData.purpose.trim().length < 10}
+                          style={{ borderRadius: '6px', fontWeight: 600, fontSize: '0.8rem', padding: '0.4rem 1rem' }}
+                        >
+                          {checkingSimilarity ? <Spinner size="sm" /> : <><i className="fas fa-search me-1"></i> Check Similar FIRs</>}
+                        </Button>
+                        {aiResult && (
+                          <div className="d-flex align-items-center gap-2 flex-wrap">
+                            <Badge bg="success" style={{ fontSize: '0.78rem', padding: '0.35rem 0.6rem' }}>
+                              <i className="fas fa-check-circle me-1"></i>{aiResult.crime_type}
+                            </Badge>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={
+                                <Tooltip>
+                                  {Object.entries(aiResult.all_scores || {}).map(([k, v]) => (
+                                    <div key={k} style={{ fontSize: '0.72rem' }}>{k}: {(v * 100).toFixed(1)}%</div>
+                                  ))}
+                                </Tooltip>
+                              }
+                            >
+                              <Badge bg="secondary" style={{ fontSize: '0.72rem', cursor: 'pointer' }}>
+                                {(aiResult.confidence * 100).toFixed(1)}% confidence
+                              </Badge>
+                            </OverlayTrigger>
+                          </div>
+                        )}
+                      </div>
+                    </Card.Body>
+                  </Card>
+
+                  {/* Similar FIRs Warning */}
+                  {similarFIRs.length > 0 && (
+                    <Alert variant="warning" className="mt-2" dismissible onClose={() => setSimilarFIRs([])}>
+                      <Alert.Heading style={{ fontSize: '0.9rem' }}>
+                        <i className="fas fa-exclamation-triangle me-2"></i>
+                        {similarFIRs.length} Similar FIR(s) Found
+                      </Alert.Heading>
+                      <p style={{ fontSize: '0.8rem', marginBottom: '8px' }}>
+                        These existing FIRs have similar descriptions. Please check if yours is a duplicate:
+                      </p>
+                      {similarFIRs.slice(0, 3).map((f, i) => (
+                        <div key={i} style={{ padding: '6px 0', borderTop: i > 0 ? '1px solid #ffeeba' : 'none', fontSize: '0.78rem' }}>
+                          <strong>{f.fir_number || `FIR #${f.id}`}</strong> — {f.crime_type} ({f.similarity}% match)
+                          <br /><span className="text-muted">{f.location}</span>
+                        </div>
+                      ))}
+                    </Alert>
+                  )}
+
                   {/* Crime Type */}
                   <Form.Group className="mb-4">
                     <Form.Label className="fw-bold">
                       <i className="fas fa-exclamation-circle me-2"></i> Crime Type *
+                      {aiResult && <span className="text-success ms-2" style={{ fontSize: '0.75rem', fontWeight: 'normal' }}>(AI auto-filled)</span>}
                     </Form.Label>
                     <Form.Select
                       name="crime_type"
@@ -343,21 +485,49 @@ const UserFIRForm = () => {
                     />
                   </Form.Group>
 
-                  {/* Purpose */}
-                  <Form.Group className="mb-4">
-                    <Form.Label className="fw-bold">
-                      Purpose of FIR *
-                    </Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={2}
-                      name="purpose"
-                      placeholder="Describe why you are filing this FIR"
-                      value={formData.purpose}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Form.Group>
+                  {/* Crime Location Coordinates */}
+                  <h5 className="mt-4 mb-3 fw-bold">
+                    <i className="fas fa-map-marker-alt me-2"></i> Crime Location (Optional)
+                  </h5>
+
+                  <Row>
+                    <Col md={6}>
+                      <Form.Group className="mb-4">
+                        <Form.Label className="fw-bold">Latitude</Form.Label>
+                        <Form.Control
+                          type="number"
+                          step="any"
+                          name="latitude"
+                          placeholder="e.g. 28.6139"
+                          value={formData.latitude}
+                          onChange={handleChange}
+                          min="-90"
+                          max="90"
+                        />
+                        <Form.Text className="text-muted" style={{ fontSize: '0.75rem' }}>
+                          Range: -90 to 90
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group className="mb-4">
+                        <Form.Label className="fw-bold">Longitude</Form.Label>
+                        <Form.Control
+                          type="number"
+                          step="any"
+                          name="longitude"
+                          placeholder="e.g. 77.2090"
+                          value={formData.longitude}
+                          onChange={handleChange}
+                          min="-180"
+                          max="180"
+                        />
+                        <Form.Text className="text-muted" style={{ fontSize: '0.75rem' }}>
+                          Range: -180 to 180
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+                  </Row>
 
                   {/* Buttons */}
                   <div className="d-flex gap-2">
@@ -394,7 +564,9 @@ const UserFIRForm = () => {
                           number: '',
                           address: '',
                           relation: '',
-                          purpose: ''
+                          purpose: '',
+                          latitude: '',
+                          longitude: ''
                         });
                         setError('');
                       }}

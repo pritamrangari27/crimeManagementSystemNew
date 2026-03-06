@@ -1,0 +1,96 @@
+/* ===================================================
+   Mobile-Responsive Dashboard Enhancements
+   =================================================== */
+
+/* Touch-friendly improvements */
+@media (max-width: 768px) {
+  /* Tables scroll horizontally */
+  .table-responsive { -webkit-overflow-scrolling: touch; }
+
+  /* Cards stack full width */
+  .card { margin-bottom: 12px; }
+
+  /* Larger touch targets */
+  .btn { min-height: 44px; min-width: 44px; }
+  .btn-sm { min-height: 36px; }
+
+  /* Compact table cells */
+  .table td, .table th { padding: 8px 10px; font-size: 0.82rem; }
+
+  /* Container less padding */
+  .container-fluid { padding-left: 12px !important; padding-right: 12px !important; }
+
+  /* Page headers */
+  h3.fw-bold { font-size: 1.3rem; }
+
+  /* Badge sizing */
+  .badge { font-size: 0.7rem; padding: 4px 8px; }
+
+  /* Charts resize properly */
+  canvas { max-width: 100% !important; height: auto !important; }
+
+  /* Workflow pipeline horizontal scroll */
+  .workflow-timeline .workflow-step {
+    padding-bottom: 20px;
+  }
+
+  /* Modal full width on mobile */
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+
+  .modal-lg { max-width: calc(100% - 1rem); }
+
+  /* Export buttons stack */
+  .export-btn-row .col-md-4 { margin-bottom: 8px; }
+}
+
+@media (max-width: 576px) {
+  /* Even more compact */
+  .container-fluid { padding-left: 8px !important; padding-right: 8px !important; }
+
+  h3.fw-bold { font-size: 1.15rem; }
+  p.text-muted { font-size: 0.78rem; }
+
+  /* Stats cards grid */
+  .row.g-3 > [class*="col-md-3"] { flex: 0 0 50%; max-width: 50%; }
+
+  /* Notification dropdown */
+  .notification-dropdown { width: calc(100vw - 24px) !important; right: -100px !important; }
+
+  /* Workflow stage filter buttons scroll */
+  .workflow-stage-filter { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Table font */
+  .table { font-size: 0.75rem; }
+  .table td, .table th { padding: 6px 8px; }
+}
+
+@media (max-width: 480px) {
+  /* Full-width stats */
+  .row.g-3 > [class*="col-md-3"] { flex: 0 0 100%; max-width: 100%; }
+
+  /* Sidebar header notification bell */
+  .sidebar-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Very small buttons */
+  .btn-sm { font-size: 0.72rem; padding: 4px 8px; min-height: 32px; }
+}
+
+/* Tablet landscape */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container-fluid { padding-left: 16px !important; padding-right: 16px !important; }
+}
+
+/* Print styles for export/reports */
+@media print {
+  .sidebar, .sidebar-toggle-mobile, .system-banner, .chatbot-wrapper,
+  .notification-bell-wrapper, .btn { display: none !important; }
+  .modal-backdrop { display: none !important; }
+  body { background: white !important; }
+  .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+}

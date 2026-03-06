@@ -1,5 +1,4 @@
 const express = require('express');
-const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
@@ -15,6 +14,9 @@ const firsRouter = require('./routes/firs');
 const policeRouter = require('./routes/police');
 const stationsRouter = require('./routes/stations');
 const dashboardRouter = require('./routes/dashboard');
+const chatbotRouter = require('./routes/chatbot');
+const notificationsRouter = require('./routes/notifications').router;
+const advancedRouter = require('./routes/advanced');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,24 +24,23 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Validate required environment variables in production
 if (NODE_ENV === 'production') {
-  const requiredVars = ['SESSION_SECRET'];
-  const missing = requiredVars.filter(v => !process.env[v]);
-  
-  if (missing.length > 0) {
-    console.error('❌ FATAL: Missing required environment variables:', missing.join(', '));
-    console.error('   - SESSION_SECRET: Strong random string (32+ chars)');
+  if (!process.env.JWT_SECRET && !process.env.SESSION_SECRET) {
+    console.error('❌ FATAL: Missing JWT_SECRET environment variable');
     process.exit(1);
   }
   
   if (!process.env.FRONTEND_URL) {
     console.warn('⚠️  FRONTEND_URL not set. Update after Vercel deployment.');
   }
-  if (process.env.DATABASE_URL) {
+  if (process.env.SUPABASE_DB_URL) {
+    console.log('✓ SUPABASE_DB_URL is configured (Supabase PostgreSQL)');
+  } else if (process.env.DATABASE_URL) {
     console.log('✓ DATABASE_URL is configured (PostgreSQL)');
   } else {
-    console.warn('⚠️  DATABASE_URL not set. Using SQLite (data will be ephemeral on Render).');
+    console.error('❌ No database URL set. Set SUPABASE_DB_URL or DATABASE_URL.');
+    process.exit(1);
   }
-  console.log('✓ SESSION_SECRET is configured');
+  console.log('✓ JWT authentication configured');
 }
 
 // CORS Configuration
@@ -76,25 +77,6 @@ app.use((req, res, next) => {
 
 app.set('maxHeaderSize', 25 * 1024 * 1024);
 
-// Session configuration
-const sessionSecret = process.env.SESSION_SECRET || 'dev_secret_key_only_for_local_use';
-
-if (NODE_ENV === 'development' && sessionSecret === 'dev_secret_key_only_for_local_use') {
-  console.warn('⚠️  Using default session secret in development. Set SESSION_SECRET env var for production.');
-}
-
-app.use(session({
-  secret: sessionSecret,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: NODE_ENV === 'production',
-    httpOnly: true,
-    sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
-    maxAge: 24 * 60 * 60 * 1000
-  }
-}));
-
 // Static files
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 app.use('/img', express.static(path.join(__dirname, '../Img')));
@@ -113,10 +95,14 @@ app.use('/api/firs', firsRouter);
 app.use('/api/police', policeRouter);
 app.use('/api/stations', stationsRouter);
 app.use('/api/dashboard', dashboardRouter);
+app.use('/api/chatbot', chatbotRouter);
+app.use('/api/notifications', notificationsRouter);
+app.use('/api/advanced', advancedRouter);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Server is running', database: process.env.DATABASE_URL ? 'PostgreSQL' : 'SQLite' });
+  const dbType = process.env.SUPABASE_DB_URL ? 'Supabase PostgreSQL' : 'PostgreSQL';
+  res.json({ status: 'OK', message: 'Server is running', database: dbType });
 });
 
 // 404 handler
@@ -145,7 +131,8 @@ async function startServer() {
       console.log(`\n🚀 Crime Management System Backend`);
       console.log(`🔗 Running on http://localhost:${PORT}`);
       console.log(`📊 API: http://localhost:${PORT}/api`);
-      console.log(`💾 Database: ${process.env.DATABASE_URL ? 'PostgreSQL' : 'SQLite'}\n`);
+      const dbLabel = process.env.SUPABASE_DB_URL ? 'Supabase PostgreSQL' : 'PostgreSQL';
+      console.log(`💾 Database: ${dbLabel}\n`);
     });
   } catch (err) {
     console.error('❌ Failed to start server:', err);

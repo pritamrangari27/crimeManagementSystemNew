@@ -76,13 +76,108 @@ router.get('/crimes-by-location', (req, res) => {
   });
 });
 
+// Get crimes by month (last 12 months from criminals table)
+router.get('/crimes-by-month', (req, res) => {
+  const sql = `
+    SELECT 
+      TO_CHAR(DATE_TRUNC('month', crime_date::date), 'YYYY-MM') AS month,
+      COUNT(*) AS count
+    FROM criminals
+    WHERE crime_date IS NOT NULL
+      AND crime_date::date >= NOW() - INTERVAL '12 months'
+    GROUP BY DATE_TRUNC('month', crime_date::date)
+    ORDER BY month ASC
+  `;
+
+  req.db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.error('Crimes by month error:', err);
+      // Fallback: group by raw crime_date substring if PG date cast fails
+      const fallbackSql = `
+        SELECT 
+          SUBSTRING(crime_date FROM 1 FOR 7) AS month,
+          COUNT(*) AS count
+        FROM criminals
+        WHERE crime_date IS NOT NULL
+        GROUP BY SUBSTRING(crime_date FROM 1 FOR 7)
+        ORDER BY month ASC
+      `;
+      req.db.all(fallbackSql, [], (err2, rows2) => {
+        if (err2) {
+          return res.status(500).json({ status: 'error', message: 'Database error' });
+        }
+        res.json({ status: 'success', data: rows2 || [] });
+      });
+      return;
+    }
+    res.json({ status: 'success', data: rows || [] });
+  });
+});
+
+// Get FIRs by month (last 12 months)
+router.get('/firs-by-month', (req, res) => {
+  const sql = `
+    SELECT 
+      TO_CHAR(DATE_TRUNC('month', crime_date::date), 'YYYY-MM') AS month,
+      COUNT(*) AS count
+    FROM firs
+    WHERE crime_date IS NOT NULL
+      AND crime_date::date >= NOW() - INTERVAL '12 months'
+    GROUP BY DATE_TRUNC('month', crime_date::date)
+    ORDER BY month ASC
+  `;
+
+  req.db.all(sql, [], (err, rows) => {
+    if (err) {
+      const fallbackSql = `
+        SELECT 
+          SUBSTRING(crime_date FROM 1 FOR 7) AS month,
+          COUNT(*) AS count
+        FROM firs
+        WHERE crime_date IS NOT NULL
+        GROUP BY SUBSTRING(crime_date FROM 1 FOR 7)
+        ORDER BY month ASC
+      `;
+      req.db.all(fallbackSql, [], (err2, rows2) => {
+        if (err2) {
+          return res.status(500).json({ status: 'error', message: 'Database error' });
+        }
+        res.json({ status: 'success', data: rows2 || [] });
+      });
+      return;
+    }
+    res.json({ status: 'success', data: rows || [] });
+  });
+});
+
+// Get crime locations for hotspot map (from both firs and criminals)
+router.get('/crime-locations', (req, res) => {
+  const sql = `
+    SELECT id, 'fir' AS source, crime_type, accused AS name, status, location, latitude, longitude, created_at
+    FROM firs
+    WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+    UNION ALL
+    SELECT id, 'criminal' AS source, crime_type, "Criminal_name" AS name, status, city || ', ' || state AS location, latitude, longitude, created_at
+    FROM criminals
+    WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+    ORDER BY created_at DESC
+  `;
+
+  req.db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.error('Crime locations error:', err);
+      return res.status(500).json({ status: 'error', message: 'Database error' });
+    }
+    res.json({ status: 'success', data: rows || [] });
+  });
+});
+
 // Get recent activity
 router.get('/activity', (req, res) => {
   const limit = req.query.limit || 10;
   const timeFilter = req.query.filter;
 
-  // Build time condition
-  const timeCondition = timeFilter === '1hour' ? "WHERE al.created_at >= datetime('now', '-1 hour')" : '';
+  const timeCondition = timeFilter === '1hour' ? "WHERE al.created_at >= NOW() - INTERVAL '1 hour'" : '';
 
   // First try activity_log table
   const activityLogSql = `
@@ -127,7 +222,7 @@ router.get('/activity', (req, res) => {
 
 // Fallback activity method
 function getActivityFallback(req, res, limit, timeFilter) {
-  const timeWhere = timeFilter === '1hour' ? "WHERE created_at >= datetime('now', '-1 hour')" : '';
+  const timeWhere = timeFilter === '1hour' ? "WHERE created_at >= NOW() - INTERVAL '1 hour'" : '';
   const sql = `
     SELECT 
       'Criminal' as type, 

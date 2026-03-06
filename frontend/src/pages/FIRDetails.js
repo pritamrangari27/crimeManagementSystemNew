@@ -211,14 +211,34 @@ const FIRDetails = () => {
                             <span className="fw-bold">{formatDate(fir.created_at || fir.date)}</span>
                           </td>
                         </tr>
-                        <tr>
-                          <td style={{ paddingTop: '8px' }}>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          <td style={{ paddingTop: '8px', paddingBottom: '12px' }}>
                             <span className="text-muted fw-bold small">
                               <i className="fas fa-map-marker-alt me-2 text-success"></i>Police Station
                             </span>
                           </td>
-                          <td style={{ paddingTop: '8px' }}>
+                          <td style={{ paddingTop: '8px', paddingBottom: '12px' }}>
                             <span className="fw-bold">{fir.station_id}</span>
+                          </td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          <td style={{ paddingTop: '8px', paddingBottom: '12px' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-map-pin me-2 text-warning"></i>Crime Location
+                            </span>
+                          </td>
+                          <td style={{ paddingTop: '8px', paddingBottom: '12px' }}>
+                            <span className="fw-bold">{fir.location || 'N/A'}</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style={{ paddingTop: '8px', verticalAlign: 'top' }}>
+                            <span className="text-muted fw-bold small">
+                              <i className="fas fa-align-left me-2 text-info"></i>Description
+                            </span>
+                          </td>
+                          <td style={{ paddingTop: '8px' }}>
+                            <span className="fw-bold">{fir.crime_description || fir.purpose || 'N/A'}</span>
                           </td>
                         </tr>
                       </tbody>
@@ -239,7 +259,7 @@ const FIRDetails = () => {
                             </span>
                           </td>
                           <td style={{ paddingBottom: '12px' }}>
-                            <span className="fw-bold">{fir.name}</span>
+                            <span className="fw-bold">{fir.complainant_name || fir.name || 'N/A'}</span>
                           </td>
                         </tr>
                         <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
@@ -259,7 +279,7 @@ const FIRDetails = () => {
                             </span>
                           </td>
                           <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
-                            <span className="fw-bold">{fir.number}</span>
+                            <span className="fw-bold">{fir.complainant_phone || fir.number || 'N/A'}</span>
                           </td>
                         </tr>
                         <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
@@ -269,7 +289,7 @@ const FIRDetails = () => {
                             </span>
                           </td>
                           <td style={{ paddingBottom: '12px', paddingTop: '8px' }}>
-                            <span className="fw-bold">{fir.relation}</span>
+                            <span className="fw-bold">{fir.relation || 'Not Specified'}</span>
                           </td>
                         </tr>
                         <tr>
@@ -300,7 +320,7 @@ const FIRDetails = () => {
                             </span>
                           </td>
                           <td>
-                            <span className="fw-bold">{fir.accused}</span>
+                            <span className="fw-bold">{fir.accused || fir.accused_name || 'Unknown'}</span>
                           </td>
                         </tr>
                       </tbody>

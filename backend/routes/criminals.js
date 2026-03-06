@@ -11,7 +11,7 @@ router.post('/add', (req, res) => {
   const {
     station_name, station_id, crime_type, crime_date, crime_time,
     Prison_name, Court_name, Criminal_name, contact, DateOfBirth,
-    email, state, city, address, photo
+    email, state, city, address, photo, gender
   } = req.body;
 
   if (!Criminal_name || !crime_type) {
@@ -21,13 +21,13 @@ router.post('/add', (req, res) => {
   const sql = `INSERT INTO criminals (
     station_name, station_id, crime_type, crime_date, crime_time,
     "Prison_name", "Court_name", "Criminal_name", contact, "DateOfBirth",
-    email, state, city, address, photo
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    email, state, city, address, photo, gender
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   req.db.run(sql, [
     station_name, station_id, crime_type, crime_date, crime_time,
     Prison_name, Court_name, Criminal_name, contact, DateOfBirth,
-    email, state, city, address, photo
+    email, state, city, address, photo, gender
   ], function(err) {
     if (err) {
       return res.status(500).json({ status: 'error', message: 'Database error' });

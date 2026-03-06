@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css';
+import './styles/mobile.css';
 
 // Pages
 import LoginModern from './pages/LoginModern';
@@ -24,9 +25,16 @@ import ChangePassword from './pages/ChangePassword';
 import StationDetails from './pages/StationDetails';
 import CriminalDetails from './pages/CriminalDetails';
 import PoliceDetails from './pages/PoliceDetails';
+import CrimeAnalysis from './pages/CrimeAnalysis';
+import CrimeHotspotMap from './pages/CrimeHotspotMap';
+import CaseWorkflow from './pages/CaseWorkflow';
+import CrimePatterns from './pages/CrimePatterns';
+import ResourceAllocation from './pages/ResourceAllocation';
+import ExportReports from './pages/ExportReports';
 
 // Components
 import PrivateRoute from './api/PrivateRoute';
+import Chatbot from './components/Chatbot';
 import { useLocation } from 'react-router-dom';
 
 // Layout wrapper to conditionally show navbar
@@ -131,6 +139,54 @@ function AppLayout() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/admin/analytics"
+            element={
+              <PrivateRoute>
+                <CrimeAnalysis />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/hotspot-map"
+            element={
+              <PrivateRoute>
+                <CrimeHotspotMap />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/workflow"
+            element={
+              <PrivateRoute>
+                <CaseWorkflow />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/patterns"
+            element={
+              <PrivateRoute>
+                <CrimePatterns />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/allocation"
+            element={
+              <PrivateRoute>
+                <ResourceAllocation />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/export"
+            element={
+              <PrivateRoute>
+                <ExportReports />
+              </PrivateRoute>
+            }
+          />
           {/* User Routes */}
           <Route
             path="/user/dashboard"
@@ -198,6 +254,22 @@ function AppLayout() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/police/workflow"
+            element={
+              <PrivateRoute>
+                <CaseWorkflow />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/police/allocation"
+            element={
+              <PrivateRoute>
+                <ResourceAllocation />
+              </PrivateRoute>
+            }
+          />
 
           {/* Profile Routes */}
           <Route
@@ -237,6 +309,7 @@ function AppLayout() {
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
+        {!isAuthPage && <Chatbot />}
       </>
     );
   }

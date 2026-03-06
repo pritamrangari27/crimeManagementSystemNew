@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { firsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import Sidebar from '../components/Sidebar';
@@ -11,6 +13,7 @@ const FIRManagement = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [firs, setFirs] = useState([]);
+  const [allFirs, setAllFirs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState(searchParams.get('status') || '');
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,12 +23,11 @@ const FIRManagement = () => {
   const [formData, setFormData] = useState({
     crime_type: '',
     crime_date: '',
-    crime_location: '',
-    description: '',
-    victim_name: '',
-    victim_phone: '',
-    victim_email: '',
-    accused_name: '',
+    location: '',
+    crime_description: '',
+    complainant_name: '',
+    complainant_phone: '',
+    accused: '',
     priority: 'Medium'
   });
 
@@ -42,6 +44,7 @@ const FIRManagement = () => {
         response = await firsAPI.getAll();
       }
       if (response.data.status === 'success') {
+        setAllFirs(response.data.data);
         setFirs(response.data.data);
       }
     } catch (error) {
@@ -66,41 +69,35 @@ const FIRManagement = () => {
         user_id: user.id,
         ...formData
       });
-      alert('FIR created successfully!');
+      toast.success('FIR created successfully!');
       setFormData({
         crime_type: '',
         crime_date: '',
-        crime_location: '',
-        description: '',
-        victim_name: '',
-        victim_phone: '',
-        victim_email: '',
-        accused_name: '',
+        location: '',
+        crime_description: '',
+        complainant_name: '',
+        complainant_phone: '',
+        accused: '',
         priority: 'Medium'
       });
       setShowForm(false);
       fetchFIRs();
     } catch (error) {
-      alert('Error creating FIR: ' + error.response?.data?.message);
+      toast.error('Error: ' + (error.response?.data?.message || 'Failed to create FIR'));
     }
   };
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
     if (query.trim()) {
-      try {
-        const response = await firsAPI.search(query);
-        if (response.data.status === 'success') {
-          setFirs(response.data.data);
-        }
-      } catch (error) {
-        console.error('Error searching:', error);
-        fetchFIRs();
-      }
+      const q = query.toLowerCase();
+      setFirs(allFirs.filter(fir =>
+        Object.values(fir).some(v => String(v || '').toLowerCase().includes(q))
+      ));
     } else {
-      fetchFIRs();
+      setFirs(allFirs);
     }
   };
 
@@ -123,9 +120,6 @@ const FIRManagement = () => {
         <div className="mgmt-header-actions">
           <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
             <i className="fas fa-arrow-left me-2"></i>Back
-          </button>
-          <button className="mgmt-btn-primary" onClick={() => setShowForm(true)}>
-            <i className="fas fa-plus me-2"></i>File New FIR
           </button>
         </div>
       </div>
@@ -172,11 +166,11 @@ const FIRManagement = () => {
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Victim Name</Form.Label>
+                  <Form.Label>Complainant Name</Form.Label>
                   <Form.Control
                     type="text"
-                    name="victim_name"
-                    value={formData.victim_name}
+                    name="complainant_name"
+                    value={formData.complainant_name}
                     onChange={handleFormChange}
                   />
                 </Form.Group>
@@ -186,8 +180,8 @@ const FIRManagement = () => {
                   <Form.Label>Accused Name</Form.Label>
                   <Form.Control
                     type="text"
-                    name="accused_name"
-                    value={formData.accused_name}
+                    name="accused"
+                    value={formData.accused}
                     onChange={handleFormChange}
                   />
                 </Form.Group>
@@ -198,8 +192,8 @@ const FIRManagement = () => {
               <Form.Label>Crime Location *</Form.Label>
               <Form.Control
                 type="text"
-                name="crime_location"
-                value={formData.crime_location}
+                name="location"
+                value={formData.location}
                 onChange={handleFormChange}
                 required
               />
@@ -209,9 +203,9 @@ const FIRManagement = () => {
               <Form.Label>Description</Form.Label>
               <Form.Control
                 as="textarea"
-                name="description"
+                name="crime_description"
                 rows={3}
-                value={formData.description}
+                value={formData.crime_description}
                 onChange={handleFormChange}
               />
             </Form.Group>
@@ -219,22 +213,11 @@ const FIRManagement = () => {
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Victim Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    name="victim_email"
-                    value={formData.victim_email}
-                    onChange={handleFormChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Victim Phone</Form.Label>
+                  <Form.Label>Complainant Phone</Form.Label>
                   <Form.Control
                     type="text"
-                    name="victim_phone"
-                    value={formData.victim_phone}
+                    name="complainant_phone"
+                    value={formData.complainant_phone}
                     onChange={handleFormChange}
                   />
                 </Form.Group>
@@ -290,6 +273,7 @@ const FIRManagement = () => {
       <table className="mgmt-table">
         <thead>
           <tr>
+            <th>Sr. No.</th>
             <th>FIR Number</th>
             <th>Crime Type</th>
             <th>Location</th>
@@ -304,13 +288,14 @@ const FIRManagement = () => {
         </thead>
         <tbody>
           {firs.length > 0 ? (
-            firs.map((fir) => (
+            firs.map((fir, idx) => (
               <tr key={fir.id}>
+                <td>{idx + 1}</td>
                 <td>FIR-{String(fir.id).padStart(4, '0')}</td>
                 <td>{fir.crime_type}</td>
                 <td>{fir.location || '-'}</td>
                 <td>{fir.accused || '-'}</td>
-                <td>{fir.name || fir.complainant_name || '-'}</td>
+                <td>{fir.complainant_name || fir.name || '-'}</td>
                 <td>{fir.address || '-'}</td>
                 <td>{new Date(fir.created_at).toLocaleDateString()}</td>
                 <td>
@@ -341,7 +326,7 @@ const FIRManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="10" className="mgmt-empty">
+              <td colSpan="11" className="mgmt-empty">
                 No FIRs found
               </td>
             </tr>
@@ -382,34 +367,30 @@ const FIRManagement = () => {
               </div>
               <div>
                 <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Location</span>
-                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-map-pin me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{viewingFIR.crime_location || 'N/A'}</p>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-map-pin me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{viewingFIR.location || 'N/A'}</p>
               </div>
               {/* Description - full width */}
               <div style={{ gridColumn: '1 / -1', background: '#f8fafc', borderRadius: '8px', padding: '8px 12px', borderLeft: '3px solid #10b981' }}>
                 <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Description</span>
-                <p style={{ margin: '2px 0 0', fontWeight: 500, color: '#334155', lineHeight: 1.4, fontSize: '0.84rem' }}>{viewingFIR.description || 'N/A'}</p>
+                <p style={{ margin: '2px 0 0', fontWeight: 500, color: '#334155', lineHeight: 1.4, fontSize: '0.84rem' }}>{viewingFIR.crime_description || 'N/A'}</p>
               </div>
               {/* Divider */}
               <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
               {/* Victim Info */}
               <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Victim Name</span>
-                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-user-shield me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{viewingFIR.victim_name || 'N/A'}</p>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Complainant Name</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-user-shield me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{viewingFIR.complainant_name || viewingFIR.name || 'N/A'}</p>
               </div>
               <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Victim Phone</span>
-                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-phone me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{viewingFIR.victim_phone || 'N/A'}</p>
-              </div>
-              <div style={{ gridColumn: '1 / -1' }}>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Victim Email</span>
-                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a', wordBreak: 'break-word' }}><i className="fas fa-envelope me-1" style={{ color: '#3b82f6', fontSize: '0.8rem' }}></i>{viewingFIR.victim_email || 'N/A'}</p>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Complainant Phone</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-phone me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{viewingFIR.complainant_phone || viewingFIR.number || 'N/A'}</p>
               </div>
               {/* Divider */}
               <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
               {/* Accused & Filing */}
               <div>
                 <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Accused Name</span>
-                <p style={{ margin: '2px 0 0', fontWeight: 700, color: '#ef4444' }}><i className="fas fa-user-secret me-1" style={{ fontSize: '0.8rem' }}></i>{viewingFIR.accused_name || 'N/A'}</p>
+                <p style={{ margin: '2px 0 0', fontWeight: 700, color: '#ef4444' }}><i className="fas fa-user-secret me-1" style={{ fontSize: '0.8rem' }}></i>{viewingFIR.accused || viewingFIR.accused_name || '-'}</p>
               </div>
               <div>
                 <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Filed On</span>
@@ -426,6 +407,7 @@ const FIRManagement = () => {
       </Modal>
         </Container>
       </div>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover theme="colored" />
       <Footer />
     </>
   );

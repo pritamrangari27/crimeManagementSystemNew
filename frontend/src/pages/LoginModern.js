@@ -114,8 +114,7 @@ const LoginModern = () => {
       
       if (response.data.status === 'success') {
         setAuthUser(response.data.user, 'Admin', response.data.token);
-        setSuccess('✓ Admin login successful! Redirecting...');
-        setTimeout(() => navigate('/admin/dashboard'), 1500);
+        navigate('/admin/dashboard');
       } else {
         setError(response.data.message || 'Login failed');
       }
@@ -126,7 +125,7 @@ const LoginModern = () => {
       if (!err.response) {
         errorMessage += 'Cannot reach backend. Check if it\'s running on port 3000.';
       } else if (err.response?.status === 401) {
-        errorMessage = 'Incorrect username or password';
+        errorMessage = 'Wrong username or password';
       } else {
         errorMessage += err.response?.data?.message || err.message;
       }
@@ -151,10 +150,7 @@ const LoginModern = () => {
       
       if (response.data.status === 'success') {
         setAuthUser(response.data.user, 'User', response.data.token);
-        setSuccess('✓ Login successful! Redirecting to dashboard...');
-        setTimeout(() => {
-          navigate('/user/dashboard');
-        }, 1500);
+        navigate('/user/dashboard');
       } else {
         setError(response.data.message || 'Login failed');
       }
@@ -168,7 +164,7 @@ const LoginModern = () => {
       } else if (!err.response) {
         errorMessage += 'Cannot reach backend server. It may be waking up — please retry in a moment.';
       } else if (err.response?.status === 401) {
-        errorMessage = 'Incorrect username or password';
+        errorMessage = 'Wrong username or password';
       } else if (err.response?.status === 400) {
         errorMessage = err.response?.data?.message || 'Invalid request';
       } else if (err.response?.status >= 500) {
@@ -198,8 +194,7 @@ const LoginModern = () => {
       
       if (response.data.status === 'success') {
         setAuthUser(response.data.user, 'Police', response.data.token);
-        setSuccess('✓ Police login successful! Redirecting...');
-        setTimeout(() => navigate('/police/dashboard'), 1500);
+        navigate('/police/dashboard');
       } else {
         setError(response.data.message || 'Login failed');
       }
@@ -210,7 +205,7 @@ const LoginModern = () => {
       if (!err.response) {
         errorMessage += 'Cannot reach backend. Check if it\'s running on port 3000.';
       } else if (err.response?.status === 401) {
-        errorMessage = 'Incorrect username or password';
+        errorMessage = 'Wrong username or password';
       } else {
         errorMessage += err.response?.data?.message || err.message;
       }
@@ -355,7 +350,7 @@ const LoginModern = () => {
             {activeTab === 'user' && (
               <div className="auth-tab-content active">
                 <h3 className="auth-card-title">User Login</h3>
-                <form onSubmit={handleUserLogin} className="auth-stagger">
+                <form onSubmit={handleUserLogin} className="auth-stagger" autoComplete="off">
                   <div className="form-group">
                     <label className="form-label">Username</label>
                     <input
@@ -408,7 +403,7 @@ const LoginModern = () => {
             {activeTab === 'admin' && (
               <div className="auth-tab-content active">
                 <h3 className="auth-card-title">Admin Login</h3>
-                <form onSubmit={handleAdminLogin} className="auth-stagger">
+                <form onSubmit={handleAdminLogin} className="auth-stagger" autoComplete="off">
                   <div className="form-group">
                     <label className="form-label">Username</label>
                     <input
@@ -454,7 +449,7 @@ const LoginModern = () => {
             {activeTab === 'police' && (
               <div className="auth-tab-content active">
                 <h3 className="auth-card-title">Police Login</h3>
-                <form onSubmit={handlePoliceLogin} className="auth-stagger">
+                <form onSubmit={handlePoliceLogin} className="auth-stagger" autoComplete="off">
                   <div className="form-group">
                     <label className="form-label">Username</label>
                     <input

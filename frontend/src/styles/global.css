@@ -428,6 +428,266 @@ body {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-4px); }
 }
+
+@keyframes ripple {
+  0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.3); }
+  70% { box-shadow: 0 0 0 10px rgba(14, 165, 233, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ================================================
+   ENHANCED MODAL STYLES
+   ================================================ */
+
+/* Confirm Modal — polished overlay */
+.confirm-modal .modal-content {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  overflow: hidden;
+}
+
+.confirm-modal .modal-backdrop {
+  backdrop-filter: blur(4px);
+}
+
+/* FIR View Modal */
+.fir-view-modal .modal-content {
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  overflow: hidden;
+}
+
+/* All modals — better base styling */
+.modal-content {
+  border: none !important;
+  border-radius: 14px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12) !important;
+  overflow: hidden;
+}
+
+.modal.show .modal-dialog {
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.modal-footer {
+  border-top: 1px solid var(--gray-200);
+}
+
+/* ================================================
+   TOAST NOTIFICATION ENHANCEMENTS
+   ================================================ */
+
+.Toastify__toast {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+  font-family: inherit !important;
+  font-size: 0.88rem !important;
+  padding: 12px 16px !important;
+}
+
+.Toastify__toast--success {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: white !important;
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: white !important;
+}
+
+.Toastify__toast--info {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7) !important;
+  color: white !important;
+}
+
+.Toastify__toast--warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: white !important;
+}
+
+.Toastify__close-button {
+  color: white !important;
+  opacity: 0.8 !important;
+}
+
+.Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* ================================================
+   LOADING SPINNER — PRODUCTION QUALITY
+   ================================================ */
+
+.page-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 16px;
+}
+
+.page-loader .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--sky-blue-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.page-loader p {
+  color: var(--gray-500);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+/* ================================================
+   ENHANCED SCROLLBAR
+   ================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-400);
+}
+
+/* ================================================
+   PROFILE INFO ITEM HOVER
+   ================================================ */
+
+.profile-info-item:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  transform: translateY(-1px);
+}
+
+/* ================================================
+   RESPONSIVE LAYOUT ENHANCEMENTS
+   ================================================ */
+
+@media (max-width: 768px) {
+  .modal-dialog {
+    margin: 12px !important;
+  }
+
+  .modal-lg {
+    max-width: calc(100% - 24px) !important;
+  }
+
+  .bento-grid.cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .bento-grid.cols-3 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .bento-grid.cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dash-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .mgmt-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .mgmt-header-actions {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .mgmt-controls {
+    flex-direction: column !important;
+  }
+
+  /* Touch-friendly buttons on tablet/mobile */
+  .action-btn {
+    min-width: 34px !important;
+    min-height: 34px !important;
+  }
+
+  /* Quick action buttons: wrap nicely */
+  .quick-action-row {
+    flex-wrap: wrap !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .bento-grid.cols-4 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .with-sidebar {
+    padding: 12px !important;
+  }
+
+  .dashboard-container {
+    padding: 0 !important;
+  }
+
+  .mgmt-container {
+    padding: 12px !important;
+  }
+
+  /* Stat cards: shrink values & icons */
+  .bento-stat-value {
+    font-size: 1.25rem !important;
+  }
+  .bento-stat-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* Chart containers: enforce min height for touch readability */
+  .bento-card canvas {
+    min-height: 220px;
+  }
+
+  /* Profile info grid: single column on small screens */
+  .profile-info-item {
+    min-width: unset !important;
+  }
+}
 @keyframes ripple {
   0%   { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.25); }
   100% { box-shadow: 0 0 0 12px rgba(14, 165, 233, 0); }

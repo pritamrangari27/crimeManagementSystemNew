@@ -38,8 +38,7 @@ const PoliceProfile = () => {
           phone: freshUser.phone || '',
           badge_number: freshUser.badge_number || ''
         });
-        setSuccess('Profile refreshed from database ✓');
-        setTimeout(() => setSuccess(''), 3000);
+        // silently refreshed
       }
     } catch (err) {
       console.error('Error refreshing profile:', err);
@@ -49,7 +48,7 @@ const PoliceProfile = () => {
     }
   };
 
-  // Refresh data on component mount
+  // Refresh data on component mount only
   useEffect(() => {
     if (!user || !role) {
       navigate('/login', { replace: true });
@@ -60,7 +59,8 @@ const PoliceProfile = () => {
       return;
     }
     refreshUserData();
-  }, [user, role, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

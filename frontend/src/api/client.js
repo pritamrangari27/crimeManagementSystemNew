@@ -27,7 +27,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Add token to request headers if it exists
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -66,7 +66,7 @@ api.interceptors.response.use(
       // Clear all auth data from localStorage
       localStorage.removeItem('authUser');
       localStorage.removeItem('userRole');
-      localStorage.removeItem('token');
+      localStorage.removeItem('authToken');
       
       // Redirect to login page
       if (typeof window !== 'undefined') {
@@ -82,8 +82,8 @@ api.interceptors.response.use(
 export const authAPI = {
   login: (username, password, role) =>
     api.post('/auth/login', { username, password, role }),
-  register: (username, password, email, phone, role, station_id = null) =>
-    api.post('/auth/register', { username, password, email, phone, role, station_id }),
+  register: (data) =>
+    api.post('/auth/register', data),
   userRegister: (username, password, email, phone = '') =>
     api.post('/auth/register', { username, password, email, phone, role: 'User' }),
   policeRegister: (username, password, email, phone, station_id) =>
@@ -91,12 +91,10 @@ export const authAPI = {
   logout: () => api.post('/auth/logout'),
   currentUser: () => api.get('/auth/current-user'),
   changePassword: (oldPassword, newPassword) => {
-    const user = JSON.parse(localStorage.getItem('authUser'));
-    return api.post('/auth/change-password', { oldPassword, newPassword, user_id: user?.id });
+    return api.post('/auth/change-password', { oldPassword, newPassword });
   },
   updateProfile: (data) => {
-    const user = JSON.parse(localStorage.getItem('authUser'));
-    return api.put('/auth/update-profile', { ...data, user_id: user?.id });
+    return api.put('/auth/update-profile', data);
   }
 };
 
@@ -117,6 +115,7 @@ export const firsAPI = {
   getByUser: (userId) => api.get(`/firs/user/${userId}`),
   getByStatus: (status) => api.get(`/firs/status/${status}`),
   create: (data) => api.post('/firs', data),
+  classify: (text) => api.post('/firs/classify', { text }),
   getByStation: (stationId) => api.get(`/firs/station/${stationId}`),
   search: (query) => api.get(`/firs/all`),
   update: (id, data) => api.put(`/firs/${id}`, data),
@@ -153,7 +152,55 @@ export const dashboardAPI = {
   getCrimesByType: () => api.get('/dashboard/crimes-by-type'),
   getFIRStatus: () => api.get('/dashboard/fir-status'),
   getCrimesByLocation: () => api.get('/dashboard/crimes-by-location'),
+  getCrimeLocations: () => api.get('/dashboard/crime-locations'),
+  getCrimesByMonth: () => api.get('/dashboard/crimes-by-month'),
+  getFIRsByMonth: () => api.get('/dashboard/firs-by-month'),
   getActivity: (limit = 10, filter = '') => api.get(`/dashboard/activity?limit=${limit}${filter ? `&filter=${filter}` : ''}`)
+};
+
+// Chatbot API
+export const chatbotAPI = {
+  send: (message) => api.post('/chatbot/message', { message }),
+  quickReplies: () => api.get('/chatbot/quick-replies'),
+};
+
+// Notifications API
+export const notificationsAPI = {
+  getAll: () => api.get('/notifications'),
+  getUnreadCount: () => api.get('/notifications/unread-count'),
+  markRead: (id) => api.put(`/notifications/${id}/read`),
+  markAllRead: () => api.put('/notifications/read-all'),
+};
+
+// Advanced Features API
+export const advancedAPI = {
+  // Workflow
+  getWorkflowStages: () => api.get('/advanced/workflow/stages'),
+  getWorkflowTimeline: (firId) => api.get(`/advanced/workflow/fir/${firId}`),
+  advanceWorkflow: (firId) => api.put(`/advanced/workflow/fir/${firId}/advance`),
+  setWorkflowStage: (firId, stage) => api.put(`/advanced/workflow/fir/${firId}/set`, { stage }),
+
+  // Auto FIR number
+  generateFIRNumber: (state, city) => api.get(`/advanced/generate-fir-number?state=${state || 'MH'}&city=${city || 'MUM'}`),
+
+  // Resource allocation
+  getWorkload: () => api.get('/advanced/allocation/workload'),
+  autoAssign: (firId) => api.post(`/advanced/allocation/auto-assign/${firId}`),
+
+  // Crime patterns
+  getPatterns: () => api.get('/advanced/patterns'),
+
+  // Similarity
+  checkSimilarity: (description, crimeType) => api.post('/advanced/similarity/check', { description, crime_type: crimeType }),
+
+  // Criminal network
+  getNetworkGraph: () => api.get('/advanced/network/graph'),
+  addNetworkLink: (data) => api.post('/advanced/network/link', data),
+  deleteNetworkLink: (id) => api.delete(`/advanced/network/link/${id}`),
+
+  // Export
+  exportCSV: (type) => api.get(`/advanced/export/csv?type=${type || 'firs'}`, { responseType: 'blob' }),
+  exportJSON: (type) => api.get(`/advanced/export/json?type=${type || 'firs'}`),
 };
 
 export default api;

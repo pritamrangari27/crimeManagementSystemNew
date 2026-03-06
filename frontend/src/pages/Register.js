@@ -11,7 +11,10 @@ const Register = () => {
     email: '',
     phone: '',
     role: 'User',
-    station_id: ''
+    station_id: '',
+    address: '',
+    department: '',
+    badge_number: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -88,14 +91,17 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await authAPI.register(
-        formData.username,
-        formData.password,
-        formData.email,
-        formData.phone,
-        formData.role,
-        formData.station_id
-      );
+      const response = await authAPI.register({
+        username: formData.username,
+        password: formData.password,
+        email: formData.email,
+        phone: formData.phone,
+        role: formData.role,
+        station_id: formData.station_id,
+        address: formData.address,
+        department: formData.department,
+        badge_number: formData.badge_number
+      });
 
       if (response.data.status === 'success') {
         alert(`Registration successful! Welcome ${formData.username}. Please login with your credentials.`);
@@ -175,6 +181,18 @@ const Register = () => {
                 </div>
 
                 <div className="form-group">
+                  <label className="form-label">Address</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="address"
+                    placeholder="Enter your address"
+                    value={formData.address}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className="form-group">
                   <label className="form-label">Register As</label>
                   <select
                     className="form-select"
@@ -211,6 +229,33 @@ const Register = () => {
                       })}
                     </select>
                   </div>
+                )}
+
+                {(formData.role === 'Police' || formData.role === 'Admin') && (
+                  <>
+                    <div className="form-group">
+                      <label className="form-label">Department</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="department"
+                        placeholder="Enter department"
+                        value={formData.department}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Badge Number</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="badge_number"
+                        placeholder="Enter badge number"
+                        value={formData.badge_number}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </>
                 )}
 
                 <div className="form-group">

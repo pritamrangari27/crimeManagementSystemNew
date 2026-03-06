@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { policeAPI } from '../api/client';
+import ConfirmModal from '../components/ConfirmModal';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import '../styles/dashboard.css';
@@ -9,11 +12,18 @@ import '../styles/dashboard.css';
 const PoliceManagement = () => {
   const navigate = useNavigate();
   const [police, setPolice] = useState([]);
+  const [allPolice, setAllPolice] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedPolice, setSelectedPolice] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editData, setEditData] = useState({});
+  const [saving, setSaving] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const [formData, setFormData] = useState({
     police_id: '',
     name: '',
@@ -32,6 +42,7 @@ const PoliceManagement = () => {
     try {
       const response = await policeAPI.getAll();
       if (response.data.status === 'success') {
+        setAllPolice(response.data.data);
         setPolice(response.data.data);
       }
     } catch (error) {
@@ -41,22 +52,17 @@ const PoliceManagement = () => {
     }
   };
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
     if (query.trim()) {
-      try {
-        const response = await policeAPI.search(query);
-        if (response.data.status === 'success') {
-          setPolice(response.data.data);
-        }
-      } catch (error) {
-        console.error('Error searching:', error);
-        fetchPolice();
-      }
+      const q = query.toLowerCase();
+      setPolice(allPolice.filter(officer =>
+        Object.values(officer).some(v => String(v || '').toLowerCase().includes(q))
+      ));
     } else {
-      fetchPolice();
+      setPolice(allPolice);
     }
   };
 
@@ -71,7 +77,7 @@ const PoliceManagement = () => {
     e.preventDefault();
     try {
       await policeAPI.add(formData);
-      alert('Police officer added successfully!');
+      toast.success('Police officer added successfully!');
       setFormData({
         police_id: '',
         name: '',
@@ -84,19 +90,68 @@ const PoliceManagement = () => {
       setShowForm(false);
       fetchPolice();
     } catch (error) {
-      alert('Error adding police: ' + error.response?.data?.message);
+      toast.error('Error: ' + (error.response?.data?.message || 'Failed to add officer'));
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure?')) {
-      try {
-        await policeAPI.delete(id);
-        alert('Police officer deleted!');
-        fetchPolice();
-      } catch (error) {
-        alert('Error deleting police');
-      }
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleEditClick = (officer) => {
+    setEditData({
+      id: officer.id,
+      police_id: officer.police_id || '',
+      name: officer.name || '',
+      email: officer.email || '',
+      phone: officer.phone || '',
+      position: officer.position || '',
+      station_name: officer.station_name || '',
+      station_id: officer.station_id || '',
+      address: officer.address || '',
+      crime_type: officer.crime_type || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditChange = (e) => {
+    setEditData({ ...editData, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveEdit = async () => {
+    setSaving(true);
+    try {
+      const { id, ...updateData } = editData;
+      await policeAPI.update(id, updateData);
+      toast.success('Police officer updated successfully!');
+      setShowEditModal(false);
+      fetchPolice();
+    } catch (error) {
+      toast.error('Error: ' + (error.response?.data?.message || 'Failed to update officer'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteFromEdit = () => {
+    setDeleteId(editData.id);
+    setShowEditModal(false);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setDeleting(true);
+    try {
+      await policeAPI.delete(deleteId);
+      toast.success('Police officer deleted successfully!');
+      fetchPolice();
+    } catch (error) {
+      toast.error('Error deleting police officer');
+    } finally {
+      setDeleting(false);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     }
   };
 
@@ -209,7 +264,7 @@ const PoliceManagement = () => {
             </Row>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
           <Button variant="secondary" onClick={() => setShowForm(false)}>
             Close
           </Button>
@@ -252,6 +307,10 @@ const PoliceManagement = () => {
                 <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-building me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{selectedPolice.station_name}</p>
               </div>
               <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Position</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-id-badge me-1" style={{ color: '#8b5cf6', fontSize: '0.8rem' }}></i>{selectedPolice.position || 'N/A'}</p>
+              </div>
+              <div>
                 <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Specialization</span>
                 <p style={{ margin: '2px 0 0' }}><span className="badge bg-danger" style={{ fontSize: '0.75rem', padding: '3px 8px' }}>{selectedPolice.crime_type}</span></p>
               </div>
@@ -273,6 +332,83 @@ const PoliceManagement = () => {
         </Modal.Footer>
       </Modal>
 
+      {/* Edit Police Modal */}
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg" centered dialogClassName="fir-view-modal">
+        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', padding: '12px 18px', borderBottom: 'none' }}>
+          <Modal.Title style={{ color: 'white', fontSize: '1rem', fontWeight: 700 }}>
+            <i className="fas fa-edit me-2"></i>Edit Police Officer
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ padding: '20px', background: '#ffffff' }}>
+          <Form>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.85rem' }}>Police ID</Form.Label>
+                  <Form.Control type="text" name="police_id" value={editData.police_id} onChange={handleEditChange} />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.85rem' }}>Full Name</Form.Label>
+                  <Form.Control type="text" name="name" value={editData.name} onChange={handleEditChange} />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.85rem' }}>Email</Form.Label>
+                  <Form.Control type="email" name="email" value={editData.email} onChange={handleEditChange} />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.85rem' }}>Phone</Form.Label>
+                  <Form.Control type="text" name="phone" value={editData.phone} onChange={handleEditChange} />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.85rem' }}>Position</Form.Label>
+                  <Form.Control type="text" name="position" value={editData.position} onChange={handleEditChange} />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.85rem' }}>Station Name</Form.Label>
+                  <Form.Control type="text" name="station_name" value={editData.station_name} onChange={handleEditChange} />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.85rem' }}>Address</Form.Label>
+                  <Form.Control type="text" name="address" value={editData.address} onChange={handleEditChange} />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.85rem' }}>Specialization</Form.Label>
+                  <Form.Control type="text" name="crime_type" value={editData.crime_type} onChange={handleEditChange} />
+                </Form.Group>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px', display: 'flex', justifyContent: 'space-between' }}>
+          <Button variant="danger" size="sm" onClick={handleDeleteFromEdit} style={{ borderRadius: '8px', fontWeight: 600 }}>
+            <i className="fas fa-trash me-1"></i>Delete
+          </Button>
+          <Button variant="success" size="sm" onClick={handleSaveEdit} disabled={saving} style={{ borderRadius: '8px', fontWeight: 600, background: '#10b981', border: 'none' }}>
+            {saving ? 'Saving...' : <><i className="fas fa-save me-1"></i>Save Changes</>}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <div className="mgmt-controls">
         <input
           type="text"
@@ -288,6 +424,7 @@ const PoliceManagement = () => {
       <table className="mgmt-table">
         <thead>
           <tr>
+            <th>Sr. No.</th>
             <th>Police ID</th>
             <th>Name</th>
             <th>Email</th>
@@ -299,21 +436,22 @@ const PoliceManagement = () => {
         </thead>
         <tbody>
           {police.length > 0 ? (
-            police.map((officer) => (
+            police.map((officer, idx) => (
               <tr key={officer.id}>
+                <td>{idx + 1}</td>
                 <td>{officer.police_id}</td>
                 <td>{officer.name}</td>
                 <td>{officer.email}</td>
                 <td>{officer.phone}</td>
-                <td>{officer.position}</td>
+                <td>{officer.position || '-'}</td>
                 <td>{officer.station_name}</td>
                 <td>
                   <div className="mgmt-actions">
                     <button className="view" onClick={() => handleViewPolice(officer)}>
                       <i className="fas fa-eye me-1"></i>View
                     </button>
-                    <button className="delete" onClick={() => handleDelete(officer.id)}>
-                      <i className="fas fa-trash me-1"></i>Delete
+                    <button className="view" style={{ background: 'rgba(245,158,11,0.10)', color: '#f59e0b' }} onClick={() => handleEditClick(officer)}>
+                      <i className="fas fa-edit me-1"></i>Edit
                     </button>
                   </div>
                 </td>
@@ -321,7 +459,7 @@ const PoliceManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="mgmt-empty">
+              <td colSpan="8" className="mgmt-empty">
                 No police officers found
               </td>
             </tr>
@@ -332,6 +470,18 @@ const PoliceManagement = () => {
       </div>
         </Container>
       </div>
+      <ConfirmModal
+        show={showDeleteModal}
+        onHide={() => { setShowDeleteModal(false); setDeleteId(null); }}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Police Officer"
+        message="Are you sure you want to delete this officer record? This action cannot be undone."
+        confirmText="Delete"
+        variant="danger"
+        icon="fas fa-trash-alt"
+        loading={deleting}
+      />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover theme="colored" />
       <Footer />
     </>
   );

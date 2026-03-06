@@ -87,9 +87,14 @@ router.get('/station/:stationId', (req, res) => {
 router.put('/:id', (req, res) => {
   const { id } = req.params;
   const updates = req.body;
+  const ALLOWED_COLS = ['police_id','name','crime_type','position','station_name','station_id','email','phone','address','active_cases'];
 
-  const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', ');
-  const values = Object.values(updates);
+  const filteredKeys = Object.keys(updates).filter(k => ALLOWED_COLS.includes(k));
+  if (filteredKeys.length === 0) {
+    return res.status(400).json({ status: 'error', message: 'No valid fields to update' });
+  }
+  const setClause = filteredKeys.map(key => `${key} = ?`).join(', ');
+  const values = filteredKeys.map(k => updates[k]);
   values.push(id);
 
   const sql = `UPDATE police SET ${setClause}, created_at = CURRENT_TIMESTAMP WHERE id = ?`;

@@ -1,15 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const { verifyToken, requireRole } = require('../utils/jwtAuth');
 const { logActivity } = require('../utils/activityLogger');
 
-// Middleware to check if user is Admin
-const checkAdmin = (req, res, next) => {
-  if (!req.session.user || req.session.user.role !== 'Admin') {
-    return res.status(403).json({ status: 'error', message: 'Admin access required' });
-  }
-  next();
-};
+// Middleware: verify JWT + require Admin role
+const checkAdmin = [verifyToken, requireRole('Admin')];
 
 // Get all users (with pagination)
 router.get('/users', checkAdmin, (req, res) => {
@@ -87,15 +83,14 @@ router.post('/users', checkAdmin, async (req, res) => {
         return res.status(500).json({ status: 'error', message: 'Failed to create user' });
       }
 
-      // Log activity
       logActivity(
         req.db,
-        req.session.user.id,
+        req.user.id,
         'USER_CREATED',
         `Created new ${role} user: ${username}`,
-        `Admin ${req.session.user.username} created user ${username}`,
+        `Admin ${req.user.username} created user ${username}`,
         'Admin',
-        req.session.user.id,
+        req.user.id,
         'fas fa-user-plus'
       );
 
@@ -181,7 +176,7 @@ router.delete('/users/:id', checkAdmin, (req, res) => {
   try {
     const { id } = req.params;
 
-    if (id == req.session.user.id) {
+    if (id == req.user.id) {
       return res.status(400).json({ status: 'error', message: 'Cannot delete your own account' });
     }
 
@@ -270,15 +265,14 @@ router.post('/users/bulk/import', checkAdmin, async (req, res) => {
       }
     }
 
-    // Log activity
     logActivity(
       req.db,
-      req.session.user.id,
+      req.user.id,
       'BULK_USER_IMPORT',
       `Imported ${results.success} users`,
-      `Admin ${req.session.user.username} imported ${results.success} users successfully`,
+      `Admin ${req.user.username} imported ${results.success} users successfully`,
       'Admin',
-      req.session.user.id,
+      req.user.id,
       'fas fa-users'
     );
 

@@ -40,6 +40,10 @@
   margin-bottom: 24px;
   border-bottom: 2px solid #d1fae5;
   padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .sidebar-header h5 {
@@ -136,14 +140,14 @@
 
 /* Sidebar Activities Section */
 .sidebar-activities {
-  flex: 1;
   margin-top: 8px;
   border-top: 2px solid #d1fae5;
   padding-top: 12px;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  max-height: 180px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .sidebar-activities-header {
@@ -199,7 +203,9 @@
 
 .sidebar-activities-list {
   padding-right: 2px;
-  overflow: hidden;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .sidebar-activities-list::-webkit-scrollbar {
@@ -292,6 +298,42 @@
   margin-top: auto;
   border-top: 2px solid #d1fae5;
   padding-top: 16px;
+}
+
+.sidebar-dev-contact-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid #a7f3d0;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #059669;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-bottom: 8px;
+}
+
+.sidebar-dev-contact-btn i {
+  font-size: 0.85rem;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-dev-contact-btn:hover {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(5, 150, 105, 0.15);
+}
+
+.sidebar-dev-contact-btn:hover i {
+  transform: rotate(15deg) scale(1.1);
+}
+
+.sidebar-dev-contact-btn:active {
+  transform: translateY(0);
 }
 
 .logout-link {
@@ -428,6 +470,8 @@
   padding-bottom: var(--footer-height);
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden;
+  width: calc(100% - var(--sidebar-width));
 }
 
 /* Main Content Container */

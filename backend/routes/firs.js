@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { logActivity } = require('../utils/activityLogger');
+const { createNotification } = require('./notifications');
 
 // ===== HELPER FUNCTIONS =====
 
@@ -45,56 +46,100 @@ const executeDatabaseQuery = (db, sql, params, res, isRun = false) => {
 router.post('/', (req, res) => {
   const {
     user_id, station_id, crime_type, accused, name, age, number, address,
-    relation, purpose, file, status = 'Sent'
+    relation, purpose, file, latitude, longitude, status = 'Sent',
+    complainant_name, complainant_phone, location, crime_description, crime_date, crime_time, priority
   } = req.body;
 
+  // Support both form field naming conventions
+  const finalName = name || complainant_name;
+  const finalNumber = number || complainant_phone;
+  const finalAccused = accused || '';
+  const finalLocation = location || '';
+  const finalDescription = crime_description || '';
+
   // Validate required fields
-  if (!user_id || !station_id || !crime_type || !accused || !name || !age || !number || !address) {
+  if (!user_id || !station_id || !crime_type) {
     return res.status(400).json({ 
       status: 'error', 
-      message: 'Missing required fields' 
+      message: 'Missing required fields (user_id, station_id, crime_type)' 
     });
   }
 
   // Use station_id as station_name if needed (from form it's just station_code)
   const station_name = station_id;
 
-  const sql = `INSERT INTO firs (
-    user_id, station_id, station_name, crime_type, accused, name, age, number, address,
-    relation, purpose, file, status, created_at, updated_at
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+  // Auto-generate FIR number
+  req.db.get(`SELECT MAX(id) as max_id FROM firs`, [], (err0, maxRow) => {
+    const serial = ((maxRow?.max_id || 0) + 1);
+    const year = new Date().getFullYear();
+    const firNumber = `FIR-${year}-MH-MUM-${String(serial).padStart(5, '0')}`;
 
-  req.db.run(sql, [
-    user_id, station_id, station_name, crime_type, accused, name, age, number, address,
-    relation || '', purpose || '', file || null, status
-  ], function(err) {
-    if (err) {
-      console.error('FIR creation database error:', err);
-      console.error('SQL:', sql);
-      console.error('Params:', [user_id, station_id, crime_type, accused, name, age, number, address, relation || '', purpose || '', file || null, crime_location || null, status]);
-      return res.status(500).json({ 
-        status: 'error', 
-        message: 'Database error: ' + (err.message || 'Failed to create FIR'),
-        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    const sql = `INSERT INTO firs (
+      fir_number, user_id, station_id, station_name, crime_type, accused, name, age, number, address,
+      relation, purpose, file, latitude, longitude, status, workflow_stage, priority,
+      complainant_name, complainant_phone, location, crime_description, crime_date, crime_time,
+      created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'FIR Filed', ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+
+    req.db.run(sql, [
+      firNumber, user_id, station_id, station_name, crime_type, finalAccused, finalName || null, age || null, finalNumber || null, address || null,
+      relation || '', purpose || '', file || null,
+      latitude ? parseFloat(latitude) : null,
+      longitude ? parseFloat(longitude) : null,
+      status,
+      priority || 'Medium',
+      finalName || null, finalNumber || null, finalLocation, finalDescription,
+      crime_date || null, crime_time || null
+    ], function(err) {
+      if (err) {
+        console.error('FIR creation database error:', err);
+        return res.status(500).json({ 
+          status: 'error', 
+          message: 'Database error: ' + (err.message || 'Failed to create FIR'),
+          error: process.env.NODE_ENV === 'development' ? err.message : undefined
+        });
+      }
+      
+      // Log the FIR creation activity
+      logActivity(
+        req.db,
+        user_id,
+        'FIR_CREATED',
+        'FIR filed successfully',
+        `New FIR ${firNumber} filed against ${accused} for ${crime_type}`,
+        'FIR',
+        this.lastID,
+        'fas fa-file-alt'
+      );
+
+      const newFirId = this.lastID;
+
+      // Auto-assign FIR to least-busy officer at station, preferring crime-type match
+      const assignSql = `
+        SELECT p.police_id, p.name, p.crime_type as specialty,
+               COUNT(f.id) as case_count
+        FROM police p
+        LEFT JOIN firs f ON f.assigned_police_id = p.police_id AND f.status NOT IN ('Rejected', 'Closed')
+        WHERE p.station_id = ?
+        GROUP BY p.police_id, p.name, p.crime_type
+        ORDER BY
+          CASE WHEN p.crime_type = ? THEN 0 ELSE 1 END,
+          COUNT(f.id) ASC
+        LIMIT 1`;
+
+      req.db.get(assignSql, [station_id, crime_type], (assignErr, officer) => {
+        if (!assignErr && officer) {
+          req.db.run(`UPDATE firs SET assigned_police_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+            [officer.police_id, newFirId], () => {});
+        }
       });
-    }
-    
-    // Log the FIR creation activity
-    logActivity(
-      req.db,
-      user_id,
-      'FIR_CREATED',
-      'FIR filed successfully',
-      `New FIR filed against ${accused} for ${crime_type}`,
-      'FIR',
-      this.lastID,
-      'fas fa-file-alt'
-    );
-    
-    res.json({ 
-      status: 'success', 
-      message: 'FIR created successfully', 
-      id: this.lastID
+      
+      res.json({ 
+        status: 'success', 
+        message: 'FIR created successfully', 
+        id: newFirId,
+        fir_number: firNumber
+      });
     });
   });
 });
@@ -237,6 +282,14 @@ router.put('/:id/approve', (req, res) => {
           id,
           'fas fa-check-circle'
         );
+
+        // Notify complainant
+        if (fir.user_id) {
+          createNotification(req.db, fir.user_id,
+            'FIR Approved',
+            `Your FIR ${fir.fir_number || '#' + id} (${fir.crime_type}) has been approved.`,
+            'fir_status', 'FIR', parseInt(id));
+        }
       }
     });
 
@@ -273,11 +326,63 @@ router.put('/:id/reject', (req, res) => {
           id,
           'fas fa-times-circle'
         );
+
+        // Notify complainant
+        if (fir.user_id) {
+          createNotification(req.db, fir.user_id,
+            'FIR Rejected',
+            `Your FIR ${fir.fir_number || '#' + id} (${fir.crime_type}) was rejected. Reason: ${rejection_reason || 'N/A'}`,
+            'fir_status', 'FIR', parseInt(id));
+        }
       }
     });
 
     res.json({ status: 'success', message: 'FIR rejected successfully' });
   });
+});
+
+// Classify FIR text using Python AI service - POST /api/firs/classify
+router.post('/classify', async (req, res) => {
+  const { text } = req.body;
+
+  if (!text || text.trim().length < 5) {
+    return res.status(400).json({ status: 'error', message: 'FIR text is required (minimum 5 characters)' });
+  }
+
+  const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+
+  try {
+    const response = await fetch(`${aiServiceUrl}/classify-fir`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text.trim() }),
+      signal: AbortSignal.timeout(10000),
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      return res.status(response.status).json({
+        status: 'error',
+        message: errData.detail || 'AI service error',
+      });
+    }
+
+    const data = await response.json();
+    res.json({
+      status: 'success',
+      data: {
+        crime_type: data.crime_type,
+        confidence: data.confidence,
+        all_scores: data.all_scores,
+      },
+    });
+  } catch (err) {
+    console.error('AI classification error:', err.message);
+    res.status(503).json({
+      status: 'error',
+      message: 'AI classification service unavailable. Make sure the Python service is running.',
+    });
+  }
 });
 
 module.exports = router;

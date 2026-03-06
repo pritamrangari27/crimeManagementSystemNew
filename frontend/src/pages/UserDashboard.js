@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Button, Modal, Badge, Form, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import { firsAPI, stationsAPI } from '../api/client';
@@ -29,7 +31,11 @@ const UserDashboard = () => {
     number: '',
     address: '',
     relation: '',
-    purpose: ''
+    purpose: '',
+    location: '',
+    crime_description: '',
+    crime_date: '',
+    crime_time: ''
   });
 
   const handleViewFIR = (fir) => { setViewingFIR(fir); setShowViewModal(true); };
@@ -64,7 +70,11 @@ const UserDashboard = () => {
       number: '',
       address: '',
       relation: '',
-      purpose: ''
+      purpose: '',
+      location: '',
+      crime_description: '',
+      crime_date: '',
+      crime_time: ''
     });
     setFirError('');
     setFirSuccess('');
@@ -112,6 +122,18 @@ const UserDashboard = () => {
       setFirError('Please enter purpose of FIR');
       return false;
     }
+    if (!firForm.location.trim()) {
+      setFirError('Please enter crime location');
+      return false;
+    }
+    if (!firForm.crime_description.trim()) {
+      setFirError('Please enter crime description');
+      return false;
+    }
+    if (!firForm.crime_date) {
+      setFirError('Please enter crime date');
+      return false;
+    }
     return true;
   };
 
@@ -137,12 +159,17 @@ const UserDashboard = () => {
         address: firForm.address,
         relation: firForm.relation,
         purpose: firForm.purpose,
+        location: firForm.location,
+        crime_description: firForm.crime_description,
+        crime_date: firForm.crime_date,
+        crime_time: firForm.crime_time,
         status: 'Sent'
       };
 
       const response = await firsAPI.create(firData);
       if (response.data.status === 'success') {
         setFirSuccess(`✓ FIR filed successfully! FIR ID: ${response.data.id}`);
+        toast.success('FIR filed successfully!');
         setTimeout(async () => {
           handleCloseFIRModal();
           // Refresh FIRs list
@@ -159,7 +186,9 @@ const UserDashboard = () => {
         setFirError(response.data.message || 'Failed to file FIR');
       }
     } catch (err) {
-      setFirError(err.response?.data?.message || err.message || 'Error filing FIR');
+      const msg = err.response?.data?.message || err.message || 'Error filing FIR';
+      setFirError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }
@@ -183,8 +212,11 @@ const UserDashboard = () => {
   if (loading) return (
     <>
       <Sidebar />
-      <div className="with-sidebar">
-        <div className="text-center py-5">Loading dashboard...</div>
+      <div className="with-sidebar d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
+        <div className="text-center">
+          <div className="page-loader"><div className="spinner"></div></div>
+          <p className="text-muted mt-2" style={{ fontSize: '0.85rem' }}>Loading dashboard...</p>
+        </div>
       </div>
       <Footer />
     </>
@@ -298,8 +330,8 @@ const UserDashboard = () => {
           </div>
 
           {/* FIR View Modal */}
-          <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="md" dialogClassName="fir-view-modal">
-            <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', padding: '12px 18px', borderBottom: 'none' }}>
+          <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="md" dialogClassName="fir-view-modal animated-modal">
+            <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', padding: '14px 18px', borderBottom: 'none' }}>
               <Modal.Title style={{ color: 'white', fontSize: '1rem', fontWeight: 700 }}>
                 <i className="fas fa-file-invoice me-2" style={{ color: '#10b981' }}></i>
                 FIR Details
@@ -311,45 +343,58 @@ const UserDashboard = () => {
                 )}
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{ padding: '16px 20px', background: '#ffffff' }}>
+            <Modal.Body style={{ padding: '20px 24px', background: '#ffffff' }}>
               {viewingFIR && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 16px', fontSize: '0.85rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 20px', fontSize: '0.85rem' }}>
                   <div>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>FIR Number</span>
-                    <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}>FIR-{String(viewingFIR.id).padStart(4, '0')}</p>
+                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>FIR-{String(viewingFIR.id).padStart(4, '0')}</p>
                   </div>
                   <div>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Type</span>
-                    <p style={{ margin: '2px 0 0' }}><span className="badge bg-danger" style={{ fontSize: '0.75rem', padding: '3px 8px' }}>{viewingFIR.crime_type}</span></p>
+                    <p style={{ margin: '4px 0 0' }}><span className="badge bg-danger" style={{ fontSize: '0.75rem', padding: '3px 8px' }}>{viewingFIR.crime_type}</span></p>
                   </div>
                   <div>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Date</span>
-                    <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="far fa-calendar me-1" style={{ color: '#3b82f6', fontSize: '0.8rem' }}></i>{viewingFIR.crime_date || 'N/A'}</p>
+                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="far fa-calendar me-1" style={{ color: '#3b82f6', fontSize: '0.8rem' }}></i>{viewingFIR.crime_date || 'N/A'}</p>
                   </div>
                   <div>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Location</span>
-                    <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-map-pin me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{viewingFIR.crime_location || 'N/A'}</p>
+                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-map-pin me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{viewingFIR.location || 'N/A'}</p>
                   </div>
-                  <div style={{ gridColumn: '1 / -1', background: '#f8fafc', borderRadius: '8px', padding: '8px 12px', borderLeft: '3px solid #10b981' }}>
+                  <div style={{ gridColumn: '1 / -1', background: '#f8fafc', borderRadius: '8px', padding: '10px 14px', borderLeft: '3px solid #10b981' }}>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Description</span>
-                    <p style={{ margin: '2px 0 0', fontWeight: 500, color: '#334155', lineHeight: 1.4, fontSize: '0.84rem' }}>{viewingFIR.description || 'N/A'}</p>
+                    <p style={{ margin: '4px 0 0', fontWeight: 500, color: '#334155', lineHeight: 1.5, fontSize: '0.84rem' }}>{viewingFIR.crime_description || viewingFIR.purpose || 'N/A'}</p>
                   </div>
                   <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
                   <div>
-                    <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Victim Name</span>
-                    <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-user-shield me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{viewingFIR.victim_name || 'N/A'}</p>
+                    <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Complainant Name</span>
+                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-user-shield me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{viewingFIR.complainant_name || viewingFIR.name || 'N/A'}</p>
                   </div>
                   <div>
+                    <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Phone</span>
+                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-phone me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{viewingFIR.complainant_phone || viewingFIR.number || 'N/A'}</p>
+                  </div>
+                  <div style={{ gridColumn: '1 / -1' }}>
+                    <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Address</span>
+                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-map-marker-alt me-1" style={{ color: '#3b82f6', fontSize: '0.8rem' }}></i>{viewingFIR.address || 'N/A'}</p>
+                  </div>
+                  <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
+                  <div>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Accused Name</span>
-                    <p style={{ margin: '2px 0 0', fontWeight: 700, color: '#ef4444' }}><i className="fas fa-user-secret me-1" style={{ fontSize: '0.8rem' }}></i>{viewingFIR.accused_name || 'N/A'}</p>
+                    <p style={{ margin: '4px 0 0', fontWeight: 700, color: '#ef4444' }}><i className="fas fa-user-secret me-1" style={{ fontSize: '0.8rem' }}></i>{viewingFIR.accused || 'N/A'}</p>
                   </div>
                   <div>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Filed On</span>
-                    <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="far fa-clock me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{viewingFIR.created_at ? new Date(viewingFIR.created_at).toLocaleDateString() : 'N/A'}</p>
+                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="far fa-clock me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{viewingFIR.created_at ? new Date(viewingFIR.created_at).toLocaleDateString() : 'N/A'}</p>
                   </div>
                   <div>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Station</span>
-                    <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-building me-1" style={{ color: '#6366f1', fontSize: '0.8rem' }}></i>{viewingFIR.station_id || 'N/A'}</p>
+                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-building me-1" style={{ color: '#6366f1', fontSize: '0.8rem' }}></i>{viewingFIR.station_name || viewingFIR.station_id || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Relation</span>
+                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>{viewingFIR.relation || 'N/A'}</p>
                   </div>
                 </div>
               )}
@@ -423,6 +468,69 @@ const UserDashboard = () => {
                     </Form.Select>
                   </Form.Group>
                 </div>
+
+                {/* Crime Details */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      <i className="fas fa-map-marker-alt me-2" style={{ color: '#f59e0b' }}></i>Crime Location *
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="location"
+                      value={firForm.location}
+                      onChange={handleFIRInputChange}
+                      placeholder="Enter crime location"
+                      required
+                      style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                    />
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      <i className="far fa-calendar me-2" style={{ color: '#3b82f6' }}></i>Crime Date *
+                    </Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="crime_date"
+                      value={firForm.crime_date}
+                      onChange={handleFIRInputChange}
+                      required
+                      style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                    />
+                  </Form.Group>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                      <i className="far fa-clock me-2" style={{ color: '#8b5cf6' }}></i>Crime Time
+                    </Form.Label>
+                    <Form.Control
+                      type="time"
+                      name="crime_time"
+                      value={firForm.crime_time}
+                      onChange={handleFIRInputChange}
+                      style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                    />
+                  </Form.Group>
+                  <div></div>
+                </div>
+
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.85rem', color: '#0f172a', marginBottom: '8px' }}>
+                    <i className="fas fa-align-left me-2" style={{ color: '#10b981' }}></i>Crime Description *
+                  </Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="crime_description"
+                    value={firForm.crime_description}
+                    onChange={handleFIRInputChange}
+                    placeholder="Describe the crime in detail"
+                    required
+                    style={{ borderRadius: '8px', borderColor: '#e2e8f0' }}
+                  />
+                </Form.Group>
 
                 {/* Accused Information */}
                 <div style={{ background: '#f8fafc', padding: '12px 16px', borderRadius: '8px', borderLeft: '3px solid #10b981', marginBottom: '16px' }}>
@@ -568,6 +676,7 @@ const UserDashboard = () => {
           </Modal>
 
         </Container>
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
       <Footer />
     </>

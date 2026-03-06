@@ -53,7 +53,7 @@ const CriminalDetails = () => {
         <Col lg={8}>
           <Card className="border-0 shadow-sm">
             <Card.Header className="bg-primary text-white">
-              <h5 className="mb-0">{criminal.name || 'N/A'}</h5>
+              <h5 className="mb-0">{criminal.Criminal_name || 'N/A'}</h5>
             </Card.Header>
             <Card.Body>
               <Row className="mb-3">
@@ -79,7 +79,7 @@ const CriminalDetails = () => {
                   <p><strong>Crime Type:</strong> {criminal.crime_type || 'N/A'}</p>
                 </Col>
                 <Col md={6}>
-                  <p><strong>Crime Location:</strong> {criminal.crime_location || 'N/A'}</p>
+                  <p><strong>Crime Location:</strong> {criminal.address || 'N/A'}</p>
                 </Col>
               </Row>
 

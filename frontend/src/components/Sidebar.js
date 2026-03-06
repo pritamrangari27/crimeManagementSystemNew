@@ -2,7 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Nav, Modal, Button, Table, Badge, Form } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser, getUserRole, clearAuth, updateAuthUser } from '../utils/authService';
-import { dashboardAPI } from '../api/client';
+import { authAPI } from '../api/client';
+import ConfirmModal from './ConfirmModal';
+import NotificationBell from './NotificationBell';
+import { DeveloperPopup } from './Footer';
 import '../styles/sidebar.css';
 
 const Sidebar = () => {
@@ -21,32 +24,11 @@ const Sidebar = () => {
     confirmPassword: ''
   });
   const [passwordError, setPasswordError] = useState('');
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showDevContact, setShowDevContact] = useState(false);
+  const [passwordSaving, setPasswordSaving] = useState(false);
   const user = getCurrentUser();
   const userRole = getUserRole();
-  const [activities, setActivities] = useState([]);
-  const [popupActivities, setPopupActivities] = useState([]);
-  const [showActivitiesModal, setShowActivitiesModal] = useState(false);
-  const [actSlideIndex, setActSlideIndex] = useState(0);
-
-  // Fetch recent activities for Admin
-  useEffect(() => {
-    if (userRole !== 'Admin') return;
-
-    const fetchActivities = async () => {
-      try {
-        const response = await dashboardAPI.getActivity(2);
-        if (response.data.status === 'success') {
-          setActivities(response.data.activities || []);
-        }
-      } catch (error) {
-        console.error('Error fetching activities:', error);
-      }
-    };
-
-    fetchActivities();
-    const interval = setInterval(fetchActivities, 30000);
-    return () => clearInterval(interval);
-  }, [userRole]);
 
   // Close popup when clicking outside
   useEffect(() => {
@@ -73,6 +55,9 @@ const Sidebar = () => {
     { path: '/admin/police', label: 'Manage Police', icon: 'fas fa-users-cog' },
     { path: '/admin/stations', label: 'Manage Stations', icon: 'fas fa-building' },
     { path: '/admin/firs', label: 'FIR Management', icon: 'fas fa-file-alt' },
+    { path: '/admin/hotspot-map', label: 'Crime Hotspot Map', icon: 'fas fa-map-marked-alt' },
+    { path: '/admin/workflow', label: 'Case Workflow', icon: 'fas fa-project-diagram' },
+    { path: '/admin/allocation', label: 'Resource Allocation', icon: 'fas fa-balance-scale' },
   ];
 
   const policeMenuItems = [
@@ -80,6 +65,8 @@ const Sidebar = () => {
     { path: '/police/firs/sent', label: 'New FIRs', icon: 'fas fa-inbox' },
     { path: '/police/firs/approved', label: 'Approved FIRs', icon: 'fas fa-check-circle' },
     { path: '/police/firs/rejected', label: 'Rejected FIRs', icon: 'fas fa-times-circle' },
+    { path: '/police/workflow', label: 'Case Workflow', icon: 'fas fa-project-diagram' },
+    { path: '/police/allocation', label: 'Resource Allocation', icon: 'fas fa-balance-scale' },
   ];
 
   const userMenuItems = [
@@ -122,6 +109,7 @@ const Sidebar = () => {
             <i className="fas fa-shield-alt me-2"></i>
             Crime Management
           </h5>
+          <NotificationBell />
         </div>
 
         {/* Sidebar Nav */}
@@ -141,159 +129,17 @@ const Sidebar = () => {
           ))}
         </Nav>
 
-        {/* Recent Activities - Admin Only */}
-        {userRole === 'Admin' && (
-          <div className="sidebar-activities">
-            <div className="sidebar-activities-header">
-              <i className="fas fa-history me-2"></i>
-              <span>Recent Activities</span>
-              {activities.length > 0 && (
-                <button
-                  className="view-all-btn"
-                  onClick={async () => {
-                    setActSlideIndex(0);
-                    try {
-                      const response = await dashboardAPI.getActivity(15, '1hour');
-                      if (response.data.status === 'success') {
-                        setPopupActivities(response.data.activities || []);
-                      }
-                    } catch (e) { console.error(e); }
-                    setShowActivitiesModal(true);
-                  }}
-                >
-                  View All
-                </button>
-              )}
-            </div>
-            <div className="sidebar-activities-list">
-              {activities.length > 0 ? (
-                activities.map((activity, idx) => (
-                  <div key={idx} className="sidebar-activity-item">
-                    <div className="activity-icon-small">
-                      <i className={activity.icon || 'fas fa-info-circle'}></i>
-                    </div>
-                    <div className="activity-details">
-                      <p className="activity-action">{activity.action}</p>
-                      <p className="activity-desc">{activity.description}</p>
-                      <span className="activity-time">
-                        <i className="fas fa-clock me-1"></i>{activity.timestamp}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-3" style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
-                  <i className="fas fa-inbox mb-2" style={{ fontSize: '1.2rem', opacity: 0.4 }}></i>
-                  <p className="mb-0">No recent activities</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Activities Slider Modal */}
-        <Modal show={showActivitiesModal} onHide={() => setShowActivitiesModal(false)} centered size="md" dialogClassName="activities-modal">
-          <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', borderBottom: 'none', padding: '14px 20px' }}>
-            <Modal.Title style={{ color: 'white', fontSize: '1rem', fontWeight: 700 }}>
-              <i className="fas fa-history me-2" style={{ color: '#10b981' }}></i>
-              Recent Activities
-              <span style={{ background: 'rgba(16,185,129,0.2)', color: '#10b981', padding: '2px 10px', borderRadius: '12px', fontSize: '0.72rem', marginLeft: '10px', fontWeight: 600 }}>
-                {popupActivities.length > 0 ? `${actSlideIndex + 1} / ${popupActivities.length}` : '0'}
-              </span>
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body style={{ background: '#f8fafc', padding: 0, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '220px' }}>
-            {popupActivities.length > 0 && (
-              <>
-                <div style={{ overflow: 'hidden', width: '100%' }}>
-                  <div style={{
-                    display: 'flex',
-                    transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
-                    transform: `translateX(-${actSlideIndex * 100}%)`
-                  }}>
-                    {popupActivities.map((activity, idx) => (
-                      <div key={idx} style={{ minWidth: '100%', padding: '32px 48px', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', width: '100%', maxWidth: '360px' }}>
-                          <div style={{
-                            width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            borderRadius: '16px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                            color: 'white', fontSize: '1.4rem', marginBottom: '16px',
-                            boxShadow: '0 6px 20px rgba(16,185,129,0.35)'
-                          }}>
-                            <i className={activity.icon || 'fas fa-info-circle'}></i>
-                          </div>
-                          <h6 className="mb-2 fw-bold" style={{ color: '#0f172a', fontSize: '1.05rem' }}>{activity.action}</h6>
-                          <p className="mb-3" style={{ color: '#475569', fontSize: '0.88rem', lineHeight: 1.5 }}>{activity.description}</p>
-                          <span style={{ background: '#e2e8f0', color: '#64748b', padding: '4px 14px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 500 }}>
-                            <i className="fas fa-clock me-1"></i>{activity.timestamp}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {popupActivities.length > 1 && (
-                  <>
-                    <button onClick={() => setActSlideIndex((actSlideIndex - 1 + popupActivities.length) % popupActivities.length)} style={{
-                      position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)',
-                      width: '34px', height: '34px', borderRadius: '50%', border: '2px solid #10b981',
-                      background: 'rgba(255,255,255,0.95)', color: '#10b981', cursor: 'pointer',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem',
-                      zIndex: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', transition: 'all 0.2s'
-                    }}>
-                      <i className="fas fa-arrow-left"></i>
-                    </button>
-                    <button onClick={() => setActSlideIndex((actSlideIndex + 1) % popupActivities.length)} style={{
-                      position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)',
-                      width: '34px', height: '34px', borderRadius: '50%', border: '2px solid #10b981',
-                      background: 'rgba(255,255,255,0.95)', color: '#10b981', cursor: 'pointer',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem',
-                      zIndex: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', transition: 'all 0.2s'
-                    }}>
-                      <i className="fas fa-arrow-right"></i>
-                    </button>
-                  </>
-                )}
-              </>
-            )}
-            {popupActivities.length === 0 && (
-              <div style={{ textAlign: 'center', color: '#94a3b8', padding: '40px 20px' }}>
-                <i className="fas fa-inbox fa-2x mb-3" style={{ opacity: 0.5 }}></i>
-                <p className="mb-0" style={{ fontSize: '0.9rem' }}>No activities in the last 1 hour</p>
-              </div>
-            )}
-          </Modal.Body>
-          {popupActivities.length > 1 && (
-            <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', justifyContent: 'center', padding: '10px', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-              <div style={{ display: 'flex', gap: '6px' }}>
-                {popupActivities.map((_, idx) => (
-                  <button key={idx} onClick={() => setActSlideIndex(idx)} style={{
-                    width: actSlideIndex === idx ? '22px' : '8px', height: '8px', borderRadius: '4px',
-                    border: 'none', background: actSlideIndex === idx ? '#10b981' : '#cbd5e1',
-                    cursor: 'pointer', transition: 'all 0.3s ease', padding: 0
-                  }} />
-                ))}
-              </div>
-              <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 500 }}>
-                <i className="fas fa-clock me-1" style={{ fontSize: '0.6rem' }}></i>
-                All activities in last 1 hour
-              </span>
-            </Modal.Footer>
-          )}
-          {popupActivities.length <= 1 && (
-            <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', justifyContent: 'center', padding: '10px' }}>
-              <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 500 }}>
-                <i className="fas fa-clock me-1" style={{ fontSize: '0.6rem' }}></i>
-                All activities in last 1 hour
-              </span>
-            </Modal.Footer>
-          )}
-        </Modal>
-
         {/* Sidebar Footer - User Profile Dropdown */}
         <div className="sidebar-footer" ref={popupRef}>
-          <div className="sidebar-user-dropdown" style={{ paddingTop: '12px' }}>
+          <button
+            className="sidebar-dev-contact-btn"
+            onClick={() => setShowDevContact(true)}
+            title="Contact Developer"
+          >
+            <i className="fas fa-code me-2"></i>
+            <span>Contact Developer</span>
+          </button>
+          <div className="sidebar-user-dropdown" style={{ paddingTop: '6px' }}>
             <Button
               variant="light"
               className="w-100 text-start fw-bold d-flex align-items-center justify-content-between"
@@ -304,32 +150,30 @@ const Sidebar = () => {
                 <i className="fas fa-user me-2"></i>
                 {user?.username}
               </span>
-              <i className={`fas fa-chevron-down ${showUserDropdown ? 'rotate' : ''}`} style={{ fontSize: '0.85rem', transition: 'transform 0.2s' }}></i>
+
             </Button>
 
             {/* Popup Card at Bottom Left */}
             {showUserDropdown && (
               <div className="user-popup-card">
-                <button
-                  className="user-popup-button"
-                  onClick={() => {
-                    if (userRole === 'Admin') navigate('/admin/profile');
-                    else if (userRole === 'Police') navigate('/police/profile');
-                    else navigate('/profile');
-                    setShowUserDropdown(false);
-                  }}
-                >
-                  <i className="fas fa-id-card"></i>
-                  Profile
-                </button>
+                {userRole !== 'Police' && (
+                  <button
+                    className="user-popup-button"
+                    onClick={() => {
+                      if (userRole === 'Admin') navigate('/admin/profile');
+                      else navigate('/profile');
+                      setShowUserDropdown(false);
+                    }}
+                  >
+                    <i className="fas fa-id-card"></i>
+                    Profile
+                  </button>
+                )}
                 <button
                   className="user-popup-button logout"
                   onClick={() => {
-                    if (window.confirm('Are you sure you want to logout?')) {
-                      clearAuth();
-                      setShowUserDropdown(false);
-                      navigate('/login');
-                    }
+                    setShowUserDropdown(false);
+                    setShowLogoutModal(true);
                   }}
                 >
                   <i className="fas fa-sign-out-alt"></i>
@@ -632,7 +476,6 @@ const Sidebar = () => {
             setPasswordError('');
           }}
           centered
-          backdrop="static"
           dialogClassName="password-modal"
         >
           <Modal.Header closeButton style={{ borderBottom: '1px solid #e0e0e0' }}>
@@ -720,7 +563,8 @@ const Sidebar = () => {
             <Button 
               variant="success" 
               size="sm"
-              onClick={() => {
+              disabled={passwordSaving}
+              onClick={async () => {
                 // Validation
                 if (!passwordFormData.currentPassword) {
                   setPasswordError('Current password is required');
@@ -739,18 +583,51 @@ const Sidebar = () => {
                   return;
                 }
                 
-                // Simulate password update (in real app, call API)
-                alert('Password changed successfully!');
-                setShowChangePasswordModal(false);
-                setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-                setPasswordError('');
+                setPasswordSaving(true);
+                try {
+                  const response = await authAPI.changePassword(
+                    passwordFormData.currentPassword,
+                    passwordFormData.newPassword
+                  );
+                  if (response.data.status === 'success') {
+                    setShowChangePasswordModal(false);
+                    setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                    setPasswordError('');
+                    alert('Password changed successfully! Please login with your new password.');
+                    clearAuth();
+                    navigate('/login');
+                  } else {
+                    setPasswordError(response.data.message || 'Failed to change password');
+                  }
+                } catch (err) {
+                  setPasswordError(err.response?.data?.message || 'Error changing password');
+                } finally {
+                  setPasswordSaving(false);
+                }
               }}
             >
-              <i className="fas fa-save me-2"></i>Update Password
+              <i className="fas fa-save me-2"></i>{passwordSaving ? 'Saving...' : 'Update Password'}
             </Button>
           </Modal.Footer>
         </Modal>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      <ConfirmModal
+        show={showLogoutModal}
+        onHide={() => setShowLogoutModal(false)}
+        onConfirm={() => {
+          clearAuth();
+          setShowLogoutModal(false);
+          navigate('/login');
+        }}
+        title="Confirm Logout"
+        message="Are you sure you want to logout?"
+        confirmText="Logout"
+        cancelText="Cancel"
+        variant="danger"
+        icon="fas fa-sign-out-alt"
+      />
 
       {/* Overlay for mobile */}
       {isMobile && (
@@ -759,6 +636,9 @@ const Sidebar = () => {
           onClick={() => setIsMobile(false)}
         ></div>
       )}
+
+      {/* Developer Contact Popup */}
+      <DeveloperPopup show={showDevContact} onClose={() => setShowDevContact(false)} />
     </>
   );
 };

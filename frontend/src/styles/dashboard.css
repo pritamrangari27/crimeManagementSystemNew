@@ -1358,7 +1358,8 @@
 
 /* Modal backdrop animation */
 .fir-form-modal.modal.show .modal-dialog,
-.fir-view-modal.modal.show .modal-dialog {
+.fir-view-modal.modal.show .modal-dialog,
+.animated-modal.modal.show .modal-dialog {
   animation: modalSlideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 

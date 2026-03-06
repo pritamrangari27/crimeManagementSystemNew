@@ -1,16 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const { generateToken, verifyToken } = require('../utils/jwtAuth');
 const { logActivity } = require('../utils/activityLogger');
 const { validateUsername, validateEmail, validatePassword, validateRole } = require('../utils/validators');
-
-// Middleware to check if user is authenticated
-const checkAuth = (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(401).json({ status: 'error', message: 'Not authenticated' });
-  }
-  next();
-};
 
 // Login endpoint with RBAC and bcrypt
 router.post('/login', async (req, res) => {
@@ -26,7 +19,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ status: 'error', message: 'Invalid role selected' });
     }
 
-    const sql = `SELECT id, username, email, phone, address, badge_number, role, station_id, profile_pic, password FROM users 
+    const sql = `SELECT id, username, email, phone, address, badge_number, department, role, station_id, profile_pic, password FROM users 
                  WHERE username = ? AND role = ?`;
     
     req.db.get(sql, [username, role], async (err, user) => {
@@ -53,18 +46,8 @@ router.post('/login', async (req, res) => {
           return res.status(401).json({ status: 'error', message: 'Police officer must be assigned to a station' });
         }
 
-        // Set secure session (don't include password)
-        req.session.user = {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          phone: user.phone,
-          address: user.address,
-          badge_number: user.badge_number,
-          role: user.role,
-          station_id: user.station_id,
-          profile_pic: user.profile_pic
-        };
+        // Generate JWT token
+        const token = generateToken(user);
         
         // Log the login activity
         logActivity(
@@ -81,6 +64,7 @@ router.post('/login', async (req, res) => {
         res.json({ 
           status: 'success', 
           message: `Login successful as ${role}`,
+          token,
           user: {
             id: user.id,
             username: user.username,
@@ -88,6 +72,7 @@ router.post('/login', async (req, res) => {
             phone: user.phone,
             address: user.address,
             badge_number: user.badge_number,
+            department: user.department,
             role: user.role,
             station_id: user.station_id,
             profile_pic: user.profile_pic
@@ -107,7 +92,7 @@ router.post('/login', async (req, res) => {
 // Register endpoint with validation and bcrypt hashing
 router.post('/register', async (req, res) => {
   try {
-    const { username, password, email, phone, role, station_id } = req.body;
+    const { username, password, email, phone, role, station_id, address, department, badge_number } = req.body;
 
     // Validate required fields
     if (!username || !password || !email || !role) {
@@ -142,12 +127,20 @@ router.post('/register', async (req, res) => {
 
     // Hash the password
     try {
+      // Explicit uniqueness check before insert
+      const existing = await new Promise((resolve, reject) => {
+        req.db.get(`SELECT id FROM users WHERE username = ?`, [username], (err, row) => err ? reject(err) : resolve(row));
+      });
+      if (existing) {
+        return res.status(409).json({ status: 'error', message: 'Username already taken. Please choose a different username.' });
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
       
-      const sql = `INSERT INTO users (username, password, email, phone, role, station_id) 
-                   VALUES (?, ?, ?, ?, ?, ?)`;
+      const sql = `INSERT INTO users (username, password, email, phone, role, station_id, address, department, badge_number) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       
-      req.db.run(sql, [username, hashedPassword, email, phone || '', role, station_id || null], function(err) {
+      req.db.run(sql, [username, hashedPassword, email, phone || '', role, station_id || null, address || '', department || '', badge_number || ''], function(err) {
         if (err) {
           console.error('Registration database error:', err);
           if (err.message.includes('UNIQUE')) {
@@ -179,25 +172,8 @@ router.post('/register', async (req, res) => {
  * SECURITY: Verify session cookie is cleared on client side (httpOnly prevents JS access)
  */
 router.post('/logout', (req, res) => {
-  try {
-    if (!req.session.user) {
-      return res.status(400).json({ status: 'error', message: 'No active session' });
-    }
-
-    req.session.destroy((err) => {
-      if (err) {
-        console.error('Session destruction error:', err);
-        return res.status(500).json({ status: 'error', message: 'Logout service unavailable' });
-      }
-      
-      // Clear session cookie on client
-      res.clearCookie('connect.sid');
-      res.json({ status: 'success', message: 'Logged out successfully' });
-    });
-  } catch (error) {
-    console.error('Logout error:', error);
-    res.status(500).json({ status: 'error', message: 'An unexpected error occurred' });
-  }
+  // JWT is stateless — client just removes the token
+  res.json({ status: 'success', message: 'Logged out successfully' });
 });
 
 /**
@@ -206,22 +182,21 @@ router.post('/logout', (req, res) => {
  * - Requires valid session (protected by checkAuth middleware)
  * SECURITY: Never expose sensitive data (password hashes, raw credentials)
  */
-router.get('/current-user', checkAuth, (req, res) => {
+router.get('/current-user', verifyToken, (req, res) => {
   try {
-    const user = req.session.user;
-
     res.json({ 
       status: 'success', 
       user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        phone: user.phone,
-        address: user.address,
-        badge_number: user.badge_number,
-        role: user.role,
-        station_id: user.station_id,
-        profile_pic: user.profile_pic
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email,
+        phone: req.user.phone,
+        address: req.user.address,
+        badge_number: req.user.badge_number,
+        department: req.user.department,
+        role: req.user.role,
+        station_id: req.user.station_id,
+        profile_pic: req.user.profile_pic
       }
     });
   } catch (error) {
@@ -235,10 +210,10 @@ router.get('/current-user', checkAuth, (req, res) => {
  * - Updates user profile fields (username, email, phone) in the database
  * - Requires authentication
  */
-router.put('/update-profile', (req, res) => {
+router.put('/update-profile', verifyToken, (req, res) => {
   try {
-    const userId = req.session?.user?.id || req.body.user_id;
-    const { username, email, phone, address, badge_number } = req.body;
+    const userId = req.user.id;
+    const { username, email, phone, address, badge_number, department } = req.body;
 
     if (!userId) {
       return res.status(400).json({ status: 'error', message: 'User identification required. Please login again.' });
@@ -272,20 +247,11 @@ router.put('/update-profile', (req, res) => {
         return res.status(409).json({ status: 'error', message: 'Username or email already taken by another user' });
       }
 
-      const updateSql = `UPDATE users SET username = ?, email = ?, phone = ?, address = ?, badge_number = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
-      req.db.run(updateSql, [username, email, phone || '', address || '', badge_number || '', userId], function(err) {
+      const updateSql = `UPDATE users SET username = ?, email = ?, phone = ?, address = ?, badge_number = ?, department = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
+      req.db.run(updateSql, [username, email, phone || '', address || '', badge_number || '', department || '', userId], function(err) {
         if (err) {
           console.error('Profile update database error:', err);
           return res.status(500).json({ status: 'error', message: 'Failed to update profile' });
-        }
-
-        // Update session data if session exists
-        if (req.session?.user) {
-          req.session.user.username = username;
-          req.session.user.email = email;
-          req.session.user.phone = phone || '';
-          req.session.user.address = address || '';
-          req.session.user.badge_number = badge_number || '';
         }
 
         // Log activity
@@ -310,8 +276,9 @@ router.put('/update-profile', (req, res) => {
             phone: phone || '',
             address: address || '',
             badge_number: badge_number || '',
-            role: req.session?.user?.role || req.body.role,
-            station_id: req.session?.user?.station_id || req.body.station_id
+            department: department || '',
+            role: req.user.role,
+            station_id: req.user.station_id
           }
         });
       });
@@ -328,10 +295,10 @@ router.put('/update-profile', (req, res) => {
  * - Hashes new password with bcrypt before storing
  * - Accepts user_id from body as fallback when session unavailable (cross-origin)
  */
-router.post('/change-password', async (req, res) => {
+router.post('/change-password', verifyToken, async (req, res) => {
   try {
-    const { oldPassword, newPassword, user_id } = req.body;
-    const userId = req.session?.user?.id || user_id;
+    const { oldPassword, newPassword } = req.body;
+    const userId = req.user.id;
 
     // Validate user identification
     if (!userId) {

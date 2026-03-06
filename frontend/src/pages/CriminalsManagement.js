@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { criminalsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
+import ConfirmModal from '../components/ConfirmModal';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import '../styles/dashboard.css';
@@ -10,19 +13,22 @@ import '../styles/dashboard.css';
 const CriminalsManagement = () => {
   const navigate = useNavigate();
   const [criminals, setCriminals] = useState([]);
+  const [allCriminals, setAllCriminals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedCriminal, setSelectedCriminal] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const [formData, setFormData] = useState({
-    criminal_name: '',
+    Criminal_name: '',
     crime_type: '',
     crime_date: '',
-    crime_location: '',
     email: '',
     contact: '',
-    date_of_birth: '',
+    DateOfBirth: '',
     gender: '',
     state: '',
     city: '',
@@ -37,6 +43,7 @@ const CriminalsManagement = () => {
     try {
       const response = await criminalsAPI.getAll();
       if (response.data.status === 'success') {
+        setAllCriminals(response.data.data);
         setCriminals(response.data.data);
       }
     } catch (error) {
@@ -46,21 +53,17 @@ const CriminalsManagement = () => {
     }
   };
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
     if (query.trim()) {
-      try {
-        const response = await criminalsAPI.search(query);
-        if (response.data.status === 'success') {
-          setCriminals(response.data.data);
-        }
-      } catch (error) {
-        console.error('Error searching:', error);
-      }
+      const q = query.toLowerCase();
+      setCriminals(allCriminals.filter(criminal =>
+        Object.values(criminal).some(v => String(v || '').toLowerCase().includes(q))
+      ));
     } else {
-      fetchCriminals();
+      setCriminals(allCriminals);
     }
   };
 
@@ -75,15 +78,14 @@ const CriminalsManagement = () => {
     e.preventDefault();
     try {
       await criminalsAPI.add(formData);
-      alert('Criminal added successfully!');
+      toast.success('Criminal record added successfully!');
       setFormData({
-        criminal_name: '',
+        Criminal_name: '',
         crime_type: '',
         crime_date: '',
-        crime_location: '',
         email: '',
         contact: '',
-        date_of_birth: '',
+        DateOfBirth: '',
         gender: '',
         state: '',
         city: '',
@@ -92,19 +94,27 @@ const CriminalsManagement = () => {
       setShowForm(false);
       fetchCriminals();
     } catch (error) {
-      alert('Error adding criminal: ' + error.response?.data?.message);
+      toast.error('Error: ' + (error.response?.data?.message || 'Failed to add criminal'));
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure?')) {
-      try {
-        await criminalsAPI.delete(id);
-        alert('Criminal deleted!');
-        fetchCriminals();
-      } catch (error) {
-        alert('Error deleting criminal');
-      }
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setDeleting(true);
+    try {
+      await criminalsAPI.delete(deleteId);
+      toast.success('Criminal record deleted successfully!');
+      fetchCriminals();
+    } catch (error) {
+      toast.error('Error deleting criminal record');
+    } finally {
+      setDeleting(false);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     }
   };
 
@@ -144,8 +154,8 @@ const CriminalsManagement = () => {
                     <Form.Label>Criminal Name *</Form.Label>
                     <Form.Control
                       type="text"
-                      name="criminal_name"
-                      value={formData.criminal_name}
+                      name="Criminal_name"
+                      value={formData.Criminal_name}
                       onChange={handleFormChange}
                       required
                     />
@@ -210,11 +220,11 @@ const CriminalsManagement = () => {
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Crime Location</Form.Label>
+                    <Form.Label>Date of Birth</Form.Label>
                     <Form.Control
-                      type="text"
-                      name="crime_location"
-                      value={formData.crime_location}
+                      type="date"
+                      name="DateOfBirth"
+                      value={formData.DateOfBirth}
                       onChange={handleFormChange}
                     />
                   </Form.Group>
@@ -297,7 +307,7 @@ const CriminalsManagement = () => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 16px', fontSize: '0.85rem' }}>
               <div>
                 <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Name</span>
-                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-id-card me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{selectedCriminal.criminal_name}</p>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-id-card me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{selectedCriminal.Criminal_name || selectedCriminal.criminal_name || 'N/A'}</p>
               </div>
               <div>
                 <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Type</span>
@@ -309,12 +319,12 @@ const CriminalsManagement = () => {
               </div>
               <div>
                 <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Location</span>
-                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-map-pin me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{selectedCriminal.crime_location}</p>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-map-pin me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{selectedCriminal.address}</p>
               </div>
               <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
               <div>
                 <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date of Birth</span>
-                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-cake-candles me-1" style={{ color: '#8b5cf6', fontSize: '0.8rem' }}></i>{selectedCriminal.date_of_birth}</p>
+                <p style={{ margin: '2px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-cake-candles me-1" style={{ color: '#8b5cf6', fontSize: '0.8rem' }}></i>{selectedCriminal.DateOfBirth}</p>
               </div>
               <div>
                 <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Gender</span>
@@ -366,10 +376,10 @@ const CriminalsManagement = () => {
       <table className="mgmt-table">
         <thead>
           <tr>
+            <th>Sr. No.</th>
             <th>Name</th>
             <th>Crime Type</th>
-            <th>Location</th>
-            <th>Address</th>
+            <th>Location/Address</th>
             <th>Email</th>
             <th>Contact</th>
             <th>Actions</th>
@@ -377,11 +387,11 @@ const CriminalsManagement = () => {
         </thead>
         <tbody>
           {criminals.length > 0 ? (
-            criminals.map((criminal) => (
+            criminals.map((criminal, idx) => (
               <tr key={criminal.id}>
-                <td>{criminal.criminal_name}</td>
+                <td>{idx + 1}</td>
+                <td>{criminal.Criminal_name}</td>
                 <td>{criminal.crime_type}</td>
-                <td>{criminal.crime_location}</td>
                 <td>{criminal.address || '-'}</td>
                 <td>{criminal.email}</td>
                 <td>{criminal.contact}</td>
@@ -390,7 +400,7 @@ const CriminalsManagement = () => {
                     <button className="view" onClick={() => handleViewCriminal(criminal)}>
                       <i className="fas fa-eye me-1"></i>View
                     </button>
-                    <button className="delete" onClick={() => handleDelete(criminal.id)}>
+                    <button className="delete" onClick={() => handleDeleteClick(criminal.id)}>
                       <i className="fas fa-trash me-1"></i>Delete
                     </button>
                   </div>
@@ -399,7 +409,7 @@ const CriminalsManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="mgmt-empty">
+              <td colSpan="8" className="mgmt-empty">
                 No criminals found
               </td>
             </tr>
@@ -410,6 +420,18 @@ const CriminalsManagement = () => {
       </div>
         </Container>
       </div>
+      <ConfirmModal
+        show={showDeleteModal}
+        onHide={() => { setShowDeleteModal(false); setDeleteId(null); }}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Criminal Record"
+        message="Are you sure you want to delete this criminal record? This action cannot be undone."
+        confirmText="Delete"
+        variant="danger"
+        icon="fas fa-trash-alt"
+        loading={deleting}
+      />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover theme="colored" />
       <Footer />
     </>
   );

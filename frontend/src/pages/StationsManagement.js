@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { stationsAPI } from '../api/client';
+import ConfirmModal from '../components/ConfirmModal';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import '../styles/dashboard.css';
@@ -9,11 +12,15 @@ import '../styles/dashboard.css';
 const StationsManagement = () => {
   const navigate = useNavigate();
   const [stations, setStations] = useState([]);
+  const [allStations, setAllStations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedStation, setSelectedStation] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const [formData, setFormData] = useState({
     station_name: '',
     station_code: '',
@@ -33,6 +40,7 @@ const StationsManagement = () => {
     try {
       const response = await stationsAPI.getAll();
       if (response.data.status === 'success') {
+        setAllStations(response.data.data);
         setStations(response.data.data);
       }
     } catch (error) {
@@ -42,22 +50,17 @@ const StationsManagement = () => {
     }
   };
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
     if (query.trim()) {
-      try {
-        const response = await stationsAPI.search(query);
-        if (response.data.status === 'success') {
-          setStations(response.data.data);
-        }
-      } catch (error) {
-        console.error('Error searching:', error);
-        fetchStations();
-      }
+      const q = query.toLowerCase();
+      setStations(allStations.filter(station =>
+        Object.values(station).some(v => String(v || '').toLowerCase().includes(q))
+      ));
     } else {
-      fetchStations();
+      setStations(allStations);
     }
   };
 
@@ -72,7 +75,7 @@ const StationsManagement = () => {
     e.preventDefault();
     try {
       await stationsAPI.add(formData);
-      alert('Police station added successfully!');
+      toast.success('Police station added successfully!');
       setFormData({
         station_name: '',
         station_code: '',
@@ -86,7 +89,7 @@ const StationsManagement = () => {
       setShowForm(false);
       fetchStations();
     } catch (error) {
-      alert('Error adding station: ' + error.response?.data?.message);
+      toast.error('Error: ' + (error.response?.data?.message || 'Failed to add station'));
     }
   };
 
@@ -95,15 +98,23 @@ const StationsManagement = () => {
     setShowViewModal(true);
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure?')) {
-      try {
-        await stationsAPI.delete(id);
-        alert('Station deleted!');
-        fetchStations();
-      } catch (error) {
-        alert('Error deleting station: ' + error.response?.data?.message);
-      }
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setDeleting(true);
+    try {
+      await stationsAPI.delete(deleteId);
+      toast.success('Police station deleted successfully!');
+      fetchStations();
+    } catch (error) {
+      toast.error('Error: ' + (error.response?.data?.message || 'Failed to delete station'));
+    } finally {
+      setDeleting(false);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     }
   };
 
@@ -234,7 +245,7 @@ const StationsManagement = () => {
             </Form.Group>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
           <Button variant="secondary" onClick={() => setShowForm(false)}>
             Close
           </Button>
@@ -259,6 +270,7 @@ const StationsManagement = () => {
       <table className="mgmt-table">
         <thead>
           <tr>
+            <th>Sr. No.</th>
             <th>Station Name</th>
             <th>Code</th>
             <th>City</th>
@@ -270,8 +282,9 @@ const StationsManagement = () => {
         </thead>
         <tbody>
           {stations.length > 0 ? (
-            stations.map((station) => (
+            stations.map((station, idx) => (
               <tr key={station.id}>
+                <td>{idx + 1}</td>
                 <td>{station.station_name}</td>
                 <td>{station.station_code}</td>
                 <td>{station.city}</td>
@@ -283,7 +296,7 @@ const StationsManagement = () => {
                     <button className="view" onClick={() => handleViewStation(station)}>
                       <i className="fas fa-eye me-1"></i>View
                     </button>
-                    <button className="delete" onClick={() => handleDelete(station.id)}>
+                    <button className="delete" onClick={() => handleDeleteClick(station.id)}>
                       <i className="fas fa-trash me-1"></i>Delete
                     </button>
                   </div>
@@ -292,7 +305,7 @@ const StationsManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="mgmt-empty">
+              <td colSpan="8" className="mgmt-empty">
                 No stations found
               </td>
             </tr>
@@ -357,6 +370,18 @@ const StationsManagement = () => {
       </Modal>
         </Container>
       </div>
+      <ConfirmModal
+        show={showDeleteModal}
+        onHide={() => { setShowDeleteModal(false); setDeleteId(null); }}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Police Station"
+        message="Are you sure you want to delete this station? This action cannot be undone."
+        confirmText="Delete"
+        variant="danger"
+        icon="fas fa-trash-alt"
+        loading={deleting}
+      />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover theme="colored" />
       <Footer />
     </>
   );

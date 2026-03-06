@@ -60,7 +60,7 @@ router.get('/:id', (req, res) => {
 router.get('/:id/details', (req, res) => {
   const { id } = req.params;
   
-  req.db.get(`SELECT * FROM police_stations WHERE id = ?`, [id], (err, station) => {
+  req.db.get(`SELECT * FROM police_station WHERE id = ?`, [id], (err, station) => {
     if (err) {
       return res.status(500).json({ status: 'error', message: 'Database error' });
     }
@@ -82,9 +82,14 @@ router.get('/:id/details', (req, res) => {
 router.put('/:id', (req, res) => {
   const { id } = req.params;
   const updates = req.body;
+  const ALLOWED_COLS = ['station_name','station_code','address','city','state','phone','email','in_charge','latitude','longitude'];
 
-  const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', ');
-  const values = Object.values(updates);
+  const filteredKeys = Object.keys(updates).filter(k => ALLOWED_COLS.includes(k));
+  if (filteredKeys.length === 0) {
+    return res.status(400).json({ status: 'error', message: 'No valid fields to update' });
+  }
+  const setClause = filteredKeys.map(key => `${key} = ?`).join(', ');
+  const values = filteredKeys.map(k => updates[k]);
   values.push(id);
 
   const sql = `UPDATE police_station SET ${setClause}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
