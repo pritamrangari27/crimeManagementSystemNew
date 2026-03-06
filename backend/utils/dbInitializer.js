@@ -349,6 +349,104 @@ async function runMigrations(db) {
       resolve();
     });
   });
+
+  // Migration 22: Ensure accused column exists in firs
+  await new Promise((resolve) => {
+    db.get(
+      `SELECT column_name FROM information_schema.columns WHERE table_name = 'firs' AND column_name = 'accused'`,
+      [], (err, row) => {
+        if (err || row) { resolve(); return; }
+        db.run(`ALTER TABLE firs ADD COLUMN accused TEXT`, [], (err) => {
+          if (!err) console.log('✓ Added accused column to firs table');
+          resolve();
+        });
+      }
+    );
+  });
+
+  // Migration 23: Ensure relation column exists in firs
+  await new Promise((resolve) => {
+    db.get(
+      `SELECT column_name FROM information_schema.columns WHERE table_name = 'firs' AND column_name = 'relation'`,
+      [], (err, row) => {
+        if (err || row) { resolve(); return; }
+        db.run(`ALTER TABLE firs ADD COLUMN relation TEXT`, [], (err) => {
+          if (!err) console.log('✓ Added relation column to firs table');
+          resolve();
+        });
+      }
+    );
+  });
+
+  // Migration 24: Ensure address column exists in firs
+  await new Promise((resolve) => {
+    db.get(
+      `SELECT column_name FROM information_schema.columns WHERE table_name = 'firs' AND column_name = 'address'`,
+      [], (err, row) => {
+        if (err || row) { resolve(); return; }
+        db.run(`ALTER TABLE firs ADD COLUMN address TEXT`, [], (err) => {
+          if (!err) console.log('✓ Added address column to firs table');
+          resolve();
+        });
+      }
+    );
+  });
+
+  // Migration 25: Populate accused, relation, address for all FIRs
+  await new Promise((resolve) => {
+    const firData = [
+      { fir: 'FIR-2025-MH-MUM-00001', accused: 'Vikram Singh', relation: 'Stranger', address: 'Flat 12, Colaba Market Rd, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00002', accused: 'Ravi Kapoor', relation: 'Stranger', address: 'Navy Nagar, Colaba, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00003', accused: 'Deepak Yadav', relation: 'Stranger', address: '221 Churchgate Apts, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00004', accused: 'Arjun Nair', relation: 'Acquaintance', address: '45 Linking Road, Bandra, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00005', accused: 'Nikhil Sharma', relation: 'Online Contact', address: 'Lokhandwala Complex, Andheri, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00006', accused: 'Suresh Patil', relation: 'Stranger', address: '14 Shivaji Park Rd, Dadar, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00007', accused: 'Imran Khan', relation: 'Neighbor', address: 'IC Colony, Borivali West, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00008', accused: 'Ganesh More', relation: 'Stranger', address: 'BKC Apartments, Kurla, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00009', accused: 'Farid Shaikh', relation: 'Stranger', address: 'Powai Lake Area, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00010', accused: 'Ajay Tiwari', relation: 'Spouse', address: 'Irla Bridge, Vile Parle, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00011', accused: 'Santosh Gupta', relation: 'Business Rival', address: 'JVPD Scheme, Juhu, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00012', accused: 'Rafiq Patel', relation: 'Former Employee', address: 'Film City Rd, Goregaon, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00013', accused: 'Pravin Jagtap', relation: 'Stranger', address: 'Link Road, Malad West, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00014', accused: 'Dinesh Rathod', relation: 'Stranger', address: 'Gateway Area, Colaba, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00015', accused: 'Manish Tiwari', relation: 'Business Associate', address: 'Nariman Point, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00016', accused: 'Zakir Hussain', relation: 'Stranger', address: 'Bandra Reclamation, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00017', accused: 'Rohit Sawant', relation: 'Colleague', address: 'Four Bungalows, Andheri, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00018', accused: 'Vijay Sonawane', relation: 'Stranger', address: 'Dadar TT Circle, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00019', accused: 'Sunil Gaikwad', relation: 'Stranger', address: 'WEH, Borivali East, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00020', accused: 'Anil Bhosale', relation: 'Real Estate Agent', address: 'Nehru Nagar, Kurla, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00021', accused: 'Sagar Mhatre', relation: 'Stranger', address: 'Hiranandani Gardens, Powai, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00022', accused: 'Kishor Nikam', relation: 'Party Guest', address: 'Balaji Nagar, Vile Parle, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00023', accused: 'Bablu Shukla', relation: 'Stranger', address: 'DN Nagar, Juhu, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00024', accused: 'Wasim Ahmed', relation: 'Business Rival', address: 'Aarey Colony, Goregaon, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00025', accused: 'Pappu Yadav', relation: 'Stranger', address: 'Orlem, Malad West, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00026', accused: 'Chhota Rajan', relation: 'Stranger', address: 'Sassoon Dock, Colaba, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00027', accused: 'Kamal Haasan', relation: 'Stranger', address: 'Oval Maidan, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00028', accused: 'Sunny Leone', relation: 'Stranger', address: 'Turner Road, Bandra, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00029', accused: 'Mohan Agashe', relation: 'Spouse', address: 'Versova, Andheri West, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00030', accused: 'Bharat Jadhav', relation: 'Business Associate', address: 'Prabhadevi, Dadar, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00031', accused: 'Akbar Ali', relation: 'Stranger', address: 'Dahisar Check Naka, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00032', accused: 'Ramzan Shaikh', relation: 'Stranger', address: 'LBS Marg, Kurla, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00033', accused: 'Guddu Pandit', relation: 'Stranger', address: 'Chandivali, Powai, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00034', accused: 'Firoz Khan', relation: 'Neighbor', address: 'Parle East, Mumbai' },
+      { fir: 'FIR-2025-MH-MUM-00035', accused: 'Babu Bhai', relation: 'Stranger', address: 'Juhu Beach Rd, Mumbai' }
+    ];
+    
+    let done = 0;
+    firData.forEach((data) => {
+      db.run(
+        `UPDATE firs SET accused = ?, relation = ?, address = ? WHERE fir_number = ?`,
+        [data.accused, data.relation, data.address, data.fir],
+        (err) => {
+          done++;
+          if (done === firData.length) {
+            console.log(`✓ Populated accused, relation, address for ${firData.length} FIRs`);
+            resolve();
+          }
+        }
+      );
+    });
+  });
 }
 
 async function createTables(db) {
