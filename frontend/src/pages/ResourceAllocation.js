@@ -33,7 +33,7 @@ const ResourceAllocation = () => {
 
   const totalOfficers = workload.length;
   const totalAssigned = workload.reduce((s, w) => s + (w.assigned_firs || 0) + (w.pending_firs || 0), 0);
-  const avgLoad = totalOfficers > 0 ? (totalAssigned / totalOfficers).toFixed(1) : 0;
+  const avgLoad = totalOfficers > 0 ? (totalAssigned / totalOfficers).toFixed(2) : '0.00';
 
   if (loading) return (
     <>
@@ -47,7 +47,7 @@ const ResourceAllocation = () => {
   return (
     <>
       <Sidebar />
-      <div className="with-sidebar">
+      <div className="with-sidebar" style={{ overflowX: 'hidden' }}>
         <Container fluid className="mgmt-container page-stagger">
           <div className="mgmt-header">
             <h2><i className="fas fa-users-cog me-2" style={{ color: '#0ea5e9' }}></i>Resource Allocation</h2>
@@ -87,17 +87,14 @@ const ResourceAllocation = () => {
                     <th>Sr. No.</th>
                     <th>Officer</th>
                     <th>Station</th>
-                    <th>Cases</th>
-                    <th>Status</th>
+                    <th>Cases Assigned</th>
                   </tr>
                 </thead>
                 <tbody>
                   {workload.length === 0 ? (
-                    <tr><td colSpan={5} className="mgmt-empty">No officers found</td></tr>
+                    <tr><td colSpan={4} className="mgmt-empty">No officers found</td></tr>
                   ) : workload.map((officer, idx) => {
                     const totalCases = (officer.assigned_firs || 0) + (officer.pending_firs || 0);
-                    const status = totalCases === 0 ? 'Available' : totalCases <= 3 ? 'Active' : 'Overloaded';
-                    const statusColor = status === 'Available' ? 'success' : status === 'Active' ? 'info' : 'danger';
                     return (
                       <tr key={officer.id}>
                         <td>{idx + 1}</td>
@@ -106,13 +103,7 @@ const ResourceAllocation = () => {
                           <br /><small className="text-muted">ID: {officer.police_id}</small>
                         </td>
                         <td>{officer.station_name || '-'}</td>
-                        <td>
-                          <Badge bg={totalCases > 5 ? 'danger' : totalCases > 2 ? 'warning' : 'success'}>{totalCases}</Badge>
-                          {officer.pending_firs > 0 && <Badge bg="warning" className="ms-1">{officer.pending_firs} pending</Badge>}
-                        </td>
-                        <td>
-                          <Badge bg={statusColor}>{status}</Badge>
-                        </td>
+                        <td style={{ fontWeight: 700 }}>{totalCases}</td>
                       </tr>
                     );
                   })}
