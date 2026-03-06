@@ -21,10 +21,6 @@ const UserFIRList = () => {
   const [statusFilter, setStatusFilter] = useState('All');
   const [sortBy, setSortBy] = useState('date');
 
-  // View FIR state
-  const [viewingFIR, setViewingFIR] = useState(null);
-  const [showViewModal, setShowViewModal] = useState(false);
-
   // FIR Form state
   const [showFIRModal, setShowFIRModal] = useState(false);
   const [stations, setStations] = useState([]);
@@ -354,9 +350,9 @@ const UserFIRList = () => {
                           </span>
                         </td>
                         <td>{fir.location || '-'}</td>
-                        <td>{fir.accused || 'Unknown'}</td>
+                        <td className="fw-bold text-danger">{fir.accused || fir.accused_name || 'Unknown'}</td>
                         <td>{fir.name || fir.complainant_name || '-'}</td>
-                        <td>{fir.address || fir.location || '-'}</td>
+                        <td>{fir.address || '-'}</td>
                         <td>
                           <small className="text-muted">{fir.station_id}</small>
                         </td>
@@ -373,7 +369,7 @@ const UserFIRList = () => {
                           <div className="mgmt-actions">
                             <button
                               className="view"
-                              onClick={() => { setViewingFIR(fir); setShowViewModal(true); }}
+                              onClick={() => navigate(`/fir/${fir.id}`)}
                             >
                               <i className="fas fa-eye me-1"></i> View
                             </button>
@@ -490,201 +486,10 @@ const UserFIRList = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-        {/* ── FIR View Popup ── */}
-        {showViewModal && viewingFIR && (
-          <div
-            className="fir-view-overlay"
-            onClick={() => setShowViewModal(false)}
-            style={{
-              position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-              background: 'rgba(15,23,42,0.55)', backdropFilter: 'blur(6px)',
-              zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              animation: 'firPopFadeIn 0.2s ease'
-            }}
-          >
-            <div
-              onClick={e => e.stopPropagation()}
-              style={{
-                background: '#fff', borderRadius: '18px', width: '580px', maxWidth: '94vw',
-                maxHeight: '88vh', overflowY: 'auto',
-                boxShadow: '0 25px 65px rgba(0,0,0,0.25)',
-                animation: 'firPopSlideUp 0.35s cubic-bezier(0.16,1,0.3,1)'
-              }}
-            >
-              {/* Header */}
-              <div style={{
-                background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-                padding: '18px 24px', borderRadius: '18px 18px 0 0',
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-              }}>
-                <div>
-                  <h5 style={{ color: '#fff', fontWeight: 700, fontSize: '1.05rem', margin: 0 }}>
-                    <i className="fas fa-file-invoice me-2" style={{ color: '#10b981' }}></i>
-                    FIR Details
-                  </h5>
-                  <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.78rem' }}>
-                    FIR-{String(viewingFIR.id).padStart(4, '0')} &bull;
-                    <span
-                      className={`ms-1 badge bg-${getStatusVariant(viewingFIR.status)}`}
-                      style={{ fontSize: '0.7rem', padding: '3px 8px', verticalAlign: 'middle' }}
-                    >{viewingFIR.status}</span>
-                  </span>
-                </div>
-                <button
-                  onClick={() => setShowViewModal(false)}
-                  style={{
-                    background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff',
-                    width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer',
-                    fontSize: '0.95rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    transition: 'background 0.2s'
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                >
-                  <i className="fas fa-times"></i>
-                </button>
-              </div>
-
-              {/* Body */}
-              <div style={{ padding: '20px 24px 24px' }}>
-                {/* Case Information */}
-                <div style={{ marginBottom: '18px' }}>
-                  <h6 style={{ fontSize: '0.8rem', fontWeight: 700, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px' }}>
-                    <i className="fas fa-info-circle me-2"></i>Case Information
-                  </h6>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    {[
-                      { label: 'FIR ID', value: `FIR-${String(viewingFIR.id).padStart(4, '0')}`, icon: 'fa-file', color: '#3b82f6' },
-                      { label: 'Crime Type', value: viewingFIR.crime_type, icon: 'fa-exclamation-triangle', color: '#ef4444', badge: true },
-                      { label: 'Crime Date', value: viewingFIR.crime_date || 'N/A', icon: 'fa-calendar', color: '#f59e0b' },
-                      { label: 'Crime Time', value: viewingFIR.crime_time || 'N/A', icon: 'fa-clock', color: '#8b5cf6' },
-                      { label: 'Location', value: viewingFIR.location || 'N/A', icon: 'fa-map-marker-alt', color: '#f59e0b' },
-                      { label: 'Station', value: viewingFIR.station_name || viewingFIR.station_id || 'N/A', icon: 'fa-building', color: '#6366f1' },
-                    ].map((item, i) => (
-                      <div key={i} style={{
-                        background: '#f8fafc', borderRadius: '10px', padding: '10px 14px',
-                        border: '1px solid #f1f5f9',
-                        animation: `firPopItemIn 0.3s ease ${i * 0.04}s both`
-                      }}>
-                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '3px' }}>
-                          <i className={`fas ${item.icon} me-1`} style={{ color: item.color, fontSize: '0.7rem' }}></i>{item.label}
-                        </div>
-                        {item.badge ? (
-                          <span className="badge bg-danger" style={{ fontSize: '0.75rem', padding: '3px 8px' }}>{item.value}</span>
-                        ) : (
-                          <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.85rem' }}>{item.value}</div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div style={{
-                  background: '#f0fdf4', borderRadius: '10px', padding: '12px 16px',
-                  borderLeft: '3px solid #10b981', marginBottom: '18px',
-                  animation: 'firPopItemIn 0.3s ease 0.25s both'
-                }}>
-                  <div style={{ fontSize: '0.68rem', color: '#059669', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
-                    <i className="fas fa-align-left me-1"></i>Description
-                  </div>
-                  <p style={{ margin: 0, fontSize: '0.84rem', color: '#334155', lineHeight: 1.6, fontWeight: 500 }}>
-                    {viewingFIR.crime_description || viewingFIR.purpose || 'N/A'}
-                  </p>
-                </div>
-
-                {/* Divider */}
-                <div style={{ height: '1px', background: '#e2e8f0', margin: '0 0 18px' }}></div>
-
-                {/* Complainant Information */}
-                <div style={{ marginBottom: '18px' }}>
-                  <h6 style={{ fontSize: '0.8rem', fontWeight: 700, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px' }}>
-                    <i className="fas fa-user-shield me-2"></i>Complainant Information
-                  </h6>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    {[
-                      { label: 'Name', value: viewingFIR.complainant_name || viewingFIR.name || 'N/A', icon: 'fa-user', color: '#10b981' },
-                      { label: 'Phone', value: viewingFIR.complainant_phone || viewingFIR.number || 'N/A', icon: 'fa-phone', color: '#3b82f6' },
-                      { label: 'Age', value: viewingFIR.age || 'N/A', icon: 'fa-birthday-cake', color: '#f59e0b' },
-                      { label: 'Address', value: viewingFIR.address || 'N/A', icon: 'fa-map-pin', color: '#6366f1' },
-                    ].map((item, i) => (
-                      <div key={i} style={{
-                        background: '#f8fafc', borderRadius: '10px', padding: '10px 14px',
-                        border: '1px solid #f1f5f9',
-                        animation: `firPopItemIn 0.3s ease ${0.3 + i * 0.04}s both`
-                      }}>
-                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '3px' }}>
-                          <i className={`fas ${item.icon} me-1`} style={{ color: item.color, fontSize: '0.7rem' }}></i>{item.label}
-                        </div>
-                        <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.85rem' }}>{item.value}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Divider */}
-                <div style={{ height: '1px', background: '#e2e8f0', margin: '0 0 18px' }}></div>
-
-                {/* Accused Information */}
-                <div>
-                  <h6 style={{ fontSize: '0.8rem', fontWeight: 700, color: '#ef4444', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px' }}>
-                    <i className="fas fa-user-secret me-2"></i>Accused Information
-                  </h6>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    {[
-                      { label: 'Accused', value: viewingFIR.accused || 'Unknown', icon: 'fa-user-secret', color: '#ef4444' },
-                      { label: 'Relation', value: viewingFIR.relation || 'Not Specified', icon: 'fa-link', color: '#8b5cf6' },
-                      { label: 'Purpose', value: viewingFIR.purpose || 'N/A', icon: 'fa-bullseye', color: '#f59e0b' },
-                      { label: 'Filed On', value: formatDate(viewingFIR.created_at), icon: 'fa-clock', color: '#10b981' },
-                    ].map((item, i) => (
-                      <div key={i} style={{
-                        background: '#f8fafc', borderRadius: '10px', padding: '10px 14px',
-                        border: '1px solid #f1f5f9',
-                        animation: `firPopItemIn 0.3s ease ${0.45 + i * 0.04}s both`
-                      }}>
-                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '3px' }}>
-                          <i className={`fas ${item.icon} me-1`} style={{ color: item.color, fontSize: '0.7rem' }}></i>{item.label}
-                        </div>
-                        <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.85rem' }}>{item.value}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div style={{
-                padding: '14px 24px', borderTop: '1px solid #f1f5f9',
-                display: 'flex', justifyContent: 'center', gap: '10px',
-                borderRadius: '0 0 18px 18px', background: '#f8fafc'
-              }}>
-                <button
-                  onClick={() => setShowViewModal(false)}
-                  style={{
-                    background: '#e2e8f0', border: 'none', borderRadius: '10px',
-                    padding: '8px 24px', fontWeight: 600, fontSize: '0.85rem',
-                    color: '#475569', cursor: 'pointer', transition: 'all 0.2s'
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.background = '#cbd5e1'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = '#e2e8f0'; }}
-                >
-                  <i className="fas fa-times me-1"></i>Close
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
       </Container>
       </div>
       <ToastContainer position="top-right" autoClose={3000} />
       <Footer />
-
-      <style>{`
-        @keyframes firPopFadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes firPopSlideUp { from { opacity: 0; transform: translateY(30px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes firPopItemIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-      `}</style>
     </>
   );
 };
