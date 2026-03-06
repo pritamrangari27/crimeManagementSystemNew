@@ -22,6 +22,7 @@ const UserDashboard = () => {
   const [submitting, setSubmitting] = useState(false);
   const [firError, setFirError] = useState('');
   const [firSuccess, setFirSuccess] = useState('');
+  const [showContact, setShowContact] = useState(false);
   const [firForm, setFirForm] = useState({
     station_id: '',
     crime_type: '',
@@ -234,8 +235,6 @@ const UserDashboard = () => {
       <Footer />
     </>
   );
-
-  const [showContact, setShowContact] = useState(false);
 
   const sentFIRs = myFIRs.filter(f => f.status === 'Sent').length;
   const approvedFIRs = myFIRs.filter(f => f.status === 'Approved').length;
