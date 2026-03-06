@@ -22,7 +22,6 @@ const AdminDashboard = () => {
   const [showActivitiesModal, setShowActivitiesModal] = useState(false);
   const [activities, setActivities] = useState([]);
   const [activitiesLoading, setActivitiesLoading] = useState(false);
-  const [activityPage, setActivityPage] = useState(0);
   const [recentFIRs, setRecentFIRs] = useState([]);
 
   useEffect(() => {
@@ -48,7 +47,6 @@ const AdminDashboard = () => {
   const handleShowRecentActivities = async () => {
     setShowActivitiesModal(true);
     setActivitiesLoading(true);
-    setActivityPage(0);
     try {
       const response = await dashboardAPI.getActivity(10, '');
       if (response.data.status === 'success') {
@@ -183,141 +181,59 @@ const AdminDashboard = () => {
           <Modal show={showActivitiesModal} onHide={() => setShowActivitiesModal(false)} centered size="lg" dialogClassName="activities-modal">
             <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', padding: '14px 20px', borderBottom: 'none' }}>
               <Modal.Title style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700 }}>
-                <i className="fas fa-history me-2"></i>Recent Activities
-                {activities.length > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 500, opacity: 0.8, marginLeft: 8 }}>({activityPage + 1} / {activities.length})</span>}
+                <i className="fas fa-history me-2"></i>Recent Activities (Last 10)
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{ padding: '24px', background: '#ffffff', minHeight: '260px' }}>
+            <Modal.Body style={{ padding: '0', background: '#ffffff', maxHeight: '600px', overflowY: 'auto' }}>
               {activitiesLoading ? (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
                   <Spinner animation="border" role="status" style={{ color: '#06b6d4', marginRight: '10px' }} />
                   <span style={{ color: '#64748b', fontWeight: 500 }}>Loading activities...</span>
                 </div>
               ) : activities && activities.length > 0 ? (
-                <div style={{ position: 'relative' }}>
-                  {/* Left Arrow */}
-                  <button
-                    onClick={() => setActivityPage(p => Math.max(0, p - 1))}
-                    disabled={activityPage === 0}
-                    style={{
-                      position: 'absolute', left: '-8px', top: '50%', transform: 'translateY(-50%)',
-                      width: '36px', height: '36px', borderRadius: '50%',
-                      background: activityPage === 0 ? '#f1f5f9' : '#06b6d4', border: 'none',
-                      color: activityPage === 0 ? '#94a3b8' : '#fff',
-                      cursor: activityPage === 0 ? 'default' : 'pointer',
-                      boxShadow: activityPage === 0 ? 'none' : '0 4px 12px rgba(6,182,212,0.3)',
-                      fontSize: '0.9rem', zIndex: 2, transition: 'all 0.2s ease',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center'
-                    }}
-                  >
-                    <i className="fas fa-chevron-left"></i>
-                  </button>
-
-                  {/* Activity Card */}
-                  <div style={{ margin: '0 40px', overflow: 'hidden' }}>
-                    {(() => {
-                      const a = activities[activityPage];
-                      if (!a) return null;
-                      const actionColors = {
-                        'FIR Filed': '#10b981', 'FIR Approved': '#059669', 'FIR Rejected': '#ef4444',
-                        'Login': '#3b82f6', 'Register': '#8b5cf6', 'Update': '#f59e0b'
-                      };
-                      const actionColor = Object.entries(actionColors).find(([k]) => (a.action || '').toLowerCase().includes(k.toLowerCase()))?.[1] || '#06b6d4';
-                      return (
-                        <div key={activityPage} style={{
-                          background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)',
-                          borderRadius: '14px', padding: '24px', border: '1px solid #e2e8f0',
-                          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
-                          animation: 'actSlideIn 0.3s ease'
-                        }}>
-                          {/* Top Row: Icon + Action */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
-                            <div style={{
-                              width: '48px', height: '48px', borderRadius: '14px',
-                              background: `${actionColor}15`, color: actionColor,
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              fontSize: '1.2rem', flexShrink: 0
-                            }}>
-                              <i className={a.icon || 'fas fa-bolt'}></i>
-                            </div>
-                            <div style={{ flex: 1 }}>
-                              <div style={{ fontWeight: 700, fontSize: '1rem', color: '#0f172a' }}>{a.action}</div>
-                              <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
-                                <i className="far fa-clock me-1"></i>
-                                {a.timestamp ? new Date(a.timestamp).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'N/A'}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Details Grid */}
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                            <div style={{ background: '#f0f9ff', borderRadius: '10px', padding: '12px 14px', border: '1px solid #e0f2fe' }}>
-                              <div style={{ fontSize: '0.68rem', color: '#0369a1', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
-                                <i className="fas fa-user me-1"></i>User
-                              </div>
-                              <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.88rem' }}>
-                                {a.user || 'System'}
-                              </div>
-                            </div>
-                            <div style={{ background: '#fff7ed', borderRadius: '10px', padding: '12px 14px', border: '1px solid #ffedd5' }}>
-                              <div style={{ fontSize: '0.68rem', color: '#c2410c', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
-                                <i className="fas fa-tag me-1"></i>Type
-                              </div>
-                              <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.88rem' }}>
-                                {a.entity_type || a.action?.split(' ')[0] || 'Activity'}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Description */}
-                          {a.description && (
-                            <div style={{
-                              marginTop: '14px', background: '#f8fafc', borderRadius: '10px',
-                              padding: '12px 14px', borderLeft: `3px solid ${actionColor}`,
-                              fontSize: '0.84rem', color: '#475569', lineHeight: 1.6
-                            }}>
-                              {a.description}
-                            </div>
+                <Table hover responsive style={{ marginBottom: '0' }}>
+                  <thead style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', position: 'sticky', top: 0 }}>
+                    <tr>
+                      <th style={{ padding: '12px 16px', fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        <i className="fas fa-user me-2" style={{ color: '#06b6d4' }}></i>User
+                      </th>
+                      <th style={{ padding: '12px 16px', fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        <i className="fas fa-exclamation-circle me-2" style={{ color: '#f59e0b' }}></i>Activity
+                      </th>
+                      <th style={{ padding: '12px 16px', fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        <i className="fas fa-clock me-2" style={{ color: '#10b981' }}></i>Time
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {activities.map((activity, index) => (
+                      <tr key={index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease', fontSize: '0.85rem' }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'white'}>
+                        <td style={{ padding: '12px 16px', color: '#0f172a', fontWeight: 600 }}>
+                          {activity.user ? (
+                            <><i className="fas fa-user-circle me-2" style={{ color: '#06b6d4' }}></i>{activity.user}</>
+                          ) : (
+                            <span style={{ color: '#94a3b8' }}>System</span>
                           )}
-                        </div>
-                      );
-                    })()}
-                  </div>
-
-                  {/* Right Arrow */}
-                  <button
-                    onClick={() => setActivityPage(p => Math.min(activities.length - 1, p + 1))}
-                    disabled={activityPage >= activities.length - 1}
-                    style={{
-                      position: 'absolute', right: '-8px', top: '50%', transform: 'translateY(-50%)',
-                      width: '36px', height: '36px', borderRadius: '50%',
-                      background: activityPage >= activities.length - 1 ? '#f1f5f9' : '#06b6d4', border: 'none',
-                      color: activityPage >= activities.length - 1 ? '#94a3b8' : '#fff',
-                      cursor: activityPage >= activities.length - 1 ? 'default' : 'pointer',
-                      boxShadow: activityPage >= activities.length - 1 ? 'none' : '0 4px 12px rgba(6,182,212,0.3)',
-                      fontSize: '0.9rem', zIndex: 2, transition: 'all 0.2s ease',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center'
-                    }}
-                  >
-                    <i className="fas fa-chevron-right"></i>
-                  </button>
-
-                  {/* Dot Indicators */}
-                  <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginTop: '18px' }}>
-                    {activities.map((_, i) => (
-                      <button key={i} onClick={() => setActivityPage(i)} style={{
-                        width: i === activityPage ? '20px' : '8px', height: '8px',
-                        borderRadius: '4px', border: 'none', cursor: 'pointer',
-                        background: i === activityPage ? '#06b6d4' : '#cbd5e1',
-                        transition: 'all 0.25s ease'
-                      }} />
+                        </td>
+                        <td style={{ padding: '12px 16px', color: '#475569' }}>
+                          {activity.icon && <i className={`${activity.icon} me-2`}></i>}
+                          <span className="fw-bold">{activity.action}</span>
+                          <br />
+                          <small style={{ color: '#94a3b8', marginTop: '4px', display: 'block' }}>{activity.description}</small>
+                        </td>
+                        <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+                          {activity.timestamp ? new Date(activity.timestamp).toLocaleTimeString('en-IN') : 'N/A'}
+                        </td>
+                      </tr>
                     ))}
-                  </div>
-                </div>
+                  </tbody>
+                </Table>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '50px 20px', color: '#94a3b8' }}>
-                  <i className="fas fa-inbox" style={{ fontSize: '2.5rem', opacity: 0.4, marginBottom: '12px' }}></i>
-                  <span style={{ fontSize: '0.9rem' }}>No recent activities</span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', color: '#94a3b8', fontSize: '0.9rem' }}>
+                  <i className="fas fa-inbox me-2" style={{ fontSize: '1.5rem', opacity: 0.5 }}></i>
+                  No recent activities
                 </div>
               )}
             </Modal.Body>
@@ -327,10 +243,6 @@ const AdminDashboard = () => {
               </Button>
             </Modal.Footer>
           </Modal>
-
-          <style>{`
-            @keyframes actSlideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-          `}</style>
 
         </Container>
       </div>

@@ -77,8 +77,7 @@ const PoliceProfile = () => {
       const data = response.data;
       if (data.status === 'success') {
         updateAuthUser(formData);
-        setSuccess('Profile updated successfully!');
-        setTimeout(() => setSuccess(''), 5000);
+        setSuccess('✓ Profile saved to database! Changes will persist when you log in again.');
         setIsEditing(false);
         // Refresh from backend to confirm
         setTimeout(() => refreshUserData(), 1500);

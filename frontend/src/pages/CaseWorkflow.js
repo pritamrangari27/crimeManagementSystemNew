@@ -114,13 +114,8 @@ const CaseWorkflow = () => {
   };
 
   const normalizeStage = (stage) => {
-    if (!stage) return 'FIR Filed';
-    const trimmed = stage.trim();
-    const match = STAGES.find(s => s.toLowerCase() === trimmed.toLowerCase());
-    if (match) return match;
-    // Partial / fuzzy match for DB inconsistencies
-    const partial = STAGES.find(s => trimmed.toLowerCase().includes(s.toLowerCase()) || s.toLowerCase().includes(trimmed.toLowerCase()));
-    return partial || 'FIR Filed';
+    if (!stage || !STAGES.includes(stage)) return 'FIR Filed';
+    return stage;
   };
 
   const filteredFIRs = filterStage === 'All' ? firs : firs.filter(f => normalizeStage(f.workflow_stage) === filterStage);
@@ -199,12 +194,17 @@ const CaseWorkflow = () => {
                       </td>
                       <td>
                         <div className="mgmt-actions">
-                          <button className="view" onClick={() => viewFIRDetails(fir)}>
-                            <i className="fas fa-eye me-1"></i>View
-                          </button>
-                          <button className="view" style={{ background: 'rgba(99,102,241,0.10)', color: '#6366f1' }} onClick={() => viewTimeline(fir)}>
+                          <button className="view" onClick={() => viewTimeline(fir)}>
                             <i className="fas fa-timeline me-1"></i>Timeline
                           </button>
+                          <button className="view" style={{ background: 'rgba(6,182,212,0.10)', color: '#06b6d4' }} onClick={() => viewFIRDetails(fir)}>
+                            <i className="fas fa-eye"></i>
+                          </button>
+                          {(role === 'Admin' || role === 'Police') && (fir.workflow_stage || 'FIR Filed') !== 'Closed' && (
+                            <button className="view" style={{ background: 'rgba(139,92,246,0.10)', color: '#8b5cf6' }} onClick={() => { setStageSelectFIR(fir); setSelectedStage(fir.workflow_stage || 'FIR Filed'); }}>
+                              <i className="fas fa-step-forward me-1"></i>Stage
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

@@ -127,19 +127,30 @@ const Sidebar = () => {
               <span>{item.label}</span>
             </Nav.Link>
           ))}
+          
+          {/* Contact Button - Only for Users, after My FIRs */}
+          {userRole === 'User' && (
+            <button
+              className="sidebar-link contact-btn"
+              onClick={() => setShowDevContact(true)}
+              style={{
+                marginTop: '6px',
+                paddingLeft: '12px',
+                paddingRight: '12px',
+                textAlign: 'left',
+                justifyContent: 'flex-start'
+              }}
+              title="Contact Developer"
+            >
+              <i className="fas fa-envelope me-2"></i>
+              <span>Contact</span>
+            </button>
+          )}
         </Nav>
 
         {/* Sidebar Footer - User Profile Dropdown */}
         <div className="sidebar-footer" ref={popupRef}>
-          <button
-            className="sidebar-dev-contact-btn"
-            onClick={() => setShowDevContact(true)}
-            title="Contact Developer"
-          >
-            <i className="fas fa-code me-2"></i>
-            <span>Contact Developer</span>
-          </button>
-          <div className="sidebar-user-dropdown" style={{ paddingTop: '6px' }}>
+          <div className="sidebar-user-dropdown">
             <Button
               variant="light"
               className="w-100 text-start fw-bold d-flex align-items-center justify-content-between"
