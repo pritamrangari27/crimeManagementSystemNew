@@ -67,7 +67,8 @@ const UserProfile = () => {
       const response = await authAPI.updateProfile(formData);
       if (response.data.status === 'success') {
         updateAuthUser(formData);
-        setSuccess('✓ Profile saved to database! Changes will persist when you log in again.');
+        setSuccess('Profile updated successfully!');
+        setTimeout(() => setSuccess(''), 5000);
         setIsEditing(false);
         setTimeout(() => refreshUserData(), 1500);
       } else {
