@@ -390,7 +390,11 @@ const UserDashboard = () => {
                   <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
                   <div>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Accused Name</span>
-                    <p style={{ margin: '4px 0 0', fontWeight: 700, color: '#ef4444' }}><i className="fas fa-user-secret me-1" style={{ fontSize: '0.8rem' }}></i>{viewingFIR.accused || 'N/A'}</p>
+                    <p style={{ margin: '4px 0 0', fontWeight: 700, color: '#ef4444' }}><i className="fas fa-user-secret me-1" style={{ fontSize: '0.8rem' }}></i>{viewingFIR.accused || viewingFIR.accused_name || 'Unknown'}</p>
+                  </div>
+                  <div>
+                    <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Relation</span>
+                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-link me-1" style={{ color: '#8b5cf6', fontSize: '0.8rem' }}></i>{viewingFIR.relation || 'Not Specified'}</p>
                   </div>
                   <div>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Filed On</span>
@@ -399,10 +403,6 @@ const UserDashboard = () => {
                   <div>
                     <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Station</span>
                     <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-building me-1" style={{ color: '#6366f1', fontSize: '0.8rem' }}></i>{viewingFIR.station_name || viewingFIR.station_id || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Relation</span>
-                    <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>{viewingFIR.relation || 'N/A'}</p>
                   </div>
                 </div>
               )}
