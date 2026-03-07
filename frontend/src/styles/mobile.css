@@ -362,6 +362,11 @@
     left: 0;
   }
 
+  .with-sidebar {
+    margin-left: 0;
+    width: 100%;
+  }
+
   .hamburger-menu {
     display: flex !important;
   }
@@ -419,6 +424,11 @@
     display: none !important;
   }
 
+  .with-sidebar {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+  }
+
   .sidebar {
     position: fixed;
     left: 0 !important;
@@ -431,7 +441,7 @@
   }
 
   .navbar {
-    margin-left: 240px;
+    margin-left: 0 !important;
   }
 
   .dashboard-container,
@@ -490,6 +500,11 @@
     display: none !important;
   }
 
+  .with-sidebar {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+  }
+
   .sidebar {
     position: fixed;
     width: 260px;
@@ -501,7 +516,7 @@
   }
 
   .navbar {
-    margin-left: 0;
+    margin-left: 0 !important;
   }
 
   .dashboard-container,
@@ -548,6 +563,11 @@
     display: none !important;
   }
 
+  .with-sidebar {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+  }
+
   .sidebar {
     position: fixed;
     width: 260px;
@@ -559,7 +579,7 @@
   }
 
   .navbar {
-    margin-left: 260px;
+    margin-left: 0 !important;
   }
 
   .dashboard-container,

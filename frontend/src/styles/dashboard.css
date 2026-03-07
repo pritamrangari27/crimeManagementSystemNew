@@ -18,13 +18,13 @@
   min-height: calc(100vh - var(--banner-height, 38px) - var(--footer-height, 42px));
   padding: var(--grid-gap);
   font-family: var(--font-stack);
-  padding-top: var(--grid-gap);
-  padding-bottom: calc(var(--footer-height, 42px) + var(--grid-gap));
   animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) both;
   overflow-y: auto;
   flex: 1;
   width: 100%;
   margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Management page container — unified spacing ── */
@@ -40,6 +40,7 @@
   flex: 1;
   width: 100%;
   margin: 0;
+  gap: var(--grid-gap);
 }
 
 /* ── Management page header — flex row with actions ── */
