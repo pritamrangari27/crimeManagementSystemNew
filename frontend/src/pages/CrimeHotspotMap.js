@@ -350,7 +350,8 @@ const CrimeHotspotMap = () => {
                         center={defaultCenter}
                         zoom={defaultZoom}
                         style={{ height: '100%', width: '100%' }}
-                        scrollWheelZoom={true}
+                        scrollWheelZoom={false}
+                        dragging={false}
                       >
                         <TileLayer
                           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
