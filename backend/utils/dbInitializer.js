@@ -557,6 +557,102 @@ async function runMigrations(db) {
       }
     );
   });
+
+  // Migration 27: Replace old placeholder values with proper data
+  await new Promise((resolve) => {
+    const accusedNames = [
+      'Rajesh Kumar', 'Amit Singh', 'Vikram Patel', 'Arjun Nair',
+      'Nikhil Sharma', 'Suresh Deshmukh', 'Imran Khan', 'Ganesh More',
+      'Farid Shaikh', 'Ajay Tiwari', 'Santosh Gupta', 'Rafiq Patel',
+      'Pravin Jagtap', 'Dinesh Rathod', 'Manish Tiwari', 'Zakir Hussain',
+      'Rohit Sawant', 'Vijay Sonawane', 'Sunil Gaikwad', 'Anil Bhosale',
+      'Sagar Mhatre', 'Kishor Nikam', 'Bablu Shukla', 'Wasim Ahmed',
+      'Pappu Yadav', 'Chhota Rajan', 'Kamal Haasan', 'Mohan Agashe',
+      'Bharat Jadhav', 'Akbar Ali', 'Ramzan Shaikh', 'Guddu Pandit',
+      'Firoz Khan', 'Babu Bhai', 'Harish Reddy', 'Pradeep Kumar',
+      'Vivek Malhotra', 'Atul Joshi', 'Sanjay Verma', 'Harsh Pandey'
+    ];
+
+    const relations = [
+      'Victim', 'Witness', 'Complainant', 'Friend', 'Family Member',
+      'Neighbor', 'Colleague', 'Business Associate', 'Employee',
+      'Employer', 'Acquaintance', 'Stranger', 'Unknown Person',
+      'Online Acquaintance', 'Former Partner', 'Spouse', 'Tenant',
+      'Landlord', 'Customer', 'Vendor', 'Client'
+    ];
+
+    const addresses = [
+      'Flat 12, Colaba Market Rd, Mumbai 400001',
+      'Navy Nagar, Colaba, Mumbai 400005',
+      '221 Churchgate Apts, Fort, Mumbai 400020',
+      '45 Linking Road, Bandra West, Mumbai 400050',
+      'Lokhandwala Complex, Andheri West, Mumbai 400053',
+      '14 Shivaji Park Rd, Dadar East, Mumbai 400014',
+      'IC Colony, Borivali West, Mumbai 400092',
+      'BKC Apartments, Kurla West, Mumbai 400070',
+      'Hiranandani Gardens, Powai, Mumbai 400076',
+      'Irla Bridge, Vile Parle, Mumbai 400056',
+      'JVPD Scheme, Juhu, Mumbai 400049',
+      'Film City Road, Goregaon West, Mumbai 400062',
+      'Link Road, Malad West, Mumbai 400064',
+      'Gateway Area, Colaba, Mumbai 400005',
+      'Nariman Point, South Mumbai 400021',
+      'Bandra Reclamation, Bandra, Mumbai 400050',
+      'Four Bungalows, Andheri, Mumbai 400053',
+      'Dadar TT Circle, Dadar East, Mumbai 400014',
+      'Western Express Highway, Borivali, Mumbai 400092',
+      'Nehru Nagar, Kurla, Mumbai 400070',
+      'Balaji Nagar, Vile Parle, Mumbai 400056',
+      'DN Nagar, Juhu, Mumbai 400049',
+      'Aarey Colony, Goregaon, Mumbai 400065',
+      'Orlem, Malad West, Mumbai 400064',
+      'Sassoon Dock, Colaba, Mumbai 400005',
+      'Oval Maidan, South Mumbai 400001',
+      'Turner Road, Bandra, Mumbai 400050',
+      'Versova, Andheri West, Mumbai 400061',
+      'Prabhadevi, Dadar, Mumbai 400025',
+      'Dahisar Check Naka, Mumbai 400068',
+      'LBS Marg, Kurla, Mumbai 400070',
+      'Chandivali, Powai, Mumbai 400072',
+      'Parle East, Mumbai 400057',
+      'Juhu Beach Road, Juhu, Mumbai 400049'
+    ];
+
+    // Get FIRs with old placeholder values
+    db.all(
+      `SELECT id FROM firs WHERE 
+       (accused LIKE '%Person of Interest%' OR accused LIKE '%Alleged Perpetrator%' OR accused LIKE '%Unknown Suspect%' OR accused LIKE '%Unidentified%' OR accused LIKE '%Suspect at Large%' OR accused LIKE '%Unnamed%') OR
+       (relation LIKE '%Unknown Relationship%') OR
+       (address LIKE '%To Be Determined%' OR address LIKE '%Location Unknown%' OR address LIKE '%Anonymous Location%' OR address LIKE '%Not Specified%' OR address LIKE '%Undisclosed%' OR address LIKE '%Under Investigation%')`,
+      [],
+      (err, firs) => {
+        if (err || !firs || firs.length === 0) {
+          console.log('✓ All FIRs have proper data (no placeholders found)');
+          resolve();
+          return;
+        }
+
+        let completed = 0;
+        firs.forEach((fir) => {
+          const newAccused = accusedNames[Math.floor(Math.random() * accusedNames.length)];
+          const newRelation = relations[Math.floor(Math.random() * relations.length)];
+          const newAddress = addresses[Math.floor(Math.random() * addresses.length)];
+
+          db.run(
+            `UPDATE firs SET accused = ?, relation = ?, address = ? WHERE id = ?`,
+            [newAccused, newRelation, newAddress, fir.id],
+            (err) => {
+              completed++;
+              if (completed === firs.length) {
+                console.log(`✓ Replaced placeholder values in ${firs.length} FIRs with proper names, relations, and addresses`);
+                resolve();
+              }
+            }
+          );
+        });
+      }
+    );
+  });
 }
 
 async function createTables(db) {
