@@ -164,7 +164,7 @@ const CaseWorkflow = () => {
           {role === 'Police' && (
             <Alert variant="info" style={{ marginBottom: 'var(--grid-gap)', borderRadius: '10px', borderLeft: '4px solid #6366f1' }}>
               <i className="fas fa-info-circle me-2"></i>
-              Showing only cases assigned to you. Visit <strong>Resource Allocation</strong> to see your workload summary.
+              Showing only cases assigned to you.
             </Alert>
           )}
 

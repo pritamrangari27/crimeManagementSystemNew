@@ -23,7 +23,6 @@ const UserFIRList = () => {
   const [sortBy, setSortBy] = useState('date');
   const [viewingFIR, setViewingFIR] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [showTableModal, setShowTableModal] = useState(false);
 
   // FIR Form state
   const [showFIRModal, setShowFIRModal] = useState(false);
@@ -273,16 +272,6 @@ const UserFIRList = () => {
             >
               <i className="fas fa-plus me-1"></i> File New FIR
             </button>
-            <button
-              className="mgmt-btn-primary mgmt-btn-table-modal"
-              onClick={() => setShowTableModal(true)}
-              style={{
-                padding: '6px 12px',
-                fontSize: '0.85rem'
-              }}
-            >
-              <i className="fas fa-table me-1"></i> View Table
-            </button>
           </div>
         </div>
 
@@ -447,56 +436,6 @@ const UserFIRList = () => {
             Showing {filteredFirs.length} of {firs.length} FIRs
           </div>
         )}
-
-        {/* FIR Table Modal - Mobile Only */}
-        <Modal show={showTableModal} onHide={() => setShowTableModal(false)} size="xl" fullscreen="sm-down" centered>
-          <Modal.Header closeButton style={{ padding: '12px 16px', background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)' }}>
-            <Modal.Title style={{ color: 'white', fontSize: '1rem', fontWeight: 700 }}>
-              <i className="fas fa-table me-2"></i>FIR Records
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body style={{ padding: '12px', overflowX: 'auto' }}>
-            {filteredFirs.length === 0 ? (
-              <div className="text-center py-4">
-                <i className="fas fa-inbox text-muted" style={{ fontSize: '32px' }}></i>
-                <p className="mt-2 text-muted small">No FIRs found</p>
-              </div>
-            ) : (
-              <div className="mgmt-table-scroll">
-                <table className="mgmt-table" style={{ fontSize: '0.75rem' }}>
-                  <thead>
-                    <tr>
-                      <th>FIR ID</th>
-                      <th>Crime</th>
-                      <th>Status</th>
-                      <th>Date</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredFirs.map((fir, idx) => (
-                      <tr key={fir.id}>
-                        <td className="fw-bold text-primary">FIR-{String(fir.id).padStart(4, '0')}</td>
-                        <td><span className="mgmt-badge info" style={{ fontSize: '0.65rem' }}>{fir.crime_type}</span></td>
-                        <td><span className={`mgmt-badge ${getStatusVariant(fir.status)}`} style={{ fontSize: '0.65rem' }}>{fir.status}</span></td>
-                        <td className="small">{new Date(fir.created_at || fir.date).toLocaleDateString()}</td>
-                        <td>
-                          <button
-                            className="view"
-                            onClick={() => { handleViewFIR(fir); setShowTableModal(false); }}
-                            style={{ padding: '3px 8px', fontSize: '0.7rem' }}
-                          >
-                            <i className="fas fa-eye me-1" style={{ fontSize: '0.65rem' }}></i> View
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </Modal.Body>
-        </Modal>
 
         {/* File New FIR Modal */}
         <Modal show={showFIRModal} onHide={handleCloseFIRModal} centered size="lg" dialogClassName="fir-form-modal">

@@ -76,7 +76,7 @@ const Sidebar = () => {
     { path: '/admin/firs', label: 'FIR Management', icon: 'fas fa-file-alt' },
     { path: '/admin/hotspot-map', label: 'Crime Hotspot Map', icon: 'fas fa-map-marked-alt' },
     { path: '/admin/workflow', label: 'Case Workflow', icon: 'fas fa-project-diagram' },
-    { path: '/admin/allocation', label: 'Resource Allocation', icon: 'fas fa-balance-scale' },
+
   ];
 
   const policeMenuItems = [
@@ -86,7 +86,7 @@ const Sidebar = () => {
     { path: '/police/firs/rejected', label: 'Rejected FIRs', icon: 'fas fa-times-circle' },
     { path: '/police/criminals', label: 'Criminal Records', icon: 'fas fa-user-secret' },
     { path: '/police/workflow', label: 'Case Workflow', icon: 'fas fa-project-diagram' },
-    { path: '/police/allocation', label: 'Resource Allocation', icon: 'fas fa-balance-scale' },
+
   ];
 
   const userMenuItems = [

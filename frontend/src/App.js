@@ -28,7 +28,6 @@ import CrimeAnalysis from './pages/CrimeAnalysis';
 import CrimeHotspotMap from './pages/CrimeHotspotMap';
 import CaseWorkflow from './pages/CaseWorkflow';
 import CrimePatterns from './pages/CrimePatterns';
-import ResourceAllocation from './pages/ResourceAllocation';
 import ExportReports from './pages/ExportReports';
 
 // Components
@@ -171,14 +170,6 @@ function AppLayout() {
             }
           />
           <Route
-            path="/admin/allocation"
-            element={
-              <PrivateRoute>
-                <ResourceAllocation />
-              </PrivateRoute>
-            }
-          />
-          <Route
             path="/admin/export"
             element={
               <PrivateRoute>
@@ -261,15 +252,6 @@ function AppLayout() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/police/allocation"
-            element={
-              <PrivateRoute>
-                <ResourceAllocation />
-              </PrivateRoute>
-            }
-          />
-
           {/* Profile Routes */}
           <Route
             path="/admin/profile"
