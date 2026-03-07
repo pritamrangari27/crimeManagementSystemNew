@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Button, Modal, Table, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { dashboardAPI, firsAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
@@ -64,10 +63,10 @@ const AdminDashboard = () => {
     return (
       <>
         <Sidebar />
-        <div className="with-sidebar d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
-          <div className="text-center">
+        <div className="with-sidebar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+          <div style={{ textAlign: 'center' }}>
             <div className="page-loader"><div className="spinner"></div></div>
-            <p className="text-muted mt-2" style={{ fontSize: '0.85rem' }}>Loading dashboard...</p>
+            <p style={{ color: '#64748b', marginTop: '8px', fontSize: '0.85rem' }}>Loading dashboard...</p>
           </div>
         </div>
       </>
@@ -91,7 +90,7 @@ const AdminDashboard = () => {
     <>
       <Sidebar />
       <div className="with-sidebar">
-        <Container fluid className="dashboard-container" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - var(--banner-height, 38px) - 50px)' }}>
+        <div className="dashboard-container" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - var(--banner-height, 38px) - 50px)' }}>
           <div style={{ maxWidth: 1100, width: '100%', margin: '0 auto' }}>
 
             {/* ── Header ── */}
@@ -103,18 +102,18 @@ const AdminDashboard = () => {
                 <p style={{ margin: 0 }}>Welcome back, <strong>{user?.username || 'Admin'}</strong>! Here's your system overview.</p>
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
-                <Button size="sm" className="fw-bold" style={{ backgroundColor: '#06b6d4', borderColor: '#06b6d4', borderRadius: 8 }}
+                <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem', backgroundColor: '#06b6d4', borderColor: '#06b6d4' }}
                   onClick={handleShowRecentActivities}>
                   <i className="fas fa-history me-1"></i> Activity Log
-                </Button>
-                <Button size="sm" variant="outline-dark" className="fw-bold" style={{ borderRadius: 8 }}
+                </button>
+                <button className="mgmt-btn-back" style={{ fontSize: '0.85rem' }}
                   onClick={() => navigate('/admin/analytics')}>
                   <i className="fas fa-chart-pie me-1"></i> Analytics
-                </Button>
-                <Button size="sm" className="fw-bold" style={{ backgroundColor: '#10b981', borderColor: '#10b981', borderRadius: 8 }}
+                </button>
+                <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem', backgroundColor: '#10b981', borderColor: '#10b981' }}
                   onClick={() => navigate('/admin/export')}>
                   <i className="fas fa-download me-1"></i> Export Reports
-                </Button>
+                </button>
               </div>
             </div>
 
@@ -178,113 +177,125 @@ const AdminDashboard = () => {
           </div>
 
           {/* ── Recent Activities Modal ── */}
-          <Modal show={showActivitiesModal} onHide={() => setShowActivitiesModal(false)} centered size="lg" dialogClassName="activities-modal">
-            <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', padding: '14px 20px', borderBottom: 'none' }}>
-              <Modal.Title style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700 }}>
-                <i className="fas fa-history me-2"></i>Recent Activities (Last 10)
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body style={{ padding: '16px', background: '#ffffff', maxHeight: '600px', overflowX: 'auto', overflowY: 'hidden' }}>
-              {activitiesLoading ? (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
-                  <Spinner animation="border" role="status" style={{ color: '#06b6d4', marginRight: '10px' }} />
-                  <span style={{ color: '#64748b', fontWeight: 500 }}>Loading activities...</span>
+          {showActivitiesModal && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1050 }}>
+              <div style={{ background: '#ffffff', borderRadius: '12px', width: '90%', maxWidth: '800px', maxHeight: '80vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+                {/* Header */}
+                <div style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', padding: '14px 20px', borderBottom: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flex: 'none' }}>
+                  <h5 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: 0 }}>
+                    <i className="fas fa-history me-2"></i>Recent Activities (Last 10)
+                  </h5>
+                  <button onClick={() => setShowActivitiesModal(false)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', padding: 0 }}>
+                    ✕
+                  </button>
                 </div>
-              ) : activities && activities.length > 0 ? (
-                <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px' }}>
-                  {activities.map((activity, index) => (
-                    <div key={index} style={{
-                      flex: '0 0 320px',
-                      background: '#ffffff',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '12px',
-                      padding: '16px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-                      transition: 'all 0.3s ease',
-                      cursor: 'pointer',
-                      minHeight: '180px',
-                      display: 'flex',
-                      flexDirection: 'column'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(6,182,212,0.12)';
-                      e.currentTarget.style.borderColor = '#06b6d4';
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
-                      e.currentTarget.style.borderColor = '#e2e8f0';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}>
-                      {/* Header */}
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
-                          {activity.icon ? (
-                            <i className={`${activity.icon}`} style={{ fontSize: '1.2rem', color: '#06b6d4' }}></i>
-                          ) : (
-                            <i className="fas fa-circle-check" style={{ fontSize: '1.2rem', color: '#10b981' }}></i>
-                          )}
-                          <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {activity.action}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* User */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                        <i className="fas fa-user-circle me-1" style={{ color: '#06b6d4', fontSize: '0.9rem' }}></i>
-                        <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>
-                          {activity.user ? activity.user : 'System'}
-                        </span>
-                      </div>
-
-                      {/* Description */}
-                      <div style={{
-                        fontSize: '0.8rem',
-                        color: '#64748b',
-                        marginBottom: '12px',
-                        flex: 1,
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}>
-                        {activity.description || 'No description'}
-                      </div>
-
-                      {/* Time */}
-                      <div style={{
-                        fontSize: '0.75rem',
-                        color: '#94a3b8',
-                        fontWeight: 500,
-                        padding: '8px 12px',
-                        background: '#f8fafc',
-                        borderRadius: '8px',
-                        textAlign: 'center',
-                        marginTop: 'auto'
-                      }}>
-                        <i className="fas fa-clock me-1" style={{ color: '#10b981' }}></i>
-                        {activity.timestamp ? new Date(activity.timestamp).toLocaleTimeString('en-IN') : 'N/A'}
-                      </div>
+                
+                {/* Body */}
+                <div style={{ padding: '16px', background: '#ffffff', maxHeight: 'calc(80vh - 100px)', overflowX: 'auto', overflowY: 'hidden', flex: 1 }}>
+                  {activitiesLoading ? (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
+                      <div style={{ width: '30px', height: '30px', border: '3px solid #06b6d4', borderTop: '3px solid transparent', borderRadius: '50%', animation: 'spin 0.6s linear infinite', marginRight: '10px' }}></div>
+                      <span style={{ color: '#64748b', fontWeight: 500 }}>Loading activities...</span>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', color: '#94a3b8', fontSize: '0.9rem', minHeight: '200px' }}>
-                  <i className="fas fa-inbox me-2" style={{ fontSize: '2rem', opacity: 0.5 }}></i>
-                  No recent activities
-                </div>
-              )}
-            </Modal.Body>
-            <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px' }}>
-              <Button variant="outline-secondary" size="sm" onClick={() => setShowActivitiesModal(false)} style={{ borderRadius: '8px', fontWeight: 600 }}>
-                <i className="fas fa-times me-1"></i>Close
-              </Button>
-            </Modal.Footer>
-          </Modal>
+                  ) : activities && activities.length > 0 ? (
+                    <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px' }}>
+                      {activities.map((activity, index) => (
+                        <div key={index} style={{
+                          flex: '0 0 320px',
+                          background: '#ffffff',
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '12px',
+                          padding: '16px',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+                          transition: 'all 0.3s ease',
+                          cursor: 'pointer',
+                          minHeight: '180px',
+                          display: 'flex',
+                          flexDirection: 'column'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(6,182,212,0.12)';
+                          e.currentTarget.style.borderColor = '#06b6d4';
+                          e.currentTarget.style.transform = 'translateY(-4px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+                          e.currentTarget.style.borderColor = '#e2e8f0';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}>
+                          {/* Header */}
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                              {activity.icon ? (
+                                <i className={`${activity.icon}`} style={{ fontSize: '1.2rem', color: '#06b6d4' }}></i>
+                              ) : (
+                                <i className="fas fa-circle-check" style={{ fontSize: '1.2rem', color: '#10b981' }}></i>
+                              )}
+                              <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {activity.action}
+                              </span>
+                            </div>
+                          </div>
 
-        </Container>
+                          {/* User */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                            <i className="fas fa-user-circle me-1" style={{ color: '#06b6d4', fontSize: '0.9rem' }}></i>
+                            <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>
+                              {activity.user ? activity.user : 'System'}
+                            </span>
+                          </div>
+
+                          {/* Description */}
+                          <div style={{
+                            fontSize: '0.8rem',
+                            color: '#64748b',
+                            marginBottom: '12px',
+                            flex: 1,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}>
+                            {activity.description || 'No description'}
+                          </div>
+
+                          {/* Time */}
+                          <div style={{
+                            fontSize: '0.75rem',
+                            color: '#94a3b8',
+                            fontWeight: 500,
+                            padding: '8px 12px',
+                            background: '#f8fafc',
+                            borderRadius: '8px',
+                            textAlign: 'center',
+                            marginTop: 'auto'
+                          }}>
+                            <i className="fas fa-clock me-1" style={{ color: '#10b981' }}></i>
+                            {activity.timestamp ? new Date(activity.timestamp).toLocaleTimeString('en-IN') : 'N/A'}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', color: '#94a3b8', fontSize: '0.9rem', minHeight: '200px' }}>
+                      <i className="fas fa-inbox me-2" style={{ fontSize: '2rem', opacity: 0.5 }}></i>
+                      No recent activities
+                    </div>
+                  )}
+                </div>
+                
+                {/* Footer */}
+                <div style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                  <button className="mgmt-btn-back" onClick={() => setShowActivitiesModal(false)} style={{ borderRadius: '8px', fontWeight: 600 }}>
+                    <i className="fas fa-times me-1"></i>Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
       </div>
       <Footer />
     </>
