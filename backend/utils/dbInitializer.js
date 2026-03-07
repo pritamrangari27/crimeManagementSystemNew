@@ -653,6 +653,103 @@ async function runMigrations(db) {
       }
     );
   });
+
+  // Migration 28: Add position column to police and backfill with data
+  await new Promise((resolve) => {
+    db.get(
+      `SELECT column_name FROM information_schema.columns WHERE table_name = 'police' AND column_name = 'position'`,
+      [],
+      (err, row) => {
+        if (err || row) { 
+          // Column already exists, just backfill if needed
+          db.all(
+            `SELECT id FROM police WHERE position IS NULL OR position = ''`,
+            [],
+            (err, police) => {
+              if (err || !police || police.length === 0) {
+                console.log('✓ All police officers have position data');
+                resolve();
+                return;
+              }
+
+              const positions = [
+                'Police Officer', 'Senior Police Officer', 'Inspector',
+                'Senior Inspector', 'Assistant Commissioner', 'Sub-Inspector',
+                'Head Constable', 'Constable', 'Patrolman', 'Detective',
+                'Detective Inspector', 'Sergeant', 'Corporal', 'Police Woman',
+                'Crime Scene Investigator', 'Traffic Police', 'Cyber Police',
+                'Street Enforcement Officer', 'Surveillance Officer', 'Narcotics Officer',
+                'Homicide Detective', 'Theft Detective', 'Fraud Investigator'
+              ];
+
+              let completed = 0;
+              police.forEach((p) => {
+                const position = positions[Math.floor(Math.random() * positions.length)];
+                db.run(
+                  `UPDATE police SET position = ? WHERE id = ?`,
+                  [position, p.id],
+                  () => {
+                    completed++;
+                    if (completed === police.length) {
+                      console.log(`✓ Backfilled position data for ${police.length} police officers`);
+                      resolve();
+                    }
+                  }
+                );
+              });
+            }
+          );
+          return;
+        }
+
+        // Column doesn't exist, create it
+        console.log('Adding position column to police table...');
+        db.run(`ALTER TABLE police ADD COLUMN position TEXT`, [], (err) => {
+          if (err) {
+            console.error('Error adding position column:', err.message);
+            resolve();
+            return;
+          }
+          console.log('✓ Added position column to police table');
+          
+          // Now backfill with data
+          const positions = [
+            'Police Officer', 'Senior Police Officer', 'Inspector',
+            'Senior Inspector', 'Assistant Commissioner', 'Sub-Inspector',
+            'Head Constable', 'Constable', 'Patrolman', 'Detective',
+            'Detective Inspector', 'Sergeant', 'Corporal', 'Police Woman',
+            'Crime Scene Investigator', 'Traffic Police', 'Cyber Police',
+            'Street Enforcement Officer', 'Surveillance Officer', 'Narcotics Officer',
+            'Homicide Detective', 'Theft Detective', 'Fraud Investigator'
+          ];
+
+          db.all(`SELECT id FROM police`, [], (err, police) => {
+            if (err || !police || police.length === 0) {
+              console.log('✓ No police officers to backfill');
+              resolve();
+              return;
+            }
+
+            let completed = 0;
+            police.forEach((p) => {
+              const position = positions[Math.floor(Math.random() * positions.length)];
+              db.run(
+                `UPDATE police SET position = ? WHERE id = ?`,
+                [position, p.id],
+                () => {
+                  completed++;
+                  if (completed === police.length) {
+                    console.log(`✓ Backfilled position data for ${police.length} police officers`);
+                    resolve();
+                  }
+                }
+              );
+            });
+          });
+        });
+      }
+    );
+  });
 }
 
 async function createTables(db) {
