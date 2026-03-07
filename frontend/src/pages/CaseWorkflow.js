@@ -193,14 +193,13 @@ const CaseWorkflow = () => {
                     <th>Crime Type</th>
                     <th>Complainant</th>
                     <th>Station</th>
-                    <th>Stage</th>
                     <th>Priority</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredFIRs.length === 0 ? (
-                    <tr><td colSpan={8} className="mgmt-empty">No cases found</td></tr>
+                    <tr><td colSpan={7} className="mgmt-empty">No cases found</td></tr>
                   ) : filteredFIRs.map((fir, idx) => (
                     <tr key={fir.id}>
                       <td>{idx + 1}</td>
@@ -208,7 +207,6 @@ const CaseWorkflow = () => {
                       <td>{fir.crime_type}</td>
                       <td>{fir.complainant_name || fir.name || '-'}</td>
                       <td>{fir.station_name || '-'}</td>
-                      <td>{getStageBadge(fir.workflow_stage)}</td>
                       <td>
                         <span className={`mgmt-badge ${fir.priority === 'Critical' ? 'danger' : fir.priority === 'High' ? 'warning' : fir.priority === 'Low' ? 'secondary' : 'info'}`}>
                           {fir.priority || 'Medium'}
