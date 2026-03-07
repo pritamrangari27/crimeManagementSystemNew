@@ -33,7 +33,7 @@ const ResourceAllocation = () => {
 
   const totalOfficers = workload.length;
   const totalAssigned = workload.reduce((s, w) => s + (w.assigned_firs || 0) + (w.pending_firs || 0), 0);
-  const avgLoad = totalOfficers > 0 ? (totalAssigned / totalOfficers).toFixed(1) : 0;
+  const avgLoad = totalOfficers > 0 ? (totalAssigned / totalOfficers).toFixed(2) : 0;
 
   if (loading) return (
     <>
@@ -88,16 +88,13 @@ const ResourceAllocation = () => {
                     <th>Officer</th>
                     <th>Station</th>
                     <th>Cases</th>
-                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {workload.length === 0 ? (
-                    <tr><td colSpan={5} className="mgmt-empty">No officers found</td></tr>
+                    <tr><td colSpan={4} className="mgmt-empty">No officers found</td></tr>
                   ) : workload.map((officer, idx) => {
                     const totalCases = (officer.assigned_firs || 0) + (officer.pending_firs || 0);
-                    const status = totalCases === 0 ? 'Available' : totalCases <= 3 ? 'Active' : 'Overloaded';
-                    const statusColor = status === 'Available' ? 'success' : status === 'Active' ? 'info' : 'danger';
                     return (
                       <tr key={officer.id}>
                         <td>{idx + 1}</td>
@@ -108,10 +105,6 @@ const ResourceAllocation = () => {
                         <td>{officer.station_name || '-'}</td>
                         <td>
                           <Badge bg={totalCases > 5 ? 'danger' : totalCases > 2 ? 'warning' : 'success'}>{totalCases}</Badge>
-                          {officer.pending_firs > 0 && <Badge bg="warning" className="ms-1">{officer.pending_firs} pending</Badge>}
-                        </td>
-                        <td>
-                          <Badge bg={statusColor}>{status}</Badge>
                         </td>
                       </tr>
                     );
