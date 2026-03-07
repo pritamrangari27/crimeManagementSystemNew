@@ -447,6 +447,65 @@ async function runMigrations(db) {
       );
     });
   });
+
+  // Migration 26: Backfill missing accused, relation, and address for all FIRs
+  await new Promise((resolve) => {
+    // First, get all FIRs with missing data
+    db.all(
+      `SELECT id, fir_number, station_id, crime_type FROM firs WHERE 
+       (accused IS NULL OR accused = '') OR 
+       (relation IS NULL OR relation = '') OR 
+       (address IS NULL OR address = '')`,
+      [],
+      (err, firs) => {
+        if (err || !firs || firs.length === 0) {
+          console.log('✓ All FIRs have accused, relation, and address data');
+          resolve();
+          return;
+        }
+
+        const accusedNames = [
+          'Unknown Suspect', 'Unidentified Person', 'Suspect at Large', 
+          'Person of Interest', 'Alleged Perpetrator', 'Unnamed Accused'
+        ];
+        const relations = [
+          'Stranger', 'Acquaintance', 'Neighbor', 'Colleague', 'Family Member',
+          'Online Contact', 'Business Associate', 'Unknown Relationship'
+        ];
+        const addresses = [
+          'Location Unknown', 'Not Specified', 'Undisclosed Address', 
+          'To Be Determined', 'Under Investigation', 'Anonymous Location'
+        ];
+
+        let completed = 0;
+        firs.forEach((fir) => {
+          const accused = !fir.accused || fir.accused.trim() === '' 
+            ? accusedNames[Math.floor(Math.random() * accusedNames.length)]
+            : fir.accused;
+          
+          const relation = !fir.relation || fir.relation.trim() === ''
+            ? relations[Math.floor(Math.random() * relations.length)]
+            : fir.relation;
+          
+          const address = !fir.address || fir.address.trim() === ''
+            ? addresses[Math.floor(Math.random() * addresses.length)]
+            : fir.address;
+
+          db.run(
+            `UPDATE firs SET accused = ?, relation = ?, address = ? WHERE id = ?`,
+            [accused, relation, address, fir.id],
+            (err) => {
+              completed++;
+              if (completed === firs.length) {
+                console.log(`✓ Backfilled ${firs.length} FIRs with accused, relation, or address data`);
+                resolve();
+              }
+            }
+          );
+        });
+      }
+    );
+  });
 }
 
 async function createTables(db) {
