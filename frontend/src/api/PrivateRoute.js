@@ -30,25 +30,26 @@ const PrivateRoute = ({ children }) => {
 
     switch (role) {
       case 'Admin':
-        // Admin can access: /admin/*, /profile, /change-password
-        isAllowed = pathname.startsWith('/admin/') || 
-                   pathname === '/profile' || 
+        // Admin can access: /admin/*, /admin-profile, /profile, /admin-fir, /change-password
+        isAllowed = pathname.startsWith('/admin') || 
+                   pathname.includes('admin') ||
+                   pathname.includes('profile') || 
                    pathname === '/change-password';
         break;
 
       case 'Police':
-        // Police can access: /police/*, /fir/*, /profile, /change-password
-        isAllowed = pathname.startsWith('/police/') || 
-                   pathname.startsWith('/fir/') ||
-                   pathname === '/police/profile' ||
+        // Police can access: /police/*, /fir/*, any profile, /change-password
+        isAllowed = pathname.startsWith('/police') || 
+                   pathname.includes('fir') ||
+                   pathname.includes('profile') ||
                    pathname === '/change-password';
         break;
 
       case 'User':
-        // User can access: /user/*, /fir/*, /profile, /change-password
-        isAllowed = pathname.startsWith('/user/') || 
-                   pathname.startsWith('/fir/') || 
-                   pathname === '/profile' || 
+        // User can access: /user/*, /fir/*, any profile, /change-password
+        isAllowed = pathname.startsWith('/user') || 
+                   pathname.includes('fir') || 
+                   pathname.includes('profile') || 
                    pathname === '/change-password';
         break;
 
@@ -63,7 +64,7 @@ const PrivateRoute = ({ children }) => {
   if (loading) return <div className="text-center py-5">Loading...</div>;
   
   if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
 
   if (!isAuthorized) {
@@ -74,7 +75,7 @@ const PrivateRoute = ({ children }) => {
       User: '/user/dashboard'
     };
     const redirectTo = dashboardMap[userRole] || '/login';
-    return <Navigate to={redirectTo} />;
+    return <Navigate to={redirectTo} replace />;
   }
 
   return children;
