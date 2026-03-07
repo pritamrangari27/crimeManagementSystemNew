@@ -20,8 +20,33 @@
   /* Container less padding */
   .container-fluid { padding-left: 12px !important; padding-right: 12px !important; }
 
-  /* Page headers */
+  /* Page headers - responsive layout */
   h3.fw-bold { font-size: 1.3rem; }
+  
+  .mgmt-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .mgmt-header h2 {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+  
+  .mgmt-header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .dash-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  
+  .dash-header > div:last-child {
+    width: 100%;
+  }
 
   /* Badge sizing */
   .badge { font-size: 0.7rem; padding: 4px 8px; }
@@ -44,6 +69,12 @@
 
   /* Export buttons stack */
   .export-btn-row .col-md-4 { margin-bottom: 8px; }
+  
+  /* Stat cards responsive */
+  .bento-grid.cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
 }
 
 @media (max-width: 576px) {
@@ -53,8 +84,13 @@
   h3.fw-bold { font-size: 1.15rem; }
   p.text-muted { font-size: 0.78rem; }
 
-  /* Stats cards grid */
-  .row.g-3 > [class*="col-md-3"] { flex: 0 0 50%; max-width: 50%; }
+  /* Statistics Cards - full width on small screens */
+  .row.g-3 > [class*="col-md-3"] { flex: 0 0 100%; max-width: 100%; }
+  
+  .bento-grid.cols-4 {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
 
   /* Notification dropdown */
   .notification-dropdown { width: calc(100vw - 24px) !important; right: -100px !important; }
@@ -65,6 +101,20 @@
   /* Table font */
   .table { font-size: 0.75rem; }
   .table td, .table th { padding: 6px 8px; }
+  
+  /* Header and action buttons stack */
+  .mgmt-header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .mgmt-header-actions button {
+    width: 100%;
+  }
+  
+  .dash-header > div:last-child > button {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {

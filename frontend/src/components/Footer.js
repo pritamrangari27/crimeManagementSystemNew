@@ -1,8 +1,54 @@
 import React, { useState } from 'react';
 import '../styles/footer.css';
 
-const DeveloperPopup = ({ show, onClose }) => {
+const DeveloperPopup = ({ show, onClose, userMode = false, user = null }) => {
   if (!show) return null;
+
+  // Get user initials for fallback avatar
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+  };
+
+  // Determine if we're showing user profile or developer info
+  const isUserProfile = userMode && user;
+
+  if (isUserProfile) {
+    return (
+      <div className="dev-popup-overlay" onClick={onClose}>
+        <div className="dev-popup-card" onClick={e => e.stopPropagation()}>
+          <button className="dev-popup-close" onClick={onClose}>
+            <i className="fas fa-times"></i>
+          </button>
+          <div className="dev-popup-header">
+            <div className="dev-popup-avatar" style={{ background: '#10b981', fontSize: '28px' }}>
+              {getInitials(user.username)}
+            </div>
+            <h4 className="dev-popup-name">{user.username}</h4>
+            <p className="dev-popup-role">{user.role || 'User'}</p>
+          </div>
+          <div className="dev-popup-body">
+            <div className="dev-popup-item">
+              <i className="fas fa-envelope"></i>
+              <span>{user.email || 'N/A'}</span>
+            </div>
+            <div className="dev-popup-item">
+              <i className="fas fa-phone"></i>
+              <span>{user.phone || 'N/A'}</span>
+            </div>
+            {user.address && (
+              <div className="dev-popup-item">
+                <i className="fas fa-map-marker-alt"></i>
+                <span>{user.address}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Original developer info
   return (
     <div className="dev-popup-overlay" onClick={onClose}>
       <div className="dev-popup-card" onClick={e => e.stopPropagation()}>

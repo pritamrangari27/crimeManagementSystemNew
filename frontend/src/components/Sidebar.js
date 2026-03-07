@@ -5,7 +5,6 @@ import { getCurrentUser, getUserRole, clearAuth, updateAuthUser } from '../utils
 import { authAPI } from '../api/client';
 import ConfirmModal from './ConfirmModal';
 import NotificationBell from './NotificationBell';
-import { DeveloperPopup } from './Footer';
 import '../styles/sidebar.css';
 
 const Sidebar = () => {
@@ -25,7 +24,6 @@ const Sidebar = () => {
   });
   const [passwordError, setPasswordError] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [showDevContact, setShowDevContact] = useState(false);
   const [passwordSaving, setPasswordSaving] = useState(false);
   const user = getCurrentUser();
   const userRole = getUserRole();
@@ -127,25 +125,6 @@ const Sidebar = () => {
               <span>{item.label}</span>
             </Nav.Link>
           ))}
-          
-          {/* Contact Button - Only for Users, after My FIRs */}
-          {userRole === 'User' && (
-            <button
-              className="sidebar-link contact-btn"
-              onClick={() => setShowDevContact(true)}
-              style={{
-                marginTop: '6px',
-                paddingLeft: '12px',
-                paddingRight: '12px',
-                textAlign: 'left',
-                justifyContent: 'flex-start'
-              }}
-              title="Contact Developer"
-            >
-              <i className="fas fa-envelope me-2"></i>
-              <span>Contact</span>
-            </button>
-          )}
         </Nav>
 
         {/* Sidebar Footer - User Profile Dropdown */}
@@ -647,9 +626,6 @@ const Sidebar = () => {
           onClick={() => setIsMobile(false)}
         ></div>
       )}
-
-      {/* Developer Contact Popup */}
-      <DeveloperPopup show={showDevContact} onClose={() => setShowDevContact(false)} />
     </>
   );
 };
