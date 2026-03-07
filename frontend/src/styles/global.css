@@ -1049,3 +1049,92 @@ body {
   opacity: 1 !important;
 }
 
+/* ================================================
+   DEFENSIVE BUTTON VISIBILITY RULES
+   Prevent buttons from disappearing due to state changes
+   ================================================ */
+
+/* Global Button Visibility */
+button, .btn, [role="button"] {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  appearance: button;
+}
+
+/* Disabled buttons should only be grayed, never hidden */
+button:disabled, .btn:disabled, [role="button"][aria-disabled="true"] {
+  opacity: 0.6 !important;
+  pointer-events: auto !important;
+  cursor: not-allowed !important;
+  visibility: visible !important;
+  display: inline-flex !important;
+}
+
+/* Bootstrap button variants - always visible */
+.btn-primary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-secondary,
+.btn-outline-primary, .btn-outline-secondary, .btn-outline-danger {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* Export page buttons */
+.export-buttons-container {
+  visibility: visible !important;
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 5 !important;
+  position: relative !important;
+}
+
+.export-buttons-container .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Containers should not hide buttons */
+.card, [class*="card"], form, [role="form"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Flex/Grid buttons */
+.d-flex button, .d-flex .btn,
+.row button, .row .btn,
+.col button, .col .btn,
+.container button, .container .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* Modal buttons */
+.modal-body button, .modal-body .btn,
+.modal-footer button, .modal-footer .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* Management table actions */
+.mgmt-actions button, .mgmt-actions .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* Prevent display:none that might get applied */
+button[style*="display:none"], 
+.btn[style*="display:none"],
+button[style*="visibility:hidden"],
+.btn[style*="visibility:hidden"] {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}

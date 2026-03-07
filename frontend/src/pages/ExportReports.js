@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Button, Card, Alert, Table, Row, Col, Spinner } from 'react-bootstrap';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import { advancedAPI } from '../api/client';
+import { ensureButtonVisibility } from '../utils/buttonVisibility';
 import '../styles/dashboard.css';
 
 const EXPORT_TYPES = [
@@ -23,6 +24,11 @@ const ExportReports = () => {
   const [previewHeaders, setPreviewHeaders] = useState([]);
   const [previewLoading, setPreviewLoading] = useState(false);
 
+  // Ensure buttons are always visible on mount and when state changes
+  useEffect(() => {
+    ensureButtonVisibility();
+  }, [previewData, previewLoading, exporting]);
+
   if (role !== 'Admin') {
     navigate('/login');
     return null;
@@ -30,8 +36,10 @@ const ExportReports = () => {
 
   const handlePreview = async (format) => {
     setError('');
+    
     // Guard: prevent multiple simultaneous exports
     if (previewLoading || exporting) {
+      console.warn('Export already in progress');
       return;
     }
     
@@ -45,14 +53,17 @@ const ExportReports = () => {
       const res = await advancedAPI.exportJSON(selectedType);
       const data = res.data?.data || [];
       if (data.length === 0) { 
-        setError('No data to export'); 
+        setError('No data to export');
         setPreviewLoading(false);
         return; 
       }
       const headers = Object.keys(data[0]);
       setPreviewHeaders(headers);
       setPreviewData({ data, format });
+      // Ensure buttons remain visible after state update
+      setTimeout(() => ensureButtonVisibility(), 100);
     } catch (err) {
+      console.error('Export error:', err);
       setError('Failed to load data');
       setPreviewLoading(false);
     } finally {
@@ -77,63 +88,80 @@ const ExportReports = () => {
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
+      console.error('CSV export error:', err);
       setError('CSV export failed');
       setTimeout(() => setError(''), 3000);
     } finally {
       setExporting('');
+      // Ensure buttons remain visible
+      setTimeout(() => ensureButtonVisibility(), 50);
     }
   };
 
   const handleDownloadExcel = () => {
     if (!previewData?.data) return;
-    const data = previewData.data;
-    const headers = Object.keys(data[0]);
-    const rows = [headers.join('\t'), ...data.map(row => headers.map(h => String(row[h] ?? '').replace(/\t/g, ' ')).join('\t'))];
-    const blob = new Blob([rows.join('\n')], { type: 'text/tab-separated-values' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${selectedType}_report_${Date.now()}.xls`;
-    link.click();
-    window.URL.revokeObjectURL(url);
-    setSuccess('✓ Excel file downloaded successfully!');
-    setTimeout(() => setSuccess(''), 4000);
+    try {
+      const data = previewData.data;
+      const headers = Object.keys(data[0]);
+      const rows = [headers.join('\t'), ...data.map(row => headers.map(h => String(row[h] ?? '').replace(/\t/g, ' ')).join('\t'))];
+      const blob = new Blob([rows.join('\n')], { type: 'text/tab-separated-values' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${selectedType}_report_${Date.now()}.xls`;
+      link.click();
+      setTimeout(() => window.URL.revokeObjectURL(url), 100);
+      setSuccess('✓ Excel file downloaded successfully!');
+      setTimeout(() => setSuccess(''), 4000);
+    } catch (err) {
+      console.error('Excel download error:', err);
+      setError('Failed to download Excel file');
+    } finally {
+      setTimeout(() => ensureButtonVisibility(), 50);
+    }
   };
 
   const handlePrintPDF = () => {
     if (!previewData?.data) return;
-    const data = previewData.data;
-    const headers = Object.keys(data[0]);
-    let html = `
-      <!DOCTYPE html><html><head><title>Crime Report - ${selectedType}</title>
-      <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        h1 { color: #1e293b; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 11px; }
-        th { background: #0ea5e9; color: white; padding: 8px 6px; text-align: left; }
-        td { padding: 6px; border-bottom: 1px solid #e5e7eb; }
-        tr:nth-child(even) { background: #f8fafc; }
-        .footer { margin-top: 30px; color: #94a3b8; font-size: 11px; text-align: center; }
-      </style></head><body>
-      <h1>Crime Management System — ${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Report</h1>
-      <p>Generated on ${new Date().toLocaleString()} | Total Records: ${data.length}</p>
-      <table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>`;
-    data.forEach(row => {
-      html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
-    });
-    html += `</tbody></table><div class="footer">Generated by Crime Management System</div></body></html>`;
-    
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(html);
-    printWindow.document.close();
-    printWindow.focus();
-    setTimeout(() => { 
-      printWindow.print();
-      // Don't close the window, let user handle it after printing
-    }, 500);
-    
-    setSuccess('✓ PDF print dialog opened! Select "Save as PDF" to download.');
-    setTimeout(() => setSuccess(''), 5000);
+    try {
+      const data = previewData.data;
+      const headers = Object.keys(data[0]);
+      let html = `
+        <!DOCTYPE html><html><head><title>Crime Report - ${selectedType}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          h1 { color: #1e293b; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 11px; }
+          th { background: #0ea5e9; color: white; padding: 8px 6px; text-align: left; }
+          td { padding: 6px; border-bottom: 1px solid #e5e7eb; }
+          tr:nth-child(even) { background: #f8fafc; }
+          .footer { margin-top: 30px; color: #94a3b8; font-size: 11px; text-align: center; }
+        </style></head><body>
+        <h1>Crime Management System — ${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Report</h1>
+        <p>Generated on ${new Date().toLocaleString()} | Total Records: ${data.length}</p>
+        <table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+      data.forEach(row => {
+        html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
+      });
+      html += `</tbody></table><div class="footer">Generated by Crime Management System</div></body></html>`;
+      
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => { 
+        printWindow.print();
+        // Don't close the window, let user handle it after printing
+      }, 500);
+      
+      setSuccess('✓ PDF print dialog opened! Select "Save as PDF" to download.');
+      setTimeout(() => setSuccess(''), 5000);
+    } catch (err) {
+      console.error('PDF print error:', err);
+      setError('Failed to open print dialog');
+    } finally {
+      setTimeout(() => ensureButtonVisibility(), 50);
+    }
   };
 
   // If preview data is available, show the preview page

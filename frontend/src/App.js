@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css';
 import './styles/mobile.css';
+import { ensureButtonVisibility } from './utils/buttonVisibility';
 
 // Context
 import { ChangePasswordProvider } from './context/ChangePasswordContext';
@@ -292,6 +293,16 @@ function AppLayout() {
   }
 
 function App() {
+  const [isReady, setIsReady] = React.useState(false);
+
+  React.useEffect(() => {
+    // Initialize global button visibility on app start
+    ensureButtonVisibility();
+    setIsReady(true);
+  }, []);
+
+  if (!isReady) return null;
+
   return (
     <Router>
       <ChangePasswordProvider>
