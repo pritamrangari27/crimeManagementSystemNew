@@ -65,6 +65,28 @@ router.post('/', (req, res) => {
     });
   }
 
+  // Validate complainant/accused information
+  if (!accused || accused.trim() === '') {
+    return res.status(400).json({ 
+      status: 'error', 
+      message: 'Accused name/description is required' 
+    });
+  }
+
+  if (!address || address.trim() === '') {
+    return res.status(400).json({ 
+      status: 'error', 
+      message: 'Address is required' 
+    });
+  }
+
+  if (!relation || relation.trim() === '') {
+    return res.status(400).json({ 
+      status: 'error', 
+      message: 'Relation to accused is required' 
+    });
+  }
+
   // Use station_id as station_name if needed (from form it's just station_code)
   const station_name = station_id;
 
