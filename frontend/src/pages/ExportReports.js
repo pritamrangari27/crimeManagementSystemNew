@@ -27,7 +27,40 @@ const ExportReports = () => {
   // Ensure buttons are always visible on mount and when state changes
   useEffect(() => {
     ensureButtonVisibility();
-  }, [previewData, previewLoading, exporting]);
+    
+    // Force check immediately
+    const checkVisibility = () => {
+      const buttons = document.querySelectorAll('.export-buttons-container button, .export-buttons-container .btn');
+      buttons.forEach(btn => {
+        btn.style.visibility = 'visible';
+        btn.style.display = 'inline-flex';
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+      });
+    };
+    
+    checkVisibility();
+    
+    // Check again after render completes
+    setTimeout(checkVisibility, 0);
+    setTimeout(checkVisibility, 100);
+    
+  }, [previewData, previewLoading, exporting, error, success]);
+
+  // Additional safety: run visibility check periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const btns = document.querySelectorAll('.export-buttons-container button');
+      btns.forEach(btn => {
+        const style = window.getComputedStyle(btn);
+        if (style.visibility === 'hidden' || style.opacity === '0' || style.display === 'none') {
+          btn.style.cssText = 'visibility: visible !important; display: inline-flex !important; opacity: 1 !important;';
+        }
+      });
+    }, 500);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   if (role !== 'Admin') {
     navigate('/login');
@@ -74,6 +107,7 @@ const ExportReports = () => {
   const handleCSVExport = async () => {
     setExporting('csv');
     setError('');
+    
     try {
       const res = await advancedAPI.exportCSV(selectedType);
       const blob = new Blob([res.data], { type: 'text/csv' });
@@ -81,87 +115,75 @@ const ExportReports = () => {
       const link = document.createElement('a');
       link.href = url;
       link.download = `${selectedType}_report_${Date.now()}.csv`;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+      
       // Add small delay before revoking to ensure download starts
       setTimeout(() => window.URL.revokeObjectURL(url), 100);
       setSuccess('CSV downloaded successfully!');
+      setExporting(''); // Clear exporting state
+      
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       console.error('CSV export error:', err);
       setError('CSV export failed');
+      setExporting(''); // Clear exporting state on error
       setTimeout(() => setError(''), 3000);
-    } finally {
-      setExporting('');
-      // Ensure buttons remain visible
-      setTimeout(() => ensureButtonVisibility(), 50);
     }
   };
 
   const handleDownloadExcel = () => {
     if (!previewData?.data) return;
-    try {
-      const data = previewData.data;
-      const headers = Object.keys(data[0]);
-      const rows = [headers.join('\t'), ...data.map(row => headers.map(h => String(row[h] ?? '').replace(/\t/g, ' ')).join('\t'))];
-      const blob = new Blob([rows.join('\n')], { type: 'text/tab-separated-values' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${selectedType}_report_${Date.now()}.xls`;
-      link.click();
-      setTimeout(() => window.URL.revokeObjectURL(url), 100);
-      setSuccess('✓ Excel file downloaded successfully!');
-      setTimeout(() => setSuccess(''), 4000);
-    } catch (err) {
-      console.error('Excel download error:', err);
-      setError('Failed to download Excel file');
-    } finally {
-      setTimeout(() => ensureButtonVisibility(), 50);
-    }
+    const data = previewData.data;
+    const headers = Object.keys(data[0]);
+    const rows = [headers.join('\t'), ...data.map(row => headers.map(h => String(row[h] ?? '').replace(/\t/g, ' ')).join('\t'))];
+    const blob = new Blob([rows.join('\n')], { type: 'text/tab-separated-values' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${selectedType}_report_${Date.now()}.xls`;
+    link.click();
+    window.URL.revokeObjectURL(url);
+    setSuccess('✓ Excel file downloaded successfully!');
+    setTimeout(() => setSuccess(''), 4000);
   };
 
   const handlePrintPDF = () => {
     if (!previewData?.data) return;
-    try {
-      const data = previewData.data;
-      const headers = Object.keys(data[0]);
-      let html = `
-        <!DOCTYPE html><html><head><title>Crime Report - ${selectedType}</title>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 20px; }
-          h1 { color: #1e293b; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px; }
-          table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 11px; }
-          th { background: #0ea5e9; color: white; padding: 8px 6px; text-align: left; }
-          td { padding: 6px; border-bottom: 1px solid #e5e7eb; }
-          tr:nth-child(even) { background: #f8fafc; }
-          .footer { margin-top: 30px; color: #94a3b8; font-size: 11px; text-align: center; }
-        </style></head><body>
-        <h1>Crime Management System — ${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Report</h1>
-        <p>Generated on ${new Date().toLocaleString()} | Total Records: ${data.length}</p>
-        <table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>`;
-      data.forEach(row => {
-        html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
-      });
-      html += `</tbody></table><div class="footer">Generated by Crime Management System</div></body></html>`;
-      
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(html);
-      printWindow.document.close();
-      printWindow.focus();
-      setTimeout(() => { 
-        printWindow.print();
-        // Don't close the window, let user handle it after printing
-      }, 500);
-      
-      setSuccess('✓ PDF print dialog opened! Select "Save as PDF" to download.');
-      setTimeout(() => setSuccess(''), 5000);
-    } catch (err) {
-      console.error('PDF print error:', err);
-      setError('Failed to open print dialog');
-    } finally {
-      setTimeout(() => ensureButtonVisibility(), 50);
-    }
+    const data = previewData.data;
+    const headers = Object.keys(data[0]);
+    let html = `
+      <!DOCTYPE html><html><head><title>Crime Report - ${selectedType}</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: #1e293b; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 11px; }
+        th { background: #0ea5e9; color: white; padding: 8px 6px; text-align: left; }
+        td { padding: 6px; border-bottom: 1px solid #e5e7eb; }
+        tr:nth-child(even) { background: #f8fafc; }
+        .footer { margin-top: 30px; color: #94a3b8; font-size: 11px; text-align: center; }
+      </style></head><body>
+      <h1>Crime Management System — ${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Report</h1>
+      <p>Generated on ${new Date().toLocaleString()} | Total Records: ${data.length}</p>
+      <table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+    data.forEach(row => {
+      html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
+    });
+    html += `</tbody></table><div class="footer">Generated by Crime Management System</div></body></html>`;
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => { 
+      printWindow.print();
+      // Don't close the window, let user handle it after printing
+    }, 500);
+    
+    setSuccess('✓ PDF print dialog opened! Select "Save as PDF" to download.');
+    setTimeout(() => setSuccess(''), 5000);
   };
 
   // If preview data is available, show the preview page
@@ -251,7 +273,7 @@ const ExportReports = () => {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', paddingTop: '38px', backgroundColor: '#f9fafb' }}>
       <style>{`
-        /* Defensive CSS to prevent button hiding */
+        /* ===== BUTTON VISIBILITY RULES - Never allow hiding ===== */
         .export-buttons-container {
           visibility: visible !important;
           display: block !important;
@@ -267,10 +289,43 @@ const ExportReports = () => {
           opacity: 1 !important;
           pointer-events: auto !important;
         }
-        
+
         .export-buttons-container .btn:disabled {
           opacity: 0.6 !important;
           pointer-events: auto !important;
+          cursor: not-allowed !important;
+          visibility: visible !important;
+        }
+
+        /* Bootstrap button safeguards */
+        .btn, button {
+          visibility: visible !important;
+          display: inline-flex !important;
+          opacity: 1 !important;
+        }
+
+        .btn-success, .btn-primary, .btn-danger {
+          visibility: visible !important;
+          display: inline-flex !important;
+          opacity: 1 !important;
+        }
+
+        /* Prevent Card from hiding buttons */
+        .card {
+          visibility: visible !important;
+          opacity: 1 !important;
+        }
+
+        .card-body {
+          visibility: visible !important;
+          opacity: 1 !important;
+        }
+
+        /* Row and Col button containers */
+        .row button, .col button {
+          visibility: visible !important;
+          display: inline-flex !important;
+          opacity: 1 !important;
         }
       `}</style>
       <div style={{ position: 'fixed', left: 0, top: 0, height: '100vh', zIndex: 1000 }}>
@@ -364,10 +419,12 @@ const ExportReports = () => {
                         transition: 'transform 0.2s', 
                         fontWeight: 600, 
                         minHeight: '60px', 
-                        display: 'flex !important', 
+                        display: 'inline-flex !important', 
                         visibility: 'visible !important', 
                         opacity: 1,
-                        pointerEvents: exporting === 'csv' ? 'auto' : 'auto'
+                        width: '100%',
+                        pointerEvents: 'auto',
+                        cursor: exporting === 'csv' ? 'not-allowed' : 'pointer'
                       }}
                       onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
                       onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
@@ -388,10 +445,12 @@ const ExportReports = () => {
                         transition: 'transform 0.2s', 
                         fontWeight: 600, 
                         minHeight: '60px', 
-                        display: 'flex !important', 
+                        display: 'inline-flex !important', 
                         visibility: 'visible !important', 
                         opacity: 1,
-                        pointerEvents: 'auto'
+                        width: '100%',
+                        pointerEvents: 'auto',
+                        cursor: previewLoading || exporting ? 'not-allowed' : 'pointer'
                       }}
                       onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
                       onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
@@ -412,10 +471,12 @@ const ExportReports = () => {
                         transition: 'transform 0.2s', 
                         fontWeight: 600, 
                         minHeight: '60px', 
-                        display: 'flex !important', 
+                        display: 'inline-flex !important', 
                         visibility: 'visible !important', 
                         opacity: 1,
-                        pointerEvents: 'auto'
+                        width: '100%',
+                        pointerEvents: 'auto',
+                        cursor: previewLoading || exporting ? 'not-allowed' : 'pointer'
                       }}
                       onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
                       onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}

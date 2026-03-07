@@ -1,0 +1,272 @@
+/* ============================================================
+   CRITICAL: BUTTON VISIBILITY RULES
+   Prevents buttons from disappearing due to state changes
+   ============================================================ */
+
+/* === GLOBAL BUTTON RULES === */
+button,
+.btn,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Disabled state: still visible, just grayed out */
+button:disabled,
+.btn:disabled,
+[role="button"][aria-disabled="true"] {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 0.6 !important;
+  pointer-events: auto !important;
+  cursor: not-allowed !important;
+}
+
+/* === BOOTSTRAP BUTTON VARIANTS === */
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info,
+.btn-light,
+.btn-dark,
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-danger,
+.btn-outline-warning,
+.btn-outline-info {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-success:disabled,
+.btn-danger:disabled,
+.btn-warning:disabled,
+.btn-info:disabled {
+  visibility: visible !important;
+  opacity: 0.6 !important;
+}
+
+/* === EXPORT BUTTONS SPECIFIC === */
+.export-buttons-container {
+  visibility: visible !important;
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 5 !important;
+  position: relative !important;
+}
+
+.export-buttons-container button,
+.export-buttons-container .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.export-buttons-container button:disabled,
+.export-buttons-container .btn:disabled {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 0.6 !important;
+  pointer-events: auto !important;
+}
+
+/* === CARD CONTAINERS (should not hide buttons) === */
+.card,
+[class*="card"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.card-body,
+[class*="card-body"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* === FORM CONTAINERS === */
+form,
+[role="form"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+form button,
+form .btn,
+[role="form"] button,
+[role="form"] .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* === FLEX/GRID CONTAINERS === */
+.d-flex button,
+.d-flex .btn,
+.row button,
+.row .btn,
+.col button,
+.col .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* === MODAL BUTTONS === */
+.modal-body button,
+.modal-body .btn,
+.modal-footer button,
+.modal-footer .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* === MANAGEMENT PAGE BUTTONS === */
+.mgmt-actions button,
+.mgmt-actions .btn,
+.management-controls button,
+.management-controls .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+.view-btn,
+.edit-btn,
+.delete-btn,
+.add-btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* === TABLE ACTION BUTTONS === */
+.table .btn,
+.table button,
+table .btn,
+table button {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* === ALERT ACTION BUTTONS === */
+.alert button,
+.alert .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* === PREVENT display:none === */
+button {
+  display: inline-flex !important;
+}
+
+.btn {
+  display: inline-flex !important;
+}
+
+/* === PREVENT visibility:hidden === */
+button {
+  visibility: visible !important;
+}
+
+.btn {
+  visibility: visible !important;
+}
+
+/* === PREVENT opacity:0 === */
+button {
+  opacity: 1 !important;
+}
+
+.btn {
+  opacity: 1 !important;
+}
+
+/* === PREVENT pointer-events:none === */
+button {
+  pointer-events: auto !important;
+}
+
+.btn {
+  pointer-events: auto !important;
+}
+
+/* === Size variations === */
+.btn-sm,
+.btn-lg,
+.btn-xs {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* === Group buttons === */
+.btn-group button,
+.btn-group .btn {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* === Ensure text is readable === */
+button,
+.btn {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+/* === Focus/Active states should not hide === */
+button:focus,
+.btn:focus,
+button:active,
+.btn:active {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* === Hover states === */
+button:hover:not(:disabled),
+.btn:hover:not(:disabled) {
+  visibility: visible !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
+}
+
+/* === Prevent any animation from hiding buttons === */
+@keyframes noHide {
+  0%, 100% {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+button,
+.btn {
+  animation: noHide !important;
+}
+
+/* === Emergency override for any inline styles that hide === */
+button[style*="display:none"] { display: inline-flex !important; }
+button[style*="visibility:hidden"] { visibility: visible !important; }
+button[style*="opacity:0"] { opacity: 1 !important; }
+
+.btn[style*="display:none"] { display: inline-flex !important; }
+.btn[style*="visibility:hidden"] { visibility: visible !important; }
+.btn[style*="opacity:0"] { opacity: 1 !important; }
