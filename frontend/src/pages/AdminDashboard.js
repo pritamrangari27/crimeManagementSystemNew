@@ -206,40 +206,40 @@ const AdminDashboard = () => {
                           border: '1px solid #e2e8f0',
                           borderRadius: '12px',
                           padding: '16px',
-                          boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
                           transition: 'all 0.3s ease',
                           cursor: 'pointer',
-                          minHeight: '180px',
+                          minHeight: '200px',
                           display: 'flex',
                           flexDirection: 'column'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(6,182,212,0.12)';
+                          e.currentTarget.style.boxShadow = '0 8px 16px rgba(6,182,212,0.15)';
                           e.currentTarget.style.borderColor = '#06b6d4';
-                          e.currentTarget.style.transform = 'translateY(-4px)';
+                          e.currentTarget.style.transform = 'translateY(-6px)';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+                          e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
                           e.currentTarget.style.borderColor = '#e2e8f0';
                           e.currentTarget.style.transform = 'translateY(0)';
                         }}>
                           {/* Header */}
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
                               {activity.icon ? (
                                 <i className={`${activity.icon}`} style={{ fontSize: '1.2rem', color: '#06b6d4' }}></i>
                               ) : (
                                 <i className="fas fa-circle-check" style={{ fontSize: '1.2rem', color: '#10b981' }}></i>
                               )}
-                              <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {activity.action}
                               </span>
                             </div>
                           </div>
 
                           {/* User */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                            <i className="fas fa-user-circle me-1" style={{ color: '#06b6d4', fontSize: '0.9rem' }}></i>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                            <i className="fas fa-user-circle" style={{ color: '#06b6d4', fontSize: '0.9rem' }}></i>
                             <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>
                               {activity.user ? activity.user : 'System'}
                             </span>
@@ -255,24 +255,31 @@ const AdminDashboard = () => {
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
-                            textOverflow: 'ellipsis'
+                            textOverflow: 'ellipsis',
+                            lineHeight: '1.5'
                           }}>
                             {activity.description || 'No description'}
                           </div>
 
-                          {/* Time */}
+                          {/* Date & Time */}
                           <div style={{
                             fontSize: '0.75rem',
-                            color: '#94a3b8',
+                            color: '#64748b',
                             fontWeight: 500,
-                            padding: '8px 12px',
-                            background: '#f8fafc',
+                            padding: '10px 12px',
+                            background: '#f1f5f9',
                             borderRadius: '8px',
-                            textAlign: 'center',
-                            marginTop: 'auto'
+                            marginTop: 'auto',
+                            lineHeight: '1.4'
                           }}>
-                            <i className="fas fa-clock me-1" style={{ color: '#10b981' }}></i>
-                            {activity.timestamp ? new Date(activity.timestamp).toLocaleTimeString('en-IN') : 'N/A'}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
+                              <i className="fas fa-calendar" style={{ color: '#0891b2', fontSize: '0.8rem' }}></i>
+                              <span>{activity.timestamp ? new Date(activity.timestamp).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <i className="fas fa-clock" style={{ color: '#06b6d4', fontSize: '0.8rem' }}></i>
+                              <span>{activity.timestamp ? new Date(activity.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }) : 'N/A'}</span>
+                            </div>
                           </div>
                         </div>
                       ))}
