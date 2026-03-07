@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Table, Card, Badge, Button, Spinner, Alert, Form, Modal } from 'react-bootstrap';
+import { Container, Badge, Button, Spinner, Alert, Modal, Form } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -226,6 +226,13 @@ const UserFIRList = () => {
     rejected: firs.filter(f => f.status === 'Rejected').length
   };
 
+  const statCards = [
+    { label: 'Total FIRs',  value: stats.total,      color: '#0f172a', icon: 'fas fa-file-alt', bg: 'rgba(15,23,42,0.08)' },
+    { label: 'Sent',        value: stats.sent,       color: '#06b6d4', icon: 'fas fa-paper-plane', bg: 'rgba(6,182,212,0.10)' },
+    { label: 'Approved',    value: stats.approved,   color: '#10b981', icon: 'fas fa-check-circle', bg: 'rgba(16,185,129,0.10)' },
+    { label: 'Rejected',    value: stats.rejected,   color: '#ef4444', icon: 'fas fa-times-circle', bg: 'rgba(239,68,68,0.10)' },
+  ];
+
   return (
     <>
       <Sidebar />
@@ -279,168 +286,164 @@ const UserFIRList = () => {
           </div>
         </div>
 
-        {/* Statistics Grid - 2x2 on Mobile */}
-        <Row className="mb-2" style={{ gap: '8px' }}>
-          <Col xs={6} sm={6} md={3} className="mb-2" style={{ padding: '0 4px' }}>
-            <Card className="border-0 shadow-sm text-center" style={{ minHeight: '80px' }}>
-              <Card.Body style={{ padding: '10px' }}>
-                <h6 className="text-muted mb-1" style={{ fontSize: '0.65rem' }}>Total FIRs</h6>
-                <h3 className="fw-bold text-primary mb-0" style={{ fontSize: '1.1rem' }}>{stats.total}</h3>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col xs={6} sm={6} md={3} className="mb-2" style={{ padding: '0 4px' }}>
-            <Card className="border-0 shadow-sm text-center" style={{ minHeight: '80px' }}>
-              <Card.Body style={{ padding: '10px' }}>
-                <h6 className="text-muted mb-1" style={{ fontSize: '0.65rem' }}>Sent</h6>
-                <h3 className="fw-bold text-info mb-0" style={{ fontSize: '1.1rem' }}>{stats.sent}</h3>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col xs={6} sm={6} md={3} className="mb-2" style={{ padding: '0 4px' }}>
-            <Card className="border-0 shadow-sm text-center" style={{ minHeight: '80px' }}>
-              <Card.Body style={{ padding: '10px' }}>
-                <h6 className="text-muted mb-1" style={{ fontSize: '0.65rem' }}>Approved</h6>
-                <h3 className="fw-bold text-success mb-0" style={{ fontSize: '1.1rem' }}>{stats.approved}</h3>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col xs={6} sm={6} md={3} className="mb-2" style={{ padding: '0 4px' }}>
-            <Card className="border-0 shadow-sm text-center" style={{ minHeight: '80px' }}>
-              <Card.Body style={{ padding: '10px' }}>
-                <h6 className="text-muted mb-1" style={{ fontSize: '0.65rem' }}>Rejected</h6>
-                <h3 className="fw-bold text-danger mb-0" style={{ fontSize: '1.1rem' }}>{stats.rejected}</h3>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        {/* Filters and Sorting - One Line */}
-        <Card className="border-0 shadow-sm mb-2">
-          <Card.Body style={{ padding: '10px 12px' }}>
-            <Row className="align-items-end" style={{ gap: '8px' }}>
-              <Col xs={12} sm={6} style={{ padding: '0 4px' }}>
-                <Form.Group style={{ marginBottom: '0' }}>
-                  <Form.Label className="fw-bold" style={{ fontSize: '0.75rem', marginBottom: '4px' }}>
-                    <i className="fas fa-filter me-1"></i> Filter by Status
-                  </Form.Label>
-                  <Form.Select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    style={{ padding: '4px 8px', fontSize: '0.8rem' }}
-                  >
-                    <option value="All">All Statuses</option>
-                    <option value="Sent">Sent</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Rejected">Rejected</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={6} style={{ padding: '0 4px' }}>
-                <Form.Group style={{ marginBottom: '0' }}>
-                  <Form.Label className="fw-bold" style={{ fontSize: '0.75rem', marginBottom: '4px' }}>
-                    <i className="fas fa-sort me-1"></i> Sort By
-                  </Form.Label>
-                  <Form.Select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    style={{ padding: '4px 8px', fontSize: '0.8rem' }}
-                  >
-                    <option value="date">Date (Newest First)</option>
-                    <option value="status">Status</option>
-                    <option value="crime">Crime Type</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-
-        {/* FIR Table - Hide on Mobile */}
-        {loading ? (
-              <div className="text-center py-3">
-                <Spinner animation="border" size="sm" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-                <p className="mt-2 text-muted small">Loading your FIRs...</p>
-              </div>
-            ) : error ? (
-              <Alert variant="danger" className="m-2">
-                {error}
-              </Alert>
-            ) : filteredFirs.length === 0 ? (
-              <div className="text-center py-3">
-                <i className="fas fa-inbox text-muted" style={{ fontSize: '36px' }}></i>
-                <p className="mt-2 text-muted small">No FIRs found</p>
-              </div>
-            ) : (
-              <div className="mgmt-table-wrap">
-                <div className="mgmt-table-scroll">
-                <table className="mgmt-table">
-                  <thead>
-                    <tr>
-                      <th>Sr. No.</th>
-                      <th>FIR ID</th>
-                      <th>Crime Type</th>
-                      <th>Location</th>
-                      <th>Accused</th>
-                      <th>Complainant</th>
-                      <th>Address</th>
-                      <th>Station</th>
-                      <th>Filed Date</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredFirs.map((fir, idx) => (
-                      <tr key={fir.id}>
-                        <td>{idx + 1}</td>
-                        <td className="fw-bold text-primary">
-                          FIR-{String(fir.id).padStart(4, '0')}
-                        </td>
-                        <td>
-                          <span className="mgmt-badge info">
-                            {fir.crime_type}
-                          </span>
-                        </td>
-                        <td>{fir.location || '-'}</td>
-                        <td className="fw-bold text-danger">{fir.accused || fir.accused_name || 'Unknown'}</td>
-                        <td>{fir.name || fir.complainant_name || '-'}</td>
-                        <td>{fir.address || '-'}</td>
-                        <td>
-                          <small className="text-muted">{fir.station_id}</small>
-                        </td>
-                        <td className="small">
-                          {formatDate(fir.created_at || fir.date)}
-                        </td>
-                        <td>
-                          <span className={`mgmt-badge ${getStatusVariant(fir.status)}`}>
-                            <i className={`fas ${getStatusIcon(fir.status)} me-1`}></i>
-                            {fir.status}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="mgmt-actions">
-                            <button
-                              className="view"
-                              onClick={() => handleViewFIR(fir)}
-                            >
-                              <i className="fas fa-eye me-1"></i> View
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+        {/* Statistics Grid - Bento Style */}
+        <div className="bento-grid cols-4 stagger-enter" style={{ marginBottom: 'var(--grid-gap)' }}>
+          {statCards.map((s, i) => (
+            <div key={i} className="bento-card" style={{ padding: 'var(--card-pad-sm)' }}>
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <div className="bento-stat-label">{s.label}</div>
+                  <div className="bento-stat-value" style={{ color: s.color }}>{s.value}</div>
+                </div>
+                <div className="bento-stat-icon" style={{ background: s.bg, color: s.color }}>
+                  <i className={s.icon}></i>
                 </div>
               </div>
-            )}
+            </div>
+          ))}
+        </div>
+
+        {/* Filters and Sorting - One Line */}
+        <div className="bento-card" style={{ padding: '12px 16px', marginBottom: 'var(--grid-gap)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div>
+              <label className="fw-bold" style={{ fontSize: '0.75rem', marginBottom: '4px', display: 'block', color: '#0f172a' }}>
+                <i className="fas fa-filter me-1"></i> Filter by Status
+              </label>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '6px 8px',
+                  fontSize: '0.8rem',
+                  border: '1.5px solid #e2e8f0',
+                  borderRadius: '8px',
+                  fontFamily: 'inherit',
+                  background: '#fff',
+                  color: '#0f172a',
+                  outline: 'none',
+                  transition: 'border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                  cursor: 'pointer'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#10b981';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.10)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e2e8f0';
+                  e.target.style.boxShadow = 'none';
+                }}
+              >
+                <option value="All">All Statuses</option>
+                <option value="Sent">Sent</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+            <div>
+              <label className="fw-bold" style={{ fontSize: '0.75rem', marginBottom: '4px', display: 'block', color: '#0f172a' }}>
+                <i className="fas fa-sort me-1"></i> Sort By
+              </label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '6px 8px',
+                  fontSize: '0.8rem',
+                  border: '1.5px solid #e2e8f0',
+                  borderRadius: '8px',
+                  fontFamily: 'inherit',
+                  background: '#fff',
+                  color: '#0f172a',
+                  outline: 'none',
+                  transition: 'border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                  cursor: 'pointer'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#10b981';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.10)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e2e8f0';
+                  e.target.style.boxShadow = 'none';
+                }}
+              >
+                <option value="date">Date (Newest First)</option>
+                <option value="status">Status</option>
+                <option value="crime">Crime Type</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* FIR Table */}
+        <div className="bento-card stagger-enter" style={{ padding: 0, overflow: 'hidden' }}>
+          <div style={{ padding: '10px 16px', fontWeight: 700, fontSize: '0.8rem', borderBottom: '1.5px solid #e2e8f0', color: '#0f172a' }}>
+            <i className="fas fa-list-alt me-2" style={{ color: '#10b981' }}></i>FIR Records
+          </div>
+          {loading ? (
+            <div className="text-center py-3">
+              <Spinner animation="border" size="sm" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+              <p className="mt-2 text-muted small">Loading your FIRs...</p>
+            </div>
+          ) : error ? (
+            <Alert variant="danger" className="m-2">
+              {error}
+            </Alert>
+          ) : filteredFirs.length === 0 ? (
+            <div style={{ padding: '30px 16px', textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>
+              No FIRs found
+            </div>
+          ) : (
+            <div className="dense-table-wrap" style={{ border: 'none', borderRadius: 0, boxShadow: 'none', maxHeight: 'calc(100vh - 340px)', overflowY: 'auto' }}>
+              <table className="table table-sm mb-0">
+                <thead>
+                  <tr>
+                    <th>FIR ID</th>
+                    <th>Crime Type</th>
+                    <th>Location</th>
+                    <th>Accused</th>
+                    <th>Complainant</th>
+                    <th>Filed Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredFirs.map((fir) => (
+                    <tr key={fir.id}>
+                      <td style={{ fontWeight: 600 }}>FIR-{String(fir.id).padStart(4, '0')}</td>
+                      <td>{fir.crime_type}</td>
+                      <td>{fir.location || '-'}</td>
+                      <td className="fw-bold text-danger">{fir.accused || fir.accused_name || 'Unknown'}</td>
+                      <td>{fir.name || fir.complainant_name || '-'}</td>
+                      <td>{new Date(fir.created_at).toLocaleDateString()}</td>
+                      <td>
+                        <span className={`badge bg-${getStatusVariant(fir.status)}`} style={{ fontSize: '0.72rem', padding: '3px 8px' }}>
+                          {fir.status}
+                        </span>
+                      </td>
+                      <td>
+                        <Button onClick={() => handleViewFIR(fir)} variant="info" size="sm"
+                          style={{ fontSize: '0.75rem', padding: '3px 10px', borderRadius: 6 }}>
+                          <i className="fas fa-eye me-1"></i>View
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
 
         {/* Pagination Info */}
         {filteredFirs.length > 0 && (
-          <div className="mt-3 text-center text-muted small">
+          <div style={{ marginTop: '10px', textAlign: 'center', color: '#94a3b8', fontSize: '0.8rem' }}>
             Showing {filteredFirs.length} of {firs.length} FIRs
           </div>
         )}
