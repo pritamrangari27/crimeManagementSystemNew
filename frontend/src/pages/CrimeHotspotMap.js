@@ -345,12 +345,12 @@ const CrimeHotspotMap = () => {
                       </p>
                     </div>
                   ) : (
-                    <div style={{ height: '350px', width: '100%' }}>
+                    <div style={{ height: '280px', width: '100%' }}>
                       <MapContainer
                         center={defaultCenter}
                         zoom={defaultZoom}
                         style={{ height: '100%', width: '100%' }}
-                        scrollWheelZoom={false}
+                        scrollWheelZoom={true}
                       >
                         <TileLayer
                           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -368,46 +368,6 @@ const CrimeHotspotMap = () => {
                       </MapContainer>
                     </div>
                   )}
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-
-          {/* Legend */}
-          <Row className="mb-4">
-            <Col>
-              <Card className="border-0 shadow-sm">
-                <Card.Body>
-                  <h6 className="fw-bold mb-3" style={{ fontSize: '0.9rem', color: '#1a202c' }}>
-                    <i className="fas fa-info-circle me-2" style={{ color: '#667eea' }}></i>Map Legend
-                  </h6>
-                  <div className="d-flex flex-wrap gap-3">
-                    {[
-                      { label: 'Theft', color: '#e74c3c' },
-                      { label: 'Robbery', color: '#c0392b' },
-                      { label: 'Assault', color: '#e67e22' },
-                      { label: 'Murder', color: '#8e44ad' },
-                      { label: 'Fraud', color: '#2980b9' },
-                      { label: 'Cybercrime', color: '#16a085' },
-                      { label: 'Drug Offense', color: '#d35400' },
-                      { label: 'Other', color: '#667eea' },
-                    ].map((item, i) => (
-                      <div key={i} className="d-flex align-items-center gap-1">
-                        <div style={{
-                          width: 14, height: 14, borderRadius: '50%',
-                          backgroundColor: item.color, border: '2px solid #fff',
-                          boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
-                        }}></div>
-                        <span style={{ fontSize: '0.78rem', color: '#555' }}>{item.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-2 d-flex flex-wrap gap-3">
-                    <div className="d-flex align-items-center gap-1">
-                      <div style={{ width: 20, height: 10, background: 'linear-gradient(90deg, #2ecc71, #f1c40f, #e74c3c, #8e44ad)', borderRadius: 3 }}></div>
-                      <span style={{ fontSize: '0.78rem', color: '#555' }}>Heatmap: Low → High density</span>
-                    </div>
-                  </div>
                 </Card.Body>
               </Card>
             </Col>

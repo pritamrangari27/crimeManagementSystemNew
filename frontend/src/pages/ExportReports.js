@@ -29,16 +29,20 @@ const ExportReports = () => {
   }
 
   const handlePreview = async (format) => {
-    setPreviewLoading(true);
     setError('');
+    if (format === 'csv') {
+      await handleCSVExport();
+      return;
+    }
+    
+    setPreviewLoading(true);
     try {
-      if (format === 'csv') {
-        await handleCSVExport();
-        return;
-      }
       const res = await advancedAPI.exportJSON(selectedType);
       const data = res.data?.data || [];
-      if (data.length === 0) { setError('No data to export'); setPreviewLoading(false); return; }
+      if (data.length === 0) { 
+        setError('No data to export'); 
+        return; 
+      }
       const headers = Object.keys(data[0]);
       setPreviewHeaders(headers);
       setPreviewData({ data, format });
@@ -278,12 +282,12 @@ const ExportReports = () => {
                     variant="success"
                     className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handlePreview('csv')}
-                    disabled={!!exporting || previewLoading}
+                    disabled={exporting === 'csv' || previewLoading}
                     style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px' }}
                     onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                     onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                   >
-                    {exporting === 'csv' || (previewLoading) ? <Spinner size="sm" /> : <i className="fas fa-file-csv" style={{ fontSize: '1.3rem' }}></i>}
+                    {exporting === 'csv' ? <Spinner size="sm" /> : <i className="fas fa-file-csv" style={{ fontSize: '1.3rem' }}></i>}
                     Download CSV
                   </Button>
                 </Col>

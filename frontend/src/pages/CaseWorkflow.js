@@ -194,14 +194,13 @@ const CaseWorkflow = () => {
                     <th>Complainant</th>
                     <th>Station</th>
                     <th>Priority</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredFIRs.length === 0 ? (
-                    <tr><td colSpan={7} className="mgmt-empty">No cases found</td></tr>
+                    <tr><td colSpan={6} className="mgmt-empty">No cases found</td></tr>
                   ) : filteredFIRs.map((fir, idx) => (
-                    <tr key={fir.id}>
+                    <tr key={fir.id} onClick={() => viewTimeline(fir)} style={{ cursor: 'pointer' }}>
                       <td>{idx + 1}</td>
                       <td style={{ fontWeight: 600 }}>{fir.fir_number || `FIR-${String(fir.id).padStart(4, '0')}`}</td>
                       <td>{fir.crime_type}</td>
@@ -211,21 +210,6 @@ const CaseWorkflow = () => {
                         <span className={`mgmt-badge ${fir.priority === 'Critical' ? 'danger' : fir.priority === 'High' ? 'warning' : fir.priority === 'Low' ? 'secondary' : 'info'}`}>
                           {fir.priority || 'Medium'}
                         </span>
-                      </td>
-                      <td>
-                        <div className="mgmt-actions">
-                          <button className="view" onClick={() => viewTimeline(fir)}>
-                            <i className="fas fa-timeline me-1"></i>Timeline
-                          </button>
-                          <button className="view" style={{ background: 'rgba(6,182,212,0.10)', color: '#06b6d4' }} onClick={() => viewFIRDetails(fir)}>
-                            <i className="fas fa-eye"></i>
-                          </button>
-                          {(role === 'Admin' || role === 'Police') && (fir.workflow_stage || 'FIR Filed') !== 'Closed' && (
-                            <button className="view" style={{ background: 'rgba(139,92,246,0.10)', color: '#8b5cf6' }} onClick={() => { setStageSelectFIR(fir); setSelectedStage(fir.workflow_stage || 'FIR Filed'); }}>
-                              <i className="fas fa-step-forward me-1"></i>Stage
-                            </button>
-                          )}
-                        </div>
                       </td>
                     </tr>
                   ))}

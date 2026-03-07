@@ -31,6 +31,7 @@ import CrimeHotspotMap from './pages/CrimeHotspotMap';
 import CaseWorkflow from './pages/CaseWorkflow';
 import CrimePatterns from './pages/CrimePatterns';
 import ExportReports from './pages/ExportReports';
+import ChangePassword from './pages/ChangePassword';
 
 // Components
 import PrivateRoute from './api/PrivateRoute';
@@ -276,6 +277,14 @@ function AppLayout() {
             element={
               <PrivateRoute>
                 <PoliceProfile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/change-password"
+            element={
+              <PrivateRoute>
+                <ChangePassword />
               </PrivateRoute>
             }
           />
