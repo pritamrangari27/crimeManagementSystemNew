@@ -448,7 +448,7 @@ async function runMigrations(db) {
     });
   });
 
-  // Migration 26: Backfill missing accused, relation, and address for all FIRs
+  // Migration 26: Backfill missing accused, relation, and address for all FIRs with realistic data
   await new Promise((resolve) => {
     // First, get all FIRs with missing data
     db.all(
@@ -464,17 +464,68 @@ async function runMigrations(db) {
           return;
         }
 
+        // Proper Indian names (realistic accused names)
         const accusedNames = [
-          'Unknown Suspect', 'Unidentified Person', 'Suspect at Large', 
-          'Person of Interest', 'Alleged Perpetrator', 'Unnamed Accused'
+          'Rajesh Kumar', 'Amit Singh', 'Vikram Patel', 'Arjun Nair',
+          'Nikhil Sharma', 'Suresh Deshmukh', 'Imran Khan', 'Ganesh More',
+          'Farid Shaikh', 'Ajay Tiwari', 'Santosh Gupta', 'Rafiq Patel',
+          'Pravin Jagtap', 'Dinesh Rathod', 'Manish Tiwari', 'Zakir Hussain',
+          'Rohit Sawant', 'Vijay Sonawane', 'Sunil Gaikwad', 'Anil Bhosale',
+          'Sagar Mhatre', 'Kishor Nikam', 'Bablu Shukla', 'Wasim Ahmed',
+          'Pappu Yadav', 'Chhota Rajan', 'Kamal Haasan', 'Mohan Agashe',
+          'Bharat Jadhav', 'Akbar Ali', 'Ramzan Shaikh', 'Guddu Pandit',
+          'Firoz Khan', 'Babu Bhai', 'Harish Reddy', 'Pradeep Kumar',
+          'Vivek Malhotra', 'Atul Joshi', 'Sanjay Verma', 'Harsh Pandey'
         ];
+        
+        // Proper relationship types
         const relations = [
-          'Stranger', 'Acquaintance', 'Neighbor', 'Colleague', 'Family Member',
-          'Online Contact', 'Business Associate', 'Unknown Relationship'
+          'Victim', 'Witness', 'Complainant', 'Friend', 'Family Member',
+          'Neighbor', 'Colleague', 'Business Associate', 'Employee',
+          'Employer', 'Acquaintance', 'Stranger', 'Unknown Person',
+          'Online Acquaintance', 'Former Partner', 'Spouse', 'Tenant',
+          'Landlord', 'Customer', 'Vendor', 'Client'
         ];
+        
+        // Proper Mumbai addresses
         const addresses = [
-          'Location Unknown', 'Not Specified', 'Undisclosed Address', 
-          'To Be Determined', 'Under Investigation', 'Anonymous Location'
+          'Flat 12, Colaba Market Rd, Mumbai 400001',
+          'Navy Nagar, Colaba, Mumbai 400005',
+          '221 Churchgate Apts, Fort, Mumbai 400020',
+          '45 Linking Road, Bandra West, Mumbai 400050',
+          'Lokhandwala Complex, Andheri West, Mumbai 400053',
+          '14 Shivaji Park Rd, Dadar East, Mumbai 400014',
+          'IC Colony, Borivali West, Mumbai 400092',
+          'BKC Apartments, Kurla West, Mumbai 400070',
+          'Hiranandani Gardens, Powai, Mumbai 400076',
+          'Irla Bridge, Vile Parle, Mumbai 400056',
+          'JVPD Scheme, Juhu, Mumbai 400049',
+          'Film City Road, Goregaon West, Mumbai 400062',
+          'Link Road, Malad West, Mumbai 400064',
+          'Gateway Area, Colaba, Mumbai 400005',
+          'Nariman Point, South Mumbai 400021',
+          'Bandra Reclamation, Bandra, Mumbai 400050',
+          'Four Bungalows, Andheri, Mumbai 400053',
+          'Dadar TT Circle, Dadar East, Mumbai 400014',
+          'Western Express Highway, Borivali, Mumbai 400092',
+          'Nehru Nagar, Kurla, Mumbai 400070',
+          'Balaji Nagar, Vile Parle, Mumbai 400056',
+          'DN Nagar, Juhu, Mumbai 400049',
+          'Aarey Colony, Goregaon, Mumbai 400065',
+          'Orlem, Malad West, Mumbai 400064',
+          'Sassoon Dock, Colaba, Mumbai 400005',
+          'Oval Maidan, South Mumbai 400001',
+          'Turner Road, Bandra, Mumbai 400050',
+          'Versova, Andheri West, Mumbai 400061',
+          'Prabhadevi, Dadar, Mumbai 400025',
+          'Dahisar Check Naka, Mumbai 400068',
+          'LBS Marg, Kurla, Mumbai 400070',
+          'Chandivali, Powai, Mumbai 400072',
+          'Parle East, Mumbai 400057',
+          'Juhu Beach Road, Juhu, Mumbai 400049',
+          'Banasthali Cross Road, Vile Parle, Mumbai 400056',
+          '42 C Wing, Building A, Mahim, Mumbai 400016',
+          'Plot 89, Sector 5, Airoli, Mumbai 400708'
         ];
 
         let completed = 0;
@@ -497,7 +548,7 @@ async function runMigrations(db) {
             (err) => {
               completed++;
               if (completed === firs.length) {
-                console.log(`✓ Backfilled ${firs.length} FIRs with accused, relation, or address data`);
+                console.log(`✓ Backfilled ${firs.length} FIRs with proper accused names, relations, and addresses`);
                 resolve();
               }
             }
