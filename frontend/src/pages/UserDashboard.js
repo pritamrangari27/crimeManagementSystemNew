@@ -18,6 +18,7 @@ const UserDashboard = () => {
   const [viewingFIR, setViewingFIR] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showFIRModal, setShowFIRModal] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [stations, setStations] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [firError, setFirError] = useState('');
@@ -234,8 +235,6 @@ const UserDashboard = () => {
       <Footer />
     </>
   );
-
-  const [showContact, setShowContact] = useState(false);
 
   const sentFIRs = myFIRs.filter(f => f.status === 'Sent').length;
   const approvedFIRs = myFIRs.filter(f => f.status === 'Approved').length;
