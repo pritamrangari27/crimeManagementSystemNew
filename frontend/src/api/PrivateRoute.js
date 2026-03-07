@@ -47,8 +47,8 @@ const PrivateRoute = ({ children }) => {
         // User can access: /user/*, /fir/*, any profile
         isAllowed = pathname.startsWith('/user') || 
                    pathname.includes('fir') || 
-                   pathname.includes('profile') || 
-                   pathname === '/change-passwo
+                   pathname.includes('profile');
+        break;
 
       default:
         isAllowed = false;
