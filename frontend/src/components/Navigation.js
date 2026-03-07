@@ -112,8 +112,8 @@ const Navigation = () => {
                     else navigate('/profile');
                   }} style={{ cursor: 'pointer' }}>
                     My Profile
-                  </Dropdown.Item>openChangePasswordModal(
-                  <Dropdown.Item onClick={() => navigate('/change-password')} style={{ cursor: 'pointer' }}>
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => openChangePasswordModal()} style={{ cursor: 'pointer' }}>
                     Change Password
                   </Dropdown.Item>
                   <Dropdown.Divider />
