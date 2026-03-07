@@ -146,6 +146,64 @@ const CaseWorkflow = () => {
 
   return (
     <>
+      <style>{`
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideIn {
+          from {
+            transform: translateX(-100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+
+        .mgmt-table tbody tr {
+          position: relative;
+        }
+
+        .mgmt-table tbody tr::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width: 3px;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .mgmt-table tbody tr:hover::before {
+          opacity: 1;
+        }
+
+        .mgmt-table th {
+          position: sticky;
+          top: 0;
+          z-index: 10;
+        }
+      `}</style>
       <Sidebar />
       <div className="with-sidebar">
         <Container fluid className="mgmt-container page-stagger">
@@ -185,36 +243,123 @@ const CaseWorkflow = () => {
           {/* FIR Table */}
           <div className="mgmt-table-wrap">
             <div className="mgmt-table-scroll">
-              <table className="mgmt-table">
+              <table className="mgmt-table" style={{ borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr>
-                    <th>Sr. No.</th>
-                    <th>FIR #</th>
-                    <th>Crime Type</th>
-                    <th>Complainant</th>
-                    <th>Station</th>
-                    <th>Priority</th>
-                    <th>Timeline</th>
+                  <tr style={{
+                    background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                    color: '#fff',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 10,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
+                    <th style={{ padding: '14px 12px', textAlign: 'center' }}>Sr. No.</th>
+                    <th style={{ padding: '14px 12px', textAlign: 'left' }}>FIR #</th>
+                    <th style={{ padding: '14px 12px', textAlign: 'left' }}>Crime Type</th>
+                    <th style={{ padding: '14px 12px', textAlign: 'left' }}>Complainant</th>
+                    <th style={{ padding: '14px 12px', textAlign: 'left' }}>Station</th>
+                    <th style={{ padding: '14px 12px', textAlign: 'center' }}>Priority</th>
+                    <th style={{ padding: '14px 12px', textAlign: 'center' }}>Timeline</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredFIRs.length === 0 ? (
-                    <tr><td colSpan={7} className="mgmt-empty">No cases found</td></tr>
+                    <tr><td colSpan={7} className="mgmt-empty" style={{ padding: '40px 20px', textAlign: 'center', color: '#94a3b8' }}>
+                      <i className="fas fa-inbox me-2" style={{ fontSize: '2rem', opacity: 0.3 }}></i>
+                      <p style={{ margin: '8px 0 0' }}>No cases found</p>
+                    </td></tr>
                   ) : filteredFIRs.map((fir, idx) => (
-                    <tr key={fir.id}>
-                      <td>{idx + 1}</td>
-                      <td style={{ fontWeight: 600 }}>{fir.fir_number || `FIR-${String(fir.id).padStart(4, '0')}`}</td>
-                      <td>{fir.crime_type}</td>
-                      <td>{fir.complainant_name || fir.name || '-'}</td>
-                      <td>{fir.station_name || '-'}</td>
-                      <td>
-                        <span className={`mgmt-badge ${fir.priority === 'Critical' ? 'danger' : fir.priority === 'High' ? 'warning' : fir.priority === 'Low' ? 'secondary' : 'info'}`}>
-                          {fir.priority || 'Medium'}
+                    <tr key={fir.id} style={{
+                      animation: `slideInUp 0.5s ease ${idx * 0.05}s backwards`,
+                      borderBottom: '1px solid #e2e8f0',
+                      transition: 'all 0.3s ease',
+                      background: idx % 2 === 0 ? '#ffffff' : '#f8fafc',
+                      cursor: 'pointer'
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = 'rgba(99,102,241,0.05)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(99,102,241,0.15)';
+                      e.currentTarget.style.transform = 'translateX(4px)';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = idx % 2 === 0 ? '#ffffff' : '#f8fafc';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.transform = 'translateX(0)';
+                    }}>
+                      <td style={{ padding: '14px 12px', textAlign: 'center', fontWeight: 700, color: '#6366f1', fontSize: '0.9rem' }}>
+                        {idx + 1}
+                      </td>
+                      <td style={{ padding: '14px 12px', fontWeight: 700, color: '#0f172a', fontSize: '0.9rem', letterSpacing: '0.3px' }}>
+                        {fir.fir_number || `FIR-${String(fir.id).padStart(4, '0')}`}
+                      </td>
+                      <td style={{ padding: '14px 12px', color: '#334155', fontSize: '0.85rem' }}>
+                        <span style={{
+                          background: 'rgba(239,68,68,0.1)',
+                          color: '#dc2626',
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          fontWeight: 600,
+                          fontSize: '0.8rem',
+                          display: 'inline-block'
+                        }}>
+                          <i className="fas fa-exclamation-circle me-1"></i>{fir.crime_type}
                         </span>
                       </td>
-                      <td>
-                        <button className="view" onClick={() => viewTimeline(fir)} style={{ background: 'rgba(99,102,241,0.10)', color: '#6366f1', fontWeight: 600, fontSize: '0.82rem', padding: '6px 12px', borderRadius: 6 }}>
-                          <i className="fas fa-timeline me-1"></i>View & Update
+                      <td style={{ padding: '14px 12px', color: '#334155', fontSize: '0.9rem', fontWeight: 500 }}>
+                        <i className="fas fa-user-circle me-2" style={{ color: '#10b981', fontSize: '0.9rem' }}></i>
+                        {fir.complainant_name || fir.name || '-'}
+                      </td>
+                      <td style={{ padding: '14px 12px', color: '#334155', fontSize: '0.9rem', fontWeight: 500 }}>
+                        <i className="fas fa-building me-2" style={{ color: '#6366f1', fontSize: '0.9rem' }}></i>
+                        {fir.station_name && fir.station_name.split(' ').slice(0, 2).join(' ') || '-'}
+                      </td>
+                      <td style={{ padding: '14px 12px', textAlign: 'center' }}>
+                        <span style={{
+                          background: fir.priority === 'Critical' ? '#fee2e2' : fir.priority === 'High' ? '#fef3c7' : fir.priority === 'Low' ? '#f0fdf4' : '#dbeafe',
+                          color: fir.priority === 'Critical' ? '#991b1b' : fir.priority === 'High' ? '#92400e' : fir.priority === 'Low' ? '#166534' : '#064e3b',
+                          padding: '6px 12px',
+                          borderRadius: '12px',
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          display: 'inline-block',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.3px'
+                        }}>
+                          {fir.priority === 'Critical' ? '🔴' : fir.priority === 'High' ? '🟠' : fir.priority === 'Low' ? '🟢' : '🔵'} {fir.priority || 'Medium'}
+                        </span>
+                      </td>
+                      <td style={{ padding: '14px 12px', textAlign: 'center' }}>
+                        <button className="view" onClick={() => viewTimeline(fir)} style={{
+                          background: 'linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.15) 100%)',
+                          color: '#6366f1',
+                          fontWeight: 700,
+                          fontSize: '0.8rem',
+                          padding: '8px 16px',
+                          borderRadius: '8px',
+                          border: '1.5px solid rgba(99,102,241,0.3)',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px'
+                        }}
+                        onMouseEnter={e => {
+                          e.target.style.background = 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)';
+                          e.target.style.color = '#fff';
+                          e.target.style.boxShadow = '0 6px 16px rgba(99,102,241,0.3)';
+                          e.target.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={e => {
+                          e.target.style.background = 'linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.15) 100%)';
+                          e.target.style.color = '#6366f1';
+                          e.target.style.boxShadow = 'none';
+                          e.target.style.transform = 'translateY(0)';
+                        }}>
+                          <i className="fas fa-timeline"></i>View & Update
                         </button>
                       </td>
                     </tr>

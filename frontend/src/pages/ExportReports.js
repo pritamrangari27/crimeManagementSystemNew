@@ -30,6 +30,11 @@ const ExportReports = () => {
 
   const handlePreview = async (format) => {
     setError('');
+    // Guard: prevent multiple simultaneous exports
+    if (previewLoading || exporting) {
+      return;
+    }
+    
     if (format === 'csv') {
       await handleCSVExport();
       return;
@@ -41,6 +46,7 @@ const ExportReports = () => {
       const data = res.data?.data || [];
       if (data.length === 0) { 
         setError('No data to export'); 
+        setPreviewLoading(false);
         return; 
       }
       const headers = Object.keys(data[0]);
@@ -48,6 +54,7 @@ const ExportReports = () => {
       setPreviewData({ data, format });
     } catch (err) {
       setError('Failed to load data');
+      setPreviewLoading(false);
     } finally {
       setPreviewLoading(false);
     }
@@ -64,14 +71,16 @@ const ExportReports = () => {
       link.href = url;
       link.download = `${selectedType}_report_${Date.now()}.csv`;
       link.click();
-      window.URL.revokeObjectURL(url);
+      // Add small delay before revoking to ensure download starts
+      setTimeout(() => window.URL.revokeObjectURL(url), 100);
       setSuccess('CSV downloaded successfully!');
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       setError('CSV export failed');
+      setTimeout(() => setError(''), 3000);
     } finally {
       setExporting('');
-      setPreviewLoading(false);
-      setTimeout(() => setSuccess(''), 3000);
     }
   };
 
@@ -213,6 +222,29 @@ const ExportReports = () => {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', paddingTop: '38px', backgroundColor: '#f9fafb' }}>
+      <style>{`
+        /* Defensive CSS to prevent button hiding */
+        .export-buttons-container {
+          visibility: visible !important;
+          display: block !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          z-index: 5 !important;
+          position: relative !important;
+        }
+        
+        .export-buttons-container .btn {
+          visibility: visible !important;
+          display: inline-flex !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+        }
+        
+        .export-buttons-container .btn:disabled {
+          opacity: 0.6 !important;
+          pointer-events: auto !important;
+        }
+      `}</style>
       <div style={{ position: 'fixed', left: 0, top: 0, height: '100vh', zIndex: 1000 }}>
         <Sidebar />
       </div>
@@ -269,59 +301,105 @@ const ExportReports = () => {
             ))}
           </Row>
 
-          {/* Export Buttons - IMPORTANT: Always visible */}
-          <Card className="border-0 shadow-sm" style={{ borderRadius: 14, animation: 'fadeInUp 0.5s ease', marginBottom: '30px', visibility: 'visible' }}>
-            <Card.Body className="p-4" style={{ visibility: 'visible' }}>
-              <h6 className="fw-bold mb-3">
-                <i className="fas fa-file-export me-2" style={{ color: '#6366f1' }}></i>
-                Export {EXPORT_TYPES.find(t => t.value === selectedType)?.label || 'Data'}
-              </h6>
-              <Row className="g-3" style={{ visibility: 'visible' }}>
-                <Col md={4} xs={12} style={{ visibility: 'visible' }}>
-                  <Button
-                    variant="success"
-                    className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
-                    onClick={() => handlePreview('csv')}
-                    disabled={exporting === 'csv'}
-                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px', display: 'flex !important', visibility: 'visible !important', opacity: 1 }}
-                    onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-                  >
-                    {exporting === 'csv' ? <Spinner size="sm" /> : <i className="fas fa-file-csv" style={{ fontSize: '1.3rem' }}></i>}
-                    Download CSV
-                  </Button>
-                </Col>
-                <Col md={4} xs={12} style={{ visibility: 'visible' }}>
-                  <Button
-                    variant="primary"
-                    className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
-                    onClick={() => handlePreview('excel')}
-                    disabled={previewLoading || exporting}
-                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px', display: 'flex !important', visibility: 'visible !important', opacity: 1 }}
-                    onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-                  >
-                    {previewLoading ? <Spinner size="sm" /> : <i className="fas fa-file-excel" style={{ fontSize: '1.3rem' }}></i>}
-                    Preview & Export Excel
-                  </Button>
-                </Col>
-                <Col md={4} xs={12} style={{ visibility: 'visible' }}>
-                  <Button
-                    variant="danger"
-                    className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
-                    onClick={() => handlePreview('pdf')}
-                    disabled={previewLoading || exporting}
-                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px', display: 'flex !important', visibility: 'visible !important', opacity: 1 }}
-                    onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-                  >
-                    {previewLoading ? <Spinner size="sm" /> : <i className="fas fa-file-pdf" style={{ fontSize: '1.3rem' }}></i>}
-                    Preview & Export PDF
-                  </Button>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
+          {/* Export Buttons - ALWAYS VISIBLE - Never Hidden */}
+          <div className="export-buttons-container" style={{ 
+            position: 'relative', 
+            zIndex: 5, 
+            visibility: 'visible', 
+            display: 'block',
+            opacity: 1,
+            pointerEvents: 'auto'
+          }}>
+            <Card className="border-0 shadow-sm" style={{ 
+              borderRadius: 14, 
+              animation: 'fadeInUp 0.5s ease', 
+              marginBottom: '30px', 
+              visibility: 'visible',
+              display: 'block',
+              opacity: 1
+            }}>
+              <Card.Body className="p-4" style={{ visibility: 'visible', display: 'block' }}>
+                <h6 className="fw-bold mb-3">
+                  <i className="fas fa-file-export me-2" style={{ color: '#6366f1' }}></i>
+                  Export {EXPORT_TYPES.find(t => t.value === selectedType)?.label || 'Data'}
+                </h6>
+                <Row className="g-3" style={{ visibility: 'visible', display: 'flex' }}>
+                  <Col md={4} xs={12} style={{ visibility: 'visible', display: 'block' }}>
+                    <Button
+                      variant="success"
+                      className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
+                      onClick={() => handlePreview('csv')}
+                      disabled={exporting === 'csv'}
+                      style={{ 
+                        borderRadius: 12, 
+                        fontSize: '1rem', 
+                        transition: 'transform 0.2s', 
+                        fontWeight: 600, 
+                        minHeight: '60px', 
+                        display: 'flex !important', 
+                        visibility: 'visible !important', 
+                        opacity: 1,
+                        pointerEvents: exporting === 'csv' ? 'auto' : 'auto'
+                      }}
+                      onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
+                      onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                    >
+                      {exporting === 'csv' ? <Spinner size="sm" /> : <i className="fas fa-file-csv" style={{ fontSize: '1.3rem' }}></i>}
+                      Download CSV
+                    </Button>
+                  </Col>
+                  <Col md={4} xs={12} style={{ visibility: 'visible', display: 'block' }}>
+                    <Button
+                      variant="primary"
+                      className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
+                      onClick={() => handlePreview('excel')}
+                      disabled={previewLoading || exporting}
+                      style={{ 
+                        borderRadius: 12, 
+                        fontSize: '1rem', 
+                        transition: 'transform 0.2s', 
+                        fontWeight: 600, 
+                        minHeight: '60px', 
+                        display: 'flex !important', 
+                        visibility: 'visible !important', 
+                        opacity: 1,
+                        pointerEvents: 'auto'
+                      }}
+                      onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
+                      onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                    >
+                      {previewLoading ? <Spinner size="sm" /> : <i className="fas fa-file-excel" style={{ fontSize: '1.3rem' }}></i>}
+                      Preview & Export Excel
+                    </Button>
+                  </Col>
+                  <Col md={4} xs={12} style={{ visibility: 'visible', display: 'block' }}>
+                    <Button
+                      variant="danger"
+                      className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
+                      onClick={() => handlePreview('pdf')}
+                      disabled={previewLoading || exporting}
+                      style={{ 
+                        borderRadius: 12, 
+                        fontSize: '1rem', 
+                        transition: 'transform 0.2s', 
+                        fontWeight: 600, 
+                        minHeight: '60px', 
+                        display: 'flex !important', 
+                        visibility: 'visible !important', 
+                        opacity: 1,
+                        pointerEvents: 'auto'
+                      }}
+                      onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
+                      onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                    >
+                      {previewLoading ? <Spinner size="sm" /> : <i className="fas fa-file-pdf" style={{ fontSize: '1.3rem' }}></i>}
+                      Preview & Export PDF
+                    </Button>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </div>
         </Container>
         <Footer />
       </div>
