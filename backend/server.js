@@ -127,13 +127,17 @@ async function startServer() {
     // Store db in app.locals so middleware can access it
     app.locals.db = db;
 
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`\n🚀 Crime Management System Backend`);
       console.log(`🔗 Running on http://localhost:${PORT}`);
       console.log(`📊 API: http://localhost:${PORT}/api`);
       const dbLabel = process.env.SUPABASE_DB_URL ? 'Supabase PostgreSQL' : 'PostgreSQL';
       console.log(`💾 Database: ${dbLabel}\n`);
     });
+
+    // Keep-alive: Set socket timeout to 5 minutes (300 seconds)
+    server.keepAliveTimeout = 5 * 60 * 1000; // 5 minutes in milliseconds
+    server.headersTimeout = 6 * 60 * 1000; // 6 minutes (slightly longer than keepAliveTimeout)
   } catch (err) {
     console.error('❌ Failed to start server:', err);
     process.exit(1);
