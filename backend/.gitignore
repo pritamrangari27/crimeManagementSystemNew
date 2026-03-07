@@ -2,7 +2,6 @@ node_modules/
 .env
 .env.local
 .env.*.local
-db_crime.sqlite
 uploads/
 *.log
 .DS_Store

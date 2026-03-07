@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { logActivity } = require('../utils/activityLogger');
+const ResponseHandler = require('../utils/responseHandler');
 
 // Add police officer
 router.post('/add', (req, res) => {
@@ -9,7 +10,7 @@ router.post('/add', (req, res) => {
   } = req.body;
 
   if (!police_id || !name) {
-    return res.status(400).json({ status: 'error', message: 'Missing required fields' });
+    return ResponseHandler.validationError(res, 'Missing required fields');
   }
 
   const sql = `INSERT INTO police (
@@ -21,9 +22,9 @@ router.post('/add', (req, res) => {
   ], function(err) {
     if (err) {
       if (err.message.includes('UNIQUE')) {
-        return res.status(400).json({ status: 'error', message: 'Police ID already exists' });
+        return ResponseHandler.error(res, 'Police ID already exists', 400);
       }
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Add police officer');
     }
     
     // Log the police officer addition activity
@@ -38,7 +39,7 @@ router.post('/add', (req, res) => {
       'fas fa-users-cog'
     );
     
-    res.json({ status: 'success', message: 'Police officer added', id: this.lastID });
+    return ResponseHandler.success(res, { id: this.lastID }, 'Police officer added', 201);
   });
 });
 
@@ -48,9 +49,9 @@ router.get('/all', (req, res) => {
 
   req.db.all(sql, [], (err, rows) => {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Fetch all police');
     }
-    res.json({ status: 'success', data: rows });
+    ResponseHandler.success(res, rows, 'Police officers retrieved');
   });
 });
 
@@ -61,12 +62,12 @@ router.get('/:id', (req, res) => {
 
   req.db.get(sql, [id], (err, row) => {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Fetch police by ID');
     }
     if (!row) {
-      return res.status(404).json({ status: 'error', message: 'Police officer not found' });
+      return ResponseHandler.notFound(res, 'Police officer');
     }
-    res.json({ status: 'success', data: row });
+    ResponseHandler.success(res, row, 'Police officer retrieved');
   });
 });
 
@@ -77,9 +78,9 @@ router.get('/station/:stationId', (req, res) => {
 
   req.db.all(sql, [stationId], (err, rows) => {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Fetch police by station');
     }
-    res.json({ status: 'success', data: rows });
+    ResponseHandler.success(res, rows, 'Police officers retrieved');
   });
 });
 
@@ -91,7 +92,7 @@ router.put('/:id', (req, res) => {
 
   const filteredKeys = Object.keys(updates).filter(k => ALLOWED_COLS.includes(k));
   if (filteredKeys.length === 0) {
-    return res.status(400).json({ status: 'error', message: 'No valid fields to update' });
+    return ResponseHandler.validationError(res, 'No valid fields to update');
   }
   const setClause = filteredKeys.map(key => `${key} = ?`).join(', ');
   const values = filteredKeys.map(k => updates[k]);
@@ -101,9 +102,9 @@ router.put('/:id', (req, res) => {
 
   req.db.run(sql, values, function(err) {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Update police');
     }
-    res.json({ status: 'success', message: 'Police officer updated' });
+    ResponseHandler.success(res, { id }, 'Police officer updated');
   });
 });
 
@@ -114,9 +115,9 @@ router.delete('/:id', (req, res) => {
 
   req.db.run(sql, [id], function(err) {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Delete police');
     }
-    res.json({ status: 'success', message: 'Police officer deleted' });
+    ResponseHandler.success(res, { id }, 'Police officer deleted');
   });
 });
 

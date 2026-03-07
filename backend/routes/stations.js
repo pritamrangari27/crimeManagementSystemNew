@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const ResponseHandler = require('../utils/responseHandler');
 
 // Add police station
 router.post('/add', (req, res) => {
@@ -8,7 +9,7 @@ router.post('/add', (req, res) => {
   } = req.body;
 
   if (!station_name || !station_code || !address || !state) {
-    return res.status(400).json({ status: 'error', message: 'Missing required fields' });
+    return ResponseHandler.validationError(res, 'Missing required fields');
   }
 
   const sql = `INSERT INTO police_station (
@@ -20,11 +21,11 @@ router.post('/add', (req, res) => {
   ], function(err) {
     if (err) {
       if (err.message.includes('UNIQUE')) {
-        return res.status(400).json({ status: 'error', message: 'Station Code already exists' });
+        return ResponseHandler.error(res, 'Station Code already exists', 400);
       }
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Add police station');
     }
-    res.json({ status: 'success', message: 'Police station added', id: this.lastID });
+    ResponseHandler.success(res, { id: this.lastID }, 'Police station added', 201);
   });
 });
 
@@ -34,9 +35,9 @@ router.get('/all', (req, res) => {
 
   req.db.all(sql, [], (err, rows) => {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Fetch all stations');
     }
-    res.json({ status: 'success', data: rows });
+    ResponseHandler.success(res, rows, 'Police stations retrieved');
   });
 });
 
@@ -47,12 +48,12 @@ router.get('/:id', (req, res) => {
 
   req.db.get(sql, [id], (err, row) => {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Fetch station by ID');
     }
     if (!row) {
-      return res.status(404).json({ status: 'error', message: 'Station not found' });
+      return ResponseHandler.notFound(res, 'Police station');
     }
-    res.json({ status: 'success', data: row });
+    ResponseHandler.success(res, row, 'Police station retrieved');
   });
 });
 
@@ -62,18 +63,18 @@ router.get('/:id/details', (req, res) => {
   
   req.db.get(`SELECT * FROM police_station WHERE id = ?`, [id], (err, station) => {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Fetch station details');
     }
     if (!station) {
-      return res.status(404).json({ status: 'error', message: 'Station not found' });
+      return ResponseHandler.notFound(res, 'Police station');
     }
 
     req.db.get(`SELECT COUNT(*) as officer_count FROM police WHERE station_id = ?`, [id], (err, count) => {
       if (err) {
-        return res.status(500).json({ status: 'error', message: 'Database error' });
+        return ResponseHandler.databaseError(res, err, 'Count station officers');
       }
 
-      res.json({ status: 'success', data: { ...station, ...count } });
+      ResponseHandler.success(res, { ...station, ...count }, 'Station details retrieved');
     });
   });
 });
@@ -86,7 +87,7 @@ router.put('/:id', (req, res) => {
 
   const filteredKeys = Object.keys(updates).filter(k => ALLOWED_COLS.includes(k));
   if (filteredKeys.length === 0) {
-    return res.status(400).json({ status: 'error', message: 'No valid fields to update' });
+    return ResponseHandler.validationError(res, 'No valid fields to update');
   }
   const setClause = filteredKeys.map(key => `${key} = ?`).join(', ');
   const values = filteredKeys.map(k => updates[k]);
@@ -96,9 +97,9 @@ router.put('/:id', (req, res) => {
 
   req.db.run(sql, values, function(err) {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Update station');
     }
-    res.json({ status: 'success', message: 'Police station updated' });
+    ResponseHandler.success(res, { id }, 'Police station updated');
   });
 });
 
@@ -108,16 +109,19 @@ router.delete('/:id', (req, res) => {
 
   // Check if station has officers
   req.db.get(`SELECT COUNT(*) as count FROM police WHERE station_id = ?`, [id], (err, result) => {
-    if (err || result.count > 0) {
-      return res.status(400).json({ status: 'error', message: 'Cannot delete station with officers' });
+    if (err) {
+      return ResponseHandler.databaseError(res, err, 'Check station officers');
+    }
+    if (result.count > 0) {
+      return ResponseHandler.error(res, 'Cannot delete station with officers', 400);
     }
 
     const sql = `DELETE FROM police_station WHERE id = ?`;
     req.db.run(sql, [id], function(err) {
       if (err) {
-        return res.status(500).json({ status: 'error', message: 'Database error' });
+        return ResponseHandler.databaseError(res, err, 'Delete station');
       }
-      res.json({ status: 'success', message: 'Police station deleted' });
+      ResponseHandler.success(res, { id }, 'Police station deleted');
     });
   });
 });

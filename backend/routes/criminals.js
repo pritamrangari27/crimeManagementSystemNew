@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { logActivity } = require('../utils/activityLogger');
+const ResponseHandler = require('../utils/responseHandler');
 
 // Mixed-case columns need quoting for PostgreSQL
 const MIXED_CASE_COLS = ['Prison_name', 'Court_name', 'Criminal_name', 'DateOfBirth'];
@@ -15,7 +16,7 @@ router.post('/add', (req, res) => {
   } = req.body;
 
   if (!Criminal_name || !crime_type) {
-    return res.status(400).json({ status: 'error', message: 'Missing required fields' });
+    return ResponseHandler.validationError(res, 'Missing required fields');
   }
 
   const sql = `INSERT INTO criminals (
@@ -30,7 +31,7 @@ router.post('/add', (req, res) => {
     email, state, city, address, photo, gender
   ], function(err) {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Add criminal');
     }
     
     // Log the criminal addition activity
@@ -45,7 +46,7 @@ router.post('/add', (req, res) => {
       'fas fa-user-secret'
     );
     
-    res.json({ status: 'success', message: 'Criminal added', id: this.lastID });
+    ResponseHandler.success(res, { id: this.lastID }, 'Criminal added', 201);
   });
 });
 
@@ -55,9 +56,9 @@ router.get('/all', (req, res) => {
   
   req.db.all(sql, [], (err, rows) => {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Fetch all criminals');
     }
-    res.json({ status: 'success', data: rows });
+    ResponseHandler.success(res, rows, 'Criminals retrieved');
   });
 });
 
@@ -68,12 +69,12 @@ router.get('/:id', (req, res) => {
 
   req.db.get(sql, [id], (err, row) => {
     if (err) {
-      return res.status(500).json({ status: 'error', message: 'Database error' });
+      return ResponseHandler.databaseError(res, err, 'Fetch criminal by ID');
     }
     if (!row) {
-      return res.status(404).json({ status: 'error', message: 'Criminal not found' });
+      return ResponseHandler.notFound(res, 'Criminal');
     }
-    res.json({ status: 'success', data: row });
+    ResponseHandler.success(res, row, 'Criminal retrieved');
   });
 });
 
