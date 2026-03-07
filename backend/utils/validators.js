@@ -12,6 +12,8 @@ const validateUsername = (username) => {
   if (!username || typeof username !== 'string') {
     return { valid: false, message: 'Username is required' };
   }
+  // Remove leading and trailing spaces
+  username = username.trim();
   if (username.length < 3 || username.length > 50) {
     return { valid: false, message: 'Username must be 3-50 characters' };
   }
@@ -28,6 +30,7 @@ const validateEmail = (email) => {
   if (!email || typeof email !== 'string') {
     return { valid: false, message: 'Email is required' };
   }
+  email = email.trim();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return { valid: false, message: 'Invalid email address' };
@@ -44,6 +47,7 @@ const validatePassword = (password) => {
   if (!password || typeof password !== 'string') {
     return { valid: false, message: 'Password is required' };
   }
+  password = password.trim();
   if (password.length < 6) {
     return { valid: false, message: 'Password must be at least 6 characters' };
   }
@@ -57,6 +61,7 @@ const validatePhone = (phone) => {
   if (!phone) {
     return { valid: true }; // Optional field
   }
+  phone = phone.trim();
   if (typeof phone !== 'string') {
     return { valid: false, message: 'Phone must be a string' };
   }
