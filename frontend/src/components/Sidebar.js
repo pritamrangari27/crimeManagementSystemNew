@@ -19,14 +19,7 @@ const Sidebar = () => {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editFormData, setEditFormData] = useState({});
-  const [passwordFormData, setPasswordFormData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  });
-  const [passwordError, setPasswordError] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [passwordSaving, setPasswordSaving] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
   const user = getCurrentUser();
   const userRole = getUserRole();
@@ -478,12 +471,6 @@ const Sidebar = () => {
                   onClick={() => {
                     setShowProfileModal(false);
                     openChangePasswordModal();
-                    setPasswordFormData({
-                      currentPassword: '',
-                      newPassword: '',
-                      confirmPassword: ''
-                    });
-                    setPasswordError('');
                   }}
                 >
                   <i className="fas fa-key me-2"></i>Change Password
@@ -493,149 +480,7 @@ const Sidebar = () => {
           </Modal.Footer>
         </Modal>
 
-        {/* Change Password Modal */}
-        <Modal 
-          show={showChangePasswordModal} 
-          onHide={() => {
-            closeChangePasswordModal();
-            setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-            setPasswordError('');
-          }}
-          centered
-          dialogClassName="password-modal"
-        >
-          <Modal.Header closeButton style={{ borderBottom: '1px solid #e0e0e0' }}>
-            <Modal.Title style={{ color: '#0ea5e9', fontWeight: 'bold' }}>
-              <i className="fas fa-key me-2"></i>Change Password
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body style={{ padding: '20px' }}>
-            {passwordError && (
-              <div className="alert alert-danger" role="alert">
-                <i className="fas fa-exclamation-circle me-2"></i>{passwordError}
-              </div>
-            )}
-            <Form>
-              <Form.Group className="mb-3">
-                <Form.Label style={{ fontWeight: 'bold', color: '#1a1a1a' }}>
-                  <i className="fas fa-lock me-2" style={{ color: '#0ea5e9' }}></i>Current Password
-                </Form.Label>
-                <Form.Control 
-                  type="password"
-                  placeholder="Enter your current password"
-                  value={passwordFormData.currentPassword}
-                  onChange={(e) => {
-                    setPasswordFormData({ ...passwordFormData, currentPassword: e.target.value });
-                    setPasswordError('');
-                  }}
-                  style={{ 
-                    borderColor: passwordError ? '#ef4444' : '#e0e0e0',
-                    borderRadius: '0.5rem'
-                  }}
-                />
-              </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label style={{ fontWeight: 'bold', color: '#1a1a1a' }}>
-                  <i className="fas fa-key me-2" style={{ color: '#0ea5e9' }}></i>New Password
-                </Form.Label>
-                <Form.Control 
-                  type="password"
-                  placeholder="Enter your new password"
-                  value={passwordFormData.newPassword}
-                  onChange={(e) => {
-                    setPasswordFormData({ ...passwordFormData, newPassword: e.target.value });
-                    setPasswordError('');
-                  }}
-                  style={{ 
-                    borderColor: passwordError ? '#ef4444' : '#e0e0e0',
-                    borderRadius: '0.5rem'
-                  }}
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label style={{ fontWeight: 'bold', color: '#1a1a1a' }}>
-                  <i className="fas fa-lock me-2" style={{ color: '#0ea5e9' }}></i>Confirm Password
-                </Form.Label>
-                <Form.Control 
-                  type="password"
-                  placeholder="Confirm your new password"
-                  value={passwordFormData.confirmPassword}
-                  onChange={(e) => {
-                    setPasswordFormData({ ...passwordFormData, confirmPassword: e.target.value });
-                    setPasswordError('');
-                  }}
-                  style={{ 
-                    borderColor: passwordError ? '#ef4444' : '#e0e0e0',
-                    borderRadius: '0.5rem'
-                  }}
-                />
-              </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer style={{ display: 'flex', gap: '8px', justifyContent: 'center', borderTop: '1px solid #e0e0e0' }}>
-            <Button 
-              variant="secondary" 
-              size="sm"
-              onClick={() => {
-                closeChangePasswordModal();
-                setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-                setPasswordError('');
-              }}
-            >
-              <i className="fas fa-times me-2"></i>Cancel
-            </Button>
-            <Button 
-              variant="success" 
-              size="sm"
-              disabled={passwordSaving}
-              onClick={async () => {
-                // Validation
-                if (!passwordFormData.currentPassword) {
-                  setPasswordError('Current password is required');
-                  return;
-                }
-                if (!passwordFormData.newPassword) {
-                  setPasswordError('New password is required');
-                  return;
-                }
-                if (passwordFormData.newPassword.length < 6) {
-                  setPasswordError('New password must be at least 6 characters');
-                  return;
-                }
-                if (passwordFormData.newPassword !== passwordFormData.confirmPassword) {
-                  setPasswordError('Passwords do not match');
-                  return;
-                }
-                
-                setPasswordSaving(true);
-                try {
-                  const response = await authAPI.changePassword(
-                    passwordFormData.currentPassword,
-                    passwordFormData.newPassword
-                  );
-                  if (response.data.status === 'success') {
-                    closeChangePasswordModal();
-                    setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-                    setPasswordError('');
-                    alert('Password changed successfully! Please login with your new password.');
-                    clearAuth();
-                    navigate('/login');
-                  } else {
-                    setPasswordError(response.data.message || 'Failed to change password');
-                  }
-                } catch (err) {
-                  setPasswordError(err.response?.data?.message || 'Error changing password');
-                } finally {
-                  setPasswordSaving(false);
-                }
-              }}
-            >
-              <i className="fas fa-save me-2"></i>{passwordSaving ? 'Saving...' : 'Update Password'}
-            </Button>
-          </Modal.Footer>
-        </Modal>
       </div>
 
       {/* Logout Confirmation Modal */}
