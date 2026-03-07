@@ -3,6 +3,8 @@
  * Prevents buttons from disappearing due to state race conditions
  */
 
+import React from 'react';
+
 export const ensureButtonVisibility = () => {
   const style = document.createElement('style');
   style.innerHTML = `
