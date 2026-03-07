@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { logActivity } = require('../utils/activityLogger');
 const ResponseHandler = require('../utils/responseHandler');
+const { verifyToken, requireRole } = require('../utils/jwtAuth');
 
 // Add police officer
-router.post('/add', (req, res) => {
+router.post('/add', verifyToken, requireRole('Admin'), (req, res) => {
   const {
     police_id, name, crime_type, position, station_name, station_id, email, phone, address
   } = req.body;
@@ -44,7 +45,7 @@ router.post('/add', (req, res) => {
 });
 
 // Get all police officers
-router.get('/all', (req, res) => {
+router.get('/all', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const sql = `SELECT * FROM police ORDER BY created_at DESC`;
 
   req.db.all(sql, [], (err, rows) => {
@@ -56,7 +57,7 @@ router.get('/all', (req, res) => {
 });
 
 // Get police by ID
-router.get('/:id', (req, res) => {
+router.get('/:id', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { id } = req.params;
   const sql = `SELECT * FROM police WHERE id = ?`;
 
@@ -72,7 +73,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Get police by station
-router.get('/station/:stationId', (req, res) => {
+router.get('/station/:stationId', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { stationId } = req.params;
   const sql = `SELECT * FROM police WHERE station_id = ? ORDER BY name ASC`;
 
@@ -85,7 +86,7 @@ router.get('/station/:stationId', (req, res) => {
 });
 
 // Update police
-router.put('/:id', (req, res) => {
+router.put('/:id', verifyToken, requireRole('Admin'), (req, res) => {
   const { id } = req.params;
   const updates = req.body;
   const ALLOWED_COLS = ['police_id','name','crime_type','position','station_name','station_id','email','phone','address','active_cases'];
@@ -109,7 +110,7 @@ router.put('/:id', (req, res) => {
 });
 
 // Delete police
-router.delete('/:id', (req, res) => {
+router.delete('/:id', verifyToken, requireRole('Admin'), (req, res) => {
   const { id } = req.params;
   const sql = `DELETE FROM police WHERE id = ?`;
 

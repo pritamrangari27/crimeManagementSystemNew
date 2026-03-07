@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const ResponseHandler = require('../utils/responseHandler');
+const { verifyToken, requireRole } = require('../utils/jwtAuth');
 
 // Add police station
-router.post('/add', (req, res) => {
+router.post('/add', verifyToken, requireRole('Admin'), (req, res) => {
   const {
     station_name, station_code, address, city, state, phone, email, in_charge
   } = req.body;
@@ -30,7 +31,7 @@ router.post('/add', (req, res) => {
 });
 
 // Get all police stations
-router.get('/all', (req, res) => {
+router.get('/all', verifyToken, (req, res) => {
   const sql = `SELECT * FROM police_station ORDER BY created_at DESC`;
 
   req.db.all(sql, [], (err, rows) => {
@@ -42,7 +43,7 @@ router.get('/all', (req, res) => {
 });
 
 // Get station by ID
-router.get('/:id', (req, res) => {
+router.get('/:id', verifyToken, (req, res) => {
   const { id } = req.params;
   const sql = `SELECT * FROM police_station WHERE id = ?`;
 
@@ -58,7 +59,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Get station with officers count
-router.get('/:id/details', (req, res) => {
+router.get('/:id/details', verifyToken, (req, res) => {
   const { id } = req.params;
   
   req.db.get(`SELECT * FROM police_station WHERE id = ?`, [id], (err, station) => {
@@ -80,7 +81,7 @@ router.get('/:id/details', (req, res) => {
 });
 
 // Update police station
-router.put('/:id', (req, res) => {
+router.put('/:id', verifyToken, requireRole('Admin'), (req, res) => {
   const { id } = req.params;
   const updates = req.body;
   const ALLOWED_COLS = ['station_name','station_code','address','city','state','phone','email','in_charge','latitude','longitude'];
@@ -104,7 +105,7 @@ router.put('/:id', (req, res) => {
 });
 
 // Delete police station
-router.delete('/:id', (req, res) => {
+router.delete('/:id', verifyToken, requireRole('Admin'), (req, res) => {
   const { id } = req.params;
 
   // Check if station has officers

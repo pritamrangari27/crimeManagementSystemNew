@@ -39,11 +39,19 @@ const PoliceSentFIRs = () => {
       setLoading(true);
       setError('');
       let response;
-      if (stationId) {
-        response = await firsAPI.getByStation(stationId);
+      
+      // Police officers see only their assigned FIRs
+      if (role === 'Police') {
+        response = await firsAPI.getMyAssigned();
       } else {
-        response = await firsAPI.getAll();
+        // Admin sees all FIRs for the station if stationId provided
+        if (stationId) {
+          response = await firsAPI.getByStation(stationId);
+        } else {
+          response = await firsAPI.getAll();
+        }
       }
+      
       const data = response.data;
       
       if (data.status === 'success' && Array.isArray(data.data)) {
@@ -65,12 +73,12 @@ const PoliceSentFIRs = () => {
     }
   };
 
-  // Fetch FIRs for the station
+  // Fetch FIRs for the station or police
   useEffect(() => {
-    if (stationId) {
+    if (role === 'Police' || stationId) {
       fetchFIRs();
     }
-  }, [stationId]);
+  }, [stationId, role]);
 
   // Filter FIRs when filter changes
   useEffect(() => {

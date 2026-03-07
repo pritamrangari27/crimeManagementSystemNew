@@ -57,7 +57,16 @@ const PoliceDashboard = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        const response = await firsAPI.getByStation(stationId);
+        let response;
+        
+        // Police officers see only their assigned FIRs
+        if (user?.role === 'Police') {
+          response = await firsAPI.getMyAssigned();
+        } else {
+          // Admin sees all FIRs for the station
+          response = await firsAPI.getByStation(stationId);
+        }
+        
         const data = response.data;
         if (data.status === 'success' && Array.isArray(data.data)) {
           const firs = data.data;
@@ -77,7 +86,7 @@ const PoliceDashboard = () => {
         setLoading(false);
       }
     };
-    if (stationId) fetchStats();
+    if (stationId || user?.role === 'Police') fetchStats();
   }, [stationId]);
 
   if (loading) {

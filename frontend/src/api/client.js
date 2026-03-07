@@ -111,6 +111,7 @@ export const criminalsAPI = {
 // FIRs API
 export const firsAPI = {
   getAll: () => api.get('/firs/all'),
+  getMyAssigned: () => api.get('/firs/my-assigned'),
   getById: (id) => api.get(`/firs/${id}`),
   getByUser: (userId) => api.get(`/firs/user/${userId}`),
   getByStatus: (status) => api.get(`/firs/status/${status}`),

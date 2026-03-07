@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { logActivity } = require('../utils/activityLogger');
 const { createNotification } = require('./notifications');
+const { verifyToken, requireRole } = require('../utils/jwtAuth');
 
 // ===== HELPER FUNCTIONS =====
 
@@ -43,7 +44,7 @@ const executeDatabaseQuery = (db, sql, params, res, isRun = false) => {
 };
 
 // Create FIR - POST /api/firs
-router.post('/', (req, res) => {
+router.post('/', verifyToken, (req, res) => {
   const {
     user_id, station_id, crime_type, accused, name, age, number, address,
     relation, purpose, file, latitude, longitude, status = 'Sent',
@@ -166,8 +167,8 @@ router.post('/', (req, res) => {
   });
 });
 
-// Get all FIRs - GET /api/firs/all
-router.get('/all', (req, res) => {
+// Get all FIRs - GET /api/firs/all (Admin only)
+router.get('/all', verifyToken, requireRole('Admin'), (req, res) => {
   const sql = `SELECT * FROM firs ORDER BY created_at DESC`;
 
   req.db.all(sql, [], (err, rows) => {
@@ -178,8 +179,28 @@ router.get('/all', (req, res) => {
   });
 });
 
+// Get FIRs assigned to current police officer - GET /api/firs/my-assigned
+router.get('/my-assigned', verifyToken, requireRole('Police'), (req, res) => {
+  const badge_number = req.user?.badge_number;
+  
+  if (!badge_number) {
+    return res.status(400).json({ status: 'error', message: 'Badge number not found in token' });
+  }
+
+  // Get FIRs assigned to this police officer (using badge_number as police_id)
+  const sql = `SELECT * FROM firs WHERE assigned_police_id = ? ORDER BY created_at DESC`;
+
+  req.db.all(sql, [badge_number], (err, rows) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ status: 'error', message: 'Database error' });
+    }
+    res.json({ status: 'success', data: rows || [] });
+  });
+});
+
 // Get FIRs for a specific station - GET /api/firs/station/:station_id
-router.get('/station/:station_id', (req, res) => {
+router.get('/station/:station_id', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { station_id } = req.params;
   const sql = `SELECT * FROM firs WHERE station_id = ? ORDER BY created_at DESC`;
 
@@ -193,7 +214,7 @@ router.get('/station/:station_id', (req, res) => {
 });
 
 // Get user's FIRs - GET /api/firs/user/:user_id
-router.get('/user/:user_id', (req, res) => {
+router.get('/user/:user_id', verifyToken, (req, res) => {
   const { user_id } = req.params;
   const sql = `SELECT * FROM firs WHERE user_id = ? ORDER BY created_at DESC`;
 
@@ -207,7 +228,7 @@ router.get('/user/:user_id', (req, res) => {
 });
 
 // Get FIR by ID - GET /api/firs/:id
-router.get('/:id', (req, res) => {
+router.get('/:id', verifyToken, (req, res) => {
   const { id } = req.params;
 
   getFirById(req.db, id, (err, row) => {
@@ -223,7 +244,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Update FIR status - PUT /api/firs/:id
-router.put('/:id', (req, res) => {
+router.put('/:id', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
@@ -246,7 +267,7 @@ router.put('/:id', (req, res) => {
 });
 
 // Get FIRs by status - GET /api/firs/status/:status
-router.get('/status/:status', (req, res) => {
+router.get('/status/:status', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { status } = req.params;
   const sql = `SELECT * FROM firs WHERE status = ? ORDER BY created_at DESC`;
 
@@ -259,7 +280,7 @@ router.get('/status/:status', (req, res) => {
 });
 
 // Delete FIR - DELETE /api/firs/:id
-router.delete('/:id', (req, res) => {
+router.delete('/:id', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { id } = req.params;
   const sql = `DELETE FROM firs WHERE id = ?`;
 
@@ -276,7 +297,7 @@ router.delete('/:id', (req, res) => {
 });
 
 // Approve FIR - PUT /api/firs/:id/approve
-router.put('/:id/approve', (req, res) => {
+router.put('/:id/approve', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { id } = req.params;
   const { assigned_officer_id } = req.body;
 
@@ -320,7 +341,7 @@ router.put('/:id/approve', (req, res) => {
 });
 
 // Reject FIR - PUT /api/firs/:id/reject
-router.put('/:id/reject', (req, res) => {
+router.put('/:id/reject', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { id } = req.params;
   const { rejection_reason } = req.body;
 

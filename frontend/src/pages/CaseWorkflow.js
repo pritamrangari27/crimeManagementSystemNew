@@ -13,6 +13,8 @@ const STAGE_COLORS = ['#64748b', '#0ea5e9', '#8b5cf6', '#ec4899', '#6366f1', '#1
 const CaseWorkflow = () => {
   const navigate = useNavigate();
   const role = localStorage.getItem('userRole');
+  const user = JSON.parse(localStorage.getItem('authUser'));
+  const userPoliceId = user?.badge_number;
   const [firs, setFirs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -34,11 +36,22 @@ const CaseWorkflow = () => {
   const fetchFIRs = async () => {
     try {
       setLoading(true);
-      const res = await firsAPI.getAll();
+      let res;
+      
+      // Admin sees all FIRs, Police sees only their assigned FIRs
+      if (role === 'Admin') {
+        res = await firsAPI.getAll();
+      } else if (role === 'Police') {
+        res = await firsAPI.getMyAssigned();
+      } else {
+        throw new Error('Invalid role');
+      }
+      
       const data = res.data?.firs || res.data?.data || [];
       setFirs(data);
     } catch (err) {
       setError('Failed to load FIRs');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -137,7 +150,9 @@ const CaseWorkflow = () => {
       <div className="with-sidebar">
         <Container fluid className="mgmt-container page-stagger">
           <div className="mgmt-header">
-            <h2><i className="fas fa-project-diagram me-2" style={{ color: '#6366f1' }}></i>Case Workflow</h2>
+            <h2><i className="fas fa-project-diagram me-2" style={{ color: '#6366f1' }}></i>
+              {role === 'Admin' ? 'All Cases Workflow' : 'My Case Workflow'}
+            </h2>
             <div className="mgmt-header-actions">
               <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
                 <i className="fas fa-arrow-left me-2"></i>Back
@@ -146,6 +161,13 @@ const CaseWorkflow = () => {
           </div>
 
           {error && <Alert variant="danger" dismissible onClose={() => setError('')}>{error}</Alert>}
+
+          {role === 'Police' && (
+            <Alert variant="info" style={{ marginBottom: 'var(--grid-gap)', borderRadius: '10px', borderLeft: '4px solid #6366f1' }}>
+              <i className="fas fa-info-circle me-2"></i>
+              Showing only cases assigned to you. Visit <strong>Resource Allocation</strong> to see your workload summary.
+            </Alert>
+          )}
 
           {/* Stage Pipeline Filters */}
           <div className="mgmt-controls" style={{ flexWrap: 'wrap', gap: '6px' }}>

@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { logActivity } = require('../utils/activityLogger');
 const ResponseHandler = require('../utils/responseHandler');
+const { verifyToken, requireRole } = require('../utils/jwtAuth');
 
 // Mixed-case columns need quoting for PostgreSQL
 const MIXED_CASE_COLS = ['Prison_name', 'Court_name', 'Criminal_name', 'DateOfBirth'];
 const quoteCol = (col) => MIXED_CASE_COLS.includes(col) ? `"${col}"` : col;
 
 // Add criminal
-router.post('/add', (req, res) => {
+router.post('/add', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const {
     station_name, station_id, crime_type, crime_date, crime_time,
     Prison_name, Court_name, Criminal_name, contact, DateOfBirth,
@@ -51,7 +52,7 @@ router.post('/add', (req, res) => {
 });
 
 // Get all criminals
-router.get('/all', (req, res) => {
+router.get('/all', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const sql = `SELECT * FROM criminals ORDER BY created_at DESC`;
   
   req.db.all(sql, [], (err, rows) => {
@@ -63,7 +64,7 @@ router.get('/all', (req, res) => {
 });
 
 // Get criminal by ID
-router.get('/:id', (req, res) => {
+router.get('/:id', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { id } = req.params;
   const sql = `SELECT * FROM criminals WHERE id = ?`;
 
@@ -79,7 +80,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Update criminal
-router.put('/:id', (req, res) => {
+router.put('/:id', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { id } = req.params;
   const updates = req.body;
 
@@ -98,7 +99,7 @@ router.put('/:id', (req, res) => {
 });
 
 // Delete criminal
-router.delete('/:id', (req, res) => {
+router.delete('/:id', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { id } = req.params;
   const sql = `DELETE FROM criminals WHERE id = ?`;
 
@@ -111,7 +112,7 @@ router.delete('/:id', (req, res) => {
 });
 
 // Search criminals
-router.get('/search/query', (req, res) => {
+router.get('/search/query', verifyToken, requireRole('Police', 'Admin'), (req, res) => {
   const { query } = req.query;
   
   if (!query) {
