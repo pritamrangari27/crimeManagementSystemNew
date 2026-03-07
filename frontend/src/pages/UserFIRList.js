@@ -20,6 +20,8 @@ const UserFIRList = () => {
   const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [sortBy, setSortBy] = useState('date');
+  const [viewingFIR, setViewingFIR] = useState(null);
+  const [showViewModal, setShowViewModal] = useState(false);
 
   // FIR Form state
   const [showFIRModal, setShowFIRModal] = useState(false);
@@ -104,6 +106,12 @@ const UserFIRList = () => {
       const msg = err.response?.data?.message || err.message || 'Error filing FIR';
       setFirError(msg); toast.error(msg);
     } finally { setSubmitting(false); }
+  };
+
+  // View FIR Details
+  const handleViewFIR = (fir) => { 
+    setViewingFIR(fir); 
+    setShowViewModal(true); 
   };
 
   // Fetch FIRs
@@ -369,7 +377,7 @@ const UserFIRList = () => {
                           <div className="mgmt-actions">
                             <button
                               className="view"
-                              onClick={() => navigate(`/fir/${fir.id}`)}
+                              onClick={() => handleViewFIR(fir)}
                             >
                               <i className="fas fa-eye me-1"></i> View
                             </button>
@@ -483,6 +491,83 @@ const UserFIRList = () => {
             </Button>
             <Button variant="success" size="sm" onClick={handleFIRSubmit} disabled={submitting} style={{ borderRadius: '8px', fontWeight: 600, background: '#10b981', border: 'none' }}>
               {submitting ? <><Spinner as="span" animation="border" size="sm" className="me-2" />Filing FIR...</> : <><i className="fas fa-paper-plane me-1"></i>File FIR</>}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* View FIR Details Modal */}
+        <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="md" dialogClassName="fir-view-modal animated-modal">
+          <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', padding: '14px 18px', borderBottom: 'none' }}>
+            <Modal.Title style={{ color: 'white', fontSize: '1rem', fontWeight: 700 }}>
+              <i className="fas fa-file-invoice me-2" style={{ color: '#10b981' }}></i>
+              FIR Details
+              {viewingFIR && (
+                <Badge bg={viewingFIR.status === 'Approved' ? 'success' : viewingFIR.status === 'Rejected' ? 'danger' : 'info'} className="ms-2"
+                  style={{ fontSize: '0.7rem', padding: '4px 8px', verticalAlign: 'middle' }}>
+                  {viewingFIR.status}
+                </Badge>
+              )}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{ padding: '20px 24px', background: '#ffffff' }}>
+            {viewingFIR && (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 20px', fontSize: '0.85rem' }}>
+                <div>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>FIR Number</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>FIR-{String(viewingFIR.id).padStart(4, '0')}</p>
+                </div>
+                <div>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Type</span>
+                  <p style={{ margin: '4px 0 0' }}><span className="badge bg-danger" style={{ fontSize: '0.75rem', padding: '3px 8px' }}>{viewingFIR.crime_type}</span></p>
+                </div>
+                <div>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Date</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="far fa-calendar me-1" style={{ color: '#3b82f6', fontSize: '0.8rem' }}></i>{viewingFIR.crime_date || 'N/A'}</p>
+                </div>
+                <div>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Location</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-map-pin me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{viewingFIR.location || 'N/A'}</p>
+                </div>
+                <div style={{ gridColumn: '1 / -1', background: '#f8fafc', borderRadius: '8px', padding: '10px 14px', borderLeft: '3px solid #10b981' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Description</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 500, color: '#334155', lineHeight: 1.5, fontSize: '0.84rem' }}>{viewingFIR.crime_description || viewingFIR.purpose || 'N/A'}</p>
+                </div>
+                <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
+                <div>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Complainant Name</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-user-shield me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{viewingFIR.complainant_name || viewingFIR.name || 'N/A'}</p>
+                </div>
+                <div>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Phone</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-phone me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{viewingFIR.complainant_phone || viewingFIR.number || 'N/A'}</p>
+                </div>
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Address</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-map-marker-alt me-1" style={{ color: '#3b82f6', fontSize: '0.8rem' }}></i>{viewingFIR.address || 'N/A'}</p>
+                </div>
+                <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
+                <div>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Accused Name</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 700, color: '#ef4444' }}><i className="fas fa-user-secret me-1" style={{ fontSize: '0.8rem' }}></i>{viewingFIR.accused || 'N/A'}</p>
+                </div>
+                <div>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Filed On</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="far fa-clock me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{viewingFIR.created_at ? new Date(viewingFIR.created_at).toLocaleDateString() : 'N/A'}</p>
+                </div>
+                <div>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Station</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-building me-1" style={{ color: '#6366f1', fontSize: '0.8rem' }}></i>{viewingFIR.station_name || viewingFIR.station_id || 'N/A'}</p>
+                </div>
+                <div>
+                  <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Relation</span>
+                  <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>{viewingFIR.relation || 'N/A'}</p>
+                </div>
+              </div>
+            )}
+          </Modal.Body>
+          <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px', justifyContent: 'center' }}>
+            <Button variant="outline-secondary" size="sm" onClick={() => setShowViewModal(false)} style={{ borderRadius: '8px', padding: '5px 20px', fontWeight: 600 }}>
+              <i className="fas fa-times me-1"></i>Close
             </Button>
           </Modal.Footer>
         </Modal>

@@ -16,7 +16,6 @@ import StationsManagement from './pages/StationsManagement';
 import FIRManagement from './pages/FIRManagement';
 import UserFIRForm from './pages/UserFIRForm';
 import UserFIRList from './pages/UserFIRList';
-import FIRDetails from './pages/FIRDetails';
 import PoliceSentFIRs from './pages/PoliceSentFIRs';
 import UserProfile from './pages/UserProfile';
 import AdminProfile from './pages/AdminProfile';
@@ -209,14 +208,6 @@ function AppLayout() {
             element={
               <PrivateRoute>
                 <UserFIRList />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/fir/:id"
-            element={
-              <PrivateRoute>
-                <FIRDetails />
               </PrivateRoute>
             }
           />
