@@ -188,10 +188,10 @@ const AdminDashboard = () => {
 
           {/* ── Recent Activities Modal ── */}
           {showActivitiesModal && (
-            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1050 }}>
-              <div style={{ background: '#ffffff', borderRadius: '12px', width: '90%', maxWidth: '800px', maxHeight: '80vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1050, animation: 'fadeIn 0.2s ease' }}>
+              <div style={{ background: '#ffffff', borderRadius: '12px', width: '90%', maxWidth: '800px', maxHeight: '80vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', animation: 'scaleIn 0.3s ease' }}>
                 {/* Header */}
-                <div style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', padding: '14px 20px', borderBottom: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flex: 'none' }}>
+                <div style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', padding: '14px 20px', borderBottom: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flex: 'none', animation: 'slideInDown 0.3s ease' }}>
                   <h5 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: 0 }}>
                     <i className="fas fa-history me-2"></i>Recent Activities (Last 10)
                   </h5>
@@ -227,7 +227,8 @@ const AdminDashboard = () => {
                           fontSize: '1.2rem',
                           transition: 'all 0.3s ease',
                           boxShadow: activityIndex === 0 ? 'none' : '0 4px 8px rgba(6,182,212,0.3)',
-                          flexShrink: 0
+                          flexShrink: 0,
+                          animation: 'slideInLeft 0.4s ease'
                         }}
                         title="Previous Activity"
                       >
@@ -244,7 +245,7 @@ const AdminDashboard = () => {
                             padding: '16px',
                             boxShadow: '0 8px 16px rgba(6,182,212,0.1)',
                             transition: 'all 0.3s ease',
-                            animation: 'fadeIn 0.3s ease',
+                            animation: 'slideInUp 0.4s ease',
                             height: '100%',
                             display: 'flex',
                             flexDirection: 'column'
@@ -261,7 +262,7 @@ const AdminDashboard = () => {
                                   {activities[activityIndex].action}
                                 </span>
                               </div>
-                              <span style={{ fontSize: '0.75rem', background: '#06b6d4', color: 'white', padding: '4px 8px', borderRadius: '20px', fontWeight: 600 }}>
+                              <span style={{ fontSize: '0.75rem', background: '#06b6d4', color: 'white', padding: '4px 8px', borderRadius: '20px', fontWeight: 600, animation: 'pulse 1.5s ease-in-out infinite' }}>
                                 {activityIndex + 1} / {activities.length}
                               </span>
                             </div>
@@ -303,11 +304,23 @@ const AdminDashboard = () => {
                             }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <i className="fas fa-calendar" style={{ color: '#0891b2', fontSize: '0.9rem' }}></i>
-                                <span>{activities[activityIndex].timestamp ? new Date(activities[activityIndex].timestamp).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}</span>
+                                <span>{
+                                  activities[activityIndex].timestamp 
+                                    ? new Date(activities[activityIndex].timestamp).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+                                    : activities[activityIndex].created_at 
+                                    ? new Date(activities[activityIndex].created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+                                    : new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+                                }</span>
                               </div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <i className="fas fa-clock" style={{ color: '#06b6d4', fontSize: '0.9rem' }}></i>
-                                <span>{activities[activityIndex].timestamp ? new Date(activities[activityIndex].timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : 'N/A'}</span>
+                                <span>{
+                                  activities[activityIndex].timestamp 
+                                    ? new Date(activities[activityIndex].timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+                                    : activities[activityIndex].created_at 
+                                    ? new Date(activities[activityIndex].created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+                                    : new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+                                }</span>
                               </div>
                             </div>
                           </div>
@@ -332,7 +345,8 @@ const AdminDashboard = () => {
                           fontSize: '1.2rem',
                           transition: 'all 0.3s ease',
                           boxShadow: activityIndex === activities.length - 1 ? 'none' : '0 4px 8px rgba(6,182,212,0.3)',
-                          flexShrink: 0
+                          flexShrink: 0,
+                          animation: 'slideInRight 0.4s ease'
                         }}
                         title="Next Activity"
                       >
@@ -348,7 +362,7 @@ const AdminDashboard = () => {
                 </div>
                 
                 {/* Footer */}
-                <div style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                <div style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px', display: 'flex', justifyContent: 'flex-end', gap: '8px', animation: 'slideInDown 0.3s ease 0.1s backwards' }}>
                   <button className="mgmt-btn-back" onClick={() => setShowActivitiesModal(false)} style={{ borderRadius: '8px', fontWeight: 600 }}>
                     <i className="fas fa-times me-1"></i>Close
                   </button>
