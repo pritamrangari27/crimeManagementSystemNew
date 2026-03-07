@@ -23,6 +23,7 @@ const UserFIRList = () => {
   const [sortBy, setSortBy] = useState('date');
   const [viewingFIR, setViewingFIR] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [showTableModal, setShowTableModal] = useState(false);
 
   // FIR Form state
   const [showFIRModal, setShowFIRModal] = useState(false);
@@ -230,70 +231,103 @@ const UserFIRList = () => {
       <Sidebar />
       <div className="with-sidebar">
       <Container fluid className="mgmt-container page-stagger">
-        {/* Header */}
-        <div className="mgmt-header">
+        {/* Header with Actions in One Line */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          marginBottom: '14px',
+          gap: '10px'
+        }}>
           <div>
-            <h2><i className="fas fa-list me-2"></i> My FIRs</h2>
-            <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>View and track all your filed FIRs</p>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: 0, fontWeight: 700 }}>
+              <i className="fas fa-list me-2"></i> My FIRs
+            </h2>
+            <p className="text-muted mb-0" style={{ fontSize: '0.8rem' }}>View and track all your filed FIRs</p>
           </div>
-          <div className="mgmt-header-actions">
-            <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
-              <i className="fas fa-arrow-left me-2"></i> Back
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-end'
+          }}>
+            <button
+              className="mgmt-btn-back"
+              onClick={() => navigate(-1)}
+              style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+            >
+              <i className="fas fa-arrow-left me-1"></i> Back
             </button>
-            <button className="mgmt-btn-primary" onClick={handleOpenFIRModal}>
-              <i className="fas fa-plus me-2"></i> File New FIR
+            <button
+              className="mgmt-btn-primary"
+              onClick={handleOpenFIRModal}
+              style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+            >
+              <i className="fas fa-plus me-1"></i> File New FIR
+            </button>
+            <button
+              className="mgmt-btn-primary mgmt-btn-table-modal"
+              onClick={() => setShowTableModal(true)}
+              style={{
+                padding: '6px 12px',
+                fontSize: '0.85rem'
+              }}
+            >
+              <i className="fas fa-table me-1"></i> View Table
             </button>
           </div>
         </div>
 
-        {/* Statistics Cards */}
-        <Row className="mb-2">
-          <Col md={3} className="mb-2">
-            <Card className="border-0 shadow-sm text-center">
-              <Card.Body className="py-2 px-3">
-                <h6 className="text-muted mb-1" style={{ fontSize: '0.7rem' }}>Total FIRs</h6>
-                <h3 className="fw-bold text-primary mb-0" style={{ fontSize: '1.3rem' }}>{stats.total}</h3>
+        {/* Statistics Grid - 2x2 on Mobile */}
+        <Row className="mb-2" style={{ gap: '8px' }}>
+          <Col xs={6} sm={6} md={3} className="mb-2" style={{ padding: '0 4px' }}>
+            <Card className="border-0 shadow-sm text-center" style={{ minHeight: '80px' }}>
+              <Card.Body style={{ padding: '10px' }}>
+                <h6 className="text-muted mb-1" style={{ fontSize: '0.65rem' }}>Total FIRs</h6>
+                <h3 className="fw-bold text-primary mb-0" style={{ fontSize: '1.1rem' }}>{stats.total}</h3>
               </Card.Body>
             </Card>
           </Col>
-          <Col md={3} className="mb-2">
-            <Card className="border-0 shadow-sm text-center">
-              <Card.Body className="py-2 px-3">
-                <h6 className="text-muted mb-1" style={{ fontSize: '0.7rem' }}>Sent</h6>
-                <h3 className="fw-bold text-info mb-0" style={{ fontSize: '1.3rem' }}>{stats.sent}</h3>
+          <Col xs={6} sm={6} md={3} className="mb-2" style={{ padding: '0 4px' }}>
+            <Card className="border-0 shadow-sm text-center" style={{ minHeight: '80px' }}>
+              <Card.Body style={{ padding: '10px' }}>
+                <h6 className="text-muted mb-1" style={{ fontSize: '0.65rem' }}>Sent</h6>
+                <h3 className="fw-bold text-info mb-0" style={{ fontSize: '1.1rem' }}>{stats.sent}</h3>
               </Card.Body>
             </Card>
           </Col>
-          <Col md={3} className="mb-2">
-            <Card className="border-0 shadow-sm text-center">
-              <Card.Body className="py-2 px-3">
-                <h6 className="text-muted mb-1" style={{ fontSize: '0.7rem' }}>Approved</h6>
-                <h3 className="fw-bold text-success mb-0" style={{ fontSize: '1.3rem' }}>{stats.approved}</h3>
+          <Col xs={6} sm={6} md={3} className="mb-2" style={{ padding: '0 4px' }}>
+            <Card className="border-0 shadow-sm text-center" style={{ minHeight: '80px' }}>
+              <Card.Body style={{ padding: '10px' }}>
+                <h6 className="text-muted mb-1" style={{ fontSize: '0.65rem' }}>Approved</h6>
+                <h3 className="fw-bold text-success mb-0" style={{ fontSize: '1.1rem' }}>{stats.approved}</h3>
               </Card.Body>
             </Card>
           </Col>
-          <Col md={3} className="mb-2">
-            <Card className="border-0 shadow-sm text-center">
-              <Card.Body className="py-2 px-3">
-                <h6 className="text-muted mb-1" style={{ fontSize: '0.7rem' }}>Rejected</h6>
-                <h3 className="fw-bold text-danger mb-0" style={{ fontSize: '1.3rem' }}>{stats.rejected}</h3>
+          <Col xs={6} sm={6} md={3} className="mb-2" style={{ padding: '0 4px' }}>
+            <Card className="border-0 shadow-sm text-center" style={{ minHeight: '80px' }}>
+              <Card.Body style={{ padding: '10px' }}>
+                <h6 className="text-muted mb-1" style={{ fontSize: '0.65rem' }}>Rejected</h6>
+                <h3 className="fw-bold text-danger mb-0" style={{ fontSize: '1.1rem' }}>{stats.rejected}</h3>
               </Card.Body>
             </Card>
           </Col>
         </Row>
 
-        {/* Filters and Sorting */}
+        {/* Filters and Sorting - One Line */}
         <Card className="border-0 shadow-sm mb-2">
-          <Card.Body className="py-2 px-3">
-            <Row className="align-items-end">
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">
-                    <i className="fas fa-filter me-2"></i> Filter by Status
+          <Card.Body style={{ padding: '10px 12px' }}>
+            <Row className="align-items-end" style={{ gap: '8px' }}>
+              <Col xs={12} sm={6} style={{ padding: '0 4px' }}>
+                <Form.Group style={{ marginBottom: '0' }}>
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.75rem', marginBottom: '4px' }}>
+                    <i className="fas fa-filter me-1"></i> Filter by Status
                   </Form.Label>
                   <Form.Select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
+                    style={{ padding: '4px 8px', fontSize: '0.8rem' }}
                   >
                     <option value="All">All Statuses</option>
                     <option value="Sent">Sent</option>
@@ -302,14 +336,15 @@ const UserFIRList = () => {
                   </Form.Select>
                 </Form.Group>
               </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">
-                    <i className="fas fa-sort me-2"></i> Sort By
+              <Col xs={12} sm={6} style={{ padding: '0 4px' }}>
+                <Form.Group style={{ marginBottom: '0' }}>
+                  <Form.Label className="fw-bold" style={{ fontSize: '0.75rem', marginBottom: '4px' }}>
+                    <i className="fas fa-sort me-1"></i> Sort By
                   </Form.Label>
                   <Form.Select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
+                    style={{ padding: '4px 8px', fontSize: '0.8rem' }}
                   >
                     <option value="date">Date (Newest First)</option>
                     <option value="status">Status</option>
@@ -321,7 +356,7 @@ const UserFIRList = () => {
           </Card.Body>
         </Card>
 
-        {/* FIR Table */}
+        {/* FIR Table - Hide on Mobile */}
         {loading ? (
               <div className="text-center py-3">
                 <Spinner animation="border" size="sm" role="status">
@@ -409,6 +444,56 @@ const UserFIRList = () => {
             Showing {filteredFirs.length} of {firs.length} FIRs
           </div>
         )}
+
+        {/* FIR Table Modal - Mobile Only */}
+        <Modal show={showTableModal} onHide={() => setShowTableModal(false)} size="xl" fullscreen="sm-down" centered>
+          <Modal.Header closeButton style={{ padding: '12px 16px', background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)' }}>
+            <Modal.Title style={{ color: 'white', fontSize: '1rem', fontWeight: 700 }}>
+              <i className="fas fa-table me-2"></i>FIR Records
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{ padding: '12px', overflowX: 'auto' }}>
+            {filteredFirs.length === 0 ? (
+              <div className="text-center py-4">
+                <i className="fas fa-inbox text-muted" style={{ fontSize: '32px' }}></i>
+                <p className="mt-2 text-muted small">No FIRs found</p>
+              </div>
+            ) : (
+              <div className="mgmt-table-scroll">
+                <table className="mgmt-table" style={{ fontSize: '0.75rem' }}>
+                  <thead>
+                    <tr>
+                      <th>FIR ID</th>
+                      <th>Crime</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredFirs.map((fir, idx) => (
+                      <tr key={fir.id}>
+                        <td className="fw-bold text-primary">FIR-{String(fir.id).padStart(4, '0')}</td>
+                        <td><span className="mgmt-badge info" style={{ fontSize: '0.65rem' }}>{fir.crime_type}</span></td>
+                        <td><span className={`mgmt-badge ${getStatusVariant(fir.status)}`} style={{ fontSize: '0.65rem' }}>{fir.status}</span></td>
+                        <td className="small">{new Date(fir.created_at || fir.date).toLocaleDateString()}</td>
+                        <td>
+                          <button
+                            className="view"
+                            onClick={() => { handleViewFIR(fir); setShowTableModal(false); }}
+                            style={{ padding: '3px 8px', fontSize: '0.7rem' }}
+                          >
+                            <i className="fas fa-eye me-1" style={{ fontSize: '0.65rem' }}></i> View
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </Modal.Body>
+        </Modal>
 
         {/* File New FIR Modal */}
         <Modal show={showFIRModal} onHide={handleCloseFIRModal} centered size="lg" dialogClassName="fir-form-modal">
