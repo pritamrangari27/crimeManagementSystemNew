@@ -3,6 +3,7 @@ import { Nav, Modal, Button, Table, Badge, Form } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser, getUserRole, clearAuth, updateAuthUser } from '../utils/authService';
 import { authAPI } from '../api/client';
+import { useChangePassword } from '../context/ChangePasswordContext';
 import ConfirmModal from './ConfirmModal';
 import NotificationBell from './NotificationBell';
 import '../styles/sidebar.css';
@@ -10,6 +11,7 @@ import '../styles/sidebar.css';
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isOpen: showChangePasswordModal, closeChangePasswordModal, openChangePasswordModal } = useChangePassword();
   const popupRef = useRef(null);
   const sidebarRef = useRef(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -17,7 +19,6 @@ const Sidebar = () => {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editFormData, setEditFormData] = useState({});
-  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [passwordFormData, setPasswordFormData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -476,7 +477,7 @@ const Sidebar = () => {
                   size="sm" 
                   onClick={() => {
                     setShowProfileModal(false);
-                    setShowChangePasswordModal(true);
+                    openChangePasswordModal();
                     setPasswordFormData({
                       currentPassword: '',
                       newPassword: '',
@@ -496,7 +497,7 @@ const Sidebar = () => {
         <Modal 
           show={showChangePasswordModal} 
           onHide={() => {
-            setShowChangePasswordModal(false);
+            closeChangePasswordModal();
             setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
             setPasswordError('');
           }}
@@ -578,7 +579,7 @@ const Sidebar = () => {
               variant="secondary" 
               size="sm"
               onClick={() => {
-                setShowChangePasswordModal(false);
+                closeChangePasswordModal();
                 setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
                 setPasswordError('');
               }}
@@ -615,7 +616,7 @@ const Sidebar = () => {
                     passwordFormData.newPassword
                   );
                   if (response.data.status === 'success') {
-                    setShowChangePasswordModal(false);
+                    closeChangePasswordModal();
                     setPasswordFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
                     setPasswordError('');
                     alert('Password changed successfully! Please login with your new password.');

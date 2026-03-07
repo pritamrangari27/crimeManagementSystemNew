@@ -4,6 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css';
 import './styles/mobile.css';
 
+// Context
+import { ChangePasswordProvider } from './context/ChangePasswordContext';
+
 // Pages
 import LoginModern from './pages/LoginModern';
 import Register from './pages/Register';
@@ -20,7 +23,6 @@ import PoliceSentFIRs from './pages/PoliceSentFIRs';
 import UserProfile from './pages/UserProfile';
 import AdminProfile from './pages/AdminProfile';
 import PoliceProfile from './pages/PoliceProfile';
-import ChangePassword from './pages/ChangePassword';
 import StationDetails from './pages/StationDetails';
 import CriminalDetails from './pages/CriminalDetails';
 import PoliceDetails from './pages/PoliceDetails';
@@ -277,14 +279,6 @@ function AppLayout() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/change-password"
-            element={
-              <PrivateRoute>
-                <ChangePassword />
-              </PrivateRoute>
-            }
-          />
 
           {/* Redirect */}
           <Route path="/" element={<Navigate to="/login" />} />
@@ -298,9 +292,11 @@ function AppLayout() {
 function App() {
   return (
     <Router>
-      <div className="App">
-        <AppLayout />
-      </div>
+      <ChangePasswordProvider>
+        <div className="App">
+          <AppLayout />
+        </div>
+      </ChangePasswordProvider>
     </Router>
   );
 }

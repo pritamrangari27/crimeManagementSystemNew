@@ -30,28 +30,25 @@ const PrivateRoute = ({ children }) => {
 
     switch (role) {
       case 'Admin':
-        // Admin can access: /admin/*, /admin-profile, /profile, /admin-fir, /change-password
+        // Admin can access: /admin/*, /admin-profile, /profile
         isAllowed = pathname.startsWith('/admin') || 
                    pathname.includes('admin') ||
-                   pathname.includes('profile') || 
-                   pathname === '/change-password';
+                   pathname.includes('profile');
         break;
 
       case 'Police':
-        // Police can access: /police/*, /fir/*, any profile, /change-password
+        // Police can access: /police/*, /fir/*, any profile
         isAllowed = pathname.startsWith('/police') || 
                    pathname.includes('fir') ||
-                   pathname.includes('profile') ||
-                   pathname === '/change-password';
+                   pathname.includes('profile');
         break;
 
       case 'User':
-        // User can access: /user/*, /fir/*, any profile, /change-password
+        // User can access: /user/*, /fir/*, any profile
         isAllowed = pathname.startsWith('/user') || 
                    pathname.includes('fir') || 
                    pathname.includes('profile') || 
-                   pathname === '/change-password';
-        break;
+                   pathname === '/change-passwo
 
       default:
         isAllowed = false;
