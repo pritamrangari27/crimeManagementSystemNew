@@ -184,55 +184,95 @@ const AdminDashboard = () => {
                 <i className="fas fa-history me-2"></i>Recent Activities (Last 10)
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{ padding: '0', background: '#ffffff', maxHeight: '600px', overflowY: 'auto' }}>
+            <Modal.Body style={{ padding: '16px', background: '#ffffff', maxHeight: '600px', overflowX: 'auto', overflowY: 'hidden' }}>
               {activitiesLoading ? (
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
                   <Spinner animation="border" role="status" style={{ color: '#06b6d4', marginRight: '10px' }} />
                   <span style={{ color: '#64748b', fontWeight: 500 }}>Loading activities...</span>
                 </div>
               ) : activities && activities.length > 0 ? (
-                <Table hover responsive style={{ marginBottom: '0' }}>
-                  <thead style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', position: 'sticky', top: 0 }}>
-                    <tr>
-                      <th style={{ padding: '12px 16px', fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                        <i className="fas fa-user me-2" style={{ color: '#06b6d4' }}></i>User
-                      </th>
-                      <th style={{ padding: '12px 16px', fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                        <i className="fas fa-exclamation-circle me-2" style={{ color: '#f59e0b' }}></i>Activity
-                      </th>
-                      <th style={{ padding: '12px 16px', fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                        <i className="fas fa-clock me-2" style={{ color: '#10b981' }}></i>Time
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {activities.map((activity, index) => (
-                      <tr key={index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease', fontSize: '0.85rem' }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'}
-                        onMouseLeave={(e) => e.currentTarget.style.background = 'white'}>
-                        <td style={{ padding: '12px 16px', color: '#0f172a', fontWeight: 600 }}>
-                          {activity.user ? (
-                            <><i className="fas fa-user-circle me-2" style={{ color: '#06b6d4' }}></i>{activity.user}</>
+                <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px' }}>
+                  {activities.map((activity, index) => (
+                    <div key={index} style={{
+                      flex: '0 0 320px',
+                      background: '#ffffff',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '12px',
+                      padding: '16px',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer',
+                      minHeight: '180px',
+                      display: 'flex',
+                      flexDirection: 'column'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(6,182,212,0.12)';
+                      e.currentTarget.style.borderColor = '#06b6d4';
+                      e.currentTarget.style.transform = 'translateY(-4px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+                      e.currentTarget.style.borderColor = '#e2e8f0';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}>
+                      {/* Header */}
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                          {activity.icon ? (
+                            <i className={`${activity.icon}`} style={{ fontSize: '1.2rem', color: '#06b6d4' }}></i>
                           ) : (
-                            <span style={{ color: '#94a3b8' }}>System</span>
+                            <i className="fas fa-circle-check" style={{ fontSize: '1.2rem', color: '#10b981' }}></i>
                           )}
-                        </td>
-                        <td style={{ padding: '12px 16px', color: '#475569' }}>
-                          {activity.icon && <i className={`${activity.icon} me-2`}></i>}
-                          <span className="fw-bold">{activity.action}</span>
-                          <br />
-                          <small style={{ color: '#94a3b8', marginTop: '4px', display: 'block' }}>{activity.description}</small>
-                        </td>
-                        <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
-                          {activity.timestamp ? new Date(activity.timestamp).toLocaleTimeString('en-IN') : 'N/A'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                          <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {activity.action}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* User */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                        <i className="fas fa-user-circle me-1" style={{ color: '#06b6d4', fontSize: '0.9rem' }}></i>
+                        <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>
+                          {activity.user ? activity.user : 'System'}
+                        </span>
+                      </div>
+
+                      {/* Description */}
+                      <div style={{
+                        fontSize: '0.8rem',
+                        color: '#64748b',
+                        marginBottom: '12px',
+                        flex: 1,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}>
+                        {activity.description || 'No description'}
+                      </div>
+
+                      {/* Time */}
+                      <div style={{
+                        fontSize: '0.75rem',
+                        color: '#94a3b8',
+                        fontWeight: 500,
+                        padding: '8px 12px',
+                        background: '#f8fafc',
+                        borderRadius: '8px',
+                        textAlign: 'center',
+                        marginTop: 'auto'
+                      }}>
+                        <i className="fas fa-clock me-1" style={{ color: '#10b981' }}></i>
+                        {activity.timestamp ? new Date(activity.timestamp).toLocaleTimeString('en-IN') : 'N/A'}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', color: '#94a3b8', fontSize: '0.9rem' }}>
-                  <i className="fas fa-inbox me-2" style={{ fontSize: '1.5rem', opacity: 0.5 }}></i>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', color: '#94a3b8', fontSize: '0.9rem', minHeight: '200px' }}>
+                  <i className="fas fa-inbox me-2" style={{ fontSize: '2rem', opacity: 0.5 }}></i>
                   No recent activities
                 </div>
               )}
