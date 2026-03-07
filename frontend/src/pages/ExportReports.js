@@ -213,7 +213,7 @@ const ExportReports = () => {
         <Sidebar />
       </div>
       <div style={{ flex: 1, marginLeft: '250px', overflowX: 'hidden', overflowY: 'auto' }}>
-        <Container fluid className="py-4 px-4 page-stagger">
+        <Container fluid style={{ paddingTop: '20px', paddingBottom: '40px', minHeight: '100%' }} className="px-4 page-stagger">
           <div className="d-flex align-items-center gap-3 mb-4" style={{ animation: 'fadeInDown 0.3s ease' }}>
             <Button variant="outline-secondary" size="sm" style={{ borderRadius: 8, fontWeight: 600, padding: '8px 16px' }}
               onClick={() => navigate(-1)}>
@@ -265,21 +265,21 @@ const ExportReports = () => {
             ))}
           </Row>
 
-          {/* Export Buttons */}
-          <Card className="border-0 shadow-sm" style={{ borderRadius: 14, animation: 'fadeInUp 0.5s ease' }}>
+          {/* Export Buttons - IMPORTANT: Always visible */}
+          <Card className="border-0 shadow-sm" style={{ borderRadius: 14, animation: 'fadeInUp 0.5s ease', marginBottom: '30px' }}>
             <Card.Body className="p-4">
               <h6 className="fw-bold mb-3">
                 <i className="fas fa-file-export me-2" style={{ color: '#6366f1' }}></i>
                 Export {EXPORT_TYPES.find(t => t.value === selectedType)?.label || 'Data'}
               </h6>
               <Row className="g-3">
-                <Col md={4}>
+                <Col md={4} xs={12}>
                   <Button
                     variant="success"
                     className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handlePreview('csv')}
                     disabled={!!exporting || previewLoading}
-                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600 }}
+                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px' }}
                     onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                     onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                   >
@@ -287,13 +287,13 @@ const ExportReports = () => {
                     Download CSV
                   </Button>
                 </Col>
-                <Col md={4}>
+                <Col md={4} xs={12}>
                   <Button
                     variant="primary"
                     className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handlePreview('excel')}
                     disabled={!!exporting || previewLoading}
-                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600 }}
+                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px' }}
                     onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                     onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                   >
@@ -301,13 +301,13 @@ const ExportReports = () => {
                     Preview & Export Excel
                   </Button>
                 </Col>
-                <Col md={4}>
+                <Col md={4} xs={12}>
                   <Button
                     variant="danger"
                     className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handlePreview('pdf')}
                     disabled={!!exporting || previewLoading}
-                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600 }}
+                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px' }}
                     onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                     onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                   >
