@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Table, Card, Badge, Button, Spinner, Alert, Form, Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from '../components/Sidebar';
@@ -12,6 +12,7 @@ import '../styles/dashboard.css';
 
 const UserFIRList = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = JSON.parse(localStorage.getItem('authUser'));
   const role = localStorage.getItem('userRole');
   const [firs, setFirs] = useState([]);
@@ -113,6 +114,17 @@ const UserFIRList = () => {
     setViewingFIR(fir); 
     setShowViewModal(true); 
   };
+
+  // Auto-open modal if FIR ID passed from notification
+  useEffect(() => {
+    if (location.state?.viewFIRId && firs.length > 0) {
+      const firToView = firs.find(f => f.id === location.state.viewFIRId);
+      if (firToView) {
+        handleViewFIR(firToView);
+        window.history.replaceState({}, document.title);
+      }
+    }
+  }, [location.state?.viewFIRId, firs]);
 
   // Fetch FIRs
   useEffect(() => {

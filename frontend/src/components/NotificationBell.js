@@ -61,7 +61,7 @@ const NotificationBell = () => {
   const handleNotifClick = (notif) => {
     if (!notif.is_read) handleMarkRead(notif.id);
     if (notif.entity_type === 'FIR' && notif.entity_id) {
-      navigate(`/fir/${notif.entity_id}`);
+      navigate('/fir/list', { state: { viewFIRId: notif.entity_id } });
       setOpen(false);
       setShowAll(false);
     }
