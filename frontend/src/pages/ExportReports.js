@@ -282,9 +282,9 @@ const ExportReports = () => {
                     variant="success"
                     className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handlePreview('csv')}
-                    disabled={exporting === 'csv' || previewLoading}
-                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px' }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                    disabled={exporting === 'csv'}
+                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px', display: 'flex' }}
+                    onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
                     onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                   >
                     {exporting === 'csv' ? <Spinner size="sm" /> : <i className="fas fa-file-csv" style={{ fontSize: '1.3rem' }}></i>}
@@ -296,9 +296,9 @@ const ExportReports = () => {
                     variant="primary"
                     className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handlePreview('excel')}
-                    disabled={previewLoading}
-                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px' }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                    disabled={previewLoading || exporting}
+                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px', display: 'flex' }}
+                    onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
                     onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                   >
                     {previewLoading ? <Spinner size="sm" /> : <i className="fas fa-file-excel" style={{ fontSize: '1.3rem' }}></i>}
@@ -310,9 +310,9 @@ const ExportReports = () => {
                     variant="danger"
                     className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handlePreview('pdf')}
-                    disabled={previewLoading}
-                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px' }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                    disabled={previewLoading || exporting}
+                    style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px', display: 'flex' }}
+                    onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
                     onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                   >
                     {previewLoading ? <Spinner size="sm" /> : <i className="fas fa-file-pdf" style={{ fontSize: '1.3rem' }}></i>}
