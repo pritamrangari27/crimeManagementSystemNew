@@ -177,3 +177,145 @@
   background: #e0f2fe;
   color: #0284c7;
 }
+
+/* ===== COMPREHENSIVE RESPONSIVE DESIGN ===== */
+
+/* ===== MOBILE - Screens 320px to 575px ===== */
+@media (max-width: 575px) {
+  .notification-bell-btn {
+    padding: 6px 10px !important;
+    font-size: 1.1rem !important;
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  .notification-dropdown {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 150px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: none !important;
+    width: calc(100vw - 24px) !important;
+    max-height: 60vh !important;
+    z-index: 2010 !important;
+  }
+
+  .notification-dropdown-header {
+    padding: 12px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .notification-list {
+    max-height: calc(60vh - 50px) !important;
+  }
+
+  .notification-item {
+    padding: 10px 12px !important;
+    gap: 10px !important;
+  }
+
+  .notification-title {
+    font-size: 0.8rem !important;
+  }
+
+  .notification-message {
+    font-size: 0.75rem !important;
+  }
+
+  .notification-time {
+    font-size: 0.65rem !important;
+  }
+
+  .notification-icon {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .notification-view-all-btn {
+    padding: 10px 12px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .notification-empty {
+    padding: 30px 15px !important;
+  }
+
+  .notification-empty i {
+    font-size: 1.5rem !important;
+  }
+
+  .notification-empty p {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* ===== TABLET - Screens 576px to 768px ===== */
+@media (min-width: 576px) and (max-width: 768px) {
+  .notification-bell-btn {
+    padding: 8px 12px !important;
+    font-size: 1.1rem !important;
+    min-height: 40px !important;
+  }
+
+  .notification-dropdown {
+    width: 340px !important;
+    max-height: 500px !important;
+    left: auto !important;
+    right: 12px !important;
+  }
+
+  .notification-item {
+    padding: 11px 14px !important;
+  }
+
+  .notification-icon {
+    width: 34px !important;
+    height: 34px !important;
+  }
+}
+
+/* ===== SMALL DESKTOP - Screens 769px to 1024px ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .notification-dropdown {
+    left: 240px !important;
+    width: 340px !important;
+    max-height: 480px !important;
+  }
+
+  .notification-item {
+    padding: 11px 15px !important;
+  }
+}
+
+/* ===== MEDIUM DESKTOP - Screens 1025px to 1440px ===== */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .notification-dropdown {
+    left: 260px !important;
+    width: 360px !important;
+  }
+
+  .notification-item {
+    padding: 12px 16px !important;
+  }
+}
+
+/* ===== LARGE DESKTOP - Screens 1441px+ ===== */
+@media (min-width: 1441px) {
+  .notification-dropdown {
+    left: 260px !important;
+    width: 380px !important;
+    max-height: 500px !important;
+  }
+
+  .notification-item {
+    padding: 12px 16px !important;
+  }
+
+  .notification-icon {
+    width: 38px !important;
+    height: 38px !important;
+  }
+}

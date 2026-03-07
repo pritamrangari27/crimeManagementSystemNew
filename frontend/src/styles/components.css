@@ -477,50 +477,283 @@
   margin-bottom: 1.5rem;
 }
 
-/* Responsive Design */
-@media (max-width: 992px) {
+/* ===== COMPREHENSIVE RESPONSIVE DESIGN ===== */
+
+/* ===== MOBILE - Screens 320px to 575px ===== */
+@media (max-width: 575px) {
+  /* Navbar */
   .navbar {
-    margin-left: 240px;
+    margin-left: 0 !important;
+    min-height: 48px !important;
+    position: relative;
+    padding: 0 12px !important;
+    padding-left: 56px !important; /* Space for hamburger menu */
+  }
+
+  .navbar-brand {
+    font-size: 1rem !important;
+    padding: 8px 8px !important;
+  }
+
+  .nav-link {
+    padding: 8px 10px !important;
+    font-size: 0.85rem !important;
+    margin: 4px 0 !important;
+  }
+
+  /* Navigation Dropdown */
+  .navbar-collapse {
+    background-color: #ffffff;
+    margin-top: 0;
+    padding: 8px 12px;
+    border-radius: 0;
+    border: 1px solid #0ea5e9;
+    position: absolute;
+    top: 48px;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+
+  /* Tables - Stack Layout */
+  .table-responsive {
+    border: none;
+    box-shadow: none;
+  }
+
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    display: block;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .table tbody td {
+    display: block;
+    padding: 8px 12px !important;
+    text-align: left !important;
+    position: relative;
+    padding-left: 100px !important;
+    border: none;
+  }
+
+  .table tbody td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 8px;
+    font-weight: 700;
+    color: #0ea5e9;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+
+  .table thead th,
+  .table tbody td {
+    padding: 8px 10px !important;
+  }
+
+  /* Cards */
+  .card {
+    margin-bottom: 12px !important;
+    border-radius: 10px !important;
+  }
+
+  .card-header {
+    padding: 12px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .card-body {
+    padding: 12px !important;
+  }
+
+  .card-footer {
+    padding: 10px !important;
+  }
+
+  /* Dropdowns */
+  .dropdown-menu {
+    width: 100% !important;
+    max-width: calc(100vw - 24px) !important;
+    position: fixed !important;
+  }
+
+  /* Loading State */
+  .loading-state {
+    min-height: 300px;
+  }
+
+  /* Empty State */
+  .empty-state {
+    padding: 2rem 1rem !important;
+  }
+
+  .empty-state h4 {
+    font-size: 1rem !important;
+  }
+
+  .empty-state p {
+    font-size: 0.85rem !important;
+  }
+
+  /* Modals */
+  .modal-dialog {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .modal-content {
+    border-radius: 0;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 12px !important;
+  }
+
+  .modal-header h5 {
+    font-size: 1rem !important;
+  }
+
+  /* Notification Bell */
+  .notification-bell {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 
-@media (max-width: 768px) {
+/* ===== TABLET - Screens 576px to 768px ===== */
+@media (min-width: 576px) and (max-width: 768px) {
   .navbar {
-    margin-left: 0;
+    margin-left: 0 !important;
+    position: relative;
   }
-  
+
   .navbar-brand {
-    font-size: 1.1rem;
+    font-size: 1.1rem !important;
   }
-  
+
   .nav-link {
-    margin: 0.5rem 0;
+    padding: 8px 12px !important;
+    font-size: 0.9rem !important;
+    margin: 4px 2px !important;
   }
-  
+
   .table {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
-  
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .card {
+    margin-bottom: 12px !important;
+  }
+
+  .card-header {
+    padding: 12px !important;
+  }
+
+  .card-body {
+    padding: 12px !important;
+  }
+
+  .dropdown-menu {
+    max-width: 300px !important;
+  }
+
+  .empty-state {
+    padding: 2.5rem 1.5rem !important;
+  }
+}
+
+/* ===== SMALL DESKTOP - Screens 769px to 1024px ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .navbar {
+    margin-left: 240px;
+  }
+
+  .navbar-brand {
+    font-size: 1.15rem;
+  }
+
+  .table {
+    font-size: 0.85rem;
+  }
+
   .table thead th,
   .table tbody td {
     padding: 10px;
   }
-  
+
   .card {
-    margin-bottom: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .nav-link {
+    padding: 0.7rem 1rem !important;
   }
 }
 
-@media (max-width: 576px) {
-  .navbar-collapse {
-    background-color: #ffffff;
-    margin-top: 0.5rem;
-    padding: 0.5rem 0;
-    border-radius: 0.5rem;
-    border: 1px solid #0ea5e9;
+/* ===== MEDIUM DESKTOP - Screens 1025px to 1440px ===== */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .navbar {
+    margin-left: 260px;
   }
-  
+
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+
   .table {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
+  }
+
+  .nav-link {
+    padding: 0.75rem 1rem !important;
+  }
+
+  .dropdown-menu {
+    max-width: 350px;
+  }
+}
+
+/* ===== LARGE DESKTOP - Screens 1441px+ ===== */
+@media (min-width: 1441px) {
+  .navbar {
+    margin-left: 260px;
+  }
+
+  .navbar-brand {
+    font-size: 1.25rem;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+
+  .nav-link {
+    padding: 0.75rem 1.25rem !important;
+  }
+
+  .card {
+    margin-bottom: 1.5rem;
+  }
+
+  .card-body {
+    padding: 1.25rem !important;
   }
 }

@@ -246,6 +246,14 @@ function AppLayout() {
             }
           />
           <Route
+            path="/police/criminals"
+            element={
+              <PrivateRoute>
+                <CriminalsManagement />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/police/workflow"
             element={
               <PrivateRoute>

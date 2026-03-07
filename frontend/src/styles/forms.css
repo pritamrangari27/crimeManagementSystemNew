@@ -853,63 +853,326 @@ textarea.form-control {
   border-color: #0d6efd;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* ===== COMPREHENSIVE RESPONSIVE DESIGN ===== */
+
+/* ===== MOBILE - Screens 320px to 575px ===== */
+@media (max-width: 575px) {
+  .management-container {
+    padding: 12px !important;
+    margin-left: 0 !important;
+  }
+
+  .management-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .management-header h1 {
+    font-size: 1.3rem;
+    width: 100%;
+  }
+
   .management-controls {
     flex-direction: column;
     align-items: stretch;
+    gap: 10px;
   }
 
   .search-box {
     min-width: auto;
+    width: 100%;
+  }
+
+  .search-box .form-control {
+    width: 100%;
+    padding: 10px 12px !important;
+    font-size: 16px !important;
+    min-height: 44px;
   }
 
   .btn-add-new {
     width: 100%;
     justify-content: center;
+    padding: 10px 14px !important;
+    font-size: 0.8rem !important;
+    min-height: 44px;
   }
 
-  .form-row {
-    grid-template-columns: 1fr;
+  /* Form Styles */
+  .form-container {
+    padding: 14px !important;
+    margin-bottom: 12px !important;
   }
 
-  .button-group {
+  .form-section {
+    margin-bottom: 16px !important;
+  }
+
+  .form-section-title {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .form-row,
+  .row {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .col,
+  [class*="col-"] {
+    width: 100% !important;
+    margin-bottom: 12px !important;
+  }
+
+  .form-control,
+  .form-select,
+  textarea {
+    width: 100% !important;
+    padding: 10px 12px !important;
+    font-size: 16px !important;
+    min-height: 44px !important;
+    border-radius: 8px !important;
+  }
+
+  .form-label {
+    font-size: 0.85rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* Buttons */
+  .button-group,
+  .action-buttons {
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 8px !important;
+    width: 100%;
   }
 
   .button-group .btn,
   .action-buttons .btn {
     width: 100%;
     justify-content: center;
-  }
-
-  .action-buttons {
-    flex-direction: column;
+    padding: 10px 14px !important;
+    min-height: 44px;
   }
 
   .button-group .btn-sm,
   .action-buttons .btn-sm {
     width: 100%;
     justify-content: center;
+    min-height: 36px;
+  }
+
+  /* Tables */
+  .table-container {
+    border: none;
+    box-shadow: none;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    display: block;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .table tbody td {
+    display: block;
+    padding: 8px 12px !important;
+    text-align: left !important;
+    position: relative;
+    padding-left: 100px !important;
+    border: none;
+    font-size: 0.8rem !important;
+  }
+
+  .table tbody td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 8px;
+    font-weight: 700;
+    color: #10b981;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+
+  /* Select dropdowns */
+  .form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 32px !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%2310b981' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+  }
+
+  /* Badge */
+  .badge {
+    padding: 4px 6px !important;
+    font-size: 0.65rem !important;
+  }
+
+  /* Modals */
+  .modal-dialog {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .modal-content {
+    border-radius: 0;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 12px !important;
+  }
+
+  .modal-header h5 {
+    font-size: 1rem !important;
   }
 }
 
-@media (max-width: 576px) {
+/* ===== TABLET - Screens 576px to 768px ===== */
+@media (min-width: 576px) and (max-width: 768px) {
+  .management-container {
+    padding: 14px !important;
+    margin-left: 0 !important;
+  }
+
   .management-header {
-    padding: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .management-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
+    width: 100%;
+  }
+
+  .management-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-box .form-control {
+    width: 100%;
+  }
+
+  .btn-add-new {
+    width: 100%;
+  }
+
+  .form-row,
+  .row {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .form-control,
+  .form-select {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+  }
+
+  .button-group,
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .button-group .btn,
+  .action-buttons .btn {
+    width: 100%;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table {
+    font-size: 0.85rem;
   }
 
   .form-container {
-    padding: 1.5rem;
+    padding: 16px !important;
+  }
+}
+
+/* ===== SMALL DESKTOP - Screens 769px to 1024px ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .management-container {
+    margin-left: 240px;
+    padding: 14px !important;
+  }
+
+  .form-row,
+  .row {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .management-header h1 {
+    font-size: 1.35rem;
   }
 
   .form-section-title {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
+  }
+
+  .table {
+    font-size: 0.85rem;
+  }
+}
+
+/* ===== MEDIUM DESKTOP - Screens 1025px to 1440px ===== */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .management-container {
+    margin-left: 260px;
+    padding: 16px !important;
+  }
+
+  .form-row,
+  .row {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .management-header h1 {
+    font-size: 1.35rem;
+  }
+
+  .table {
+    font-size: 0.88rem;
+  }
+}
+
+/* ===== LARGE DESKTOP - Screens 1441px+ ===== */
+@media (min-width: 1441px) {
+  .management-container {
+    margin-left: 260px;
+    padding: 18px !important;
+  }
+
+  .form-row,
+  .row {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .management-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .table {
+    font-size: 0.9rem;
   }
 }
 

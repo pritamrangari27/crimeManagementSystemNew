@@ -1,5 +1,5 @@
 /* ============================================
-   SIDEBAR STYLING - MODERN SAAS DESIGN
+   SIDEBAR STYLING - MODERN RESPONSIVE DESIGN
    ============================================ */
 
 :root {
@@ -16,7 +16,78 @@
   --accent-light-green: #ecfdf5;
 }
 
-/* Main Sidebar Container */
+/* ===== HAMBURGER MENU STYLES ===== */
+.hamburger-container {
+  position: fixed;
+  top: var(--banner-height, 38px);
+  left: 12px;
+  z-index: 1050;
+  display: none;
+}
+
+.hamburger-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+}
+
+.hamburger-menu:hover {
+  background-color: rgba(14, 165, 233, 0.1);
+}
+
+.hamburger-menu span {
+  display: block;
+  width: 24px;
+  height: 2.5px;
+  background-color: #0ea5e9;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+}
+
+.hamburger-menu.active span:nth-child(1) {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.hamburger-menu.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* ===== SIDEBAR OVERLAY ===== */
+.sidebar-overlay {
+  position: fixed;
+  top: var(--banner-height, 38px);
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 1999;
+}
+
+.sidebar-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ===== MAIN SIDEBAR CONTAINER ===== */
 .sidebar {
   width: var(--sidebar-width);
   height: calc(100vh - var(--banner-height));
@@ -34,7 +105,56 @@
   border-right: 2px solid #d1fae5;
 }
 
-/* Sidebar Header */
+/* Responsive Sidebar - Mobile */
+@media (max-width: 575px) {
+  .sidebar {
+    width: 85vw;
+    max-width: 300px;
+    left: -100%;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+  .hamburger-menu {
+    display: flex;
+  }
+}
+
+/* Responsive Sidebar - Tablet */
+@media (min-width: 576px) and (max-width: 768px) {
+  .sidebar {
+    width: 250px;
+    left: -100%;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+  .hamburger-menu {
+    display: flex;
+  }
+}
+
+/* Responsive Sidebar - Desktop */
+@media (min-width: 769px) {
+  .sidebar {
+    left: 0 !important;
+  }
+
+  .hamburger-menu {
+    display: none !important;
+  }
+
+  .sidebar-overlay {
+    display: none !important;
+  }
+}
+
+/* ===== SIDEBAR HEADER ===== */
 .sidebar-header {
   padding: 0 0 20px 0;
   margin-bottom: 24px;
@@ -44,6 +164,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .sidebar-header h5 {
@@ -58,6 +179,16 @@
   margin: 0;
   display: flex;
   align-items: center;
+  flex: 1;
+  min-width: 150px;
+}
+
+/* Responsive Header on Mobile */
+@media (max-width: 575px) {
+  .sidebar-header h5 {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+  }
 }
 
 .sidebar-header i {
@@ -66,14 +197,18 @@
   margin-right: 8px;
   transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
   filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.2));
+  flex-shrink: 0;
 }
+
 .sidebar-header:hover i {
   transform: rotate(10deg) scale(1.15);
 }
 
-/* Sidebar Navigation */
+/* ===== SIDEBAR NAVIGATION ===== */
 .sidebar-nav {
   padding: 8px 0;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .sidebar-link {
@@ -92,6 +227,7 @@
   position: relative;
   animation: fadeInLeft 0.35s cubic-bezier(0.4,0,0.2,1) both;
 }
+
 .sidebar-link:nth-child(1) { animation-delay: 50ms; }
 .sidebar-link:nth-child(2) { animation-delay: 100ms; }
 .sidebar-link:nth-child(3) { animation-delay: 150ms; }
@@ -126,6 +262,7 @@
   margin-right: 12px;
   font-size: 1rem;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .sidebar-link:hover i {
@@ -138,7 +275,21 @@
   transform: scale(1.15);
 }
 
-/* Contact Button in Sidebar */
+/* Responsive Link Text on Mobile */
+@media (max-width: 768px) {
+  .sidebar-link {
+    font-size: 0.875rem;
+    padding: 10px 12px !important;
+  }
+
+  .sidebar-link i {
+    width: 18px;
+    font-size: 0.9rem;
+    margin-right: 10px;
+  }
+}
+
+/* ===== CONTACT BUTTON IN SIDEBAR ===== */
 .sidebar-link.contact-btn {
   background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
   border-left: 4px solid #6366f1;

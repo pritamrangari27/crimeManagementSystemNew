@@ -11,7 +11,8 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const popupRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const sidebarRef = useRef(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -25,8 +26,28 @@ const Sidebar = () => {
   const [passwordError, setPasswordError] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [passwordSaving, setPasswordSaving] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
   const user = getCurrentUser();
   const userRole = getUserRole();
+
+  // Handle window resize for responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 575;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Close sidebar when navigating
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
 
   // Close popup when clicking outside
   useEffect(() => {
@@ -63,6 +84,7 @@ const Sidebar = () => {
     { path: '/police/firs/sent', label: 'New FIRs', icon: 'fas fa-inbox' },
     { path: '/police/firs/approved', label: 'Approved FIRs', icon: 'fas fa-check-circle' },
     { path: '/police/firs/rejected', label: 'Rejected FIRs', icon: 'fas fa-times-circle' },
+    { path: '/police/criminals', label: 'Criminal Records', icon: 'fas fa-user-secret' },
     { path: '/police/workflow', label: 'Case Workflow', icon: 'fas fa-project-diagram' },
     { path: '/police/allocation', label: 'Resource Allocation', icon: 'fas fa-balance-scale' },
   ];
@@ -89,18 +111,31 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Mobile Toggle Button */}
-      <div className="sidebar-toggle-mobile d-lg-none">
-        <button 
-          className="btn btn-primary"
-          onClick={() => setIsMobile(!isMobile)}
+      {/* Hamburger Menu Button - Visible on Mobile */}
+      <div className="hamburger-container" style={{ position: 'fixed', top: 'var(--banner-height, 38px)', left: '12px', zIndex: 1050, display: isMobile ? 'flex' : 'none' }}>
+        <button
+          className={`hamburger-menu ${sidebarOpen ? 'active' : ''}`}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          title="Toggle Navigation Menu"
+          aria-label="Toggle Navigation Menu"
         >
-          <i className="fas fa-bars"></i>
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </div>
 
+      {/* Sidebar Overlay - Click to close on mobile */}
+      {sidebarOpen && isMobile && (
+        <div
+          className={`sidebar-overlay ${sidebarOpen ? 'show' : ''}`}
+          onClick={() => setSidebarOpen(false)}
+          style={{ display: isMobile ? 'block' : 'none' }}
+        ></div>
+      )}
+
       {/* Sidebar */}
-      <div className={`sidebar ${isMobile ? 'active' : ''}`}>
+      <div ref={sidebarRef} className={`sidebar ${sidebarOpen ? 'show' : ''}`}>
         {/* Sidebar Header */}
         <div className="sidebar-header">
           <h5 className="mb-0">

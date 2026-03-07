@@ -1481,6 +1481,376 @@
   }
 }
 
+/* ===== COMPREHENSIVE RESPONSIVE MEDIA QUERIES ===== */
+
+/* ===== MOBILE - Screens 320px to 575px ===== */
+@media (max-width: 575px) {
+  /* Dashboard Container */
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    padding: 12px !important;
+    margin-left: 0 !important;
+  }
+
+  /* Header Responsive */
+  .dashboard-header,
+  .mgmt-header,
+  .management-header,
+  .dash-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .dashboard-header h1,
+  .mgmt-header h2, 
+  .management-header h1,
+  .dash-header h2 {
+    font-size: 1.3rem !important;
+    width: 100% !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Controls Responsive */
+  .mgmt-controls,
+  .management-controls {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .mgmt-controls .mgmt-search,
+  .mgmt-controls .mgmt-filter,
+  .management-controls input,
+  .management-controls select {
+    width: 100% !important;
+  }
+
+  /* Stats Grid */
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Dashboard Cards */
+  .dashboard-card {
+    padding: 14px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .dashboard-card-body {
+    flex-direction: column !important;
+  }
+
+  .dashboard-card-icon {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 1.5rem !important;
+    margin-left: 0 !important;
+    margin-top: 12px !important;
+  }
+
+  .dashboard-card-value {
+    font-size: 1.5rem !important;
+  }
+
+  .dashboard-card-title {
+    font-size: 0.75rem !important;
+  }
+
+  /* Tables - Stack Layout */
+  .table-responsive {
+    border: none;
+    box-shadow: none;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    display: block;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .table tbody td {
+    display: block;
+    padding: 8px 12px !important;
+    text-align: left !important;
+    position: relative;
+    padding-left: 100px !important;
+    border: none;
+    font-size: 0.8rem !important;
+  }
+
+  .table tbody td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 8px;
+    font-weight: 700;
+    color: #10b981;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+
+  /* Grid Layouts */
+  .bento-grid.cols-4,
+  .bento-grid.cols-3,
+  .bento-grid.cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Bento Cards */
+  .bento-card {
+    padding: 14px !important;
+  }
+
+  .bento-stat-value {
+    font-size: 1.3rem !important;
+  }
+
+  .bento-stat-label {
+    font-size: 0.65rem !important;
+  }
+
+  /* Action Buttons */
+  .mgmt-actions {
+    gap: 4px;
+  }
+
+  .mgmt-actions button,
+  .mgmt-actions .btn {
+    padding: 4px 8px !important;
+    font-size: 0.7rem !important;
+  }
+
+  /* Forms */
+  .form-control,
+  .form-select {
+    padding: 10px 12px !important;
+    font-size: 16px !important; /* Prevent zoom on iOS */
+    min-height: 44px;
+  }
+
+  .form-label {
+    font-size: 0.85rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* Buttons */
+  .btn {
+    min-height: 44px;
+    padding: 10px 14px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .btn-sm {
+    min-height: 36px;
+    padding: 8px 10px !important;
+  }
+
+  .btn-lg {
+    min-height: 48px;
+    padding: 12px 16px !important;
+  }
+
+  /* Modals */
+  .modal-dialog {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .modal-content {
+    border-radius: 0;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 12px !important;
+  }
+
+  .fir-form-modal.modal-lg .modal-dialog {
+    max-width: 100vw !important;
+  }
+
+  .fir-form-modal .form-control,
+  .fir-form-modal .form-select {
+    font-size: 16px !important;
+  }
+}
+
+/* ===== TABLET - Screens 576px to 768px ===== */
+@media (min-width: 576px) and (max-width: 768px) {
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    padding: 14px !important;
+    margin-left: 0 !important;
+  }
+
+  .dashboard-header,
+  .mgmt-header,
+  .management-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .dashboard-header h1,
+  .mgmt-header h2,
+  .management-header h1 {
+    font-size: 1.35rem !important;
+    width: 100% !important;
+  }
+
+  .mgmt-controls,
+  .management-controls {
+    flex-direction: column !important;
+  }
+
+  .mgmt-controls .mgmt-search,
+  .management-controls input {
+    width: 100% !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .bento-grid.cols-4,
+  .bento-grid.cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Tables - Horizontal Scroll */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table {
+    font-size: 0.85rem;
+  }
+
+  .dashboard-card-icon {
+    width: 55px !important;
+    height: 55px !important;
+  }
+
+  .dashboard-card-value {
+    font-size: 1.6rem !important;
+  }
+
+  .form-control,
+  .form-select {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+  }
+
+  .btn {
+    min-height: 40px;
+    padding: 8px 12px !important;
+  }
+}
+
+/* ===== SMALL DESKTOP - Screens 769px to 1024px ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    margin-left: 240px;
+    padding: 16px !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .bento-grid.cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .bento-grid.cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .dashboard-card-icon {
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .table {
+    font-size: 0.85rem;
+  }
+
+  .form-control,
+  .form-select {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* ===== MEDIUM DESKTOP - Screens 1025px to 1440px ===== */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    margin-left: 260px;
+    padding: 16px !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  }
+
+  .bento-grid.cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .bento-grid.cols-3 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .table {
+    font-size: 0.88rem;
+  }
+}
+
+/* ===== LARGE DESKTOP - Screens 1441px+ ===== */
+@media (min-width: 1441px) {
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    margin-left: 260px;
+    padding: 18px !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  }
+
+  .bento-grid.cols-4 {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  .bento-grid.cols-3 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .dashboard-card {
+    padding: 1.5rem !important;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+}
+
 /* Responsive modal */
 @media (max-width: 768px) {
   .fir-form-modal.modal-lg .modal-dialog {

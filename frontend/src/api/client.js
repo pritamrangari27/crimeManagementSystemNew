@@ -3,10 +3,19 @@ import axios from 'axios';
 // Dynamically determine API URL based on environment
 let API_BASE_URL = process.env.REACT_APP_API_URL;
 
-// If not set, use production URL if on Vercel, else localhost
-if (!API_BASE_URL) {
-  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel')) {
-    API_BASE_URL = 'https://crime-management-api.onrender.com/api';
+// If not set or invalid, determine based on hostname
+if (!API_BASE_URL || API_BASE_URL === 'undefined') {
+  if (typeof window !== 'undefined') {
+    // Prefer localhost for development
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      API_BASE_URL = 'http://localhost:5000/api';
+    } else if (window.location.hostname.includes('vercel')) {
+      // Use production API only for Vercel deployments
+      API_BASE_URL = 'https://crime-management-api.onrender.com/api';
+    } else {
+      // Default to localhost for development
+      API_BASE_URL = 'http://localhost:5000/api';
+    }
   } else {
     API_BASE_URL = 'http://localhost:5000/api';
   }
