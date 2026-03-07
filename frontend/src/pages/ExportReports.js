@@ -296,7 +296,7 @@ const ExportReports = () => {
                     variant="primary"
                     className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handlePreview('excel')}
-                    disabled={!!exporting || previewLoading}
+                    disabled={previewLoading}
                     style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px' }}
                     onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                     onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
@@ -310,7 +310,7 @@ const ExportReports = () => {
                     variant="danger"
                     className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handlePreview('pdf')}
-                    disabled={!!exporting || previewLoading}
+                    disabled={previewLoading}
                     style={{ borderRadius: 12, fontSize: '1rem', transition: 'transform 0.2s', fontWeight: 600, minHeight: '60px' }}
                     onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                     onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
