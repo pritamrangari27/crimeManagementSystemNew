@@ -37,15 +37,30 @@ const FIRManagement = () => {
 
   const fetchFIRs = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem('authUser'));
+      const role = localStorage.getItem('userRole');
       let response;
-      if (filterStatus) {
-        response = await firsAPI.getByStatus(filterStatus);
+      
+      // Admin sees all FIRs, Police sees only their assigned
+      if (role === 'Admin') {
+        if (filterStatus) {
+          response = await firsAPI.getByStatus(filterStatus);
+        } else {
+          response = await firsAPI.getAll();
+        }
+      } else if (role === 'Police') {
+        // Police officers see only their assigned FIRs
+        response = await firsAPI.getMyAssigned();
       } else {
-        response = await firsAPI.getAll();
+        throw new Error('Unauthorized: Insufficient permissions');
       }
-      if (response.data.status === 'success') {
+      
+      if (response.data.status === 'success' && Array.isArray(response.data.data)) {
         setAllFirs(response.data.data);
         setFirs(response.data.data);
+      } else if (Array.isArray(response.data)) {
+        setAllFirs(response.data);
+        setFirs(response.data);
       }
     } catch (error) {
       console.error('Error fetching FIRs:', error);
