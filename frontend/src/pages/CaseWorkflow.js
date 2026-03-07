@@ -194,13 +194,14 @@ const CaseWorkflow = () => {
                     <th>Complainant</th>
                     <th>Station</th>
                     <th>Priority</th>
+                    <th>Timeline</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredFIRs.length === 0 ? (
-                    <tr><td colSpan={6} className="mgmt-empty">No cases found</td></tr>
+                    <tr><td colSpan={7} className="mgmt-empty">No cases found</td></tr>
                   ) : filteredFIRs.map((fir, idx) => (
-                    <tr key={fir.id} onClick={() => viewTimeline(fir)} style={{ cursor: 'pointer' }}>
+                    <tr key={fir.id}>
                       <td>{idx + 1}</td>
                       <td style={{ fontWeight: 600 }}>{fir.fir_number || `FIR-${String(fir.id).padStart(4, '0')}`}</td>
                       <td>{fir.crime_type}</td>
@@ -210,6 +211,11 @@ const CaseWorkflow = () => {
                         <span className={`mgmt-badge ${fir.priority === 'Critical' ? 'danger' : fir.priority === 'High' ? 'warning' : fir.priority === 'Low' ? 'secondary' : 'info'}`}>
                           {fir.priority || 'Medium'}
                         </span>
+                      </td>
+                      <td>
+                        <button className="view" onClick={() => viewTimeline(fir)} style={{ background: 'rgba(99,102,241,0.10)', color: '#6366f1', fontWeight: 600, fontSize: '0.82rem', padding: '6px 12px', borderRadius: 6 }}>
+                          <i className="fas fa-timeline me-1"></i>View & Update
+                        </button>
                       </td>
                     </tr>
                   ))}
