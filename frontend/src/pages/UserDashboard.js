@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Button, Modal, Badge, Form, Alert, Spinner } from 'react-bootstrap';
+import { Modal, Form, Button, Alert, Spinner, Badge } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -252,7 +252,7 @@ const UserDashboard = () => {
     <>
       <Sidebar />
       <div className="with-sidebar">
-        <Container fluid className="dashboard-container">
+        <div className="dashboard-container">
 
           {/* ── Header ── */}
           <div className="dash-header">
@@ -677,7 +677,7 @@ const UserDashboard = () => {
             </Modal.Footer>
           </Modal>
 
-        </Container>
+        </div>
         <ToastContainer position="top-right" autoClose={3000} />
       </div>
       <Footer />

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Form, Alert, Spinner, Badge } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, getUserRole, updateAuthUser } from '../utils/authService';
 import { authAPI } from '../api/client';

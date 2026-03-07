@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Badge, Button, Spinner, Alert, Modal, Form } from 'react-bootstrap';
+import { Badge, Button, Spinner, Alert, Modal, Form, Row, Col, Container } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

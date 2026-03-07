@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Container, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -93,10 +92,10 @@ const PoliceDashboard = () => {
     return (
       <>
         <Sidebar />
-        <div className="with-sidebar d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
-          <div className="text-center">
+        <div className="with-sidebar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+          <div style={{ textAlign: 'center' }}>
             <div className="page-loader"><div className="spinner"></div></div>
-            <p className="text-muted mt-2" style={{ fontSize: '0.85rem' }}>Loading dashboard...</p>
+            <p style={{ color: '#64748b', marginTop: '8px', fontSize: '0.85rem' }}>Loading dashboard...</p>
           </div>
         </div>
       </>
@@ -121,7 +120,7 @@ const PoliceDashboard = () => {
     <>
       <Sidebar />
       <div className="with-sidebar">
-        <Container fluid className="dashboard-container">
+        <div className="dashboard-container">
 
           {/* ── Header ── */}
           <div className="dash-header">
@@ -129,10 +128,10 @@ const PoliceDashboard = () => {
               <h2><i className="fas fa-shield-alt me-2" style={{ color: '#10b981' }}></i>Police Dashboard</h2>
               <p>Welcome back, {user?.username || 'Officer'}!</p>
             </div>
-            <Button variant="outline-primary" size="sm" className="fw-bold" style={{ borderRadius: 8 }}
+            <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem' }}
               onClick={() => navigate('/police/profile')}>
               <i className="fas fa-user me-1"></i> My Profile
-            </Button>
+            </button>
           </div>
 
           {/* ── Stat cards (4-col bento) ── */}
@@ -268,7 +267,7 @@ const PoliceDashboard = () => {
             </div>
           </div>
 
-        </Container>
+        </div>
         <ToastContainer />
       </div>
       <Footer />
