@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css';
 import './styles/button-visibility.css';
+import './styles/enhanced-animations.css';
 import './styles/mobile.css';
 
 // Context

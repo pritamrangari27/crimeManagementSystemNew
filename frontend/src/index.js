@@ -4,6 +4,7 @@ import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css';
 import './styles/button-visibility.css';
+import './styles/enhanced-animations.css';
 import './styles/auth-modern.css';
 import './styles/dashboard.css';
 import './styles/forms.css';
