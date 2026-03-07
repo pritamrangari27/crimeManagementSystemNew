@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Container, Button, Card, Alert, Table, Row, Col, Spinner } from 'react-bootstrap';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import { advancedAPI } from '../api/client';

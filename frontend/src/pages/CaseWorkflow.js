@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Container, Button, Spinner, Alert, Card, Badge, Modal, Form, Row, Col } from 'react-bootstrap';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import { firsAPI, advancedAPI } from '../api/client';
