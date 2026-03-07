@@ -280,20 +280,13 @@ function AppLayout() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/change-password"
-            element={
-              <PrivateRoute>
-                <ChangePassword />
-              </PrivateRoute>
-            }
-          />
 
           {/* Redirect */}
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         {!isAuthPage && <Chatbot />}
+        <ChangePassword />
       </>
     );
   }
