@@ -82,7 +82,8 @@
   .mgmt-container,
   .management-container {
     padding: 12px !important;
-    padding-bottom: calc(var(--footer-height, 42px) + 16px) !important;
+    margin: 0 !important;
+    width: 100% !important;
   }
 
   /* Typography */
@@ -436,8 +437,9 @@
   .dashboard-container,
   .mgmt-container,
   .management-container {
-    margin-left: 240px;
     padding: 16px !important;
+    margin: 0 !important;
+    width: 100% !important;
   }
 
   .col-lg-3,
@@ -499,14 +501,15 @@
   }
 
   .navbar {
-    margin-left: 260px;
+    margin-left: 0;
   }
 
   .dashboard-container,
   .mgmt-container,
   .management-container {
-    margin-left: 260px;
-    padding: 16px !important;
+    margin: 0 !important;
+    padding: 18px !important;
+    width: 100% !important;
   }
 
   .col-lg-3 {
@@ -562,8 +565,9 @@
   .dashboard-container,
   .mgmt-container,
   .management-container {
-    margin-left: 260px;
+    margin: 0 !important;
     padding: 18px !important;
+    width: 100% !important;
   }
 
   .col-lg-3 {

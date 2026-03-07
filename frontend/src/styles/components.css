@@ -4,12 +4,13 @@
   box-shadow: 0 1px 3px rgba(14, 165, 233, 0.1);
   padding: 0 !important;
   min-height: 56px;
-  margin-left: var(--sidebar-width, 260px);
+  margin-left: 0;
   position: sticky;
   top: var(--banner-height, 38px);
   z-index: 999;
   transition: margin-left 0.3s ease;
   border-bottom: 1px solid #0ea5e9;
+  width: 100%;
 }
 
 .navbar-brand {

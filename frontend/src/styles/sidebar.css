@@ -639,15 +639,18 @@
 
 /* Main Content Area with Sidebar */
 .with-sidebar {
-  margin-left: var(--sidebar-width);
+  margin-left: var(--sidebar-width, 260px);
   transition: margin-left 0.3s ease;
   margin-top: 0;
-  padding-top: var(--banner-height);
-  padding-bottom: var(--footer-height);
+  padding-top: var(--banner-height, 38px);
+  padding-bottom: var(--footer-height, 42px);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-  width: calc(100% - var(--sidebar-width));
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 /* Main Content Container */

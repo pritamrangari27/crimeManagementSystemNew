@@ -18,22 +18,28 @@
   min-height: calc(100vh - var(--banner-height, 38px) - var(--footer-height, 42px));
   padding: var(--grid-gap);
   font-family: var(--font-stack);
-  padding-top: calc(var(--grid-gap) + 4px);
-  padding-bottom: calc(var(--footer-height, 42px) + 16px);
+  padding-top: var(--grid-gap);
+  padding-bottom: calc(var(--footer-height, 42px) + var(--grid-gap));
   animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) both;
   overflow-y: auto;
+  flex: 1;
+  width: 100%;
+  margin: 0;
 }
 
 /* ── Management page container — unified spacing ── */
 .mgmt-container {
   background-color: #ffffff;
   min-height: calc(100vh - var(--banner-height, 38px) - var(--footer-height, 42px));
-  padding: var(--grid-gap) var(--grid-gap) calc(var(--footer-height, 42px) + 16px);
+  padding: var(--grid-gap);
   font-family: var(--font-stack);
   animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) both;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  width: 100%;
+  margin: 0;
 }
 
 /* ── Management page header — flex row with actions ── */
