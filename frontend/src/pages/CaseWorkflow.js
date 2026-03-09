@@ -178,6 +178,10 @@ const CaseWorkflow = () => {
           }
         }
 
+        .mgmt-table {
+          table-layout: fixed;
+        }
+
         .mgmt-table tbody tr {
           position: relative;
         }
@@ -293,10 +297,10 @@ const CaseWorkflow = () => {
                     return (
                       <tr key={fir.id}>
                         {/* COLUMN 1: Sr. No. */}
-                        <td style={{ fontWeight: 700, color: '#6366f1', textAlign: 'center', minWidth: '50px' }}>{srNo}</td>
+                        <td style={{ fontWeight: 700, color: '#6366f1', textAlign: 'center', width: '60px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{srNo}</td>
                         
                         {/* COLUMN 2: FIR # */}
-                        <td style={{ fontWeight: 700, color: '#0f172a', minWidth: '80px' }}>{firNumber}</td>
+                        <td style={{ fontWeight: 700, color: '#0f172a', width: '140px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{firNumber}</td>
                         
                         {/* COLUMN 3: Crime Type */}
                         <td style={{ minWidth: '100px' }}>
