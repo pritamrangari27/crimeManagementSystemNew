@@ -778,6 +778,51 @@ async function runMigrations(db) {
       );
     });
   });
+
+  // Migration 30: Fix FIRs with station codes as station_name (POW001 → Powai Police Station)
+  await new Promise((resolve) => {
+    console.log('Fixing FIR station names (codes → full names)...');
+    // Map of station codes to station names
+    const stationMapping = {
+      'POW001': 'Powai Police Station',
+      'COL001': 'Colaba Police Station',
+      'MRD001': 'Marine Drive Police Station',
+      'BND001': 'Bandra Police Station',
+      'AND001': 'Andheri Police Station',
+      'DAD001': 'Dadar Police Station',
+      'BOR001': 'Borivali Police Station',
+      'KUR001': 'Kurla Police Station',
+      'VLP001': 'Vile Parle Police Station',
+      'JUH001': 'Juhu Police Station',
+      'GOR001': 'Goregaon Police Station',
+      'MAL001': 'Malad Police Station'
+    };
+
+    let completed = 0;
+    const codes = Object.keys(stationMapping);
+    
+    if (codes.length === 0) {
+      resolve();
+      return;
+    }
+
+    codes.forEach((code) => {
+      const fullName = stationMapping[code];
+      db.run(
+        `UPDATE firs SET station_name = ? WHERE station_name = ?`,
+        [fullName, code],
+        function(err) {
+          if (!err && this.changes > 0) {
+            console.log(`✓ Fixed ${this.changes} FIR records: ${code} → ${fullName}`);
+          }
+          completed++;
+          if (completed === codes.length) {
+            resolve();
+          }
+        }
+      );
+    });
+  });
 }
 
 async function createTables(db) {

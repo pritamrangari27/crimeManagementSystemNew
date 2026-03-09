@@ -88,11 +88,17 @@ router.post('/', verifyToken, (req, res) => {
     });
   }
 
-  // Use station_id as station_name if needed (from form it's just station_code)
-  const station_name = station_id;
+  // Fetch actual station name from police_station table
+  req.db.get(`SELECT station_name FROM police_station WHERE id = ? OR station_code = ?`, [station_id, station_id], (errStation, stationRow) => {
+    if (errStation) {
+      console.error('Station lookup error:', errStation);
+      return res.status(500).json({ status: 'error', message: 'Station lookup failed' });
+    }
 
-  // Auto-generate FIR number
-  req.db.get(`SELECT MAX(id) as max_id FROM firs`, [], (err0, maxRow) => {
+    const station_name = stationRow?.station_name || station_id; // Fallback to station_id if not found
+
+    // Auto-generate FIR number
+    req.db.get(`SELECT MAX(id) as max_id FROM firs`, [], (err0, maxRow) => {
     const serial = ((maxRow?.max_id || 0) + 1);
     const year = new Date().getFullYear();
     const firNumber = `FIR-${year}-MH-MUM-${String(serial).padStart(5, '0')}`;
@@ -163,6 +169,7 @@ router.post('/', verifyToken, (req, res) => {
         id: newFirId,
         fir_number: firNumber
       });
+    });
     });
   });
 });
