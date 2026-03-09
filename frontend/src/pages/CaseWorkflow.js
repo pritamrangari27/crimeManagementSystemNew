@@ -268,9 +268,9 @@ const CaseWorkflow = () => {
                     </td></tr>
                   ) : filteredFIRs.map((fir, idx) => (
                     <tr key={fir.id}>
-                      <td style={{ fontWeight: 700, color: '#6366f1' }}>{idx + 1}</td>
+                      <td style={{ fontWeight: 700, color: '#6366f1', textAlign: 'center' }}>{idx + 1}</td>
                       <td style={{ fontWeight: 700, color: '#0f172a' }}>{fir.fir_number || `FIR-${String(fir.id).padStart(4, '0')}`}</td>
-                      <td><span className="mgmt-badge danger"><i className="fas fa-exclamation-circle me-1"></i>{fir.crime_type}</span></td>
+                      <td><Badge bg="danger" style={{ fontSize: '0.75rem' }}>{fir.crime_type || 'N/A'}</Badge></td>
                       <td><i className="fas fa-user-circle me-2" style={{ color: '#10b981' }}></i>{fir.complainant_name || fir.name || '-'}</td>
                       <td><i className="fas fa-user-secret me-2" style={{ color: '#ef4444' }}></i>{fir.accused || '-'}</td>
                       <td title={fir.address} style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -279,14 +279,14 @@ const CaseWorkflow = () => {
                       </td>
                       <td><i className="fas fa-building me-2" style={{ color: '#6366f1' }}></i>{fir.station_name && fir.station_name.split(' ').slice(0, 2).join(' ') || '-'}</td>
                       <td style={{ textAlign: 'center' }}>
-                        <span className={`mgmt-badge ${fir.priority === 'Critical' ? 'danger' : fir.priority === 'High' ? 'warning' : fir.priority === 'Low' ? 'success' : 'info'}`}>
-                          {fir.priority === 'Critical' ? '🔴' : fir.priority === 'High' ? '🟠' : fir.priority === 'Low' ? '🟢' : '🔵'} {fir.priority || 'Medium'}
-                        </span>
+                        <Badge bg={fir.priority === 'Critical' ? 'danger' : fir.priority === 'High' ? 'warning' : fir.priority === 'Low' ? 'success' : 'info'} style={{ fontSize: '0.75rem' }}>
+                          {fir.priority || 'Medium'}
+                        </Badge>
                       </td>
                       <td style={{ textAlign: 'center' }}>
-                        <span className={`mgmt-badge ${fir.status === 'Approved' ? 'success' : fir.status === 'Rejected' ? 'danger' : fir.status === 'Closed' ? 'dark' : 'info'}`}>
+                        <Badge bg={fir.status === 'Approved' ? 'success' : fir.status === 'Rejected' ? 'danger' : fir.status === 'Closed' ? 'dark' : 'info'} style={{ fontSize: '0.75rem' }}>
                           {fir.status || 'Sent'}
-                        </span>
+                        </Badge>
                       </td>
                       <td style={{ fontSize: '0.8rem', color: '#64748b' }}>
                         {fir.created_at ? new Date(fir.created_at).toLocaleDateString('en-IN') : '-'}
