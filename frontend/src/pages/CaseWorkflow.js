@@ -180,7 +180,45 @@ const CaseWorkflow = () => {
 
         .mgmt-table {
           table-layout: fixed;
+          width: 100%;
         }
+
+        /* Column Width Definitions (12 columns total) */
+        .mgmt-table th:nth-child(1),
+        .mgmt-table td:nth-child(1) { width: 60px; }
+        
+        .mgmt-table th:nth-child(2),
+        .mgmt-table td:nth-child(2) { width: 140px; }
+        
+        .mgmt-table th:nth-child(3),
+        .mgmt-table td:nth-child(3) { width: 110px; }
+        
+        .mgmt-table th:nth-child(4),
+        .mgmt-table td:nth-child(4) { width: 130px; }
+        
+        .mgmt-table th:nth-child(5),
+        .mgmt-table td:nth-child(5) { width: 130px; }
+        
+        .mgmt-table th:nth-child(6),
+        .mgmt-table td:nth-child(6) { width: 150px; }
+        
+        .mgmt-table th:nth-child(7),
+        .mgmt-table td:nth-child(7) { width: 120px; }
+        
+        .mgmt-table th:nth-child(8),
+        .mgmt-table td:nth-child(8) { width: 95px; }
+        
+        .mgmt-table th:nth-child(9),
+        .mgmt-table td:nth-child(9) { width: 100px; }
+        
+        .mgmt-table th:nth-child(10),
+        .mgmt-table td:nth-child(10) { width: 110px; }
+        
+        .mgmt-table th:nth-child(11),
+        .mgmt-table td:nth-child(11) { width: 110px; }
+        
+        .mgmt-table th:nth-child(12),
+        .mgmt-table td:nth-child(12) { width: 120px; }
 
         .mgmt-table tbody tr {
           position: relative;
