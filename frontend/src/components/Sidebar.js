@@ -3,7 +3,6 @@ import { Nav, Modal, Button, Table, Badge, Form } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser, getUserRole, clearAuth, updateAuthUser } from '../utils/authService';
 import { authAPI } from '../api/client';
-import { useChangePassword } from '../context/ChangePasswordContext';
 import ConfirmModal from './ConfirmModal';
 import NotificationBell from './NotificationBell';
 import '../styles/sidebar.css';
@@ -11,7 +10,6 @@ import '../styles/sidebar.css';
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isOpen: showChangePasswordModal, closeChangePasswordModal, openChangePasswordModal } = useChangePassword();
   const popupRef = useRef(null);
   const sidebarRef = useRef(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -470,7 +468,7 @@ const Sidebar = () => {
                   size="sm" 
                   onClick={() => {
                     setShowProfileModal(false);
-                    openChangePasswordModal();
+                    navigate('/change-password');
                   }}
                 >
                   <i className="fas fa-key me-2"></i>Change Password

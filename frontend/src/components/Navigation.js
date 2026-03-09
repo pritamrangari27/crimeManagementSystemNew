@@ -3,12 +3,10 @@ import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { authAPI } from '../api/client';
 import { clearAuth, getCurrentUser, getUserRole } from '../utils/authService';
-import { useChangePassword } from '../context/ChangePasswordContext';
 
 const Navigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { openChangePasswordModal } = useChangePassword();
   const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
 
@@ -113,7 +111,7 @@ const Navigation = () => {
                   }} style={{ cursor: 'pointer' }}>
                     My Profile
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => openChangePasswordModal()} style={{ cursor: 'pointer' }}>
+                  <Dropdown.Item onClick={() => navigate('/change-password')} style={{ cursor: 'pointer' }}>
                     Change Password
                   </Dropdown.Item>
                   <Dropdown.Divider />
