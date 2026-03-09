@@ -188,47 +188,49 @@ const AdminDashboard = () => {
 
           {/* ── Recent Activities Modal ── */}
           {showActivitiesModal && (
-            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1050, animation: 'fadeIn 0.2s ease' }}>
-              <div style={{ background: '#ffffff', borderRadius: '12px', width: '90%', maxWidth: '800px', maxHeight: '80vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', animation: 'scaleIn 0.3s ease' }}>
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1050, animation: 'fadeIn 0.25s ease-out' }}>
+              <div style={{ background: '#ffffff', borderRadius: '16px', width: '92%', maxWidth: '500px', maxHeight: '70vh', display: 'flex', flexDirection: 'column', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', animation: 'scaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)', transform: 'translateZ(0)' }}>
                 {/* Header */}
-                <div style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', padding: '14px 20px', borderBottom: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flex: 'none', animation: 'slideInDown 0.3s ease' }}>
-                  <h5 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: 0 }}>
-                    <i className="fas fa-history me-2"></i>Recent Activities (Last 10)
+                <div style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #0891b2 100%)', padding: '12px 18px', borderBottom: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flex: 'none', animation: 'slideInDown 0.35s ease-out', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)', animation: 'shimmer 2s infinite' }}></div>
+                  <h5 style={{ color: 'white', fontSize: '1rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
+                    <i className="fas fa-history" style={{ fontSize: '1.1rem' }}></i>Recent Activities
                   </h5>
-                  <button onClick={() => setShowActivitiesModal(false)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', padding: 0 }}>
+                  <button onClick={() => setShowActivitiesModal(false)} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', fontSize: '1.3rem', cursor: 'pointer', padding: '2px 6px', borderRadius: '6px', transition: 'all 0.2s ease', position: 'relative', zIndex: 1 }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.3)'} onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}>
                     ✕
                   </button>
                 </div>
                 
                 {/* Body */}
-                <div style={{ padding: '16px', background: '#ffffff', maxHeight: 'calc(80vh - 100px)', overflowY: 'hidden', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                <div style={{ padding: '14px', background: '#ffffff', maxHeight: 'calc(70vh - 70px)', overflowY: 'hidden', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                   {activitiesLoading ? (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
-                      <div style={{ width: '30px', height: '30px', border: '3px solid #06b6d4', borderTop: '3px solid transparent', borderRadius: '50%', animation: 'spin 0.6s linear infinite', marginRight: '10px' }}></div>
-                      <span style={{ color: '#64748b', fontWeight: 500 }}>Loading activities...</span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '30px 20px', gap: '12px' }}>
+                      <div style={{ width: '24px', height: '24px', border: '3px solid #06b6d4', borderTop: '3px solid transparent', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }}></div>
+                      <span style={{ color: '#64748b', fontWeight: 500, fontSize: '0.9rem' }}>Loading...</span>
                     </div>
                   ) : activities && activities.length > 0 ? (
-                    <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                    <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
                       {/* Left Arrow */}
                       <button
                         onClick={handlePreviousActivity}
                         disabled={activityIndex === 0}
                         style={{
-                          background: activityIndex === 0 ? '#e2e8f0' : '#06b6d4',
+                          background: activityIndex === 0 ? '#f1f5f9' : 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)',
                           border: 'none',
                           borderRadius: '50%',
-                          width: '40px',
-                          height: '40px',
+                          width: '36px',
+                          height: '36px',
                           cursor: activityIndex === 0 ? 'not-allowed' : 'pointer',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           color: activityIndex === 0 ? '#cbd5e1' : 'white',
-                          fontSize: '1.2rem',
+                          fontSize: '1rem',
                           transition: 'all 0.3s ease',
-                          boxShadow: activityIndex === 0 ? 'none' : '0 4px 8px rgba(6,182,212,0.3)',
+                          boxShadow: activityIndex === 0 ? 'none' : '0 6px 16px rgba(6,182,212,0.4)',
                           flexShrink: 0,
-                          animation: 'slideInLeft 0.4s ease'
+                          animation: 'slideInLeft 0.4s ease-out',
+                          fontWeight: 600
                         }}
                         title="Previous Activity"
                       >
@@ -236,90 +238,92 @@ const AdminDashboard = () => {
                       </button>
 
                       {/* Activity Card */}
-                      <div style={{ flex: 1, minHeight: '200px' }}>
+                      <div style={{ flex: 1, minHeight: '160px' }}>
                         {activities[activityIndex] && (
                           <div style={{
                             background: '#ffffff',
-                            border: '2px solid #e2e8f0',
+                            border: '1.5px solid #e0e7ff',
                             borderRadius: '12px',
-                            padding: '16px',
-                            boxShadow: '0 8px 16px rgba(6,182,212,0.1)',
+                            padding: '14px',
+                            boxShadow: '0 4px 16px rgba(6,182,212,0.08)',
                             transition: 'all 0.3s ease',
-                            animation: 'slideInUp 0.4s ease',
+                            animation: 'slideInUp 0.4s ease-out',
                             height: '100%',
                             display: 'flex',
-                            flexDirection: 'column'
+                            flexDirection: 'column',
+                            background: 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)'
                           }}>
                             {/* Header */}
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', paddingBottom: '12px', borderBottom: '2px solid #f1f5f9' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', paddingBottom: '10px', borderBottom: '1.5px solid #e0e7ff' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
                                 {activities[activityIndex].icon ? (
-                                  <i className={`${activities[activityIndex].icon}`} style={{ fontSize: '1.3rem', color: '#06b6d4' }}></i>
+                                  <i className={`${activities[activityIndex].icon}`} style={{ fontSize: '1.1rem', color: '#0ea5e9', flexShrink: 0 }}></i>
                                 ) : (
-                                  <i className="fas fa-circle-check" style={{ fontSize: '1.3rem', color: '#10b981' }}></i>
+                                  <i className="fas fa-circle-check" style={{ fontSize: '1.1rem', color: '#10b981', flexShrink: 0 }}></i>
                                 )}
-                                <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#0f172a' }}>
+                                <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                   {activities[activityIndex].action}
                                 </span>
                               </div>
-                              <span style={{ fontSize: '0.75rem', background: '#06b6d4', color: 'white', padding: '4px 8px', borderRadius: '20px', fontWeight: 600, animation: 'pulse 1.5s ease-in-out infinite' }}>
-                                {activityIndex + 1} / {activities.length}
+                              <span style={{ fontSize: '0.7rem', background: 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)', color: 'white', padding: '3px 8px', borderRadius: '12px', fontWeight: 600, flexShrink: 0, animation: 'pulse 2s ease-in-out infinite' }}>
+                                {activityIndex + 1}/{activities.length}
                               </span>
                             </div>
 
                             {/* User */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px' }}>
-                              <i className="fas fa-user-circle" style={{ color: '#06b6d4', fontSize: '1rem' }}></i>
-                              <span style={{ fontSize: '0.85rem', color: '#475569', fontWeight: 600 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                              <i className="fas fa-user-circle" style={{ color: '#0891b2', fontSize: '0.95rem' }}></i>
+                              <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>
                                 {activities[activityIndex].user ? activities[activityIndex].user : 'System'}
                               </span>
                             </div>
 
                             {/* Description */}
                             <div style={{
-                              fontSize: '0.85rem',
+                              fontSize: '0.8rem',
                               color: '#64748b',
-                              marginBottom: '12px',
+                              marginBottom: '10px',
                               flex: 1,
-                              lineHeight: '1.6',
-                              background: '#f8fafc',
-                              padding: '12px',
-                              borderRadius: '8px'
+                              lineHeight: '1.5',
+                              background: 'rgba(6,182,212,0.05)',
+                              padding: '10px',
+                              borderRadius: '8px',
+                              overflow: 'hidden'
                             }}>
                               {activities[activityIndex].description || 'No description'}
                             </div>
 
                             {/* Date & Time */}
                             <div style={{
-                              fontSize: '0.8rem',
+                              fontSize: '0.75rem',
                               color: '#64748b',
                               fontWeight: 500,
-                              padding: '12px 12px',
-                              background: '#f1f5f9',
+                              padding: '8px 10px',
+                              background: 'linear-gradient(135deg, #f0f9ff 0%, rgba(6,182,212,0.05) 100%)',
                               borderRadius: '8px',
                               marginTop: 'auto',
                               display: 'grid',
                               gridTemplateColumns: '1fr 1fr',
-                              gap: '12px'
+                              gap: '10px'
                             }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <i className="fas fa-calendar" style={{ color: '#0891b2', fontSize: '0.9rem' }}></i>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <i className="fas fa-calendar-alt" style={{ color: '#0ea5e9', fontSize: '0.8rem' }}></i>
                                 <span>{
                                   activities[activityIndex].timestamp 
-                                    ? new Date(activities[activityIndex].timestamp).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+                                    ? new Date(activities[activityIndex].timestamp).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })
                                     : activities[activityIndex].created_at 
-                                    ? new Date(activities[activityIndex].created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
-                                    : new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+                                    ? new Date(activities[activityIndex].created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })
+                                    : new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })
                                 }</span>
                               </div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <i className="fas fa-clock" style={{ color: '#06b6d4', fontSize: '0.9rem' }}></i>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <i className="fas fa-clock" style={{ color: '#06b6d4', fontSize: '0.8rem' }}></i>
                                 <span>{
                                   activities[activityIndex].timestamp 
-                                    ? new Date(activities[activityIndex].timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+                                    ? new Date(activities[activityIndex].timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
                                     : activities[activityIndex].created_at 
-                                    ? new Date(activities[activityIndex].created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
-                                    : new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+                                    ? new Date(activities[activityIndex].created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+                                    : new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
                                 }</span>
                               </div>
                             </div>
@@ -332,21 +336,22 @@ const AdminDashboard = () => {
                         onClick={handleNextActivity}
                         disabled={activityIndex === activities.length - 1}
                         style={{
-                          background: activityIndex === activities.length - 1 ? '#e2e8f0' : '#06b6d4',
+                          background: activityIndex === activities.length - 1 ? '#f1f5f9' : 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)',
                           border: 'none',
                           borderRadius: '50%',
-                          width: '40px',
-                          height: '40px',
+                          width: '36px',
+                          height: '36px',
                           cursor: activityIndex === activities.length - 1 ? 'not-allowed' : 'pointer',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           color: activityIndex === activities.length - 1 ? '#cbd5e1' : 'white',
-                          fontSize: '1.2rem',
+                          fontSize: '1rem',
                           transition: 'all 0.3s ease',
-                          boxShadow: activityIndex === activities.length - 1 ? 'none' : '0 4px 8px rgba(6,182,212,0.3)',
+                          boxShadow: activityIndex === activities.length - 1 ? 'none' : '0 6px 16px rgba(6,182,212,0.4)',
                           flexShrink: 0,
-                          animation: 'slideInRight 0.4s ease'
+                          animation: 'slideInRight 0.4s ease-out',
+                          fontWeight: 600
                         }}
                         title="Next Activity"
                       >
@@ -354,16 +359,16 @@ const AdminDashboard = () => {
                       </button>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', color: '#94a3b8', fontSize: '0.9rem', width: '100%' }}>
-                      <i className="fas fa-inbox me-2" style={{ fontSize: '2rem', opacity: 0.5 }}></i>
-                      No recent activities
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', color: '#94a3b8', fontSize: '0.9rem', width: '100%' }}>
+                      <i className="fas fa-inbox" style={{ fontSize: '2.5rem', opacity: 0.2, marginBottom: '8px' }}></i>
+                      No activities yet
                     </div>
                   )}
                 </div>
                 
                 {/* Footer */}
-                <div style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px', display: 'flex', justifyContent: 'flex-end', gap: '8px', animation: 'slideInDown 0.3s ease 0.1s backwards' }}>
-                  <button className="mgmt-btn-back" onClick={() => setShowActivitiesModal(false)} style={{ borderRadius: '8px', fontWeight: 600 }}>
+                <div style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%)', borderTop: '1px solid #e0e7ff', padding: '10px 18px', display: 'flex', justifyContent: 'flex-end', gap: '8px', animation: 'slideInUp 0.3s ease-out 0.05s backwards' }}>
+                  <button className="mgmt-btn-back" onClick={() => setShowActivitiesModal(false)} style={{ borderRadius: '8px', fontWeight: 600, padding: '6px 16px', fontSize: '0.85rem' }}>
                     <i className="fas fa-times me-1"></i>Close
                   </button>
                 </div>
