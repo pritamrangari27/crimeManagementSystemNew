@@ -303,26 +303,35 @@ const CrimeHotspotMap = () => {
           {/* Filters Row */}
           <Row className="mb-3">
             <Col md={4} className="mb-2">
+              <Form.Label style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0f172a', marginBottom: '6px' }}>
+                <i className="fas fa-layer-group me-2" style={{ color: '#667eea' }}></i>Map View
+              </Form.Label>
               <Form.Select
                 size="sm"
                 value={viewMode}
                 onChange={(e) => setViewMode(e.target.value)}
-                style={{ borderRadius: '6px', border: '2px solid #e0e0e0' }}
+                style={{ borderRadius: '6px', border: '2px solid #e0e0e0', fontSize: '0.85rem' }}
               >
-                <option value="cluster">Cluster View</option>
-                <option value="heatmap">Heatmap View</option>
-                <option value="both">Both (Cluster + Heatmap)</option>
+                <option value="cluster">📍 Cluster View - Grouped incidents by area</option>
+                <option value="heatmap">🔥 Heatmap View - Heat intensity visualization</option>
+                <option value="both">📊 Both Views - Cluster + Heatmap combined</option>
               </Form.Select>
             </Col>
             <Col md={4} className="mb-2">
+              <Form.Label style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0f172a', marginBottom: '6px' }}>
+                <i className="fas fa-filter me-2" style={{ color: '#f59e0b' }}></i>Filter by Crime Type
+              </Form.Label>
               <Form.Select
                 size="sm"
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
-                style={{ borderRadius: '6px', border: '2px solid #e0e0e0' }}
+                style={{ borderRadius: '6px', border: '2px solid #e0e0e0', fontSize: '0.85rem' }}
               >
-                <option value="">All Crime Types</option>
-                {crimeTypes.map(t => <option key={t} value={t}>{t}</option>)}
+                <option value="">📋 All Crime Types ({crimeLocations.length} total)</option>
+                {crimeTypes.map(t => {
+                  const count = crimeLocations.filter(c => c.crime_type === t).length;
+                  return <option key={t} value={t}>{t} ({count})</option>;
+                })}
               </Form.Select>
             </Col>
             <Col md={4} className="mb-2 text-end">
