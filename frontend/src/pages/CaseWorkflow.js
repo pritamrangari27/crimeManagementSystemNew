@@ -266,41 +266,96 @@ const CaseWorkflow = () => {
                       <i className="fas fa-inbox me-2" style={{ fontSize: '2rem', opacity: 0.3 }}></i>
                       <p style={{ margin: '8px 0 0' }}>No cases found</p>
                     </td></tr>
-                  ) : filteredFIRs.map((fir, idx) => (
-                    <tr key={fir.id}>
-                      <td style={{ fontWeight: 700, color: '#6366f1', textAlign: 'center' }}>{idx + 1}</td>
-                      <td style={{ fontWeight: 700, color: '#0f172a' }}>{fir.fir_number || `FIR-${String(fir.id).padStart(4, '0')}`}</td>
-                      <td><Badge bg="danger" style={{ fontSize: '0.75rem' }}>{fir.crime_type || 'N/A'}</Badge></td>
-                      <td><i className="fas fa-user-circle me-2" style={{ color: '#10b981' }}></i>{fir.complainant_name || fir.name || '-'}</td>
-                      <td><i className="fas fa-user-secret me-2" style={{ color: '#ef4444' }}></i>{fir.accused || '-'}</td>
-                      <td title={fir.address} style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        <i className="fas fa-map-marker-alt me-2" style={{ color: '#f59e0b' }}></i>
-                        {fir.address ? fir.address.substring(0, 20) + (fir.address.length > 20 ? '...' : '') : '-'}
-                      </td>
-                      <td><i className="fas fa-building me-2" style={{ color: '#6366f1' }}></i>{fir.station_name && fir.station_name.split(' ').slice(0, 2).join(' ') || '-'}</td>
-                      <td style={{ textAlign: 'center' }}>
-                        <Badge bg={fir.priority === 'Critical' ? 'danger' : fir.priority === 'High' ? 'warning' : fir.priority === 'Low' ? 'success' : 'info'} style={{ fontSize: '0.75rem' }}>
-                          {fir.priority || 'Medium'}
-                        </Badge>
-                      </td>
-                      <td style={{ textAlign: 'center' }}>
-                        <Badge bg={fir.status === 'Approved' ? 'success' : fir.status === 'Rejected' ? 'danger' : fir.status === 'Closed' ? 'dark' : 'info'} style={{ fontSize: '0.75rem' }}>
-                          {fir.status || 'Sent'}
-                        </Badge>
-                      </td>
-                      <td style={{ fontSize: '0.8rem', color: '#64748b' }}>
-                        {fir.created_at ? new Date(fir.created_at).toLocaleDateString('en-IN') : '-'}
-                      </td>
-                      <td style={{ fontSize: '0.8rem', color: '#64748b' }}>
-                        {fir.updated_at ? new Date(fir.updated_at).toLocaleDateString('en-IN') : '-'}
-                      </td>
-                      <td style={{ textAlign: 'center' }}>
-                        <button className="view" onClick={() => viewTimeline(fir)}>
-                          <i className="fas fa-timeline"></i>View & Update
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  ) : filteredFIRs.map((fir, idx) => {
+                    // Column 1: Sr. No. (Sequential index)
+                    const srNo = idx + 1;
+                    // Column 2: FIR # (FIR number)
+                    const firNumber = fir.fir_number || `FIR-${String(fir.id).padStart(4, '0')}`;
+                    // Column 3: Crime Type
+                    const crimeType = fir.crime_type || 'N/A';
+                    // Column 4: Complainant
+                    const complainant = fir.complainant_name || fir.name || '-';
+                    // Column 5: Accused
+                    const accused = fir.accused || '-';
+                    // Column 6: Address
+                    const address = fir.address ? fir.address.substring(0, 20) + (fir.address.length > 20 ? '...' : '') : '-';
+                    // Column 7: Station
+                    const station = fir.station_name && fir.station_name.split(' ').slice(0, 2).join(' ') || '-';
+                    // Column 8: Priority
+                    const priority = fir.priority || 'Medium';
+                    // Column 9: Status
+                    const status = fir.status || 'Sent';
+                    // Column 10: Date Filed
+                    const dateFiled = fir.created_at ? new Date(fir.created_at).toLocaleDateString('en-IN') : '-';
+                    // Column 11: Last Updated
+                    const lastUpdated = fir.updated_at ? new Date(fir.updated_at).toLocaleDateString('en-IN') : '-';
+
+                    return (
+                      <tr key={fir.id}>
+                        {/* COLUMN 1: Sr. No. */}
+                        <td style={{ fontWeight: 700, color: '#6366f1', textAlign: 'center', minWidth: '50px' }}>{srNo}</td>
+                        
+                        {/* COLUMN 2: FIR # */}
+                        <td style={{ fontWeight: 700, color: '#0f172a', minWidth: '80px' }}>{firNumber}</td>
+                        
+                        {/* COLUMN 3: Crime Type */}
+                        <td style={{ minWidth: '100px' }}>
+                          <Badge bg="danger" style={{ fontSize: '0.75rem' }}>{crimeType}</Badge>
+                        </td>
+                        
+                        {/* COLUMN 4: Complainant */}
+                        <td style={{ minWidth: '120px' }}>
+                          <i className="fas fa-user-circle me-2" style={{ color: '#10b981' }}></i>{complainant}
+                        </td>
+                        
+                        {/* COLUMN 5: Accused */}
+                        <td style={{ minWidth: '100px' }}>
+                          <i className="fas fa-user-secret me-2" style={{ color: '#ef4444' }}></i>{accused}
+                        </td>
+                        
+                        {/* COLUMN 6: Address */}
+                        <td title={fir.address} style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: '120px' }}>
+                          <i className="fas fa-map-marker-alt me-2" style={{ color: '#f59e0b' }}></i>{address}
+                        </td>
+                        
+                        {/* COLUMN 7: Station */}
+                        <td style={{ minWidth: '100px' }}>
+                          <i className="fas fa-building me-2" style={{ color: '#6366f1' }}></i>{station}
+                        </td>
+                        
+                        {/* COLUMN 8: Priority */}
+                        <td style={{ textAlign: 'center', minWidth: '90px' }}>
+                          <Badge bg={priority === 'Critical' ? 'danger' : priority === 'High' ? 'warning' : priority === 'Low' ? 'success' : 'info'} style={{ fontSize: '0.75rem' }}>
+                            {priority}
+                          </Badge>
+                        </td>
+                        
+                        {/* COLUMN 9: Status */}
+                        <td style={{ textAlign: 'center', minWidth: '90px' }}>
+                          <Badge bg={status === 'Approved' ? 'success' : status === 'Rejected' ? 'danger' : status === 'Closed' ? 'dark' : 'info'} style={{ fontSize: '0.75rem' }}>
+                            {status}
+                          </Badge>
+                        </td>
+                        
+                        {/* COLUMN 10: Date Filed */}
+                        <td style={{ fontSize: '0.8rem', color: '#64748b', minWidth: '100px' }}>
+                          {dateFiled}
+                        </td>
+                        
+                        {/* COLUMN 11: Last Updated */}
+                        <td style={{ fontSize: '0.8rem', color: '#64748b', minWidth: '100px' }}>
+                          {lastUpdated}
+                        </td>
+                        
+                        {/* COLUMN 12: Actions */}
+                        <td style={{ textAlign: 'center', minWidth: '120px' }}>
+                          <button className="view" onClick={() => viewTimeline(fir)}>
+                            <i className="fas fa-timeline"></i>View & Update
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
