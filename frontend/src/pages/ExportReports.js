@@ -71,9 +71,9 @@ const ExportReports = () => {
   const handlePreview = async (format) => {
     setError('');
     
-    // Guard: prevent multiple simultaneous exports
-    if (previewLoading || exporting) {
-      console.warn('Export already in progress');
+    // Guard: prevent multiple simultaneous exports - use specific format keys
+    if (exporting) {
+      console.warn(`Export format ${exporting} already in progress`);
       return;
     }
     
@@ -82,13 +82,13 @@ const ExportReports = () => {
       return;
     }
     
-    setPreviewLoading(true);
+    setExporting(format); // Use format-specific state
     try {
       const res = await advancedAPI.exportJSON(selectedType);
       const data = res.data?.data || [];
       if (data.length === 0) { 
         setError('No data to export');
-        setPreviewLoading(false);
+        setExporting('');
         return; 
       }
       const headers = Object.keys(data[0]);
@@ -99,9 +99,7 @@ const ExportReports = () => {
     } catch (err) {
       console.error('Export error:', err);
       setError('Failed to load data');
-      setPreviewLoading(false);
-    } finally {
-      setPreviewLoading(false);
+      setExporting('');
     }
   };
 
@@ -122,15 +120,16 @@ const ExportReports = () => {
       
       // Add small delay before revoking to ensure download starts
       setTimeout(() => window.URL.revokeObjectURL(url), 100);
-      setSuccess('CSV downloaded successfully!');
-      setExporting(''); // Clear exporting state
+      setSuccess('✓ CSV downloaded successfully!');
+      // Clear exporting state immediately after download starts
+      setExporting('');
       
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       console.error('CSV export error:', err);
       setError('CSV export failed');
-      setExporting(''); // Clear exporting state on error
+      setExporting('');
       setTimeout(() => setError(''), 3000);
     }
   };
@@ -474,7 +473,7 @@ const ExportReports = () => {
                       variant="primary"
                       className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                       onClick={() => handlePreview('excel')}
-                      disabled={previewLoading || exporting}
+                      disabled={exporting === 'excel'}
                       style={{ 
                         borderRadius: 10, 
                         fontSize: '0.95rem', 
@@ -486,13 +485,14 @@ const ExportReports = () => {
                         opacity: 1,
                         width: '100%',
                         pointerEvents: 'auto',
-                        cursor: previewLoading || exporting ? 'not-allowed' : 'pointer'
+                        cursor: exporting === 'excel' ? 'not-allowed' : 'pointer',
+                        background: exporting === 'excel' ? '#0ea5e9' : undefined
                       }}
                       onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
                       onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                     >
-                      {previewLoading ? <Spinner size="sm" /> : <i className="fas fa-file-excel" style={{ fontSize: '1.2rem' }}></i>}
-                      <span>{previewLoading ? 'Loading...' : 'Preview Excel'}</span>
+                      {exporting === 'excel' ? <Spinner size="sm" /> : <i className="fas fa-file-excel" style={{ fontSize: '1.2rem' }}></i>}
+                      <span>{exporting === 'excel' ? 'Loading...' : 'Preview Excel'}</span>
                     </Button>
                   </Col>
                   <Col md={4} xs={12} style={{ visibility: 'visible', display: 'block' }}>
@@ -500,7 +500,7 @@ const ExportReports = () => {
                       variant="danger"
                       className="w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                       onClick={() => handlePreview('pdf')}
-                      disabled={previewLoading || exporting}
+                      disabled={exporting === 'pdf'}
                       style={{ 
                         borderRadius: 10, 
                         fontSize: '0.95rem', 
@@ -512,13 +512,14 @@ const ExportReports = () => {
                         opacity: 1,
                         width: '100%',
                         pointerEvents: 'auto',
-                        cursor: previewLoading || exporting ? 'not-allowed' : 'pointer'
+                        cursor: exporting === 'pdf' ? 'not-allowed' : 'pointer',
+                        background: exporting === 'pdf' ? '#ef4444' : undefined
                       }}
                       onMouseEnter={e => !e.currentTarget.disabled && (e.currentTarget.style.transform = 'translateY(-2px)')}
                       onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                     >
-                      {previewLoading ? <Spinner size="sm" /> : <i className="fas fa-file-pdf" style={{ fontSize: '1.2rem' }}></i>}
-                      <span>{previewLoading ? 'Loading...' : 'Preview PDF'}</span>
+                      {exporting === 'pdf' ? <Spinner size="sm" /> : <i className="fas fa-file-pdf" style={{ fontSize: '1.2rem' }}></i>}
+                      <span>{exporting === 'pdf' ? 'Loading...' : 'Preview PDF'}</span>
                     </Button>
                   </Col>
                 </Row>
