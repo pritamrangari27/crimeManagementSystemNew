@@ -62,9 +62,9 @@ const LoginModern = () => {
           if (response.data.status === 'success' && Array.isArray(response.data.data)) {
             setStations(response.data.data);
           }
-        } catch (err) {
-          // Silent fail - stations list optional
-        }
+    } catch (err) {
+      // Silent fail for optional stations list, don't log to console
+    }
       };
       fetchStations();
     }
@@ -119,7 +119,10 @@ const LoginModern = () => {
         setError(response.data.message || 'Login failed');
       }
     } catch (err) {
-      console.error('Admin login error:', err);
+      // Only log in development to avoid red errors in console
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Admin login error:', err);
+      }
       let errorMessage = 'Login failed. ';
       
       if (!err.response) {
@@ -199,11 +202,14 @@ const LoginModern = () => {
         setError(response.data.message || 'Login failed');
       }
     } catch (err) {
-      console.error('Police login error:', err);
+      // Only log in development to avoid red errors in console
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Police login error:', err);
+      }
       let errorMessage = 'Login failed. ';
       
       if (!err.response) {
-        errorMessage += 'Cannot reach backend. Check if it\'s running on port 3000.';
+        errorMessage += 'Cannot reach backend. Check if it\'s running on port 5000.';
       } else if (err.response?.status === 401) {
         errorMessage = 'Wrong username or password';
       } else {

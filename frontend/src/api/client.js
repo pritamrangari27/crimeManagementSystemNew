@@ -44,7 +44,9 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error('[Request Error]', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[Request Error]', error);
+    }
     return Promise.reject(error);
   }
 );
@@ -55,13 +57,16 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error('[Response Error]', {
-      message: error.message,
-      status: error.response?.status,
-      data: error.response?.data,
-      url: error.config?.url,
-      code: error.code
-    });
+    // Only log actual errors (not 4xx status codes which are usually handled)
+    if (error.response?.status >= 500 || !error.response) {
+      console.error('[Response Error]', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        url: error.config?.url,
+        code: error.code
+      });
+    }
 
     // Handle 401 Unauthorized - session expired or not authenticated
     if (error.response?.status === 401) {
