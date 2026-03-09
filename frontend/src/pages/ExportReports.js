@@ -259,27 +259,29 @@ const ExportReports = () => {
 
             {/* Preview Table */}
             <Card className="border-0 shadow-sm" style={{ animation: 'fadeInUp 0.4s ease', borderRadius: 12, overflow: 'hidden' }}>
-              <Card.Body style={{ padding: 0, maxHeight: 'calc(100vh - 350px)', overflowY: 'auto' }}>
-                <Table hover responsive style={{ marginBottom: 0, fontSize: '0.82rem' }}>
-                  <thead style={{ position: 'sticky', top: 0, background: '#f8fafc', zIndex: 10 }}>
-                    <tr>
-                      <th style={{ padding: '10px 12px', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', color: '#0f172a' }}>Sr. No.</th>
-                      {previewHeaders.map(h => (
-                        <th key={h} style={{ padding: '10px 12px', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', color: '#0f172a', whiteSpace: 'nowrap' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {previewData.data.map((row, idx) => (
-                      <tr key={idx}>
-                        <td style={{ padding: '8px 12px', fontWeight: 600 }}>{idx + 1}</td>
+              <Card.Body style={{ padding: 0, maxHeight: 'calc(100vh - 350px)', overflowY: 'auto', overflowX: 'auto' }}>
+                <div style={{ minWidth: 'fit-content' }}>
+                  <Table hover style={{ marginBottom: 0, fontSize: '0.82rem' }}>
+                    <thead style={{ position: 'sticky', top: 0, background: '#f8fafc', zIndex: 10 }}>
+                      <tr>
+                        <th style={{ padding: '10px 12px', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', color: '#0f172a', minWidth: 60 }}>Sr. No.</th>
                         {previewHeaders.map(h => (
-                          <td key={h} style={{ padding: '8px 12px', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row[h] ?? '-'}</td>
+                          <th key={h} style={{ padding: '10px 12px', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', color: '#0f172a', whiteSpace: 'nowrap', minWidth: 120 }}>{h}</th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                    </thead>
+                    <tbody>
+                      {previewData.data.map((row, idx) => (
+                        <tr key={idx}>
+                          <td style={{ padding: '8px 12px', fontWeight: 600, minWidth: 60 }}>{idx + 1}</td>
+                          {previewHeaders.map(h => (
+                            <td key={h} style={{ padding: '8px 12px', maxWidth: 250, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 120 }}>{row[h] ?? '-'}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
               </Card.Body>
             </Card>
 
