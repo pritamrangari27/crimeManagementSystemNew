@@ -1,0 +1,651 @@
+/* ===================================================
+   COMPREHENSIVE RESPONSIVE DESIGN SYSTEM
+   Mobile-First Approach for All Device Sizes
+   =================================================== */
+
+/* ===== MOBILE FIRST - Base Styles for Small Screens (< 576px) ===== */
+@media (max-width: 575px) {
+  /* Layout & Spacing */
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    width: 85vw;
+    max-width: 300px;
+    height: 100vh;
+    top: var(--banner-height, 38px);
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2000;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+  .navbar {
+    margin-left: 0 !important;
+    position: relative;
+  }
+
+  .hamburger-menu {
+    display: flex !important;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1000;
+  }
+
+  .hamburger-menu span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #0ea5e9;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hamburger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+  }
+
+  .hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px, -8px);
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: var(--banner-height, 38px);
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 1999;
+  }
+
+  .sidebar-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Containers & Padding */
+  .container-fluid,
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    padding: 12px !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Typography */
+  body {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  h1 { font-size: 1.5rem !important; }
+  h2 { font-size: 1.3rem !important; }
+  h3 { font-size: 1.1rem !important; }
+  h4 { font-size: 1rem !important; }
+  h5 { font-size: 0.95rem !important; }
+  h6 { font-size: 0.9rem !important; }
+
+  .management-header h1,
+  .mgmt-header h2 {
+    font-size: 1.3rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Buttons - Touch Friendly */
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 14px !important;
+    font-size: 0.8rem !important;
+    border-radius: 8px !important;
+  }
+
+  .btn-sm {
+    min-height: 36px;
+    padding: 8px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .btn-lg {
+    min-height: 48px;
+    padding: 12px 16px !important;
+    font-size: 0.9rem !important;
+  }
+
+  /* Forms - Single Column Layout */
+  .form-control,
+  .form-select {
+    padding: 10px 12px !important;
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    min-height: 44px;
+  }
+
+  .form-group {
+    margin-bottom: 16px !important;
+  }
+
+  .form-label {
+    font-size: 0.85rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  .row {
+    flex-wrap: wrap;
+  }
+
+  .col, [class*="col-"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin-bottom: 12px;
+  }
+
+  .col-md-6, .col-lg-3, .col-lg-4, .col-lg-6, .col-xl-3, .col-xl-4 {
+    width: 100% !important;
+  }
+
+  /* Cards */
+  .card {
+    margin-bottom: 12px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .card-header {
+    padding: 12px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .card-body {
+    padding: 12px !important;
+  }
+
+  .card-footer {
+    padding: 10px !important;
+  }
+
+  /* Tables - Convert to Stacked on Mobile */
+  .table-responsive {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+    border: none;
+    box-shadow: none;
+  }
+
+  .table {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    display: block;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  .table tbody td {
+    display: block;
+    padding: 8px 12px !important;
+    text-align: left !important;
+    border: none;
+    position: relative;
+    padding-left: 40% !important;
+  }
+
+  .table tbody td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 8px;
+    font-weight: 600;
+    color: #0ea5e9;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  /* Modals - Full Screen on Mobile */
+  .modal {
+    position: fixed !important;
+    margin: 0 !important;
+  }
+
+  .modal-dialog {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: calc(100vh - var(--banner-height, 38px));
+  }
+
+  .modal-content {
+    height: 100%;
+    border-radius: 0;
+    border: none;
+  }
+
+  .modal .modal-header {
+    padding: 12px !important;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .modal .modal-body {
+    padding: 12px !important;
+    overflow-y: auto;
+  }
+
+  .modal .modal-footer {
+    padding: 12px !important;
+    gap: 8px;
+  }
+
+  /* Headers & Navigation */
+  .mgmt-header,
+  .management-header,
+  .dash-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px;
+  }
+
+  .mgmt-header-actions,
+  .management-controls {
+    width: 100% !important;
+    flex-direction: column !important;
+  }
+
+  .mgmt-header-actions button,
+  .management-controls button {
+    width: 100% !important;
+  }
+
+  .mgmt-header h2,
+  .management-header h1 {
+    width: 100% !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Search & Filter Bars */
+  .mgmt-controls,
+  .management-controls {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .mgmt-controls .mgmt-search,
+  .mgmt-controls .mgmt-filter,
+  .search-box .form-control,
+  .management-controls input,
+  .management-controls select {
+    width: 100% !important;
+    flex: 1 !important;
+    min-width: auto !important;
+  }
+
+  /* Stat Cards */
+  .stat-card,
+  .dashboard-stat,
+  .info-card {
+    padding: 12px !important;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+
+  .stat-card h6,
+  .dashboard-stat h6 {
+    font-size: 0.75rem !important;
+  }
+
+  .stat-card h3,
+  .dashboard-stat h3 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Dropdowns & Menus */
+  .dropdown-menu {
+    width: 100% !important;
+    position: fixed !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  /* Navbar Adjustments */
+  .navbar {
+    min-height: 48px !important;
+    padding: 0 !important;
+  }
+
+  .navbar-brand {
+    font-size: 1rem !important;
+    padding: 8px 12px !important;
+  }
+
+  .nav-link {
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* Badge & Tags */
+  .badge {
+    padding: 4px 8px !important;
+    font-size: 0.7rem !important;
+  }
+
+  /* Hide table on mobile, show modal button */
+  .mgmt-table-wrap {
+    display: none !important;
+  }
+
+  .mgmt-btn-table-modal {
+    display: inline-flex !important;
+  }
+}
+
+/* ===== TABLET - Screens 576px to 768px ===== */
+@media (min-width: 576px) and (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    width: 250px;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2000;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+  .with-sidebar {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .hamburger-menu {
+    display: flex !important;
+  }
+
+  .navbar {
+    margin-left: 0 !important;
+  }
+
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    padding: 16px !important;
+  }
+
+  h1 { font-size: 1.6rem !important; }
+  h2 { font-size: 1.4rem !important; }
+  h3 { font-size: 1.2rem !important; }
+
+  .btn {
+    min-height: 40px;
+    padding: 8px 12px !important;
+  }
+
+  .form-control,
+  .form-select {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+  }
+
+  .col-md-6 {
+    width: 100% !important;
+  }
+
+  .col-lg-3, .col-lg-4, .col-lg-6, .col-xl-3, .col-xl-4 {
+    width: 100% !important;
+  }
+
+  .table {
+    font-size: 0.85rem;
+  }
+
+  .table tbody td {
+    padding: 10px !important;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ===== SMALL DESKTOP - Screens 769px to 1024px ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hamburger-menu {
+    display: none !important;
+  }
+
+  .with-sidebar {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0 !important;
+    width: 240px;
+    height: calc(100vh - var(--banner-height, 38px));
+  }
+
+  .sidebar-overlay {
+    display: none !important;
+  }
+
+  .navbar {
+    margin-left: 0 !important;
+  }
+
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    padding: 16px !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .col-lg-3,
+  .col-lg-4,
+  .col-lg-6 {
+    width: 50% !important;
+    flex: 0 0 50% !important;
+  }
+
+  .col-xl-3 {
+    width: 50% !important;
+  }
+
+  .col-xl-4 {
+    width: 50% !important;
+  }
+
+  .btn {
+    min-height: 38px;
+    padding: 8px 12px !important;
+  }
+
+  .form-control,
+  .form-select {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+  }
+
+  .table {
+    font-size: 0.85rem;
+  }
+
+  .mgmt-header,
+  .management-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .mgmt-header-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+/* ===== MEDIUM DESKTOP - Screens 1025px to 1440px (Default) ===== */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .hamburger-menu {
+    display: none !important;
+  }
+
+  .with-sidebar {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+  }
+
+  .sidebar {
+    position: fixed;
+    width: 260px;
+    left: 0 !important;
+  }
+
+  .sidebar-overlay {
+    display: none !important;
+  }
+
+  .navbar {
+    margin-left: 0 !important;
+  }
+
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    margin: 0 !important;
+    padding: 18px !important;
+    width: 100% !important;
+  }
+
+  .col-lg-3 {
+    width: 33.333% !important;
+    flex: 0 0 33.333% !important;
+  }
+
+  .col-lg-4 {
+    width: 33.333% !important;
+    flex: 0 0 33.333% !important;
+  }
+
+  .col-lg-6 {
+    width: 50% !important;
+    flex: 0 0 50% !important;
+  }
+
+  .col-xl-3 {
+    width: 25% !important;
+    flex: 0 0 25% !important;
+  }
+
+  .col-xl-4 {
+    width: 33.333% !important;
+    flex: 0 0 33.333% !important;
+  }
+
+  .table {
+    font-size: 0.88rem;
+  }
+}
+
+/* ===== LARGE DESKTOP - Screens 1441px+ ===== */
+@media (min-width: 1441px) {
+  .hamburger-menu {
+    display: none !important;
+  }
+
+  .with-sidebar {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+  }
+
+  .sidebar {
+    position: fixed;
+    width: 260px;
+    left: 0 !important;
+  }
+
+  .sidebar-overlay {
+    display: none !important;
+  }
+
+  .navbar {
+    margin-left: 0 !important;
+  }
+
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    margin: 0 !important;
+    padding: 18px !important;
+    width: 100% !important;
+  }
+
+  .col-lg-3 {
+    width: 25% !important;
+    flex: 0 0 25% !important;
+  }
+
+  .col-lg-4 {
+    width: 33.333% !important;
+    flex: 0 0 33.333% !important;
+  }
+
+  .col-lg-6 {
+    width: 50% !important;
+    flex: 0 0 50% !important;
+  }
+
+  .col-xl-3 {
+    width: 25% !important;
+    flex: 0 0 25% !important;
+  }
+
+  .col-xl-4 {
+    width: 33.333% !important;
+    flex: 0 0 33.333% !important;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+}
+
+/* Print styles for export/reports */
+@media print {
+  .sidebar,
+  .hamburger-menu,
+  .system-banner,
+  .chatbot-wrapper,
+  .notification-bell-wrapper {
+    display: none !important;
+  }
+  .modal-backdrop {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+  }
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+}

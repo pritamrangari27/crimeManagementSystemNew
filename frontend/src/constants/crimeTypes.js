@@ -1,0 +1,23 @@
+// Crime Types for Dropdown Selection
+export const CRIME_TYPES = [
+  { value: 'Theft', label: 'Theft' },
+  { value: 'Assault', label: 'Assault' },
+  { value: 'Burglary', label: 'Burglary' },
+  { value: 'Robbery', label: 'Robbery' },
+  { value: 'Fraud', label: 'Fraud' },
+  { value: 'Cybercrime', label: 'Cybercrime' },
+  { value: 'Harassment', label: 'Harassment' },
+  { value: 'Vandalism', label: 'Vandalism' },
+  { value: 'Trespassing', label: 'Trespassing' },
+  { value: 'Arson', label: 'Arson' },
+  { value: 'Drug Offense', label: 'Drug Offense' },
+  { value: 'DUI', label: 'DUI/Drunk Driving' },
+  { value: 'Traffic Violation', label: 'Traffic Violation' },
+  { value: 'Homicide', label: 'Homicide' },
+  { value: 'Sexual Offense', label: 'Sexual Offense' },
+  { value: 'Kidnapping', label: 'Kidnapping' },
+  { value: 'Racketeering', label: 'Racketeering' },
+  { value: 'Extortion', label: 'Extortion' },
+  { value: 'Forgery', label: 'Forgery' },
+  { value: 'Counterfeiting', label: 'Counterfeiting' },
+];

@@ -1,0 +1,321 @@
+.notification-bell-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-bell-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  padding: 8px 12px;
+  font-size: 1.2rem;
+  color: #10b981;
+  transition: color 0.2s;
+}
+
+.notification-bell-btn:hover { color: #059669; }
+
+.notification-badge {
+  position: absolute !important;
+  top: 2px;
+  right: 2px;
+  font-size: 0.65rem;
+  padding: 2px 5px;
+  min-width: 18px;
+  border-radius: 10px;
+}
+
+.notification-dropdown {
+  position: fixed;
+  top: 70px;
+  left: var(--sidebar-width, 260px);
+  width: 360px;
+  max-height: 480px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  z-index: 10001;
+  overflow: hidden;
+  animation: notifSlideDown 0.2s ease;
+}
+
+@keyframes notifSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.notification-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.mark-all-read-btn {
+  background: none;
+  border: none;
+  color: #0ea5e9;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.mark-all-read-btn:hover { text-decoration: underline; }
+
+.notification-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.notification-item:hover { background: #f0f9ff; }
+.notification-item.unread { background: #eff6ff; }
+.notification-item.unread:hover { background: #dbeafe; }
+
+.notification-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #1e293b;
+  margin-bottom: 2px;
+}
+
+.notification-message {
+  font-size: 0.78rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notification-time {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+.notification-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.notification-empty i {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.notification-empty p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 480px) {
+  .notification-dropdown {
+    width: 300px;
+    left: 10px;
+    right: auto;
+  }
+}
+
+.notification-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3b82f6;
+  flex-shrink: 0;
+  align-self: center;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.notification-view-all-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  color: #0ea5e9;
+  font-weight: 600;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  text-align: center;
+}
+
+.notification-view-all-btn:hover {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+/* ===== COMPREHENSIVE RESPONSIVE DESIGN ===== */
+
+/* ===== MOBILE - Screens 320px to 575px ===== */
+@media (max-width: 575px) {
+  .notification-bell-btn {
+    padding: 6px 10px !important;
+    font-size: 1.1rem !important;
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  .notification-dropdown {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 150px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: none !important;
+    width: calc(100vw - 24px) !important;
+    max-height: 60vh !important;
+    z-index: 2010 !important;
+  }
+
+  .notification-dropdown-header {
+    padding: 12px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .notification-list {
+    max-height: calc(60vh - 50px) !important;
+  }
+
+  .notification-item {
+    padding: 10px 12px !important;
+    gap: 10px !important;
+  }
+
+  .notification-title {
+    font-size: 0.8rem !important;
+  }
+
+  .notification-message {
+    font-size: 0.75rem !important;
+  }
+
+  .notification-time {
+    font-size: 0.65rem !important;
+  }
+
+  .notification-icon {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .notification-view-all-btn {
+    padding: 10px 12px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .notification-empty {
+    padding: 30px 15px !important;
+  }
+
+  .notification-empty i {
+    font-size: 1.5rem !important;
+  }
+
+  .notification-empty p {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* ===== TABLET - Screens 576px to 768px ===== */
+@media (min-width: 576px) and (max-width: 768px) {
+  .notification-bell-btn {
+    padding: 8px 12px !important;
+    font-size: 1.1rem !important;
+    min-height: 40px !important;
+  }
+
+  .notification-dropdown {
+    width: 340px !important;
+    max-height: 500px !important;
+    left: auto !important;
+    right: 12px !important;
+  }
+
+  .notification-item {
+    padding: 11px 14px !important;
+  }
+
+  .notification-icon {
+    width: 34px !important;
+    height: 34px !important;
+  }
+}
+
+/* ===== SMALL DESKTOP - Screens 769px to 1024px ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .notification-dropdown {
+    left: 240px !important;
+    width: 340px !important;
+    max-height: 480px !important;
+  }
+
+  .notification-item {
+    padding: 11px 15px !important;
+  }
+}
+
+/* ===== MEDIUM DESKTOP - Screens 1025px to 1440px ===== */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .notification-dropdown {
+    left: 260px !important;
+    width: 360px !important;
+  }
+
+  .notification-item {
+    padding: 12px 16px !important;
+  }
+}
+
+/* ===== LARGE DESKTOP - Screens 1441px+ ===== */
+@media (min-width: 1441px) {
+  .notification-dropdown {
+    left: 260px !important;
+    width: 380px !important;
+    max-height: 500px !important;
+  }
+
+  .notification-item {
+    padding: 12px 16px !important;
+  }
+
+  .notification-icon {
+    width: 38px !important;
+    height: 38px !important;
+  }
+}

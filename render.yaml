@@ -1,0 +1,21 @@
+---
+services:
+  - type: web
+    name: crime-management-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: SUPABASE_DB_URL
+        value: postgresql://postgres.ujfcsjfvpwymrrdudfmo:wG4boZlbMqSuDUDR@aws-1-ap-south-1.pooler.supabase.com:6543/postgres
+      - key: JWT_SECRET
+        value: crime_mgmt_jwt_secret_2026_secure
+      - key: SESSION_SECRET
+        value: crime_mgmt_secret_key_2026_secure
+      - key: FRONTEND_URL
+        value: https://crime-management-system-new.vercel.app

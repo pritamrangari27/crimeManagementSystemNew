@@ -1,0 +1,27 @@
+{
+  "name": "crime-management-system",
+  "version": "1.0.0",
+  "description": "Crime Management System - Full Stack (Backend in /backend, Frontend in /frontend)",
+  "main": "backend/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "build": "cd backend && npm install",
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "init-db": "cd backend && npm run init-db",
+    "sample-data": "cd backend && npm run sample-data"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "keywords": [
+    "crime-management",
+    "fir",
+    "police",
+    "nodejs",
+    "react"
+  ],
+  "author": "pritamrangari27",
+  "license": "MIT"
+}
