@@ -1,39 +1,39 @@
-# 🚔 Crime Management System
+#  Crime Management System
 
-## 🧭 Overview
+##  Overview
 
 The **Crime Management System** is a production-ready web application designed for law enforcement agencies, police stations, and the public. It enables citizens to file FIRs (First Information Reports) online, allows police officers to manage cases and criminals, and gives administrators full oversight of stations, users, and analytics — all through a secure, role-based platform.
 
-> 🔗 **Live:** [https://crime-management-system-new.vercel.app/](https://crime-management-system-new.vercel.app/)
+>  **Live:** [https://crime-management-system-new.vercel.app/](https://crime-management-system-new.vercel.app/)
 
 ---
 
-## ✨ Features
+##  Features
 
-### 👤 For Citizens (Users)
-- 📝 **File FIRs online** with auto-generated FIR numbers (e.g. `FIR-2025-MH-MUM-00001`)
-- 🤖 **AI-powered crime classification** — describe the incident, the system detects the crime type automatically
-- 📍 **Geo-tagged reports** with latitude/longitude support
-- 🔔 **Real-time notifications** — get notified when your FIR is approved or rejected
-- 💬 **AI Chatbot** — 24/7 assistant for FIR guidance, safety tips, and legal FAQs
-- 📊 **Personal dashboard** — track all your filed FIRs and their statuses
+###  For Citizens (Users)
+-  **File FIRs online** with auto-generated FIR numbers (e.g. `FIR-2025-MH-MUM-00001`)
+-  **AI-powered crime classification** — describe the incident, the system detects the crime type automatically
+-  **Geo-tagged reports** with latitude/longitude support
+-  **Real-time notifications** — get notified when your FIR is approved or rejected
+-  **AI Chatbot** — 24/7 assistant for FIR guidance, safety tips, and legal FAQs
+-  **Personal dashboard** — track all your filed FIRs and their statuses
 
-### 👮 For Police Officers
-- 📂 **Manage assigned FIRs** — view, approve, or reject cases
-- 🗂️ **Criminal database** — add, search, and update criminal records
-- 🏢 **Station-based access** — officers only see data from their assigned station
-- 📋 **Case tracking** — full case history with workflow stages
+###  For Police Officers
+-  **Manage assigned FIRs** — view, approve, or reject cases
+-  **Criminal database** — add, search, and update criminal records
+-  **Station-based access** — officers only see data from their assigned station
+-  **Case tracking** — full case history with workflow stages
 
-### 🛡️ For Administrators
-- 👥 **User management** — create, update, delete users with role assignment
-- 📦 **Bulk user import** — import up to 10,000 users via CSV
-- 🏛️ **Station management** — add and manage police stations
-- 📊 **Analytics dashboard** — crime heatmaps, monthly trends, FIR status charts
-- 🕵️ **Activity logs** — full audit trail of all system actions
+###  For Administrators
+-  **User management** — create, update, delete users with role assignment
+-  **Bulk user import** — import up to 10,000 users via CSV
+-  **Station management** — add and manage police stations
+-  **Analytics dashboard** — crime heatmaps, monthly trends, FIR status charts
+-  **Activity logs** — full audit trail of all system actions
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -47,7 +47,7 @@ The **Crime Management System** is a production-ready web application designed f
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -83,7 +83,7 @@ The **Crime Management System** is a production-ready web application designed f
 
 ---
 
-## 🔐 Roles & Permissions
+##  Roles & Permissions
 
 | Feature | User | Police | Admin |
 |---|:---:|:---:|:---:|
@@ -144,7 +144,7 @@ On first run, the database tables are **automatically created and seeded** via `
 
 ---
 
-## ⚙️ Environment Variables
+##  Environment Variables
 
 Create a `.env` file in the root directory:
 
@@ -169,9 +169,9 @@ AI_SERVICE_URL=http://localhost:8000
 
 ---
 
-## 📡 API Endpoints
+##  API Endpoints
 
-### 🔑 Authentication — `/api/auth`
+###  Authentication — `/api/auth`
 
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
@@ -182,7 +182,7 @@ AI_SERVICE_URL=http://localhost:8000
 | `PUT` | `/update-profile` | ✅ | Update profile info |
 | `POST` | `/change-password` | ✅ | Change password (bcrypt verified) |
 
-### 📄 FIRs — `/api/firs`
+###  FIRs — `/api/firs`
 
 | Method | Endpoint | Role | Description |
 |---|---|---|---|
@@ -199,7 +199,7 @@ AI_SERVICE_URL=http://localhost:8000
 | `DELETE` | `/:id` | Police+ | Delete a FIR |
 | `POST` | `/classify` | ❌ | AI crime type classification |
 
-### 🕵️ Criminals — `/api/criminals`
+###  Criminals — `/api/criminals`
 
 | Method | Endpoint | Role | Description |
 |---|---|---|---|
@@ -210,7 +210,7 @@ AI_SERVICE_URL=http://localhost:8000
 | `PUT` | `/:id` | Police+ | Update criminal record |
 | `DELETE` | `/:id` | Police+ | Delete criminal record |
 
-### 👮 Police — `/api/police`
+###  Police — `/api/police`
 
 | Method | Endpoint | Role | Description |
 |---|---|---|---|
@@ -221,7 +221,7 @@ AI_SERVICE_URL=http://localhost:8000
 | `PUT` | `/:id` | Admin | Update officer |
 | `DELETE` | `/:id` | Admin | Delete officer |
 
-### 🏢 Stations — `/api/stations`
+###  Stations — `/api/stations`
 
 | Method | Endpoint | Role | Description |
 |---|---|---|---|
@@ -232,7 +232,7 @@ AI_SERVICE_URL=http://localhost:8000
 | `PUT` | `/:id` | Admin | Update station |
 | `DELETE` | `/:id` | Admin | Delete station |
 
-### 📊 Dashboard — `/api/dashboard`
+###  Dashboard — `/api/dashboard`
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -263,7 +263,7 @@ AI_SERVICE_URL=http://localhost:8000
 
 ---
 
-## 🗄️ Database Schema
+##  Database Schema
 
 ### Core Tables
 
@@ -281,7 +281,7 @@ activity_log      — id, user_id, activity_type, action, description, entity_ty
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Here's how to get started:
 
