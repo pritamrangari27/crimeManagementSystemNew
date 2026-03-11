@@ -1577,11 +1577,26 @@
   /* Header Responsive */
   .dashboard-header,
   .mgmt-header,
-  .management-header,
-  .dash-header {
+  .management-header {
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 10px !important;
+  }
+
+  .dash-header {
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+
+  .dash-header > div:first-child {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dash-header > div:last-child {
+    flex-shrink: 0;
   }
 
   .dashboard-header h1,
@@ -1605,6 +1620,13 @@
   .management-controls input,
   .management-controls select {
     width: 100% !important;
+  }
+
+  /* Dash header button */
+  .dash-header button {
+    font-size: 0.75rem !important;
+    padding: 6px 12px !important;
+    white-space: nowrap;
   }
 
   /* Stats Grid */
@@ -1669,12 +1691,20 @@
 
   .dense-table-wrap tbody td {
     display: table-cell !important;
-    padding: 8px 6px !important;
+    padding: 8px 4px !important;
     text-align: left !important;
     position: relative !important;
-    padding-left: 6px !important;
+    padding-left: 4px !important;
     border: none !important;
-    font-size: 0.7rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  .dense-table-wrap thead th {
+    padding: 8px 4px !important;
+    font-size: 0.65rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
   }
 
   /* Hide Crime Type and Status columns */
@@ -1688,12 +1718,12 @@
   /* Adjust column widths for FIR Number, Date, View button */
   .dense-table-wrap thead th:first-child,
   .dense-table-wrap tbody td:first-child {
-    width: 40% !important;
+    width: 35% !important;
   }
 
   .dense-table-wrap thead th:nth-child(4),
   .dense-table-wrap tbody td:nth-child(4) {
-    width: 35% !important;
+    width: 40% !important;
   }
 
   .dense-table-wrap thead th:last-child,
@@ -1704,7 +1734,7 @@
 
   .dense-table-wrap .btn {
     padding: 2px 6px !important;
-    font-size: 0.65rem !important;
+    font-size: 0.6rem !important;
   }
 
   .table tbody tr {
