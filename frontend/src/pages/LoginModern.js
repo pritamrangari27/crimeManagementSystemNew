@@ -12,7 +12,7 @@ const LoginModern = () => {
   // Login States
   const [adminLogin, setAdminLogin] = useState({ username: '', password: '' });
   const [userLogin, setUserLogin] = useState({ username: '', password: '' });
-  const [policeLogin, setPoliceLogin] = useState({ username: '', password: '', station_id: '' });
+  const [policeLogin, setPoliceLogin] = useState({ username: '', password: '' });
 
   // Register States
   const [userRegister, setUserRegister] = useState({
@@ -53,9 +53,9 @@ const LoginModern = () => {
     setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
   };
 
-  // Fetch stations
+  // Fetch stations for police registration
   useEffect(() => {
-    if (stations.length === 0 && (activeTab === 'police' || (showRegisterModal && registerType === 'police'))) {
+    if (stations.length === 0 && showRegisterModal && registerType === 'police') {
       const fetchStations = async () => {
         try {
           const response = await stationsAPI.getAll();
@@ -68,7 +68,7 @@ const LoginModern = () => {
       };
       fetchStations();
     }
-  }, [activeTab, stations.length, showRegisterModal, registerType]);
+  }, [stations.length, showRegisterModal, registerType]);
 
   const clearErrors = () => {
     setError('');
@@ -300,11 +300,10 @@ const LoginModern = () => {
       if (response.data.status === 'success') {
         setModalSuccess(`Welcome Officer ${policeRegister.username}! Registration successful.`);
         const savedUsername = policeRegister.username;
-        const savedStationId = policeRegister.station_id;
         setTimeout(() => {
           closeRegisterModal();
           setActiveTab('police');
-          setPoliceLogin({ username: savedUsername, password: '', station_id: savedStationId });
+          setPoliceLogin({ username: savedUsername, password: '' });
           setSuccess('Registration successful! Please login with your credentials.');
         }, 2000);
       }
@@ -466,20 +465,6 @@ const LoginModern = () => {
                       onChange={(e) => setPoliceLogin({ ...policeLogin, username: e.target.value })}
                       required
                     />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Police Station</label>
-                    <select 
-                      className="form-select" 
-                      value={policeLogin.station_id}
-                      onChange={(e) => setPoliceLogin({ ...policeLogin, station_id: e.target.value })}
-                    >
-                      <option value="">-- Select Station --</option>
-                      {stations.map((station) => (
-                        <option key={station.id} value={station.id}>{station.station_name}</option>
-                      ))}
-                    </select>
                   </div>
 
                   <div className="form-group">
