@@ -798,6 +798,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  outline: none;
+  box-shadow: none;
 }
 
 .password-toggle:hover {
@@ -807,6 +809,13 @@ body {
 .password-toggle:focus {
   outline: none;
   color: #0ea5e9;
+  box-shadow: none;
+}
+
+.password-toggle:active {
+  color: #0284c7;
+  box-shadow: none;
+  outline: none;
 }
 
 /* ============================================================
