@@ -869,13 +869,22 @@ textarea:focus-visible {
   .auth-tabs {
     padding: 0 !important;
     gap: 0 !important;
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: space-between !important;
   }
 
   .auth-tab {
-    padding: 0.6rem 0.6rem !important;
-    font-size: 0.75rem !important;
-    letter-spacing: 0.3px !important;
+    padding: 0.7rem 0.5rem !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.8px !important;
     flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    height: auto !important;
+    min-height: 50px !important;
   }
 
   .auth-tab-content {
