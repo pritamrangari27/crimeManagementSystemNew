@@ -174,7 +174,6 @@ const CrimeAnalysis = () => {
             <p className="text-muted mt-2" style={{ fontSize: '0.85rem' }}>Loading analytics...</p>
           </div>
         </div>
-        <Footer />
       </>
     );
   }

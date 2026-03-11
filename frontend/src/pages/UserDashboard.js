@@ -217,7 +217,6 @@ const UserDashboard = () => {
           <p className="text-muted mt-2" style={{ fontSize: '0.85rem' }}>Loading dashboard...</p>
         </div>
       </div>
-      <Footer />
     </>
   );
 
@@ -230,7 +229,6 @@ const UserDashboard = () => {
           <button className="btn btn-primary" onClick={() => navigate('/user/dashboard')}>Retry</button>
         </div>
       </div>
-      <Footer />
     </>
   );
 
@@ -679,7 +677,6 @@ const UserDashboard = () => {
         </div>
         <ToastContainer position="top-right" autoClose={3000} />
       </div>
-      <Footer />
     </>
   );
 };

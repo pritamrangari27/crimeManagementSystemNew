@@ -231,7 +231,6 @@ const CrimeHotspotMap = () => {
             <p className="text-muted mt-3">Loading crime hotspot data...</p>
           </div>
         </div>
-        <Footer />
       </>
     );
   }

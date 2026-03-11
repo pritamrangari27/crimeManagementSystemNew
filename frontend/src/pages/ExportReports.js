@@ -295,7 +295,6 @@ const ExportReports = () => {
               </Button>
             </div>
           </Container>
-          <Footer />
         </div>
       </>
     );
@@ -526,7 +525,6 @@ const ExportReports = () => {
             </Card>
           </div>
         </Container>
-        <Footer />
       </div>
     </>
   );

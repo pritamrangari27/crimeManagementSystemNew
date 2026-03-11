@@ -422,7 +422,6 @@ const FIRManagement = () => {
         </Container>
       </div>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover theme="colored" />
-      <Footer />
     </>
   );
 };

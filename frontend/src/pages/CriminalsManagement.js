@@ -431,7 +431,6 @@ const CriminalsManagement = () => {
         loading={deleting}
       />
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover theme="colored" />
-      <Footer />
     </>
   );
 };
