@@ -283,7 +283,7 @@ const UserDashboard = () => {
           </div>
 
           {/* ── Recent FIRs table (full-width bento) ── */}
-          <div className="bento-card stagger-enter" style={{ padding: 0, overflow: 'hidden' }}>
+          <div className="bento-card" style={{ padding: 0, overflow: 'hidden' }}>
             <div style={{ padding: '10px 16px', fontWeight: 700, fontSize: '0.8rem', borderBottom: '1.5px solid #e2e8f0', color: '#0f172a' }}>
               <i className="fas fa-list-alt me-2" style={{ color: '#10b981' }}></i>Recent FIRs
             </div>

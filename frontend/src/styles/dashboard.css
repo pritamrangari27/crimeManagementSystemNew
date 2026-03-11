@@ -20,6 +20,7 @@
   font-family: var(--font-stack);
   animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) both;
   overflow-y: auto;
+  overflow-x: hidden;
   flex: 1;
   width: 100%;
   margin: 0;
@@ -35,6 +36,7 @@
   font-family: var(--font-stack);
   animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) both;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -1569,6 +1571,7 @@
   .management-container {
     padding: 12px !important;
     margin-left: 0 !important;
+    overflow-x: hidden !important;
   }
 
   /* Header Responsive */
@@ -1644,6 +1647,64 @@
 
   .table thead {
     display: none;
+  }
+
+  /* Recent FIRs Table - Keep Horizontal */
+  .dense-table-wrap .table {
+    display: table !important;
+    width: 100% !important;
+  }
+
+  .dense-table-wrap thead {
+    display: table-header-group !important;
+  }
+
+  .dense-table-wrap tbody tr {
+    display: table-row !important;
+    border: none;
+    border-bottom: 1px solid #e5e7eb !important;
+    margin-bottom: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .dense-table-wrap tbody td {
+    display: table-cell !important;
+    padding: 8px 6px !important;
+    text-align: left !important;
+    position: relative !important;
+    padding-left: 6px !important;
+    border: none !important;
+    font-size: 0.7rem !important;
+  }
+
+  /* Hide Crime Type and Status columns */
+  .dense-table-wrap thead th:nth-child(2),
+  .dense-table-wrap thead th:nth-child(3),
+  .dense-table-wrap tbody td:nth-child(2),
+  .dense-table-wrap tbody td:nth-child(3) {
+    display: none !important;
+  }
+
+  /* Adjust column widths for FIR Number, Date, View button */
+  .dense-table-wrap thead th:first-child,
+  .dense-table-wrap tbody td:first-child {
+    width: 40% !important;
+  }
+
+  .dense-table-wrap thead th:nth-child(4),
+  .dense-table-wrap tbody td:nth-child(4) {
+    width: 35% !important;
+  }
+
+  .dense-table-wrap thead th:last-child,
+  .dense-table-wrap tbody td:last-child {
+    width: 25% !important;
+    text-align: center !important;
+  }
+
+  .dense-table-wrap .btn {
+    padding: 2px 6px !important;
+    font-size: 0.65rem !important;
   }
 
   .table tbody tr {
