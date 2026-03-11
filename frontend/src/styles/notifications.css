@@ -191,14 +191,15 @@
 
   .notification-dropdown {
     position: fixed !important;
-    top: auto !important;
-    bottom: 150px !important;
-    left: 12px !important;
-    right: 12px !important;
+    top: 50% !important;
+    left: 50% !important;
+    bottom: auto !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) !important;
     width: auto !important;
     max-width: none !important;
     width: calc(100vw - 24px) !important;
-    max-height: 60vh !important;
+    max-height: 70vh !important;
     z-index: 2010 !important;
   }
 
