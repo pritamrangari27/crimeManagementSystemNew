@@ -47,31 +47,6 @@ function AppLayout() {
 
   return (
     <>
-      {!isAuthPage && (
-        <div className="system-banner" style={{
-          width: '100%',
-          background: 'linear-gradient(90deg, #ff9800 0%, #f44336 100%)',
-          color: '#fff',
-          textAlign: 'center',
-          padding: '8px 0',
-          fontWeight: 600,
-          fontSize: '14px',
-          letterSpacing: '0.5px',
-          zIndex: 10000,
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          borderBottom: '2px solid rgba(0,0,0,0.1)',
-          height: '38px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-          <span style={{ marginRight: 8 }}>&#9888;</span>
-          A system building is in progress
-          <span style={{ marginLeft: 8 }}>&#9888;</span>
-        </div>
-      )}
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<LoginModern />} />

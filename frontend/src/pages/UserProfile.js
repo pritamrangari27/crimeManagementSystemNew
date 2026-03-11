@@ -5,7 +5,6 @@ import { getCurrentUser, getUserRole, updateAuthUser } from '../utils/authServic
 import { authAPI } from '../api/client';
 import { useChangePassword } from '../context/ChangePasswordContext';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import '../styles/forms.css';
 
 const UserProfile = () => {
@@ -246,7 +245,7 @@ const UserProfile = () => {
         `}</style>
       </Container>
       </div>
-      <Footer />
+
     </>
   );
 };

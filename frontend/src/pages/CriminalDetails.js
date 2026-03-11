@@ -90,7 +90,6 @@ const CriminalDetails = () => {
       </Row>
         </Container>
       </div>
-      <Footer />
     </>
   );
 };

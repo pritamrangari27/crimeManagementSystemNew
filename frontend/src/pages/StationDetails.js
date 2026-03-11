@@ -90,7 +90,6 @@ const StationDetails = () => {
       </Row>
         </Container>
       </div>
-      <Footer />
     </>
   );
 };

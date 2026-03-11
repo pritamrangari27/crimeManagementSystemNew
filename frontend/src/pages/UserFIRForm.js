@@ -589,7 +589,7 @@ const UserFIRForm = () => {
         </Row>
       </Container>
       </div>
-      <Footer />
+
     </>
   );
 };

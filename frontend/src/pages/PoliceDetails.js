@@ -103,7 +103,6 @@ const PoliceDetails = () => {
       </Row>
         </Container>
       </div>
-      <Footer />
     </>
   );
 };

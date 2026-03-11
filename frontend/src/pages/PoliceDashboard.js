@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import { firsAPI } from '../api/client';
 import useFIRRealtime from '../utils/useFIRRealtime';
 import '../styles/dashboard.css';
@@ -270,7 +269,6 @@ const PoliceDashboard = () => {
         </div>
         <ToastContainer />
       </div>
-      <Footer />
     </>
   );
 };

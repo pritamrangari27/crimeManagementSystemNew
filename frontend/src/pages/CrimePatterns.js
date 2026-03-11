@@ -7,7 +7,6 @@ import {
 } from 'chart.js';
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import { advancedAPI } from '../api/client';
 import '../styles/dashboard.css';
 
@@ -196,7 +195,6 @@ const CrimePatterns = () => {
             </Card.Body>
           </Card>
         </Container>
-        <Footer />
       </div>
     </div>
   );

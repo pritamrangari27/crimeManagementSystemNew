@@ -7,7 +7,6 @@ import { criminalsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import ConfirmModal from '../components/ConfirmModal';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import '../styles/dashboard.css';
 
 const CriminalsManagement = () => {

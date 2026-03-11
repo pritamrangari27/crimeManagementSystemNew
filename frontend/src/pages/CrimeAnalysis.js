@@ -252,7 +252,6 @@ const CrimeAnalysis = () => {
           </div>
         </Container>
       </div>
-      <Footer />
     </>
   );
 };

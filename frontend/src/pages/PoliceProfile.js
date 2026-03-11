@@ -446,7 +446,7 @@ const PoliceProfile = () => {
         `}</style>
       </Container>
       </div>
-      <Footer />
+
     </>
   );
 };

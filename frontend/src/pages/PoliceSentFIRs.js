@@ -274,7 +274,7 @@ const PoliceSentFIRs = () => {
             )}
       </Container>
       </div>
-      <Footer />
+
     </>
   );
 };

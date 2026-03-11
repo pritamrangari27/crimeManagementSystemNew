@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Button, Card, Form, Alert, Spinner } from 'react-bootstrap';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import { authAPI } from '../api/client';
 import { getCurrentUser, getUserRole } from '../utils/authService';
 import '../styles/forms.css';
@@ -306,7 +305,6 @@ const ChangePassword = () => {
             </Card.Body>
           </Card>
         </Container>
-        <Footer />
       </div>
     </>
   );

@@ -6,7 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { policeAPI } from '../api/client';
 import ConfirmModal from '../components/ConfirmModal';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import '../styles/dashboard.css';
 
 const PoliceManagement = () => {

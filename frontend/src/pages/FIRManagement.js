@@ -6,7 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { firsAPI } from '../api/client';
 import { CRIME_TYPES } from '../constants/crimeTypes';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import '../styles/dashboard.css';
 
 const FIRManagement = () => {

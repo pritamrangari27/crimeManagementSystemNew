@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Button, Spinner, Alert, Badge, Modal, Form } from 'react-bootstrap';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import { firsAPI, advancedAPI } from '../api/client';
 import '../styles/dashboard.css';
 
@@ -553,8 +552,6 @@ const CaseWorkflow = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      <Footer />
       <style>{`
         .workflow-timeline { position: relative; }
         .workflow-step { display: flex; align-items: flex-start; position: relative; padding-bottom: 28px; }

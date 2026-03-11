@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { dashboardAPI, firsAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import '../styles/dashboard.css';
 
 const AdminDashboard = () => {
@@ -378,7 +377,6 @@ const AdminDashboard = () => {
 
         </div>
       </div>
-      <Footer />
     </>
   );
 };

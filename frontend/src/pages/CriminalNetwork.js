@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Spinner, Button, Alert, Row, Col, Form, Badge, OverlayTrigger, Tooltip, Modal } from 'react-bootstrap';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import { advancedAPI, criminalsAPI } from '../api/client';
 import '../styles/dashboard.css';
 
@@ -304,7 +303,6 @@ const CriminalNetwork = () => {
             )}
           </Row>
         </Container>
-        <Footer />
       </div>
 
       {/* Add Link Modal */}
