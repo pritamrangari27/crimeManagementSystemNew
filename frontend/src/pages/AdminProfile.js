@@ -4,7 +4,6 @@ import { Container, Button, Spinner, Alert, Card, Badge, Form, Row, Col } from '
 import { getCurrentUser, getUserRole, updateAuthUser } from '../utils/authService';
 import { authAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import '../styles/forms.css';
 
 const AdminProfile = () => {

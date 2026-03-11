@@ -15,7 +15,6 @@ import {
 } from 'chart.js';
 import { Line, Doughnut } from 'react-chartjs-2';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import { dashboardAPI } from '../api/client';
 import '../styles/dashboard.css';
 

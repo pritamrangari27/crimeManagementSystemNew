@@ -469,6 +469,20 @@ const LoginModern = () => {
                   </div>
 
                   <div className="form-group">
+                    <label className="form-label">Police Station</label>
+                    <select 
+                      className="form-select" 
+                      value={policeLogin.station_id}
+                      onChange={(e) => setPoliceLogin({ ...policeLogin, station_id: e.target.value })}
+                    >
+                      <option value="">-- Select Station --</option>
+                      {stations.map((station) => (
+                        <option key={station.id} value={station.id}>{station.station_name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
                     <label className="form-label">Password</label>
                     <div className="password-wrapper">
                       <input

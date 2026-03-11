@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Button, Badge, Table, Modal, Form, Spinner, Alert } from 'react-bootstrap';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import { firsAPI } from '../api/client';
 import '../styles/forms.css';
 import '../styles/dashboard.css';

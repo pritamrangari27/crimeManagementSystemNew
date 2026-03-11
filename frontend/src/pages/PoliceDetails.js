@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import { policeAPI } from '../api/client';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 
 const PoliceDetails = () => {
   const { id } = useParams();

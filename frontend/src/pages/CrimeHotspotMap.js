@@ -9,7 +9,6 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
 import { dashboardAPI } from '../api/client';
 import '../styles/dashboard.css';
 
