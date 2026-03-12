@@ -6,6 +6,7 @@ import { authAPI } from '../api/client';
 import { useChangePassword } from '../context/ChangePasswordContext';
 import Sidebar from '../components/Sidebar';
 import '../styles/forms.css';
+import '../styles/mobile-profile.css';
 
 const UserProfile = () => {
   const navigate = useNavigate();

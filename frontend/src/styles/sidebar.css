@@ -23,6 +23,8 @@
   left: 0;
   z-index: 1050;
   display: none;
+  padding: 0;
+  margin: 0;
 }
 
 .hamburger-menu {
@@ -111,11 +113,19 @@
     width: 85vw;
     max-width: 300px;
     left: -100%;
+    top: 0 !important;
+    height: 100vh;
     transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-top: 0 !important;
   }
 
   .sidebar.show {
     left: 0;
+  }
+
+  .with-sidebar {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 
   .hamburger-menu {
@@ -703,8 +713,10 @@
     --sidebar-width: 260px;
     left: -260px;
     height: 100vh;
+    top: 0 !important;
     transition: left 0.3s ease;
     border-radius: 0;
+    padding-top: 0 !important;
   }
 
   .sidebar.active {
@@ -716,6 +728,8 @@
     width: 100%;
     padding-left: 0;
     padding-right: 0;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 
   .main-content {

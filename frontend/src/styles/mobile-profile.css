@@ -1,0 +1,70 @@
+/* ===== MOBILE PROFILE PAGE - 575px and down ===== */
+@media (max-width: 575px) {
+  .mgmt-container .card {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .mgmt-container .card .card-body {
+    padding: 0 !important;
+    margin-top: -10px !important;
+  }
+
+  /* Reduce card banner padding and avatar */
+  .mgmt-container .card > div:first-child {
+    padding: 12px 12px 20px !important;
+  }
+
+  .mgmt-container .card div.d-flex.align-items-center.gap-3 {
+    gap: 8px !important;
+  }
+
+  .mgmt-container .card div.d-flex.align-items-center.gap-3 > div:first-child {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 1.1rem !important;
+  }
+
+  .mgmt-container .card h4 {
+    font-size: 0.95rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  .mgmt-container .card .text-white span {
+    font-size: 0.75rem !important;
+  }
+
+  /* Profile info grid - compact */
+  .mgmt-container .card > div:last-child > div {
+    padding: 12px 12px 14px !important;
+  }
+
+  .mgmt-container .card div[style*="display: grid"] {
+    gap: 6px !important;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+  }
+
+  .profile-info-item {
+    padding: 7px 8px !important;
+    gap: 6px !important;
+  }
+
+  /* Buttons on one line - Edit Profile and Change Password */
+  .d-flex.gap-2.flex-wrap.mt-3.pt-3 {
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    justify-content: center !important;
+  }
+
+  .d-flex.gap-2.flex-wrap.mt-3.pt-3 .btn {
+    flex: 1;
+    font-size: 0.7rem !important;
+    padding: 5px 8px !important;
+    white-space: nowrap;
+    min-width: auto;
+  }
+
+  .d-flex.gap-2.flex-wrap.mt-3.pt-3 .btn i {
+    margin-right: 4px !important;
+  }
+}
