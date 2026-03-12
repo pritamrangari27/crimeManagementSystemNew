@@ -240,108 +240,53 @@ const CrimeHotspotMap = () => {
       <Sidebar />
       <div className="with-sidebar">
         <Container fluid className="dashboard-container py-3 px-3">
-          {/* Header */}
-          <Row className="mb-3">
-            <Col>
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <h2 className="fw-bold mb-1" style={{ fontSize: '1.4rem', color: '#1a202c' }}>
-                    <i className="fas fa-map-marked-alt me-2" style={{ color: '#e74c3c' }}></i>
-                    Crime Hotspot Map
-                  </h2>
-                  <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>
-                    Geographic visualization of crime incidents with heatmap & clustering
-                  </p>
-                </div>
-                <Button variant="secondary" size="sm" onClick={() => navigate(-1)} style={{ borderRadius: '6px' }}>
-                  <i className="fas fa-arrow-left me-2"></i>Back
-                </Button>
-              </div>
-            </Col>
-          </Row>
+          {/* Header - Single Line */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, gap: 12 }}>
+            <div>
+              <h2 className="fw-bold mb-0" style={{ fontSize: '1.2rem', color: '#1a202c' }}>
+                <i className="fas fa-map-marked-alt me-2" style={{ color: '#e74c3c' }}></i>
+                Crime Hotspot Map
+              </h2>
+            </div>
+            <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
+              <i className="fas fa-arrow-left me-2"></i>Back
+            </button>
+          </div>
 
           {error && <Alert variant="danger" className="mb-3" style={{ borderRadius: '10px' }}>{error}</Alert>}
 
-          {/* Stats + Controls */}
-          <Row className="mb-3">
-            <Col lg={3} md={6} className="mb-2">
-              <Card className="border-0 shadow-sm h-100" style={{ borderLeft: '5px solid #e74c3c' }}>
-                <Card.Body className="py-3">
-                  <p className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>Mapped Crimes</p>
-                  <h3 className="fw-bold mb-0" style={{ fontSize: '1.5rem', color: '#e74c3c' }}>{totalCrimes}</h3>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col lg={3} md={6} className="mb-2">
-              <Card className="border-0 shadow-sm h-100" style={{ borderLeft: '5px solid #4e73df' }}>
-                <Card.Body className="py-3">
-                  <p className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>From FIRs</p>
-                  <h3 className="fw-bold mb-0" style={{ fontSize: '1.5rem', color: '#4e73df' }}>{firCount}</h3>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col lg={3} md={6} className="mb-2">
-              <Card className="border-0 shadow-sm h-100" style={{ borderLeft: '5px solid #1cc88a' }}>
-                <Card.Body className="py-3">
-                  <p className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>Criminal Records</p>
-                  <h3 className="fw-bold mb-0" style={{ fontSize: '1.5rem', color: '#1cc88a' }}>{criminalCount}</h3>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col lg={3} md={6} className="mb-2">
-              <Card className="border-0 shadow-sm h-100" style={{ borderLeft: '5px solid #f6c23e' }}>
-                <Card.Body className="py-3">
-                  <p className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>Crime Types</p>
-                  <h3 className="fw-bold mb-0" style={{ fontSize: '1.5rem', color: '#f6c23e' }}>{crimeTypes.length}</h3>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+          {/* Stats Grid - 2x2 */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 20 }}>
+            <Card className="border-0 shadow-sm" style={{ borderLeft: '5px solid #e74c3c' }}>
+              <Card.Body className="py-3 px-3">
+                <p className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>Mapped Crimes</p>
+                <h3 className="fw-bold mb-0" style={{ fontSize: '1.3rem', color: '#e74c3c' }}>{totalCrimes}</h3>
+              </Card.Body>
+            </Card>
+            <Card className="border-0 shadow-sm" style={{ borderLeft: '5px solid #4e73df' }}>
+              <Card.Body className="py-3 px-3">
+                <p className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>From FIRs</p>
+                <h3 className="fw-bold mb-0" style={{ fontSize: '1.3rem', color: '#4e73df' }}>{firCount}</h3>
+              </Card.Body>
+            </Card>
+            <Card className="border-0 shadow-sm" style={{ borderLeft: '5px solid #1cc88a' }}>
+              <Card.Body className="py-3 px-3">
+                <p className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>Crime Record</p>
+                <h3 className="fw-bold mb-0" style={{ fontSize: '1.3rem', color: '#1cc88a' }}>{criminalCount}</h3>
+              </Card.Body>
+            </Card>
+            <Card className="border-0 shadow-sm" style={{ borderLeft: '5px solid #f6c23e' }}>
+              <Card.Body className="py-3 px-3">
+                <p className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem' }}>Crime Types</p>
+                <h3 className="fw-bold mb-0" style={{ fontSize: '1.3rem', color: '#f6c23e' }}>{crimeTypes.length}</h3>
+              </Card.Body>
+            </Card>
+          </div>
 
-          {/* Filters Row */}
-          <Row className="mb-3">
-            <Col md={4} className="mb-2">
-              <Form.Label style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0f172a', marginBottom: '6px' }}>
-                <i className="fas fa-layer-group me-2" style={{ color: '#667eea' }}></i>Map View
-              </Form.Label>
-              <Form.Select
-                size="sm"
-                value={viewMode}
-                onChange={(e) => setViewMode(e.target.value)}
-                style={{ borderRadius: '6px', border: '2px solid #e0e0e0', fontSize: '0.85rem' }}
-              >
-                <option value="cluster">📍 Cluster View - Grouped incidents by area</option>
-                <option value="heatmap">🔥 Heatmap View - Heat intensity visualization</option>
-                <option value="both">📊 Both Views - Cluster + Heatmap combined</option>
-              </Form.Select>
-            </Col>
-            <Col md={4} className="mb-2">
-              <Form.Label style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0f172a', marginBottom: '6px' }}>
-                <i className="fas fa-filter me-2" style={{ color: '#f59e0b' }}></i>Filter by Crime Type
-              </Form.Label>
-              <Form.Select
-                size="sm"
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
-                style={{ borderRadius: '6px', border: '2px solid #e0e0e0', fontSize: '0.85rem' }}
-              >
-                <option value="">📋 All Crime Types ({crimeLocations.length} total)</option>
-                {crimeTypes.map(t => {
-                  const count = crimeLocations.filter(c => c.crime_type === t).length;
-                  return <option key={t} value={t}>{t} ({count})</option>;
-                })}
-              </Form.Select>
-            </Col>
-            <Col md={4} className="mb-2 text-end">
-              <Badge bg="secondary" className="me-2" style={{ fontSize: '0.75rem' }}>
-                <i className="fas fa-map-marker-alt me-1"></i>{filteredLocations.length} markers
-              </Badge>
-            </Col>
-          </Row>
-
-          {/* Map */}
-          <Row className="mb-4">
-            <Col>
+          {/* Map Container with Filters on Right */}
+          <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+            {/* Map */}
+            <div style={{ flex: 1 }}>
               <Card className="border-0 shadow-sm">
                 <Card.Body className="p-0" style={{ borderRadius: '10px', overflow: 'hidden' }}>
                   {filteredLocations.length === 0 ? (
@@ -378,8 +323,49 @@ const CrimeHotspotMap = () => {
                   )}
                 </Card.Body>
               </Card>
-            </Col>
-          </Row>
+            </div>
+
+            {/* Filters on Right */}
+            <div style={{ width: '220px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div>
+                <Form.Label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#0f172a', marginBottom: '4px' }}>
+                  <i className="fas fa-layer-group me-1" style={{ color: '#667eea' }}></i>Map View
+                </Form.Label>
+                <Form.Select
+                  size="sm"
+                  value={viewMode}
+                  onChange={(e) => setViewMode(e.target.value)}
+                  style={{ borderRadius: '6px', border: '1.5px solid #e0e0e0', fontSize: '0.75rem', padding: '5px 8px' }}
+                >
+                  <option value="cluster">Cluster</option>
+                  <option value="heatmap">Heatmap</option>
+                  <option value="both">Both</option>
+                </Form.Select>
+              </div>
+              <div>
+                <Form.Label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#0f172a', marginBottom: '4px' }}>
+                  <i className="fas fa-filter me-1" style={{ color: '#f59e0b' }}></i>Filter Crime
+                </Form.Label>
+                <Form.Select
+                  size="sm"
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value)}
+                  style={{ borderRadius: '6px', border: '1.5px solid #e0e0e0', fontSize: '0.75rem', padding: '5px 8px' }}
+                >
+                  <option value="">All ({crimeLocations.length})</option>
+                  {crimeTypes.map(t => {
+                    const count = crimeLocations.filter(c => c.crime_type === t).length;
+                    return <option key={t} value={t}>{t}</option>;
+                  })}
+                </Form.Select>
+              </div>
+              <div style={{ padding: '10px 8px', background: '#f8f9fa', borderRadius: '6px', textAlign: 'center' }}>
+                <Badge bg="secondary" style={{ fontSize: '0.7rem', display: 'block' }}>
+                  <i className="fas fa-map-marker-alt me-1"></i>{filteredLocations.length} markers
+                </Badge>
+              </div>
+            </div>
+          </div>
         </Container>
       </div>
     </>

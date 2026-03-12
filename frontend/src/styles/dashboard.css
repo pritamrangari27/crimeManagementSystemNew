@@ -2045,8 +2045,50 @@
   }
 }
 
-/* Mobile Management Pages - Optimized Tables */
+/* Mobile Crime Hotspot Map */
 @media (max-width: 575px) {
+  /* Crime Hotspot Map Layout */
+  .with-sidebar .dashboard-container {
+    padding: 10px;
+  }
+
+  /* Map and filters - stack vertically on mobile */
+  [style*="display: flex"][style*="gap: 12px"] {
+    flex-direction: column !important;
+  }
+
+  /* Filter sidebar on mobile */
+  [style*="width: 220px"] {
+    width: 100% !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Filter items side by side */
+  [style*="width: 220px"] > div {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  /* Stats grid 2x2 stays responsive */
+  [style*="gridTemplateColumns: repeat(2, 1fr)"] {
+    gap: 10px !important;
+  }
+
+  /* Stats card content */
+  [style*="gridTemplateColumns: repeat(2, 1fr)"] .card {
+    padding: 8px !important;
+  }
+
+  [style*="gridTemplateColumns: repeat(2, 1fr)"] .card-body {
+    padding: 8px !important;
+  }
+
+  [style*="gridTemplateColumns: repeat(2, 1fr)"] h3 {
+    font-size: 1.1rem !important;
+  }
+
   /* Management header on mobile */
   .mgmt-header {
     display: flex;
