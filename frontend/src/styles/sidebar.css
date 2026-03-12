@@ -19,8 +19,8 @@
 /* ===== HAMBURGER MENU STYLES ===== */
 .hamburger-container {
   position: fixed;
-  top: var(--banner-height, 38px);
-  left: 12px;
+  top: 0;
+  left: 0;
   z-index: 1050;
   display: none;
 }
@@ -31,15 +31,15 @@
   gap: 5px;
   background: none;
   border: none;
-  padding: 8px;
+  padding: 6px;
   cursor: pointer;
   border-radius: 8px;
   transition: all 0.3s ease;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  min-height: 44px;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
 }
 
 .hamburger-menu:hover {
@@ -95,7 +95,7 @@
   top: var(--banner-height);
   left: 0;
   background: var(--sidebar-bg);
-  padding: 12px 16px;
+  padding: 6px 10px;
   box-shadow: 0 8px 32px rgba(16, 185, 129, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
   z-index: 1001;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -156,10 +156,10 @@
 
 /* ===== SIDEBAR HEADER ===== */
 .sidebar-header {
-  padding: 0 0 12px 0;
-  margin-bottom: 12px;
+  padding: 0 0 4px 0;
+  margin-bottom: 4px;
   border-bottom: 2px solid #d1fae5;
-  padding-bottom: 12px;
+  padding-bottom: 4px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -213,8 +213,8 @@
 
 .sidebar-link {
   color: var(--sidebar-text) !important;
-  padding: 10px 12px !important;
-  margin-bottom: 2px;
+  padding: 6px 8px !important;
+  margin-bottom: 0px;
   border-radius: 0.75rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
   display: flex;
@@ -316,12 +316,12 @@
 
 /* Sidebar Activities Section */
 .sidebar-activities {
-  margin-top: 4px;
+  margin-top: 1px;
   border-top: 2px solid #d1fae5;
-  padding-top: 8px;
+  padding-top: 4px;
   display: flex;
   flex-direction: column;
-  max-height: 140px;
+  max-height: 100px;
   overflow: hidden;
   flex-shrink: 0;
 }

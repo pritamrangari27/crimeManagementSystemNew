@@ -358,58 +358,58 @@
     left: auto !important;
     top: 50% !important;
     transform: translate(50%, 50%) !important;
-    width: 90vw !important;
-    height: 80vh !important;
-    max-height: 80vh !important;
-    max-width: 90vw !important;
+    width: 80vw !important;
+    height: 70vh !important;
+    max-height: 70vh !important;
+    max-width: 80vw !important;
     border-radius: 16px !important;
     z-index: 3000 !important;
   }
 
   .chatbot-header {
-    padding: 12px !important;
+    padding: 10px !important;
   }
 
   .chatbot-header h3 {
-    font-size: 1rem !important;
+    font-size: 0.95rem !important;
   }
 
   .chatbot-header p {
-    font-size: 0.75rem !important;
+    font-size: 0.7rem !important;
   }
 
   .chatbot-close {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 1rem !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.9rem !important;
   }
 
   .chatbot-messages {
-    padding: 12px !important;
-    gap: 10px !important;
-  }
-
-  .chatbot-message {
-    max-width: 90% !important;
-    padding: 8px 10px !important;
-    font-size: 0.8rem !important;
-  }
-
-  .chatbot-input {
-    padding: 10px 12px !important;
+    padding: 10px !important;
     gap: 8px !important;
   }
 
+  .chatbot-message {
+    max-width: 88% !important;
+    padding: 6px 8px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .chatbot-input {
+    padding: 8px 9px !important;
+    gap: 6px !important;
+  }
+
   .chatbot-input input {
-    padding: 8px 12px !important;
-    font-size: 16px !important; /* Prevent zoom on iOS */
-    min-height: 40px !important;
+    padding: 6px 10px !important;
+    font-size: 14px !important; /* Prevent zoom on iOS */
+    min-height: 36px !important;
   }
 
   .chatbot-input button {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 0.8rem !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.75rem !important;
   }
 
   .chatbot-typing {
