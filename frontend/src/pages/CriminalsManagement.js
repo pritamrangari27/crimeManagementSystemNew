@@ -377,6 +377,7 @@ const CriminalsManagement = () => {
           <tr>
             <th>Sr. No.</th>
             <th>Name</th>
+            <th>Contact</th>
             <th>Crime Type</th>
             <th>Actions</th>
           </tr>
@@ -387,11 +388,12 @@ const CriminalsManagement = () => {
               <tr key={criminal.id}>
                 <td>{idx + 1}</td>
                 <td>{criminal.Criminal_name}</td>
+                <td>{criminal.email || criminal.contact || '-'}</td>
                 <td>{criminal.crime_type}</td>
                 <td>
                   <div className="mgmt-actions">
                     <button className="view" onClick={() => handleViewCriminal(criminal)}>
-                      <i className="fas fa-eye"></i>
+                      <i className="fas fa-eye"></i> View
                     </button>
                   </div>
                 </td>
@@ -399,7 +401,7 @@ const CriminalsManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="mgmt-empty">
+              <td colSpan="5" className="mgmt-empty">
                 No criminals found
               </td>
             </tr>

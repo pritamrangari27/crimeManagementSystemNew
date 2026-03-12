@@ -425,7 +425,8 @@ const PoliceManagement = () => {
           <tr>
             <th>Sr. No.</th>
             <th>Name</th>
-            <th>Police ID</th>
+            <th>Contact</th>
+            <th>Station</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -435,11 +436,12 @@ const PoliceManagement = () => {
               <tr key={officer.id}>
                 <td>{idx + 1}</td>
                 <td>{officer.name}</td>
-                <td>{officer.police_id}</td>
+                <td>{officer.phone || officer.email || '-'}</td>
+                <td>{officer.station || officer.police_id || '-'}</td>
                 <td>
                   <div className="mgmt-actions">
                     <button className="view" onClick={() => handleViewPolice(officer)}>
-                      <i className="fas fa-eye"></i>
+                      <i className="fas fa-eye"></i> View
                     </button>
                   </div>
                 </td>
@@ -447,7 +449,7 @@ const PoliceManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="mgmt-empty">
+              <td colSpan="5" className="mgmt-empty">
                 No police officers found
               </td>
             </tr>

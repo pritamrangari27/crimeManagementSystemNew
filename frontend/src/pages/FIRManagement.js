@@ -293,6 +293,7 @@ const FIRManagement = () => {
             <th>Sr. No.</th>
             <th>FIR Number</th>
             <th>Crime Type</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -303,13 +304,14 @@ const FIRManagement = () => {
                 <td>{idx + 1}</td>
                 <td>FIR-{String(fir.id).padStart(4, '0')}</td>
                 <td>{fir.crime_type}</td>
+                <td><span className="badge" style={{ background: fir.status === 'Open' ? '#ef4444' : fir.status === 'Under Investigation' ? '#f59e0b' : '#10b981' }}>{fir.status || 'Pending'}</span></td>
                 <td>
                   <div className="mgmt-actions">
                     <button
                       onClick={() => handleViewFIR(fir)}
                       className="view"
                     >
-                      <i className="fas fa-eye"></i>
+                      <i className="fas fa-eye"></i> View
                     </button>
                   </div>
                 </td>
@@ -317,7 +319,7 @@ const FIRManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="mgmt-empty">
+              <td colSpan="5" className="mgmt-empty">
                 No FIRs found
               </td>
             </tr>

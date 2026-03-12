@@ -272,6 +272,7 @@ const StationsManagement = () => {
             <th>Sr. No.</th>
             <th>Station Name</th>
             <th>City</th>
+            <th>State</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -282,10 +283,11 @@ const StationsManagement = () => {
                 <td>{idx + 1}</td>
                 <td>{station.station_name}</td>
                 <td>{station.city}</td>
+                <td>{station.state || '-'}</td>
                 <td>
                   <div className="mgmt-actions">
                     <button className="view" onClick={() => handleViewStation(station)}>
-                      <i className="fas fa-eye"></i>
+                      <i className="fas fa-eye"></i> View
                     </button>
                   </div>
                 </td>
@@ -293,7 +295,7 @@ const StationsManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="mgmt-empty">
+              <td colSpan="5" className="mgmt-empty">
                 No stations found
               </td>
             </tr>
