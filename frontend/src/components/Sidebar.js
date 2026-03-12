@@ -6,6 +6,7 @@ import { authAPI } from '../api/client';
 import ConfirmModal from './ConfirmModal';
 import NotificationBell from './NotificationBell';
 import '../styles/sidebar.css';
+import '../styles/modals.css';
 
 const Sidebar = () => {
   const navigate = useNavigate();

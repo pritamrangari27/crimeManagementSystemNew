@@ -486,6 +486,11 @@
   padding-top: 16px;
 }
 
+.sidebar-user-dropdown {
+  position: relative;
+  width: 100%;
+}
+
 .sidebar-dev-contact-btn {
   width: 100%;
   display: flex;
@@ -534,9 +539,10 @@
 
 /* User Dropdown Popup Card */
 .user-popup-card {
-  position: fixed;
-  bottom: 25px;
-  left: 20px;
+  position: absolute;
+  bottom: auto;
+  top: -180px;
+  left: 0;
   background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
   border-radius: 0.75rem;
   box-shadow:

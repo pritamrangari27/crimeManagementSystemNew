@@ -1,0 +1,71 @@
+/* Confirm Modal Styling - Mobile Optimized */
+
+.confirm-modal {
+  --bs-modal-lg: 800px;
+  --bs-modal-md: 600px;
+  --bs-modal-sm: 380px;
+  --bs-modal-xs: 300px;
+}
+
+.confirm-modal .modal-dialog {
+  max-width: var(--bs-modal-sm);
+}
+
+.confirm-modal .modal-content {
+  border: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.confirm-modal .modal-body {
+  padding: 16px 20px;
+}
+
+@media (max-width: 480px) {
+  .confirm-modal .modal-dialog {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+  }
+
+  .confirm-modal .modal-body {
+    padding: 14px 16px;
+  }
+
+  .confirm-modal .modal-body h5 {
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+
+  .confirm-modal .modal-body p {
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+  }
+
+  .confirm-modal .modal-body div[style*="width"] {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .confirm-modal .modal-body div[style*="width"] i {
+    font-size: 1rem !important;
+  }
+
+  .confirm-modal .d-flex button {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 575px) {
+  .confirm-modal .modal-dialog {
+    margin: 10px auto;
+  }
+
+  .confirm-modal .modal-content {
+    border-radius: 10px;
+  }
+
+  .confirm-modal .modal-body {
+    padding: 16px;
+  }
+}

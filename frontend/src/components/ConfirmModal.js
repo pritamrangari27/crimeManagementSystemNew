@@ -24,21 +24,21 @@ const ConfirmModal = ({
 
   return (
     <Modal show={show} onHide={onHide} centered size="sm" className="confirm-modal">
-      <Modal.Body className="text-center p-4">
+      <Modal.Body className="text-center p-3" style={{ padding: '16px 20px' }}>
         <div
           style={{
-            width: 56, height: 56, borderRadius: '50%',
+            width: 48, height: 48, borderRadius: '50%',
             background: `${colors.bg}15`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 16px', color: colors.bg, fontSize: '1.4rem',
+            margin: '0 auto 12px', color: colors.bg, fontSize: '1.2rem',
             animation: 'scaleIn 0.3s cubic-bezier(.34,1.56,.64,1) both',
           }}
         >
           <i className={icon}></i>
         </div>
-        <h5 style={{ fontWeight: 700, color: '#0f172a', marginBottom: 8, fontSize: '1.05rem' }}>{title}</h5>
-        <p style={{ color: '#64748b', fontSize: '0.88rem', marginBottom: 20, lineHeight: 1.5 }}>{message}</p>
-        <div className="d-flex gap-2 justify-content-center">
+        <h5 style={{ fontWeight: 700, color: '#0f172a', marginBottom: 6, fontSize: '0.95rem' }}>{title}</h5>
+        <p style={{ color: '#64748b', fontSize: '0.8rem', marginBottom: 14, lineHeight: 1.4 }}>{message}</p>
+        <div className="d-flex gap-2 justify-content-center" style={{ gap: '8px' }}>
           <Button
             variant="outline-secondary" size="sm"
             onClick={onHide} disabled={loading}

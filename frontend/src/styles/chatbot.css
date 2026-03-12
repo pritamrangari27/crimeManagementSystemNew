@@ -92,10 +92,10 @@
     bottom: auto !important;
     transform: translate(-50%, -50%) !important;
     z-index: 10000;
-    width: 90vw !important;
-    height: 75vh !important;
-    max-width: 400px !important;
-    max-height: 600px !important;
+    width: 85vw !important;
+    height: 65vh !important;
+    max-width: 380px !important;
+    max-height: 500px !important;
     border-radius: 16px;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
     animation: chatCenterScale 0.35s cubic-bezier(.4,0,.2,1) !important;
