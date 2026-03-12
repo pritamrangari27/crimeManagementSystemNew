@@ -82,6 +82,30 @@
   overflow: hidden;
   animation: chatSlideUp 0.35s cubic-bezier(.4,0,.2,1);
 }
+
+@media (max-width: 575px) {
+  .chatbot-window {
+    position: fixed;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 10000;
+    width: 90vw !important;
+    height: 75vh !important;
+    max-width: 400px !important;
+    max-height: 600px !important;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    animation: chatCenterScale 0.35s cubic-bezier(.4,0,.2,1) !important;
+  }
+}
+
+@keyframes chatCenterScale {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
 @keyframes chatSlideUp {
   from { opacity: 0; transform: translateY(24px) scale(0.96); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
