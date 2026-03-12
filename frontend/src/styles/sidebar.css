@@ -219,6 +219,7 @@
   padding: 8px 0;
   flex: 1;
   overflow-y: auto;
+  max-height: calc(100vh - var(--banner-height, 38px) - 200px);
 }
 
 .sidebar-link {
@@ -483,12 +484,15 @@
   padding-top: 16px;
   margin-top: auto;
   border-top: 2px solid #d1fae5;
-  padding-top: 16px;
+  position: relative;
+  z-index: 1100;
+  flex-shrink: 0;
 }
 
 .sidebar-user-dropdown {
   position: relative;
   width: 100%;
+  z-index: 1100;
 }
 
 .sidebar-dev-contact-btn {
@@ -540,8 +544,8 @@
 /* User Dropdown Popup Card */
 .user-popup-card {
   position: absolute;
-  bottom: auto;
-  top: -180px;
+  bottom: 70px;
+  top: auto;
   left: 0;
   background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
   border-radius: 0.75rem;
@@ -938,6 +942,21 @@
 }
 
 /* Smooth close button rotation on all modals */
+
+/* Mobile User Popup Card */
+@media (max-width: 575px) {
+  .user-popup-card {
+    position: fixed !important;
+    bottom: auto !important;
+    top: var(--banner-height, 38px) !important;
+    left: 0 !important;
+    right: auto !important;
+    width: 85vw !important;
+    max-width: 300px !important;
+    margin: 10px !important;
+    z-index: 2000 !important;
+  }
+}
 .activities-modal .btn-close,
 .profile-modal .btn-close,
 .password-modal .btn-close {

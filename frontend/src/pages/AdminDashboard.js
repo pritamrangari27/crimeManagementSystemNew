@@ -115,21 +115,19 @@ const AdminDashboard = () => {
               </p>
               
               {/* Action Buttons */}
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-                <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem', backgroundColor: '#06b6d4', borderColor: '#06b6d4', padding: '8px 14px' }}
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+                <button className="mgmt-btn-primary" style={{ fontSize: '0.75rem', backgroundColor: '#06b6d4', borderColor: '#06b6d4', padding: '6px 10px', flex: '1', minWidth: '90px' }}
                   onClick={handleShowRecentActivities}>
-                  <i className="fas fa-history me-1"></i> Activity Log
+                  <i className="fas fa-history me-1"></i>Activity
                 </button>
-                <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem', backgroundColor: '#7c3aed', borderColor: '#7c3aed', padding: '8px 14px' }}
+                <button className="mgmt-btn-primary" style={{ fontSize: '0.75rem', backgroundColor: '#7c3aed', borderColor: '#7c3aed', padding: '6px 10px', flex: '1', minWidth: '90px' }}
                   onClick={() => navigate('/admin/analytics')}>
-                  <i className="fas fa-chart-pie me-1"></i> Analytics
+                  <i className="fas fa-chart-pie me-1"></i>Analytics
                 </button>
-                <div style={{ marginLeft: 'auto' }}>
-                  <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem', backgroundColor: '#10b981', borderColor: '#10b981', padding: '8px 14px' }}
-                    onClick={() => navigate('/admin/export')}>
-                    <i className="fas fa-download me-1"></i> Export Reports
-                  </button>
-                </div>
+                <button className="mgmt-btn-primary" style={{ fontSize: '0.75rem', backgroundColor: '#10b981', borderColor: '#10b981', padding: '6px 10px', flex: '1', minWidth: '90px' }}
+                  onClick={() => navigate('/admin/export')}>
+                  <i className="fas fa-download me-1"></i>Export
+                </button>
               </div>
             </div>
 
