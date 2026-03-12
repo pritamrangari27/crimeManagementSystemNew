@@ -6,14 +6,13 @@ import { firsAPI, advancedAPI } from '../api/client';
 import '../styles/dashboard.css';
 
 const STAGES = ['FIR Filed', 'Under Review', 'Investigation', 'Charge Sheet Filed', 'Court Proceedings', 'Closed'];
-const STAGE_ICONS = ['fas fa-file-alt', 'fas fa-search', 'fas fa-user-secret', 'fas fa-gavel', 'fas fa-balance-scale', 'fas fa-check-double'];
+const STAGE_ICONS = ['fas fa-file-alt', 'fas fa-edit', 'fas fa-magnifying-glass', 'fas fa-book', 'fas fa-gavel', 'fas fa-check'];
 const STAGE_COLORS = ['#64748b', '#0ea5e9', '#8b5cf6', '#ec4899', '#6366f1', '#10b981'];
 
 const CaseWorkflow = () => {
   const navigate = useNavigate();
   const role = localStorage.getItem('userRole');
   const user = JSON.parse(localStorage.getItem('authUser'));
-  const userPoliceId = user?.badge_number;
   const [firs, setFirs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -24,7 +23,7 @@ const CaseWorkflow = () => {
   const [detailFIR, setDetailFIR] = useState(null);
   const [advancing, setAdvancing] = useState(false);
   const [filterStage, setFilterStage] = useState('All');
-  const [stageSelectFIR, setStageSelectFIR] = useState(null);
+  const [showStageModal, setShowStageModal] = useState(false);
   const [selectedStage, setSelectedStage] = useState('');
 
   useEffect(() => {
@@ -145,114 +144,17 @@ const CaseWorkflow = () => {
 
   return (
     <>
-      <style>{`
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes slideIn {
-          from {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-
-        .mgmt-table {
-          table-layout: fixed;
-          width: 100%;
-        }
-
-        /* Column Width Definitions (12 columns total) */
-        .mgmt-table th:nth-child(1),
-        .mgmt-table td:nth-child(1) { width: 60px; }
-        
-        .mgmt-table th:nth-child(2),
-        .mgmt-table td:nth-child(2) { width: 140px; }
-        
-        .mgmt-table th:nth-child(3),
-        .mgmt-table td:nth-child(3) { width: 110px; }
-        
-        .mgmt-table th:nth-child(4),
-        .mgmt-table td:nth-child(4) { width: 130px; }
-        
-        .mgmt-table th:nth-child(5),
-        .mgmt-table td:nth-child(5) { width: 130px; }
-        
-        .mgmt-table th:nth-child(6),
-        .mgmt-table td:nth-child(6) { width: 150px; }
-        
-        .mgmt-table th:nth-child(7),
-        .mgmt-table td:nth-child(7) { width: 120px; }
-        
-        .mgmt-table th:nth-child(8),
-        .mgmt-table td:nth-child(8) { width: 95px; }
-        
-        .mgmt-table th:nth-child(9),
-        .mgmt-table td:nth-child(9) { width: 100px; }
-        
-        .mgmt-table th:nth-child(10),
-        .mgmt-table td:nth-child(10) { width: 110px; }
-        
-        .mgmt-table th:nth-child(11),
-        .mgmt-table td:nth-child(11) { width: 110px; }
-        
-        .mgmt-table th:nth-child(12),
-        .mgmt-table td:nth-child(12) { width: 120px; }
-
-        .mgmt-table tbody tr {
-          position: relative;
-        }
-
-        .mgmt-table tbody tr::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 3px;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-
-        .mgmt-table tbody tr:hover::before {
-          opacity: 1;
-        }
-
-        .mgmt-table th {
-          position: sticky;
-          top: 0;
-          z-index: 10;
-        }
-      `}</style>
       <Sidebar />
       <div className="with-sidebar">
         <Container fluid className="mgmt-container page-stagger">
+          {/* Header */}
           <div className="mgmt-header">
             <h2><i className="fas fa-project-diagram me-2" style={{ color: '#6366f1' }}></i>
-              {role === 'Admin' ? 'All Cases Workflow' : 'My Case Workflow'}
+              {role === 'Admin' ? 'Cases Workflow' : 'My Cases'}
             </h2>
-            <div className="mgmt-header-actions">
+            <div
+              className="mgmt-header-actions"
+            >
               <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
                 <i className="fas fa-arrow-left me-2"></i>Back
               </button>
@@ -262,26 +164,47 @@ const CaseWorkflow = () => {
           {error && <Alert variant="danger" dismissible onClose={() => setError('')}>{error}</Alert>}
 
           {role === 'Police' && (
-            <Alert variant="info" style={{ marginBottom: 'var(--grid-gap)', borderRadius: '10px', borderLeft: '4px solid #6366f1' }}>
+            <Alert variant="info" style={{ marginBottom: '12px', borderRadius: '8px', borderLeft: '4px solid #6366f1', fontSize: '0.9rem' }}>
               <i className="fas fa-info-circle me-2"></i>
-              Showing only cases assigned to you.
+              Showing cases assigned to you
             </Alert>
           )}
 
-          {/* Stage Pipeline Filters */}
-          <div className="mgmt-controls" style={{ flexWrap: 'wrap', gap: '6px' }}>
-            <Button size="sm" variant={filterStage === 'All' ? 'primary' : 'outline-secondary'} onClick={() => setFilterStage('All')} style={{ whiteSpace: 'nowrap', borderRadius: '20px', fontSize: '0.78rem' }}>
+          {/* Stage Filter Buttons */}
+          <div className="mgmt-controls" style={{ flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
+            <Button
+              size="sm"
+              variant={filterStage === 'All' ? 'primary' : 'outline-secondary'}
+              onClick={() => setFilterStage('All')}
+              style={{ whiteSpace: 'nowrap', borderRadius: '20px', fontSize: '0.78rem', padding: '5px 14px' }}
+            >
               All ({firs.length})
             </Button>
-            {stageCounts.map(({ stage, count }, i) => (
-              <Button key={stage} size="sm" variant={filterStage === stage ? 'primary' : 'outline-secondary'} onClick={() => setFilterStage(stage)}
-                style={{ whiteSpace: 'nowrap', borderRadius: '20px', fontSize: '0.78rem', borderColor: STAGE_COLORS[i] + '40', color: filterStage === stage ? '#fff' : STAGE_COLORS[i], background: filterStage === stage ? STAGE_COLORS[i] : 'transparent' }}>
-                <i className={`${STAGE_ICONS[i]} me-1`}></i>{stage} ({count})
-              </Button>
-            ))}
+            {STAGES.map((stage, i) => {
+              const count = firs.filter(f => (f.workflow_stage || 'FIR Filed') === stage).length;
+              return (
+                <Button
+                  key={stage}
+                  size="sm"
+                  variant={filterStage === stage ? 'primary' : 'outline-secondary'}
+                  onClick={() => setFilterStage(stage)}
+                  style={{
+                    whiteSpace: 'nowrap',
+                    borderRadius: '20px',
+                    fontSize: '0.78rem',
+                    padding: '5px 14px',
+                    borderColor: filterStage === stage ? STAGE_COLORS[i] : STAGE_COLORS[i] + '60',
+                    color: filterStage === stage ? '#fff' : STAGE_COLORS[i],
+                    background: filterStage === stage ? STAGE_COLORS[i] : 'transparent'
+                  }}
+                >
+                  <i className={`${STAGE_ICONS[i]} me-1`}></i>{stage} ({count})
+                </Button>
+              );
+            })}
           </div>
 
-          {/* FIR Table */}
+          {/* Simple Table */}
           <div className="mgmt-table-wrap">
             <div className="mgmt-table-scroll">
               <table className="mgmt-table">
@@ -290,109 +213,38 @@ const CaseWorkflow = () => {
                     <th>Sr. No.</th>
                     <th>FIR #</th>
                     <th>Crime Type</th>
-                    <th>Complainant</th>
-                    <th>Accused</th>
-                    <th>Address</th>
-                    <th>Station</th>
-                    <th>Priority</th>
                     <th>Status</th>
-                    <th>Date Filed</th>
-                    <th>Last Updated</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredFIRs.length === 0 ? (
-                    <tr><td colSpan={12} className="mgmt-empty" style={{ padding: '40px 20px', textAlign: 'center', color: '#94a3b8' }}>
-                      <i className="fas fa-inbox me-2" style={{ fontSize: '2rem', opacity: 0.3 }}></i>
-                      <p style={{ margin: '8px 0 0' }}>No cases found</p>
-                    </td></tr>
-                  ) : filteredFIRs.map((fir, idx) => {
-                    // Column 1: Sr. No. (Sequential index)
-                    const srNo = idx + 1;
-                    // Column 2: FIR # (FIR number)
-                    const firNumber = fir.fir_number || `FIR-${String(fir.id).padStart(4, '0')}`;
-                    // Column 3: Crime Type
-                    const crimeType = fir.crime_type || 'N/A';
-                    // Column 4: Complainant
-                    const complainant = fir.complainant_name || fir.name || '-';
-                    // Column 5: Accused
-                    const accused = fir.accused || '-';
-                    // Column 6: Address
-                    const address = fir.address ? fir.address.substring(0, 20) + (fir.address.length > 20 ? '...' : '') : '-';
-                    // Column 7: Station
-                    const station = fir.station_name && fir.station_name.split(' ').slice(0, 2).join(' ') || '-';
-                    // Column 8: Priority
-                    const priority = fir.priority || 'Medium';
-                    // Column 9: Status
-                    const status = fir.status || 'Sent';
-                    // Column 10: Date Filed
-                    const dateFiled = fir.created_at ? new Date(fir.created_at).toLocaleDateString('en-IN') : '-';
-                    // Column 11: Last Updated
-                    const lastUpdated = fir.updated_at ? new Date(fir.updated_at).toLocaleDateString('en-IN') : '-';
-
+                  {(filterStage === 'All' ? firs : firs.filter(f => (f.workflow_stage || 'FIR Filed') === filterStage)).length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="mgmt-empty">
+                        <i className="fas fa-inbox me-2"></i>No cases found
+                      </td>
+                    </tr>
+                  ) : (filterStage === 'All' ? firs : firs.filter(f => (f.workflow_stage || 'FIR Filed') === filterStage)).map((fir, idx) => {
+                    const stageIdx = STAGES.indexOf(fir.workflow_stage || 'FIR Filed');
                     return (
                       <tr key={fir.id}>
-                        {/* COLUMN 1: Sr. No. */}
-                        <td style={{ fontWeight: 700, color: '#6366f1', textAlign: 'center', width: '60px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{srNo}</td>
-                        
-                        {/* COLUMN 2: FIR # */}
-                        <td style={{ fontWeight: 700, color: '#0f172a', width: '140px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{firNumber}</td>
-                        
-                        {/* COLUMN 3: Crime Type */}
-                        <td style={{ minWidth: '100px' }}>
-                          <Badge bg="danger" style={{ fontSize: '0.75rem' }}>{crimeType}</Badge>
-                        </td>
-                        
-                        {/* COLUMN 4: Complainant */}
-                        <td style={{ minWidth: '120px' }}>
-                          <i className="fas fa-user-circle me-2" style={{ color: '#10b981' }}></i>{complainant}
-                        </td>
-                        
-                        {/* COLUMN 5: Accused */}
-                        <td style={{ minWidth: '100px' }}>
-                          <i className="fas fa-user-secret me-2" style={{ color: '#ef4444' }}></i>{accused}
-                        </td>
-                        
-                        {/* COLUMN 6: Address */}
-                        <td title={fir.address} style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: '120px' }}>
-                          <i className="fas fa-map-marker-alt me-2" style={{ color: '#f59e0b' }}></i>{address}
-                        </td>
-                        
-                        {/* COLUMN 7: Station */}
-                        <td style={{ minWidth: '100px' }}>
-                          <i className="fas fa-building me-2" style={{ color: '#6366f1' }}></i>{station}
-                        </td>
-                        
-                        {/* COLUMN 8: Priority */}
-                        <td style={{ textAlign: 'center', minWidth: '90px' }}>
-                          <Badge bg={priority === 'Critical' ? 'danger' : priority === 'High' ? 'warning' : priority === 'Low' ? 'success' : 'info'} style={{ fontSize: '0.75rem' }}>
-                            {priority}
+                        <td style={{ fontWeight: 700, color: '#6366f1', textAlign: 'center' }}>{idx + 1}</td>
+                        <td style={{ fontWeight: 700, color: '#0f172a' }}>FIR-{String(fir.id).padStart(4, '0')}</td>
+                        <td><Badge bg="danger" style={{ fontSize: '0.75rem' }}>{fir.crime_type || 'N/A'}</Badge></td>
+                        <td>
+                          <Badge style={{ background: STAGE_COLORS[stageIdx] || '#64748b', fontSize: '0.75rem' }}>
+                            <i className={`${STAGE_ICONS[stageIdx]} me-1`}></i>{fir.workflow_stage || 'FIR Filed'}
                           </Badge>
                         </td>
-                        
-                        {/* COLUMN 9: Status */}
-                        <td style={{ textAlign: 'center', minWidth: '90px' }}>
-                          <Badge bg={status === 'Approved' ? 'success' : status === 'Rejected' ? 'danger' : status === 'Closed' ? 'dark' : 'info'} style={{ fontSize: '0.75rem' }}>
-                            {status}
-                          </Badge>
-                        </td>
-                        
-                        {/* COLUMN 10: Date Filed */}
-                        <td style={{ fontSize: '0.8rem', color: '#64748b', minWidth: '100px' }}>
-                          {dateFiled}
-                        </td>
-                        
-                        {/* COLUMN 11: Last Updated */}
-                        <td style={{ fontSize: '0.8rem', color: '#64748b', minWidth: '100px' }}>
-                          {lastUpdated}
-                        </td>
-                        
-                        {/* COLUMN 12: Actions */}
-                        <td style={{ textAlign: 'center', minWidth: '120px' }}>
-                          <button className="view" onClick={() => viewTimeline(fir)}>
-                            <i className="fas fa-timeline"></i>View & Update
-                          </button>
+                        <td style={{ textAlign: 'center' }}>
+                          <div className="mgmt-actions">
+                            <button className="view" onClick={() => viewTimeline(fir)} title="View Timeline">
+                              <i className="fas fa-timeline"></i>
+                            </button>
+                            <button className="view" onClick={() => viewFIRDetails(fir)} title="View Details">
+                              <i className="fas fa-eye"></i>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -405,52 +257,42 @@ const CaseWorkflow = () => {
       </div>
 
       {/* Timeline Modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered dialogClassName="fir-view-modal">
-        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none' }}>
-          <Modal.Title style={{ fontSize: '1rem', fontWeight: 700 }}>
-            <i className="fas fa-project-diagram me-2"></i>
-            Case Timeline — {selectedFIR?.fir_number || `FIR #${selectedFIR?.id}`}
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="md" centered>
+        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', borderBottom: 'none', borderRadius: '8px 8px 0 0' }}>
+          <Modal.Title style={{ fontSize: '0.95rem', fontWeight: 700 }}>
+            <i className="fas fa-timeline me-2"></i>Timeline — FIR-{selectedFIR ? String(selectedFIR.id).padStart(4, '0') : ''}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ padding: '30px' }}>
-          <div className="workflow-timeline">
+        <Modal.Body style={{ padding: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '60vh', overflowY: 'auto' }}>
             {timeline.map((step, i) => (
-              <div key={i} className={`workflow-step ${step.status}`}>
-                <div className="workflow-step-indicator" style={{
+              <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', position: 'relative' }}>
+                <div style={{
                   background: step.status === 'completed' ? '#10b981' : step.status === 'current' ? STAGE_COLORS[i] : '#e2e8f0',
                   color: step.status === 'pending' ? '#94a3b8' : '#fff',
-                  width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: 700, fontSize: '0.85rem', position: 'relative', zIndex: 2,
-                  boxShadow: step.status === 'current' ? `0 0 0 4px ${STAGE_COLORS[i]}30` : 'none'
+                  width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontWeight: 700, fontSize: '0.8rem', flexShrink: 0,
+                  boxShadow: step.status === 'current' ? `0 0 0 3px ${STAGE_COLORS[i]}30` : 'none'
                 }}>
                   {step.status === 'completed' ? <i className="fas fa-check"></i> : step.order}
                 </div>
-                <div style={{ flex: 1, marginLeft: 16 }}>
-                  <div style={{ fontWeight: step.status === 'current' ? 700 : 500, color: step.status === 'pending' ? '#94a3b8' : '#1e293b', fontSize: '0.95rem' }}>
-                    <i className={`${STAGE_ICONS[i]} me-2`} style={{ color: STAGE_COLORS[i] }}></i>
-                    {step.stage}
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: step.status === 'current' ? 700 : 500, color: step.status === 'pending' ? '#94a3b8' : '#1e293b', fontSize: '0.9rem' }}>
+                    <i className={`${STAGE_ICONS[i]} me-2`} style={{ color: STAGE_COLORS[i] }}></i>{step.stage}
                   </div>
-                  {step.status === 'current' && (
-                    <Badge bg="primary" className="mt-1" style={{ fontSize: '0.7rem' }}>CURRENT STAGE</Badge>
-                  )}
+                  {step.status === 'current' && <Badge bg="primary" style={{ fontSize: '0.65rem', marginTop: '4px' }}>CURRENT</Badge>}
                 </div>
-                {i < timeline.length - 1 && (
-                  <div style={{
-                    position: 'absolute', left: 19, top: 44, width: 2, height: 'calc(100% - 28px)',
-                    background: step.status === 'completed' ? '#10b981' : '#e2e8f0'
-                  }}></div>
-                )}
               </div>
             ))}
           </div>
 
           {selectedFIR && (selectedFIR.workflow_stage || 'FIR Filed') !== 'Closed' && (role === 'Admin' || role === 'Police') && (
-            <div className="text-center mt-4">
-              <Button variant="primary" onClick={advanceStage} disabled={advancing} style={{
-                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', border: 'none', borderRadius: '10px', padding: '10px 30px'
+            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+              <Button size="sm" onClick={advanceStage} disabled={advancing} style={{
+                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', border: 'none', borderRadius: '8px', padding: '8px 24px', fontSize: '0.85rem'
               }}>
                 {advancing ? <Spinner size="sm" className="me-2" /> : <i className="fas fa-arrow-right me-2"></i>}
-                Advance to Next Stage
+                Advance Stage
               </Button>
             </div>
           )}
@@ -458,105 +300,54 @@ const CaseWorkflow = () => {
       </Modal>
 
       {/* FIR Details Modal */}
-      <Modal show={showDetailModal} onHide={() => setShowDetailModal(false)} size="md" centered dialogClassName="fir-view-modal animated-modal">
+      <Modal show={showDetailModal} onHide={() => setShowDetailModal(false)} size="md" centered>
         <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', padding: '14px 18px', borderBottom: 'none' }}>
-          <Modal.Title style={{ color: 'white', fontSize: '1rem', fontWeight: 700 }}>
-            <i className="fas fa-file-invoice me-2" style={{ color: '#06b6d4' }}></i>
-            FIR Details
-            {detailFIR && (
-              <Badge bg={detailFIR.status === 'Approved' ? 'success' : detailFIR.status === 'Rejected' ? 'danger' : 'info'} className="ms-2" style={{ fontSize: '0.7rem', padding: '4px 8px', verticalAlign: 'middle' }}>
-                {detailFIR.status}
-              </Badge>
-            )}
+          <Modal.Title style={{ color: '#fff', fontSize: '0.95rem', fontWeight: 700 }}>
+            <i className="fas fa-file-invoice me-2" style={{ color: '#06b6d4' }}></i>Case Details
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ padding: '20px 24px', background: '#ffffff' }}>
+        <Modal.Body style={{ padding: '16px 20px', fontSize: '0.85rem' }}>
           {detailFIR && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 20px', fontSize: '0.85rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 16px' }}>
               <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>FIR Number</span>
-                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>{detailFIR.fir_number || `FIR-${String(detailFIR.id).padStart(4, '0')}`}</p>
+                <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase' }}>FIR #</span>
+                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>FIR-{String(detailFIR.id).padStart(4, '0')}</p>
               </div>
               <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Type</span>
-                <p style={{ margin: '4px 0 0' }}><span className="badge bg-danger" style={{ fontSize: '0.75rem', padding: '3px 8px' }}>{detailFIR.crime_type}</span></p>
+                <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase' }}>Crime Type</span>
+                <p style={{ margin: '4px 0 0' }}><Badge bg="danger" style={{ fontSize: '0.7rem' }}>{detailFIR.crime_type || 'N/A'}</Badge></p>
               </div>
               <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crime Date</span>
-                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="far fa-calendar me-1" style={{ color: '#3b82f6', fontSize: '0.8rem' }}></i>{detailFIR.crime_date || 'N/A'}</p>
+                <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase' }}>Crime Date</span>
+                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>{detailFIR.crime_date || 'N/A'}</p>
               </div>
               <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Location</span>
-                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-map-pin me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{detailFIR.location || 'N/A'}</p>
-              </div>
-              <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Workflow Stage</span>
-                <p style={{ margin: '4px 0 0' }}>{getStageBadge(detailFIR.workflow_stage)}</p>
-              </div>
-              <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Station</span>
-                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-building me-1" style={{ color: '#6366f1', fontSize: '0.8rem' }}></i>{detailFIR.station_name || detailFIR.station_id || 'N/A'}</p>
-              </div>
-              <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
-              <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Accused Name</span>
-                <p style={{ margin: '4px 0 0', fontWeight: 700, color: '#ef4444' }}><i className="fas fa-user-secret me-1" style={{ fontSize: '0.8rem' }}></i>{detailFIR.accused || '-'}</p>
-              </div>
-              <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Relation to Accused</span>
-                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>{detailFIR.relation || '-'}</p>
+                <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase' }}>Status</span>
+                <p style={{ margin: '4px 0 0' }}>
+                  <Badge bg={detailFIR.status === 'Approved' ? 'success' : detailFIR.status === 'Rejected' ? 'danger' : 'info'} style={{ fontSize: '0.7rem' }}>
+                    {detailFIR.status || 'Sent'}
+                  </Badge>
+                </p>
               </div>
               <div style={{ gridColumn: '1 / -1' }}>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Purpose of FIR</span>
-                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#334155' }}>{detailFIR.purpose || '-'}</p>
+                <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase' }}>Complainant</span>
+                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>{detailFIR.complainant_name || detailFIR.name || 'N/A'}</p>
               </div>
-              <div style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', margin: '2px 0' }}></div>
-              <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Complainant</span>
-                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="fas fa-user-shield me-1" style={{ color: '#10b981', fontSize: '0.8rem' }}></i>{detailFIR.complainant_name || detailFIR.name || '-'}</p>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase' }}>Accused</span>
+                <p style={{ margin: '4px 0 0', fontWeight: 700, color: '#ef4444' }}>{detailFIR.accused || 'N/A'}</p>
               </div>
-              <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Filed On</span>
-                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}><i className="far fa-clock me-1" style={{ color: '#f59e0b', fontSize: '0.8rem' }}></i>{detailFIR.created_at ? new Date(detailFIR.created_at).toLocaleDateString() : 'N/A'}</p>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase' }}>Location</span>
+                <p style={{ margin: '4px 0 0', fontWeight: 600, color: '#0f172a' }}>{detailFIR.location || 'N/A'}</p>
               </div>
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px', justifyContent: 'center' }}>
-          <Button variant="outline-secondary" size="sm" onClick={() => setShowDetailModal(false)} style={{ borderRadius: '8px', padding: '5px 20px', fontWeight: 600 }}>
-            <i className="fas fa-times me-1"></i>Close
-          </Button>
+        <Modal.Footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '10px 20px' }}>
+          <Button variant="outline-secondary" size="sm" onClick={() => setShowDetailModal(false)}>Close</Button>
         </Modal.Footer>
       </Modal>
-
-      {/* Set Stage Modal */}
-      <Modal show={!!stageSelectFIR} onHide={() => setStageSelectFIR(null)} size="sm" centered>
-        <Modal.Header closeButton style={{ background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', color: '#fff', border: 'none' }}>
-          <Modal.Title style={{ fontSize: '0.95rem', fontWeight: 700 }}>
-            <i className="fas fa-step-forward me-2"></i>Set Stage
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '12px' }}>
-            FIR: <strong>{stageSelectFIR?.fir_number || `#${stageSelectFIR?.id}`}</strong>
-          </p>
-          <Form.Select value={selectedStage} onChange={(e) => setSelectedStage(e.target.value)} style={{ borderRadius: '8px' }}>
-            {STAGES.map(s => <option key={s} value={s}>{s}</option>)}
-          </Form.Select>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" size="sm" onClick={() => setStageSelectFIR(null)}>Cancel</Button>
-          <Button size="sm" onClick={handleSetStage} disabled={advancing} style={{ background: '#8b5cf6', border: 'none', borderRadius: '8px' }}>
-            {advancing ? <Spinner size="sm" className="me-1" /> : <i className="fas fa-check me-1"></i>}
-            Update Stage
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <style>{`
-        .workflow-timeline { position: relative; }
-        .workflow-step { display: flex; align-items: flex-start; position: relative; padding-bottom: 28px; }
-        .workflow-step:last-child { padding-bottom: 0; }
-      `}</style>
     </>
   );
 };
