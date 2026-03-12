@@ -186,15 +186,19 @@ const CrimeAnalysis = () => {
           <div style={{ maxWidth: 1100, width: '100%', margin: '0 auto' }}>
 
           {/* Header */}
-          <div className="dash-header" style={{ marginBottom: 18 }}>
-            <div>
-              <h2 style={{ fontSize: '1.35rem' }}>
-                <i className="fas fa-chart-pie me-2" style={{ color: '#667eea' }}></i>
-                Crime Analytics
-              </h2>
-              <p style={{ margin: 0 }}>Real-time crime statistics with interactive charts</p>
-            </div>
-            <Button variant="outline-dark" size="sm" onClick={() => navigate(-1)} style={{ borderRadius: 8 }} className="fw-bold">
+          <div style={{ marginBottom: 12 }}>
+            <h1 style={{ margin: 0, color: '#1a1a1a', fontSize: '1.4rem', fontWeight: 700, marginBottom: 6 }}>
+              <i className="fas fa-chart-bar me-2" style={{ color: '#667eea' }}></i>
+              Crime Analysis
+            </h1>
+          </div>
+          
+          {/* Subtitle & Back Button */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+            <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem' }}>
+              Real-time crime statistics and trends analysis
+            </p>
+            <Button variant="outline-secondary" size="sm" onClick={() => navigate(-1)} style={{ borderRadius: '8px', fontSize: '0.85rem' }}>
               <i className="fas fa-arrow-left me-1"></i>Back
             </Button>
           </div>
@@ -224,7 +228,7 @@ const CrimeAnalysis = () => {
           </div>
 
           {/* Row 1: Monthly Trends + Crimes by Location */}
-          <div className="bento-grid cols-2 stagger-enter" style={{ marginBottom: 'var(--grid-gap)' }}>
+          <div className="bento-grid cols-2 stagger-enter mobile-crime-single" style={{ marginBottom: 'var(--grid-gap)' }}>
             <div className="bento-card" style={{ padding: 0, overflow: 'hidden' }}>
               <div style={{ padding: '10px 16px', fontWeight: 700, fontSize: '0.8rem', borderBottom: '1.5px solid #e2e8f0', color: '#0f172a' }}>
                 <i className="fas fa-chart-line me-2" style={{ color: '#e74c3c' }}></i>Monthly Crime & FIR Trends
@@ -235,7 +239,7 @@ const CrimeAnalysis = () => {
                   : <p className="text-muted text-center pt-5">No monthly data available</p>}
               </div>
             </div>
-            <div className="bento-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <div className="bento-card" style={{ padding: 0, overflow: 'hidden', display: 'none' }} id="crime-location-card">
               <div style={{ padding: '10px 16px', fontWeight: 700, fontSize: '0.8rem', borderBottom: '1.5px solid #e2e8f0', color: '#0f172a' }}>
                 <i className="fas fa-map-marked-alt me-2" style={{ color: '#f59e0b' }}></i>Crimes by Location
               </div>

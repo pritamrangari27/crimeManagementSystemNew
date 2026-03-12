@@ -103,26 +103,33 @@ const AdminDashboard = () => {
           <div style={{ maxWidth: 1100, width: '100%', margin: '0 auto' }}>
 
             {/* ── Header ── */}
-            <div className="dash-header" style={{ marginBottom: 18 }}>
-              <div>
-                <h2 style={{ fontSize: '1.35rem' }}>
-                  <i className="fas fa-chart-line me-2" style={{ color: '#10b981' }}></i>Admin Dashboard
-                </h2>
-                <p style={{ margin: 0 }}>Welcome back, <strong>{user?.username || 'Admin'}</strong>! Here's your system overview.</p>
-              </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem', backgroundColor: '#06b6d4', borderColor: '#06b6d4' }}
+            <div style={{ marginBottom: 24 }}>
+              {/* Title */}
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#1a1a1a', marginBottom: 6 }}>
+                <i className="fas fa-chart-line me-2" style={{ color: '#10b981' }}></i>Admin Dashboard
+              </h2>
+              
+              {/* Welcome Message */}
+              <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: 14 }}>
+                Welcome back, <strong>{user?.username || 'Admin'}</strong>! Here's your system overview.
+              </p>
+              
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+                <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem', backgroundColor: '#06b6d4', borderColor: '#06b6d4', padding: '8px 14px' }}
                   onClick={handleShowRecentActivities}>
                   <i className="fas fa-history me-1"></i> Activity Log
                 </button>
-                <button className="mgmt-btn-back" style={{ fontSize: '0.85rem' }}
+                <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem', backgroundColor: '#7c3aed', borderColor: '#7c3aed', padding: '8px 14px' }}
                   onClick={() => navigate('/admin/analytics')}>
                   <i className="fas fa-chart-pie me-1"></i> Analytics
                 </button>
-                <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem', backgroundColor: '#10b981', borderColor: '#10b981' }}
-                  onClick={() => navigate('/admin/export')}>
-                  <i className="fas fa-download me-1"></i> Export Reports
-                </button>
+                <div style={{ marginLeft: 'auto' }}>
+                  <button className="mgmt-btn-primary" style={{ fontSize: '0.85rem', backgroundColor: '#10b981', borderColor: '#10b981', padding: '8px 14px' }}
+                    onClick={() => navigate('/admin/export')}>
+                    <i className="fas fa-download me-1"></i> Export Reports
+                  </button>
+                </div>
               </div>
             </div>
 

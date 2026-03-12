@@ -2034,3 +2034,13 @@
     font-size: 16px; /* Prevent mobile zoom on input focus */
   }
 }
+
+/* Mobile Crime Analysis - Show only Monthly Trends */
+@media (max-width: 575px) {
+  .mobile-crime-single {
+    grid-template-columns: 1fr !important;
+  }
+  #crime-location-card {
+    display: none !important;
+  }
+}
