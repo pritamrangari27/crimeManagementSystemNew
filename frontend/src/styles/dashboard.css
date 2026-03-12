@@ -2044,3 +2044,106 @@
     display: none !important;
   }
 }
+
+/* Mobile Management Pages - Optimized Tables */
+@media (max-width: 575px) {
+  /* Management header on mobile */
+  .mgmt-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .mgmt-header h2 {
+    font-size: 1.05rem;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .mgmt-header-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .mgmt-btn-back,
+  .mgmt-btn-primary {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+    white-space: nowrap;
+  }
+
+  .mgmt-btn-back i,
+  .mgmt-btn-primary i {
+    display: none;
+  }
+
+  /* Management controls on mobile */
+  .mgmt-controls {
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+
+  .mgmt-search {
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+
+  /* Management table on mobile */
+  .mgmt-table-wrap {
+    border-radius: 8px;
+  }
+
+  .mgmt-table {
+    font-size: 0.75rem;
+  }
+
+  .mgmt-table thead th {
+    padding: 8px 6px;
+    font-size: 0.65rem;
+    padding: 6px 4px;
+  }
+
+  .mgmt-table tbody td {
+    padding: 6px 4px;
+    font-size: 0.75rem;
+  }
+
+  .mgmt-table tbody tr {
+    background: #fff;
+  }
+
+  .mgmt-actions {
+    gap: 2px;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  .mgmt-actions button,
+  .mgmt-actions .btn {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+
+  .mgmt-actions .view {
+    background: rgba(6, 182, 212, 0.15);
+    color: #0891b2;
+    padding: 6px 10px;
+  }
+
+  .mgmt-actions .view:hover {
+    background: rgba(6, 182, 212, 0.25);
+  }
+
+  .mgmt-empty {
+    padding: 24px 12px;
+    font-size: 0.8rem;
+  }
+}
