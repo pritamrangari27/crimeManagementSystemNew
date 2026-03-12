@@ -84,6 +84,14 @@
 }
 
 @media (max-width: 575px) {
+  .chatbot-fab {
+    bottom: 90px !important;
+    right: 12px !important;
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 1.2rem !important;
+  }
+
   .chatbot-window {
     position: fixed;
     top: 50% !important;
@@ -92,10 +100,10 @@
     bottom: auto !important;
     transform: translate(-50%, -50%) !important;
     z-index: 10000;
-    width: 85vw !important;
-    height: 65vh !important;
-    max-width: 380px !important;
-    max-height: 500px !important;
+    width: 88vw !important;
+    height: 70vh !important;
+    max-width: 340px !important;
+    max-height: 480px !important;
     border-radius: 16px;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
     animation: chatCenterScale 0.35s cubic-bezier(.4,0,.2,1) !important;

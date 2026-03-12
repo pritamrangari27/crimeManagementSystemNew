@@ -23,8 +23,6 @@ const CaseWorkflow = () => {
   const [detailFIR, setDetailFIR] = useState(null);
   const [advancing, setAdvancing] = useState(false);
   const [filterStage, setFilterStage] = useState('All');
-  const [showStageModal, setShowStageModal] = useState(false);
-  const [selectedStage, setSelectedStage] = useState('');
 
   useEffect(() => {
     if (role !== 'Admin' && role !== 'Police') { navigate('/login'); return; }
@@ -98,21 +96,6 @@ const CaseWorkflow = () => {
       setDetailFIR(fir);
     }
     setShowDetailModal(true);
-  };
-
-  const handleSetStage = async () => {
-    if (!stageSelectFIR || !selectedStage) return;
-    setAdvancing(true);
-    try {
-      await advancedAPI.setWorkflowStage(stageSelectFIR.id, selectedStage);
-      await fetchFIRs();
-      setStageSelectFIR(null);
-      setSelectedStage('');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update stage');
-    } finally {
-      setAdvancing(false);
-    }
   };
 
   const getStageBadge = (stage) => {
