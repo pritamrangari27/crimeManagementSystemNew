@@ -131,7 +131,7 @@ const CriminalsManagement = () => {
         <Container fluid className="mgmt-container page-stagger">
       <div className="mgmt-header">
         <h2>Criminal Management</h2>
-        <div className="mgmt-header-actions">
+        <div className="mgmt-header-actions" style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
           <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
             <i className="fas fa-arrow-left me-2"></i>Back
           </button>
@@ -378,9 +378,6 @@ const CriminalsManagement = () => {
             <th>Sr. No.</th>
             <th>Name</th>
             <th>Crime Type</th>
-            <th>Location/Address</th>
-            <th>Email</th>
-            <th>Contact</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -391,16 +388,10 @@ const CriminalsManagement = () => {
                 <td>{idx + 1}</td>
                 <td>{criminal.Criminal_name}</td>
                 <td>{criminal.crime_type}</td>
-                <td>{criminal.address || '-'}</td>
-                <td>{criminal.email}</td>
-                <td>{criminal.contact}</td>
                 <td>
                   <div className="mgmt-actions">
                     <button className="view" onClick={() => handleViewCriminal(criminal)}>
-                      <i className="fas fa-eye me-1"></i>View
-                    </button>
-                    <button className="delete" onClick={() => handleDeleteClick(criminal.id)}>
-                      <i className="fas fa-trash me-1"></i>Delete
+                      <i className="fas fa-eye"></i>
                     </button>
                   </div>
                 </td>
@@ -408,7 +399,7 @@ const CriminalsManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="8" className="mgmt-empty">
+              <td colSpan="4" className="mgmt-empty">
                 No criminals found
               </td>
             </tr>

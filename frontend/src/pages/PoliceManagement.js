@@ -168,7 +168,7 @@ const PoliceManagement = () => {
         <Container fluid className="mgmt-container page-stagger">
       <div className="mgmt-header">
         <h2>Police Management</h2>
-        <div className="mgmt-header-actions">
+        <div className="mgmt-header-actions" style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
           <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
             <i className="fas fa-arrow-left me-2"></i>Back
           </button>
@@ -424,12 +424,8 @@ const PoliceManagement = () => {
         <thead>
           <tr>
             <th>Sr. No.</th>
-            <th>Police ID</th>
             <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Position</th>
-            <th>Station</th>
+            <th>Police ID</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -438,19 +434,12 @@ const PoliceManagement = () => {
             police.map((officer, idx) => (
               <tr key={officer.id}>
                 <td>{idx + 1}</td>
-                <td>{officer.police_id}</td>
                 <td>{officer.name}</td>
-                <td>{officer.email}</td>
-                <td>{officer.phone}</td>
-                <td>{officer.position || '-'}</td>
-                <td>{officer.station_name}</td>
+                <td>{officer.police_id}</td>
                 <td>
                   <div className="mgmt-actions">
                     <button className="view" onClick={() => handleViewPolice(officer)}>
-                      <i className="fas fa-eye me-1"></i>View
-                    </button>
-                    <button className="view" style={{ background: 'rgba(245,158,11,0.10)', color: '#f59e0b' }} onClick={() => handleEditClick(officer)}>
-                      <i className="fas fa-edit me-1"></i>Edit
+                      <i className="fas fa-eye"></i>
                     </button>
                   </div>
                 </td>
@@ -458,7 +447,7 @@ const PoliceManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="8" className="mgmt-empty">
+              <td colSpan="4" className="mgmt-empty">
                 No police officers found
               </td>
             </tr>

@@ -131,9 +131,12 @@ const FIRManagement = () => {
         <Container fluid className="mgmt-container page-stagger">
       <div className="mgmt-header">
         <h2>FIR Management</h2>
-        <div className="mgmt-header-actions">
+        <div className="mgmt-header-actions" style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
           <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
             <i className="fas fa-arrow-left me-2"></i>Back
+          </button>
+          <button className="mgmt-btn-primary" onClick={() => setShowForm(true)}>
+            <i className="fas fa-plus me-2"></i>File FIR
           </button>
         </div>
       </div>
@@ -290,13 +293,6 @@ const FIRManagement = () => {
             <th>Sr. No.</th>
             <th>FIR Number</th>
             <th>Crime Type</th>
-            <th>Location</th>
-            <th>Accused</th>
-            <th>Complainant</th>
-            <th>Address</th>
-            <th>Date Filed</th>
-            <th>Status</th>
-            <th>Priority</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -307,25 +303,6 @@ const FIRManagement = () => {
                 <td>{idx + 1}</td>
                 <td>FIR-{String(fir.id).padStart(4, '0')}</td>
                 <td>{fir.crime_type}</td>
-                <td>{fir.location || '-'}</td>
-                <td>{fir.accused || '-'}</td>
-                <td>{fir.complainant_name || fir.name || '-'}</td>
-                <td>{fir.address || '-'}</td>
-                <td>{new Date(fir.created_at).toLocaleDateString()}</td>
-                <td>
-                  <span
-                    className={`mgmt-badge ${
-                      fir.status === 'Approved'
-                        ? 'success'
-                        : fir.status === 'Rejected'
-                        ? 'danger'
-                        : 'info'
-                    }`}
-                  >
-                    {fir.status}
-                  </span>
-                </td>
-                <td>High</td>
                 <td>
                   <div className="mgmt-actions">
                     <button
@@ -340,7 +317,7 @@ const FIRManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="11" className="mgmt-empty">
+              <td colSpan="4" className="mgmt-empty">
                 No FIRs found
               </td>
             </tr>

@@ -126,7 +126,7 @@ const StationsManagement = () => {
         <Container fluid className="mgmt-container page-stagger">
       <div className="mgmt-header">
         <h2>Police Station Management</h2>
-        <div className="mgmt-header-actions">
+        <div className="mgmt-header-actions" style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
           <button className="mgmt-btn-back" onClick={() => navigate(-1)}>
             <i className="fas fa-arrow-left me-2"></i>Back
           </button>
@@ -271,11 +271,7 @@ const StationsManagement = () => {
           <tr>
             <th>Sr. No.</th>
             <th>Station Name</th>
-            <th>Code</th>
             <th>City</th>
-            <th>State</th>
-            <th>Phone</th>
-            <th>Email</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -285,18 +281,11 @@ const StationsManagement = () => {
               <tr key={station.id}>
                 <td>{idx + 1}</td>
                 <td>{station.station_name}</td>
-                <td>{station.station_code}</td>
                 <td>{station.city}</td>
-                <td>{station.state}</td>
-                <td>{station.phone}</td>
-                <td>{station.email}</td>
                 <td>
                   <div className="mgmt-actions">
                     <button className="view" onClick={() => handleViewStation(station)}>
-                      <i className="fas fa-eye me-1"></i>View
-                    </button>
-                    <button className="delete" onClick={() => handleDeleteClick(station.id)}>
-                      <i className="fas fa-trash me-1"></i>Delete
+                      <i className="fas fa-eye"></i>
                     </button>
                   </div>
                 </td>
@@ -304,7 +293,7 @@ const StationsManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="8" className="mgmt-empty">
+              <td colSpan="4" className="mgmt-empty">
                 No stations found
               </td>
             </tr>
