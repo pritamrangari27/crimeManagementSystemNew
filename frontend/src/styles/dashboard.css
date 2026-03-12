@@ -2094,30 +2094,34 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 16px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   .mgmt-header h2 {
     font-size: 1.05rem;
     margin: 0;
     flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .mgmt-header-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     margin-left: auto;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: flex-end;
+    flex-shrink: 0;
   }
 
   .mgmt-btn-back,
   .mgmt-btn-primary {
-    font-size: 0.75rem;
-    padding: 6px 10px;
+    font-size: 0.7rem;
+    padding: 5px 8px;
     white-space: nowrap;
+    flex-shrink: 0;
+    min-width: auto;
   }
 
   .mgmt-btn-back i,
