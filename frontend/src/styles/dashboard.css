@@ -1730,11 +1730,14 @@
   .dense-table-wrap tbody td:last-child {
     width: 25% !important;
     text-align: center !important;
+    display: table-cell !important;
   }
 
   .dense-table-wrap .btn {
-    padding: 2px 6px !important;
-    font-size: 0.6rem !important;
+    padding: 4px 8px !important;
+    font-size: 0.65rem !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
   }
 
   .table tbody tr {

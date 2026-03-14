@@ -118,6 +118,7 @@
     transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     padding-top: 0 !important;
     padding-left: 50px;
+    overflow: hidden !important;
   }
 
   .sidebar.show {
@@ -546,7 +547,7 @@
 /* User Dropdown Popup Card */
 .user-popup-card {
   position: absolute;
-  bottom: 50px;
+  bottom: 75px;
   top: auto;
   left: 0;
   background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
