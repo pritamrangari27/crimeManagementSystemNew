@@ -141,17 +141,19 @@ const Sidebar = () => {
         {/* Sidebar Nav */}
         <Nav className="flex-column sidebar-nav">
           {menuItems.map((item) => (
-            <Nav.Link
-              key={item.path}
-              onClick={() => {
-                navigate(item.path);
-                setIsMobile(false);
-              }}
-              className={`sidebar-link ${isActive(item.path) ? 'active' : ''}`}
-            >
-              <i className={`${item.icon} me-2`}></i>
-              <span>{item.label}</span>
-            </Nav.Link>
+            (isMobile && item.label === 'Case Workflow') ? null : (
+              <Nav.Link
+                key={item.path}
+                onClick={() => {
+                  navigate(item.path);
+                  setSidebarOpen(false);
+                }}
+                className={`sidebar-link ${isActive(item.path) ? 'active' : ''}`}
+              >
+                <i className={`${item.icon} me-2`}></i>
+                <span>{item.label}</span>
+              </Nav.Link>
+            )
           ))}
         </Nav>
 
@@ -172,7 +174,7 @@ const Sidebar = () => {
             </Button>
 
             {/* Popup Card at Bottom Left */}
-            {showUserDropdown && (
+            {showUserDropdown && (!isMobile || sidebarOpen) && (
               <div className="user-popup-card">
                 {userRole !== 'Police' && (
                   <button
