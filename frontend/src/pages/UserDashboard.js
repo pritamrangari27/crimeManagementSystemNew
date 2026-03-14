@@ -288,7 +288,7 @@ const UserDashboard = () => {
               <i className="fas fa-list-alt me-2" style={{ color: '#10b981' }}></i>Recent FIRs
             </div>
             {myFIRs.length > 0 ? (
-              <div className="dense-table-wrap" style={{ border: 'none', borderRadius: 0, boxShadow: 'none', maxHeight: 'calc(100vh - 340px)', overflowY: 'auto' }}>
+              <div className="dense-table-wrap" style={{ border: 'none', borderRadius: 0, boxShadow: 'none', maxHeight: 'calc(100vh - 340px)' }}>
                 <table className="table table-sm mb-0">
                   <thead>
                     <tr>

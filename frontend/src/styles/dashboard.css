@@ -1671,10 +1671,35 @@
     display: none;
   }
 
-  /* Recent FIRs Table - Keep Horizontal */
+  /* Recent FIRs Table - Keep Horizontal with Scrollbar */
+  .dense-table-wrap {
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+  }
+
+  /* Custom scrollbar styling for horizontal scroll on mobile */
+  .dense-table-wrap::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .dense-table-wrap::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+  }
+
+  .dense-table-wrap::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
+
+  .dense-table-wrap::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
   .dense-table-wrap .table {
     display: table !important;
-    width: 100% !important;
+    width: auto !important;
+    min-width: 360px !important;
   }
 
   .dense-table-wrap thead {
@@ -1691,20 +1716,20 @@
 
   .dense-table-wrap tbody td {
     display: table-cell !important;
-    padding: 8px 4px !important;
+    padding: 8px 6px !important;
     text-align: left !important;
     position: relative !important;
-    padding-left: 4px !important;
     border: none !important;
     font-size: 0.68rem !important;
   }
 
   .dense-table-wrap thead th {
-    padding: 8px 4px !important;
+    padding: 8px 6px !important;
     font-size: 0.65rem !important;
     font-weight: 600 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
+    white-space: nowrap !important;
   }
 
   /* Hide Crime Type and Status columns */
@@ -1718,26 +1743,32 @@
   /* Adjust column widths for FIR Number, Date, View button */
   .dense-table-wrap thead th:first-child,
   .dense-table-wrap tbody td:first-child {
-    width: 35% !important;
+    width: 120px !important;
+    min-width: 120px !important;
   }
 
   .dense-table-wrap thead th:nth-child(4),
   .dense-table-wrap tbody td:nth-child(4) {
-    width: 40% !important;
+    width: 100px !important;
+    min-width: 100px !important;
   }
 
   .dense-table-wrap thead th:last-child,
   .dense-table-wrap tbody td:last-child {
-    width: 25% !important;
+    width: 100px !important;
+    min-width: 100px !important;
     text-align: center !important;
     display: table-cell !important;
   }
 
   .dense-table-wrap .btn {
-    padding: 4px 8px !important;
-    font-size: 0.65rem !important;
+    padding: 4px 6px !important;
+    font-size: 0.6rem !important;
     white-space: nowrap !important;
-    display: inline-block !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 2px !important;
+  }
   }
 
   .table tbody tr {
