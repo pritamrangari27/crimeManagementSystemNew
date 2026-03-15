@@ -10,6 +10,7 @@ import './styles/mobile.css';
 import { ChangePasswordProvider } from './context/ChangePasswordContext';
 
 // Pages
+import LandingPage from './pages/LandingPage';
 import LoginModern from './pages/LoginModern';
 import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
@@ -43,11 +44,14 @@ import { useLocation } from 'react-router-dom';
 // Layout wrapper to conditionally show navbar
 function AppLayout() {
   const location = useLocation();
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/';
 
   return (
     <>
       <Routes>
+        {/* Landing Page - Home */}
+        <Route path="/" element={<LandingPage />} />
+        
         {/* Public Routes */}
         <Route path="/login" element={<LoginModern />} />
         <Route path="/register" element={<Register />} />
@@ -269,7 +273,6 @@ function AppLayout() {
           />
 
           {/* Redirect */}
-          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         {!isAuthPage && <Chatbot />}
