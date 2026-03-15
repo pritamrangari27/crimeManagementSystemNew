@@ -6,10 +6,11 @@ import '../styles/landing-page.css';
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null); // null, 'login', 'register'
+  const [activeModal, setActiveModal] = useState(null);
   const [activeLoginTab, setActiveLoginTab] = useState('user');
   const [registerType, setRegisterType] = useState('user');
   const [loading, setLoading] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   // Login States
   const [adminLogin, setAdminLogin] = useState({ username: '', password: '' });
@@ -46,6 +47,13 @@ const LandingPage = () => {
     policeRegPass: false,
     policeRegConfirm: false
   });
+
+  // Handle scroll for sticky header
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Fetch stations for police registration
   useEffect(() => {
@@ -110,7 +118,6 @@ const LandingPage = () => {
       }
     } catch (err) {
       let errorMessage = 'Login failed. ';
-      
       if (err.code === 'ECONNABORTED' || err.code === 'ERR_NETWORK') {
         errorMessage += 'Server may be starting up — please try again shortly.';
       } else if (!err.response) {
@@ -148,7 +155,6 @@ const LandingPage = () => {
       }
     } catch (err) {
       let errorMessage = 'Login failed. ';
-      
       if (!err.response) {
         errorMessage += 'Cannot reach backend server.';
       } else if (err.response?.status === 401) {
@@ -184,7 +190,6 @@ const LandingPage = () => {
       }
     } catch (err) {
       let errorMessage = 'Login failed. ';
-      
       if (!err.response) {
         errorMessage += 'Cannot reach backend server.';
       } else if (err.response?.status === 401) {
@@ -292,128 +297,168 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page">
-      {/* Header/Navbar */}
-      <header className="landing-header">
+      {/* Premium Header/Navbar */}
+      <header className={`premium-header ${scrolled ? 'scrolled' : ''}`}>
         <div className="header-container">
           <div className="header-logo">
-            <h1>🚔 Crime Management System</h1>
+            <div className="logo-icon">🛡️</div>
+            <h1>Crime Management</h1>
           </div>
           <div className="header-buttons">
             <button className="btn-header btn-login" onClick={openLoginModal}>
-              Login
+              Sign In
             </button>
             <button className="btn-header btn-register" onClick={() => openRegisterModal('user')}>
-              Register
+              Get Started
             </button>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-overlay"></div>
+      <section className="hero-premium">
         <div className="hero-content">
-          <h2 className="hero-title">Secure Crime Management & FIR Filing</h2>
+          <div className="hero-badge">
+            <span>🚀 Enterprise-Grade Security</span>
+          </div>
+          <h2 className="hero-title">
+            Advanced Crime Management & <span className="text-accent">FIR Filing Platform</span>
+          </h2>
           <p className="hero-subtitle">
-            Empowering citizens and law enforcement with AI-powered crime reporting, real-time tracking, and data-driven insights.
+            Empower law enforcement with AI-driven insights, real-time collaboration, and secure incident reporting. Transform public safety through intelligent data management.
           </p>
           <div className="hero-cta">
-            <button className="btn btn-primary btn-large" onClick={() => openRegisterModal('user')}>
-              File a Report
+            <button className="btn btn-primary-lg" onClick={() => openRegisterModal('user')}>
+              Start Free Trial
             </button>
-            <button className="btn btn-secondary btn-large" onClick={openLoginModal}>
-              Login to Dashboard
+            <button className="btn btn-secondary-lg" onClick={openLoginModal}>
+              Schedule Demo
             </button>
+          </div>
+        </div>
+        <div className="hero-visual">
+          <div className="floating-card card-1">
+            <div className="card-icon">📊</div>
+            <p>Real-time Analytics</p>
+          </div>
+          <div className="floating-card card-2">
+            <div className="card-icon">🔒</div>
+            <p>Bank-Level Security</p>
+          </div>
+          <div className="floating-card card-3">
+            <div className="card-icon">⚡</div>
+            <p>Instant Response</p>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section">
+      {/* Key Features Section */}
+      <section className="features-premium">
         <div className="features-container">
-          <h2 className="section-title">Why Choose Us?</h2>
+          <div className="section-header">
+            <h2>Comprehensive Platform Features</h2>
+            <p>Everything you need to manage crime, criminal data, and FIR processing efficiently</p>
+          </div>
           <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">📋</div>
-              <h3>Online FIR Filing</h3>
-              <p>File First Information Reports online anytime, anywhere with auto-generated FIR numbers.</p>
+            <div className="feature-box">
+              <div className="feature-icon-wrapper">
+                <span className="feature-icon">📋</span>
+              </div>
+              <h3>Smart Incident Reporting</h3>
+              <p>File FIRs online with AI-powered crime classification and geo-tagging for precise incident tracking.</p>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon">🤖</div>
-              <h3>AI Classification</h3>
-              <p>Intelligent crime type detection using advanced machine learning algorithms.</p>
+            <div className="feature-box">
+              <div className="feature-icon-wrapper">
+                <span className="feature-icon">🤖</span>
+              </div>
+              <h3>AI Crime Intelligence</h3>
+              <p>Machine learning algorithms automatically classify crimes and identify patterns for proactive policing.</p>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon">📍</div>
-              <h3>Geo-Tagged Reports</h3>
-              <p>Location-based incident tracking with precise latitude and longitude support.</p>
+            <div className="feature-box">
+              <div className="feature-icon-wrapper">
+                <span className="feature-icon">📍</span>
+              </div>
+              <h3>Location Intelligence</h3>
+              <p>Geo-tagged reports and crime heatmaps for data-driven deployment and resource optimization.</p>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon">🔔</div>
+            <div className="feature-box">
+              <div className="feature-icon-wrapper">
+                <span className="feature-icon">🔔</span>
+              </div>
               <h3>Real-time Notifications</h3>
-              <p>Get instant updates on FIR status, case progress, and police responses.</p>
+              <p>Instant updates on case status changes with multi-channel notification delivery.</p>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon">💬</div>
-              <h3>24/7 AI Chatbot</h3>
-              <p>Round-the-clock assistance for FIR guidance, legal FAQs, and safety tips.</p>
+            <div className="feature-box">
+              <div className="feature-icon-wrapper">
+                <span className="feature-icon">👥</span>
+              </div>
+              <h3>Criminal Database</h3>
+              <p>Comprehensive criminal records with facial recognition and identity verification.</p>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon">📊</div>
-              <h3>Analytics Dashboard</h3>
-              <p>Crime heatmaps, trend analysis, and comprehensive reporting for law enforcement.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section className="how-it-works-section">
-        <div className="how-container">
-          <h2 className="section-title">How It Works</h2>
-          <div className="steps-grid">
-            <div className="step">
-              <div className="step-number">1</div>
-              <h3>Register</h3>
-              <p>Create your account as a citizen, police officer, or administrator.</p>
-            </div>
-            <div className="step">
-              <div className="step-number">2</div>
-              <h3>Report</h3>
-              <p>File your FIR with detailed information about the incident.</p>
-            </div>
-            <div className="step">
-              <div className="step-number">3</div>
-              <h3>Track</h3>
-              <p>Monitor your case status and receive real-time updates.</p>
-            </div>
-            <div className="step">
-              <div className="step-number">4</div>
-              <h3>Resolve</h3>
-              <p>Work with authorities for case resolution and closure.</p>
+            <div className="feature-box">
+              <div className="feature-icon-wrapper">
+                <span className="feature-icon">📈</span>
+              </div>
+              <h3>Advanced Analytics</h3>
+              <p>Dive deep into crime statistics, trends, and patterns with executive dashboards.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Statistics Section */}
-      <section className="stats-section">
+      {/* Stats Section */}
+      <section className="stats-premium">
         <div className="stats-container">
-          <div className="stat">
-            <h3>10,000+</h3>
-            <p>FIRs Filed</p>
+          <div className="stat-item">
+            <div className="stat-number">10,000+</div>
+            <div className="stat-label">FIRs Processed</div>
+            <div className="stat-desc">Trusted by law enforcement</div>
           </div>
-          <div className="stat">
-            <h3>500+</h3>
-            <p>Police Officers</p>
+          <div className="stat-item">
+            <div className="stat-number">500+</div>
+            <div className="stat-label">Police Officers</div>
+            <div className="stat-desc">Active users daily</div>
           </div>
-          <div className="stat">
-            <h3>50+</h3>
-            <p>Stations Covered</p>
+          <div className="stat-item">
+            <div className="stat-number">50+</div>
+            <div className="stat-label">Police Stations</div>
+            <div className="stat-desc">Nationwide coverage</div>
           </div>
-          <div className="stat">
-            <h3>98%</h3>
-            <p>Case Resolution</p>
+          <div className="stat-item">
+            <div className="stat-number">98%</div>
+            <div className="stat-label">Case Resolution</div>
+            <div className="stat-desc">Efficiency rate</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Us Section */}
+      <section className="why-us-premium">
+        <div className="why-container">
+          <div className="section-header">
+            <h2>Why Trust Our Platform?</h2>
+          </div>
+          <div className="trust-grid">
+            <div className="trust-card">
+              <div className="trust-icon">🔐</div>
+              <h4>Enterprise Security</h4>
+              <p>ISO 27001 certified with military-grade encryption and SOC 2 Type II compliance.</p>
+            </div>
+            <div className="trust-card">
+              <div className="trust-icon">⚙️</div>
+              <h4>Built for Scale</h4>
+              <p>Handle millions of transactions with 99.9% uptime guarantee and instant scaling.</p>
+            </div>
+            <div className="trust-card">
+              <div className="trust-icon">🤝</div>
+              <h4>Expert Support</h4>
+              <p>24/7 dedicated support team of law enforcement technology specialists.</p>
+            </div>
+            <div className="trust-card">
+              <div className="trust-icon">🎓</div>
+              <h4>Training & Onboarding</h4>
+              <p>Comprehensive training programs and smooth migration from legacy systems.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -421,47 +466,48 @@ const LandingPage = () => {
       {/* Login Modal */}
       {activeModal === 'login' && (
         <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="premium-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModal}>✕</button>
             
             <div className="modal-header">
-              <h2>Login to Your Account</h2>
+              <h2>Welcome Back</h2>
+              <p>Sign in to your account</p>
             </div>
 
             {/* Login Tabs */}
-            <div className="auth-tabs">
+            <div className="premium-tabs">
               <button
-                className={`auth-tab ${activeLoginTab === 'user' ? 'active' : ''}`}
+                className={`tab-button ${activeLoginTab === 'user' ? 'active' : ''}`}
                 onClick={() => setActiveLoginTab('user')}
               >
-                ✓ Citizen
+                Citizen
               </button>
               <button
-                className={`auth-tab ${activeLoginTab === 'admin' ? 'active' : ''}`}
+                className={`tab-button ${activeLoginTab === 'admin' ? 'active' : ''}`}
                 onClick={() => setActiveLoginTab('admin')}
               >
-                ⚙ Admin
+                Administrator
               </button>
               <button
-                className={`auth-tab ${activeLoginTab === 'police' ? 'active' : ''}`}
+                className={`tab-button ${activeLoginTab === 'police' ? 'active' : ''}`}
                 onClick={() => setActiveLoginTab('police')}
               >
-                🛡 Police
+                Police Officer
               </button>
             </div>
 
-            {error && <div className="alert alert-danger">{error}</div>}
+            {error && <div className="alert alert-error">{error}</div>}
             {success && <div className="alert alert-success">{success}</div>}
 
             {/* User Login */}
             {activeLoginTab === 'user' && (
-              <form onSubmit={handleUserLogin} className="login-form">
+              <form onSubmit={handleUserLogin} className="premium-form">
                 <div className="form-group">
-                  <label className="form-label">Username</label>
+                  <label>Username</label>
                   <input
                     type="text"
-                    className="form-control"
-                    placeholder="Enter your username"
+                    className="form-input"
+                    placeholder="your.username"
                     value={userLogin.username}
                     onChange={(e) => setUserLogin({ ...userLogin, username: e.target.value })}
                     required
@@ -469,37 +515,37 @@ const LandingPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Password</label>
-                  <div className="password-wrapper">
+                  <label>Password</label>
+                  <div className="password-field">
                     <input
                       type={showPasswords.userLogin ? 'text' : 'password'}
-                      className="form-control"
-                      placeholder="Enter your password"
+                      className="form-input"
+                      placeholder="••••••••"
                       value={userLogin.password}
                       onChange={(e) => setUserLogin({ ...userLogin, password: e.target.value })}
                       required
                     />
-                    <button type="button" className="password-toggle" onClick={() => togglePassword('userLogin')} tabIndex={-1}>
-                      <i className={`fas ${showPasswords.userLogin ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                    <button type="button" className="eye-toggle" onClick={() => togglePassword('userLogin')} tabIndex={-1}>
+                      {showPasswords.userLogin ? '👁️' : '👁️‍🗨️'}
                     </button>
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                  {loading ? 'Logging in...' : 'Login'}
+                <button type="submit" className="btn btn-primary-block" disabled={loading}>
+                  {loading ? 'Signing in...' : 'Sign In'}
                 </button>
               </form>
             )}
 
             {/* Admin Login */}
             {activeLoginTab === 'admin' && (
-              <form onSubmit={handleAdminLogin} className="login-form">
+              <form onSubmit={handleAdminLogin} className="premium-form">
                 <div className="form-group">
-                  <label className="form-label">Username</label>
+                  <label>Admin Username</label>
                   <input
                     type="text"
-                    className="form-control"
-                    placeholder="Enter admin username"
+                    className="form-input"
+                    placeholder="admin.username"
                     value={adminLogin.username}
                     onChange={(e) => setAdminLogin({ ...adminLogin, username: e.target.value })}
                     required
@@ -507,37 +553,37 @@ const LandingPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Password</label>
-                  <div className="password-wrapper">
+                  <label>Password</label>
+                  <div className="password-field">
                     <input
                       type={showPasswords.adminLogin ? 'text' : 'password'}
-                      className="form-control"
-                      placeholder="Enter your password"
+                      className="form-input"
+                      placeholder="••••••••"
                       value={adminLogin.password}
                       onChange={(e) => setAdminLogin({ ...adminLogin, password: e.target.value })}
                       required
                     />
-                    <button type="button" className="password-toggle" onClick={() => togglePassword('adminLogin')} tabIndex={-1}>
-                      <i className={`fas ${showPasswords.adminLogin ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                    <button type="button" className="eye-toggle" onClick={() => togglePassword('adminLogin')} tabIndex={-1}>
+                      {showPasswords.adminLogin ? '👁️' : '👁️‍🗨️'}
                     </button>
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                  {loading ? 'Logging in...' : 'Login as Admin'}
+                <button type="submit" className="btn btn-primary-block" disabled={loading}>
+                  {loading ? 'Signing in...' : 'Sign In'}
                 </button>
               </form>
             )}
 
             {/* Police Login */}
             {activeLoginTab === 'police' && (
-              <form onSubmit={handlePoliceLogin} className="login-form">
+              <form onSubmit={handlePoliceLogin} className="premium-form">
                 <div className="form-group">
-                  <label className="form-label">Username</label>
+                  <label>Officer ID</label>
                   <input
                     type="text"
-                    className="form-control"
-                    placeholder="Enter your username"
+                    className="form-input"
+                    placeholder="officer.id"
                     value={policeLogin.username}
                     onChange={(e) => setPoliceLogin({ ...policeLogin, username: e.target.value })}
                     required
@@ -545,32 +591,32 @@ const LandingPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Password</label>
-                  <div className="password-wrapper">
+                  <label>Password</label>
+                  <div className="password-field">
                     <input
                       type={showPasswords.policeLogin ? 'text' : 'password'}
-                      className="form-control"
-                      placeholder="Enter your password"
+                      className="form-input"
+                      placeholder="••••••••"
                       value={policeLogin.password}
                       onChange={(e) => setPoliceLogin({ ...policeLogin, password: e.target.value })}
                       required
                     />
-                    <button type="button" className="password-toggle" onClick={() => togglePassword('policeLogin')} tabIndex={-1}>
-                      <i className={`fas ${showPasswords.policeLogin ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                    <button type="button" className="eye-toggle" onClick={() => togglePassword('policeLogin')} tabIndex={-1}>
+                      {showPasswords.policeLogin ? '👁️' : '👁️‍🗨️'}
                     </button>
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                  {loading ? 'Logging in...' : 'Login as Officer'}
+                <button type="submit" className="btn btn-primary-block" disabled={loading}>
+                  {loading ? 'Signing in...' : 'Sign In'}
                 </button>
               </form>
             )}
 
-            <div className="form-footer">
+            <div className="modal-footer">
               <p>Don't have an account? 
-                <button type="button" className="btn-link" onClick={() => openRegisterModal('user')}>
-                  Register here
+                <button type="button" className="link-button" onClick={() => openRegisterModal('user')}>
+                  Create one now
                 </button>
               </p>
             </div>
@@ -581,42 +627,41 @@ const LandingPage = () => {
       {/* Register Modal */}
       {activeModal === 'register' && (
         <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content modal-large" onClick={(e) => e.stopPropagation()}>
+          <div className="premium-modal modal-lg" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModal}>✕</button>
             
             <div className="modal-header">
-              <h2>
-                {registerType === 'user' ? 'Register as Citizen' : 'Register as Police Officer'}
-              </h2>
+              <h2>Create Account</h2>
+              <p>Join our secure platform</p>
             </div>
 
-            <div className="register-type-selector">
+            <div className="register-type-toggle">
               <button
-                className={`type-btn ${registerType === 'user' ? 'active' : ''}`}
+                className={`type-button ${registerType === 'user' ? 'active' : ''}`}
                 onClick={() => setRegisterType('user')}
               >
-                Citizen Account
+                Citizen Registration
               </button>
               <button
-                className={`type-btn ${registerType === 'police' ? 'active' : ''}`}
+                className={`type-button ${registerType === 'police' ? 'active' : ''}`}
                 onClick={() => setRegisterType('police')}
               >
-                Police Account
+                Police Registration
               </button>
             </div>
 
-            {error && <div className="alert alert-danger">{error}</div>}
+            {error && <div className="alert alert-error">{error}</div>}
             {success && <div className="alert alert-success">{success}</div>}
 
             {/* Citizen Register */}
             {registerType === 'user' && (
-              <form onSubmit={handleUserRegister} className="register-form">
+              <form onSubmit={handleUserRegister} className="premium-form">
                 <div className="form-group">
-                  <label className="form-label">Username</label>
+                  <label>Full Name</label>
                   <input
                     type="text"
-                    className="form-control"
-                    placeholder="Choose a username"
+                    className="form-input"
+                    placeholder="John Doe"
                     value={userRegister.username}
                     onChange={(e) => setUserRegister({ ...userRegister, username: e.target.value })}
                     required
@@ -624,11 +669,11 @@ const LandingPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Email</label>
+                  <label>Email Address</label>
                   <input
                     type="email"
-                    className="form-control"
-                    placeholder="Enter your email"
+                    className="form-input"
+                    placeholder="john@example.com"
                     value={userRegister.email}
                     onChange={(e) => setUserRegister({ ...userRegister, email: e.target.value })}
                     required
@@ -636,11 +681,11 @@ const LandingPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Phone (Optional)</label>
+                  <label>Phone Number (Optional)</label>
                   <input
                     type="tel"
-                    className="form-control"
-                    placeholder="Enter your phone number"
+                    className="form-input"
+                    placeholder="+1 (555) 123-4567"
                     value={userRegister.phone}
                     onChange={(e) => setUserRegister({ ...userRegister, phone: e.target.value })}
                   />
@@ -648,55 +693,55 @@ const LandingPage = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">Password</label>
-                    <div className="password-wrapper">
+                    <label>Password</label>
+                    <div className="password-field">
                       <input
                         type={showPasswords.userRegPass ? 'text' : 'password'}
-                        className="form-control"
-                        placeholder="Create a password"
+                        className="form-input"
+                        placeholder="••••••••"
                         value={userRegister.password}
                         onChange={(e) => setUserRegister({ ...userRegister, password: e.target.value })}
                         required
                       />
-                      <button type="button" className="password-toggle" onClick={() => togglePassword('userRegPass')} tabIndex={-1}>
-                        <i className={`fas ${showPasswords.userRegPass ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                      <button type="button" className="eye-toggle" onClick={() => togglePassword('userRegPass')} tabIndex={-1}>
+                        {showPasswords.userRegPass ? '👁️' : '👁️‍🗨️'}
                       </button>
                     </div>
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Confirm Password</label>
-                    <div className="password-wrapper">
+                    <label>Confirm Password</label>
+                    <div className="password-field">
                       <input
                         type={showPasswords.userRegConfirm ? 'text' : 'password'}
-                        className="form-control"
-                        placeholder="Confirm password"
+                        className="form-input"
+                        placeholder="••••••••"
                         value={userRegister.confirmPassword}
                         onChange={(e) => setUserRegister({ ...userRegister, confirmPassword: e.target.value })}
                         required
                       />
-                      <button type="button" className="password-toggle" onClick={() => togglePassword('userRegConfirm')} tabIndex={-1}>
-                        <i className={`fas ${showPasswords.userRegConfirm ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                      <button type="button" className="eye-toggle" onClick={() => togglePassword('userRegConfirm')} tabIndex={-1}>
+                        {showPasswords.userRegConfirm ? '👁️' : '👁️‍🗨️'}
                       </button>
                     </div>
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                  {loading ? 'Registering...' : 'Create Account'}
+                <button type="submit" className="btn btn-primary-block" disabled={loading}>
+                  {loading ? 'Creating account...' : 'Create Citizen Account'}
                 </button>
               </form>
             )}
 
             {/* Police Register */}
             {registerType === 'police' && (
-              <form onSubmit={handlePoliceRegister} className="register-form">
+              <form onSubmit={handlePoliceRegister} className="premium-form">
                 <div className="form-group">
-                  <label className="form-label">Username</label>
+                  <label>Officer Name</label>
                   <input
                     type="text"
-                    className="form-control"
-                    placeholder="Choose a username"
+                    className="form-input"
+                    placeholder="Officer Name"
                     value={policeRegister.username}
                     onChange={(e) => setPoliceRegister({ ...policeRegister, username: e.target.value })}
                     required
@@ -704,11 +749,11 @@ const LandingPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Email</label>
+                  <label>Email Address</label>
                   <input
                     type="email"
-                    className="form-control"
-                    placeholder="Enter your email"
+                    className="form-input"
+                    placeholder="officer@station.com"
                     value={policeRegister.email}
                     onChange={(e) => setPoliceRegister({ ...policeRegister, email: e.target.value })}
                     required
@@ -716,20 +761,20 @@ const LandingPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Phone (Optional)</label>
+                  <label>Phone Number</label>
                   <input
                     type="tel"
-                    className="form-control"
-                    placeholder="Enter your phone number"
+                    className="form-input"
+                    placeholder="+1 (555) 123-4567"
                     value={policeRegister.phone}
                     onChange={(e) => setPoliceRegister({ ...policeRegister, phone: e.target.value })}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Police Station</label>
+                  <label>Police Station</label>
                   <select
-                    className="form-control"
+                    className="form-input"
                     value={policeRegister.station_id}
                     onChange={(e) => setPoliceRegister({ ...policeRegister, station_id: e.target.value })}
                     required
@@ -743,50 +788,50 @@ const LandingPage = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">Password</label>
-                    <div className="password-wrapper">
+                    <label>Password</label>
+                    <div className="password-field">
                       <input
                         type={showPasswords.policeRegPass ? 'text' : 'password'}
-                        className="form-control"
-                        placeholder="Create a password"
+                        className="form-input"
+                        placeholder="••••••••"
                         value={policeRegister.password}
                         onChange={(e) => setPoliceRegister({ ...policeRegister, password: e.target.value })}
                         required
                       />
-                      <button type="button" className="password-toggle" onClick={() => togglePassword('policeRegPass')} tabIndex={-1}>
-                        <i className={`fas ${showPasswords.policeRegPass ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                      <button type="button" className="eye-toggle" onClick={() => togglePassword('policeRegPass')} tabIndex={-1}>
+                        {showPasswords.policeRegPass ? '👁️' : '👁️‍🗨️'}
                       </button>
                     </div>
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Confirm Password</label>
-                    <div className="password-wrapper">
+                    <label>Confirm Password</label>
+                    <div className="password-field">
                       <input
                         type={showPasswords.policeRegConfirm ? 'text' : 'password'}
-                        className="form-control"
-                        placeholder="Confirm password"
+                        className="form-input"
+                        placeholder="••••••••"
                         value={policeRegister.confirmPassword}
                         onChange={(e) => setPoliceRegister({ ...policeRegister, confirmPassword: e.target.value })}
                         required
                       />
-                      <button type="button" className="password-toggle" onClick={() => togglePassword('policeRegConfirm')} tabIndex={-1}>
-                        <i className={`fas ${showPasswords.policeRegConfirm ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                      <button type="button" className="eye-toggle" onClick={() => togglePassword('policeRegConfirm')} tabIndex={-1}>
+                        {showPasswords.policeRegConfirm ? '👁️' : '👁️‍🗨️'}
                       </button>
                     </div>
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                  {loading ? 'Registering...' : 'Create Officer Account'}
+                <button type="submit" className="btn btn-primary-block" disabled={loading}>
+                  {loading ? 'Creating account...' : 'Create Officer Account'}
                 </button>
               </form>
             )}
 
-            <div className="form-footer">
+            <div className="modal-footer">
               <p>Already have an account? 
-                <button type="button" className="btn-link" onClick={openLoginModal}>
-                  Login here
+                <button type="button" className="link-button" onClick={openLoginModal}>
+                  Sign in here
                 </button>
               </p>
             </div>
@@ -795,13 +840,16 @@ const LandingPage = () => {
       )}
 
       {/* Footer */}
-      <footer className="landing-footer">
-        <div className="footer-content">
-          <p>&copy; 2024 Crime Management System. All rights reserved.</p>
-          <div className="footer-links">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-            <a href="#contact">Contact Us</a>
+      <footer className="premium-footer">
+        <div className="footer-container">
+          <div className="footer-content">
+            <p>&copy; 2024 Crime Management System. All rights reserved.</p>
+            <div className="footer-links">
+              <a href="#privacy">Privacy Policy</a>
+              <a href="#terms">Terms of Service</a>
+              <a href="#security">Security</a>
+              <a href="#contact">Contact Support</a>
+            </div>
           </div>
         </div>
       </footer>
