@@ -441,7 +441,7 @@ const LandingPage = () => {
             
             <div className="modal-header">
               <h2>Welcome Back</h2>
-              <p>Sign in to your account</p>
+              <p>Please enter your credentials</p>
             </div>
 
             {/* Login Tabs */}
@@ -583,13 +583,15 @@ const LandingPage = () => {
               </form>
             )}
 
-            <div className="modal-footer">
-              <p>Don't have an account? 
-                <button type="button" className="link-button" onClick={() => openRegisterModal('user')}>
-                  Create one now
-                </button>
-              </p>
-            </div>
+            {activeLoginTab !== 'admin' && (
+              <div className="modal-footer">
+                <p>Don't have an account? 
+                  <button type="button" className="link-button" onClick={() => openRegisterModal('user')}>
+                    Register here
+                  </button>
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -602,7 +604,7 @@ const LandingPage = () => {
             
             <div className="modal-header">
               <h2>Create Account</h2>
-              <p>Join our secure platform</p>
+              <p>Register for access</p>
             </div>
 
             <div className="register-type-toggle">
