@@ -21,6 +21,19 @@
   padding: 16px 20px;
 }
 
+/* General modal centering */
+.modal.show {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.modal-dialog {
+  position: relative !important;
+  margin: auto !important;
+}
+
+/* Mobile optimized modals */
 @media (max-width: 480px) {
   .confirm-modal .modal-dialog {
     width: calc(100vw - 24px);
@@ -54,6 +67,34 @@
     font-size: 0.75rem;
     padding: 6px 12px;
   }
+
+  /* All modals on mobile */
+  .modal-dialog {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: calc(100vw - 24px) !important;
+    max-width: 400px !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+  }
+
+  .modal-content {
+    width: 100% !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    border-radius: 12px !important;
+  }
+
+  .modal-header {
+    border-radius: 12px 12px 0 0 !important;
+  }
+
+  .modal-body {
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+  }
 }
 
 @media (max-width: 575px) {
@@ -67,5 +108,38 @@
 
   .confirm-modal .modal-body {
     padding: 16px;
+  }
+
+  /* Change password and edit profile modals */
+  .change-password-modal .modal-dialog,
+  .edit-profile-modal .modal-dialog {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: calc(100vw - 20px) !important;
+    max-width: 420px !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+  }
+
+  .change-password-modal .modal-content,
+  .edit-profile-modal .modal-content {
+    border-radius: 12px !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+  }
+
+  .change-password-modal .modal-body,
+  .edit-profile-modal .modal-body {
+    padding: 16px !important;
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+  }
+
+  .change-password-modal .modal-footer,
+  .edit-profile-modal .modal-footer {
+    padding: 12px 16px !important;
+    gap: 8px !important;
   }
 }

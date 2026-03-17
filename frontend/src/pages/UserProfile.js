@@ -13,33 +13,16 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const user = getCurrentUser();
   const role = getUserRole();
-  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
 
-  const refreshUserData = async () => {
-    setRefreshing(true);
-    try {
-      const response = await authAPI.currentUser();
-      if (response.data.status === 'success') {
-        const freshUser = response.data.user;
-        updateAuthUser(freshUser);
-        // silently refreshed
-      }
-    } catch (err) {
-      console.error('Error refreshing profile:', err);
-      setError('Failed to refresh profile from database');
-    } finally {
-      setRefreshing(false);
-    }
-  };
+
 
   useEffect(() => {
     if (!user || !role) { navigate('/login', { replace: true }); return; }
     if (role !== 'User') { navigate('/user/dashboard', { replace: true }); return; }
-    refreshUserData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -77,15 +60,9 @@ const UserProfile = () => {
             </h2>
             <p className="text-muted mb-0" style={{ fontSize: '0.8rem' }}>Manage your account settings and personal information</p>
           </div>
-          <div className="d-flex gap-2">
-            <Button variant="outline-primary" size="sm" onClick={refreshUserData} disabled={refreshing} className="fw-bold">
-              {refreshing ? <><Spinner as="span" animation="border" size="sm" className="me-1" />Refreshing...</>
-                : <><i className="fas fa-sync-alt me-1"></i>Refresh</>}
-            </Button>
-            <Button variant="outline-secondary" size="sm" onClick={() => navigate(-1)} className="fw-bold">
-              <i className="fas fa-arrow-left me-1"></i>Back
-            </Button>
-          </div>
+          <Button variant="outline-secondary" size="sm" onClick={() => navigate(-1)} className="fw-bold">
+            <i className="fas fa-arrow-left me-1"></i>Back
+          </Button>
         </div>
 
         {/* ── Alerts ── */}
@@ -120,8 +97,8 @@ const UserProfile = () => {
           {/* ── Card body ── */}
           <Card.Body className="p-0" style={{ marginTop: '-20px', position: 'relative', zIndex: 2 }}>
             <div style={{ background: '#fff', borderRadius: '16px 16px 0 0', padding: '24px 28px 20px' }}>
-              {/* Info grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '10px' }}>
+              {/* Info grid - Desktop */}
+              <div className="d-none d-md-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '10px' }}>
                 {[
                   { label: 'Username', value: user.username, icon: 'fas fa-user', color: '#0ea5e9' },
                   { label: 'Email', value: user.email, icon: 'fas fa-envelope', color: '#0ea5e9' },
@@ -141,15 +118,33 @@ const UserProfile = () => {
                 ))}
               </div>
 
+              {/* Info grid - Mobile (2x2) */}
+              <div className="d-md-none" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+                {[
+                  { label: 'Username', value: user.username, icon: 'fas fa-user', color: '#0ea5e9' },
+                  { label: 'Phone', value: user.phone || <span style={{ color: '#94a3b8' }}>Not provided</span>, icon: 'fas fa-phone', color: '#10b981' },
+                  { label: 'Account Type', value: <Badge bg="info" style={{ fontSize: '0.7rem', padding: '3px 6px' }}><i className="fas fa-user me-1"></i>Regular User</Badge>, icon: 'fas fa-id-card', color: '#06b6d4' },
+                  { label: 'Member Since', value: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), icon: 'fas fa-calendar-check', color: '#f59e0b' },
+                ].map((item, i) => (
+                  <div key={i} style={{ ...infoItemStyle, animation: `fadeInUp 0.4s cubic-bezier(.4,0,.2,1) ${0.05 + i * 0.06}s both`, padding: '8px 12px' }} className="profile-info-item">
+                    <div style={{...iconCircleStyle(item.color), width: 30, height: 30, fontSize: '0.7rem'}}><i className={item.icon}></i></div>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: '0.6rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.3px' }}>{item.label}</div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#1e293b', wordBreak: 'break-word' }}>{item.value}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
               {/* Action buttons */}
-              <div className="d-flex gap-2 flex-wrap mt-3 pt-3" style={{ borderTop: '1px solid #f1f5f9' }}>
-                <Button size="sm" className="fw-bold px-3" onClick={() => setShowEditProfile(true)}
-                  style={{ background: 'linear-gradient(135deg, #0ea5e9, #0284c7)', border: 'none', borderRadius: 8, fontSize: '0.82rem' }}>
-                  <i className="fas fa-edit me-1"></i> Edit Profile
+              <div className="d-flex gap-2 flex-wrap mt-3 pt-3" style={{ borderTop: '1px solid #f1f5f9', justifyContent: 'center' }}>
+                <Button size="sm" className="fw-bold" onClick={() => setShowEditProfile(true)}
+                  style={{ background: 'linear-gradient(135deg, #0ea5e9, #0284c7)', border: 'none', borderRadius: 8, fontSize: '0.75rem', padding: '6px 14px' }}>
+                  <i className="fas fa-edit me-1"></i>Edit
                 </Button>
-                <Button size="sm" className="fw-bold px-3" onClick={() => setShowChangePassword(true)}
-                  style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626)', border: 'none', borderRadius: 8, fontSize: '0.82rem' }}>
-                  <i className="fas fa-key me-1"></i> Change Password
+                <Button size="sm" className="fw-bold" onClick={() => setShowChangePassword(true)}
+                  style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626)', border: 'none', borderRadius: 8, fontSize: '0.75rem', padding: '6px 14px' }}>
+                  <i className="fas fa-key me-1"></i>Password
                 </Button>
               </div>
             </div>
@@ -172,7 +167,6 @@ const UserProfile = () => {
         onHide={() => setShowEditProfile(false)}
         user={user}
         onSuccess={() => {
-          refreshUserData();
           setSuccess('✓ Profile updated successfully!');
           setTimeout(() => setSuccess(''), 3000);
         }}
