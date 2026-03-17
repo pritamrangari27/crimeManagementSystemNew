@@ -450,7 +450,7 @@ const LandingPage = () => {
                 className={`tab-button ${activeLoginTab === 'user' ? 'active' : ''}`}
                 onClick={() => setActiveLoginTab('user')}
               >
-                Citizen
+                User
               </button>
               <button
                 className={`tab-button ${activeLoginTab === 'admin' ? 'active' : ''}`}
@@ -612,7 +612,7 @@ const LandingPage = () => {
                 className={`type-button ${registerType === 'user' ? 'active' : ''}`}
                 onClick={() => setRegisterType('user')}
               >
-                Citizen Registration
+                User Registration
               </button>
               <button
                 className={`type-button ${registerType === 'police' ? 'active' : ''}`}

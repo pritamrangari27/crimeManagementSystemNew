@@ -186,13 +186,7 @@ body {
   height: 600px;
   background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
   border-radius: 50%;
-  animation: float 20s ease-in-out infinite;
   pointer-events: none;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px) translateX(0px); }
-  50% { transform: translateY(-30px) translateX(-20px); }
 }
 
 .hero-content {
@@ -200,17 +194,15 @@ body {
   position: relative;
   z-index: 2;
   max-width: 600px;
-  animation: slideInLeft 0.8s ease-out;
+  animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes slideInLeft {
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateX(-40px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
   }
 }
 
@@ -319,18 +311,7 @@ body {
   flex: 1;
   position: relative;
   height: 400px;
-  animation: slideInRight 0.8s ease-out;
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  animation: fadeIn 0.3s ease-out;
 }
 
 .floating-card {
@@ -344,33 +325,24 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  animation: bobbing 4s ease-in-out infinite;
-}
-
-@keyframes bobbing {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
 }
 
 .card-1 {
   width: 180px;
   top: 0;
   left: 0;
-  animation-delay: 0s;
 }
 
 .card-2 {
   width: 180px;
   top: 120px;
   right: 50px;
-  animation-delay: 0.5s;
 }
 
 .card-3 {
   width: 180px;
   bottom: 0;
   left: 100px;
-  animation-delay: 1s;
 }
 
 .card-icon {
@@ -607,7 +579,7 @@ body {
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  animation: modalPopIn 0.3s ease-out;
+  animation: modalPopIn 0.15s ease-out;
   border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
@@ -1144,13 +1116,15 @@ body {
   .premium-tabs,
   .register-type-toggle {
     padding: 1rem 1.5rem;
-    gap: 0.5rem;
+    gap: 0.8rem;
+    flex-direction: column;
   }
 
   .tab-button,
   .type-button {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.8rem;
+    padding: 0.8rem 1rem;
+    font-size: 0.82rem;
+    width: 100%;
   }
 
   .premium-form {
