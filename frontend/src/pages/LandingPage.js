@@ -432,36 +432,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Why Us Section */}
-      <section className="why-us-premium">
-        <div className="why-container">
-          <div className="section-header">
-            <h2>Why Trust Our Platform?</h2>
-          </div>
-          <div className="trust-grid">
-            <div className="trust-card">
-              <div className="trust-icon">🔐</div>
-              <h4>Enterprise Security</h4>
-              <p>ISO 27001 certified with military-grade encryption and SOC 2 Type II compliance.</p>
-            </div>
-            <div className="trust-card">
-              <div className="trust-icon">⚙️</div>
-              <h4>Built for Scale</h4>
-              <p>Handle millions of transactions with 99.9% uptime guarantee and instant scaling.</p>
-            </div>
-            <div className="trust-card">
-              <div className="trust-icon">🤝</div>
-              <h4>Expert Support</h4>
-              <p>24/7 dedicated support team of law enforcement technology specialists.</p>
-            </div>
-            <div className="trust-card">
-              <div className="trust-icon">🎓</div>
-              <h4>Training & Onboarding</h4>
-              <p>Comprehensive training programs and smooth migration from legacy systems.</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Login Modal */}
       {activeModal === 'login' && (
@@ -858,3 +828,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
