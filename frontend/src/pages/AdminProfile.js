@@ -11,7 +11,6 @@ const AdminProfile = () => {
   const user = getCurrentUser();
   const role = getUserRole();
   const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -22,35 +21,10 @@ const AdminProfile = () => {
     department: user?.department || ''
   });
 
-  const refreshUserData = async () => {
-    setRefreshing(true);
-    try {
-      const response = await authAPI.currentUser();
-      if (response.data.status === 'success') {
-        const freshUser = response.data.user;
-        updateAuthUser(freshUser);
-        setFormData({
-          username: freshUser.username || '',
-          email: freshUser.email || '',
-          phone: freshUser.phone || '',
-          department: freshUser.department || ''
-        });
-        // silently refreshed
-      }
-    } catch (err) {
-      console.error('Error refreshing profile:', err);
-      setError('Failed to refresh profile from database');
-    } finally {
-      setRefreshing(false);
-    }
-  };
-
   useEffect(() => {
     if (!user || !role) { navigate('/login', { replace: true }); return; }
     if (role !== 'Admin') { navigate('/admin/dashboard', { replace: true }); return; }
-    refreshUserData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user, role, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,7 +42,6 @@ const AdminProfile = () => {
         updateAuthUser(formData);
         setSuccess('✓ Profile saved to database! Changes will persist when you log in again.');
         setIsEditing(false);
-        setTimeout(() => refreshUserData(), 1500);
       } else {
         setError(response.data.message || 'Failed to update profile');
       }
@@ -114,10 +87,6 @@ const AdminProfile = () => {
             <p className="text-muted mb-0" style={{ fontSize: '0.8rem' }}>Manage your administrator account and settings</p>
           </div>
           <div className="d-flex gap-2">
-            <Button variant="outline-primary" size="sm" onClick={refreshUserData} disabled={refreshing} className="fw-bold">
-              {refreshing ? <><Spinner as="span" animation="border" size="sm" className="me-1" />Refreshing...</>
-                : <><i className="fas fa-sync-alt me-1"></i>Refresh</>}
-            </Button>
             <Button variant="outline-secondary" size="sm" onClick={() => navigate(-1)} className="fw-bold">
               <i className="fas fa-arrow-left me-1"></i>Back
             </Button>
@@ -197,17 +166,17 @@ const AdminProfile = () => {
               ) : (
                 <>
                   {/* Info grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '10px' }}>
+                  <div className="admin-profile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '10px' }}>
                     {[
-                      { label: 'Username', value: user.username, icon: 'fas fa-user', color: '#0ea5e9' },
-                      { label: 'Email', value: user.email, icon: 'fas fa-envelope', color: '#0ea5e9' },
-                      { label: 'Phone', value: user.phone || <span style={{ color: '#94a3b8' }}>Not provided</span>, icon: 'fas fa-phone', color: '#10b981' },
-                      { label: 'Department', value: user.department || <span style={{ color: '#94a3b8' }}>Not specified</span>, icon: 'fas fa-building', color: '#f59e0b' },
-                      { label: 'Role', value: <Badge bg="danger" style={{ fontSize: '0.72rem', padding: '3px 8px' }}><i className="fas fa-crown me-1"></i>Administrator</Badge>, icon: 'fas fa-shield-alt', color: '#ef4444' },
-                      { label: 'Status', value: <Badge bg="success" style={{ fontSize: '0.72rem', padding: '3px 8px' }}><i className="fas fa-check-circle me-1"></i>Active</Badge>, icon: 'fas fa-heartbeat', color: '#10b981' },
-                      { label: 'Member Since', value: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), icon: 'fas fa-calendar-check', color: '#f59e0b' },
+                      { label: 'Username', value: user.username, icon: 'fas fa-user', color: '#0ea5e9', mobileShow: true },
+                      { label: 'Email', value: user.email, icon: 'fas fa-envelope', color: '#0ea5e9', mobileShow: false },
+                      { label: 'Phone', value: user.phone || <span style={{ color: '#94a3b8' }}>Not provided</span>, icon: 'fas fa-phone', color: '#10b981', mobileShow: true },
+                      { label: 'Department', value: user.department || <span style={{ color: '#94a3b8' }}>Not specified</span>, icon: 'fas fa-building', color: '#f59e0b', mobileShow: true },
+                      { label: 'Role', value: <Badge bg="danger" style={{ fontSize: '0.72rem', padding: '3px 8px' }}><i className="fas fa-crown me-1"></i>Administrator</Badge>, icon: 'fas fa-shield-alt', color: '#ef4444', mobileShow: false },
+                      { label: 'Status', value: <Badge bg="success" style={{ fontSize: '0.72rem', padding: '3px 8px' }}><i className="fas fa-check-circle me-1"></i>Active</Badge>, icon: 'fas fa-heartbeat', color: '#10b981', mobileShow: false },
+                      { label: 'Member Since', value: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), icon: 'fas fa-calendar-check', color: '#f59e0b', mobileShow: true },
                     ].map((item, i) => (
-                      <div key={i} style={{ ...infoItemStyle, animation: `fadeInUp 0.4s cubic-bezier(.4,0,.2,1) ${0.05 + i * 0.06}s both` }} className="profile-info-item">
+                      <div key={i} style={{ ...infoItemStyle, animation: `fadeInUp 0.4s cubic-bezier(.4,0,.2,1) ${0.05 + i * 0.06}s both` }} className={`profile-info-item ${item.mobileShow ? '' : 'hide-mobile'}`}>
                         <div style={iconCircleStyle(item.color)}><i className={item.icon}></i></div>
                         <div>
                           <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</div>
@@ -218,7 +187,7 @@ const AdminProfile = () => {
                   </div>
 
                   {/* Permissions row */}
-                  <div style={{ marginTop: 16, padding: '12px 14px', borderRadius: '10px', background: '#f0fdf4', border: '1px solid #d1fae5' }}>
+                  <div className="permissions-row" style={{ marginTop: 16, padding: '12px 14px', borderRadius: '10px', background: '#f0fdf4', border: '1px solid #d1fae5' }}>
                     <div style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: '#059669', letterSpacing: '0.5px', marginBottom: 8 }}>
                       <i className="fas fa-lock-open me-1"></i> Permissions
                     </div>
@@ -232,7 +201,7 @@ const AdminProfile = () => {
                   </div>
 
                   {/* Action buttons */}
-                  <div className="d-flex gap-2 flex-wrap mt-3 pt-3" style={{ borderTop: '1px solid #f1f5f9' }}>
+                  <div className="admin-profile-buttons d-flex gap-2 flex-wrap mt-3 pt-3" style={{ borderTop: '1px solid #f1f5f9' }}>
                     <Button size="sm" className="fw-bold px-3" onClick={() => setIsEditing(true)}
                       style={{ background: 'linear-gradient(135deg, #0ea5e9, #0284c7)', border: 'none', borderRadius: 8, fontSize: '0.82rem' }}>
                       <i className="fas fa-edit me-1"></i> Edit Profile
@@ -253,6 +222,35 @@ const AdminProfile = () => {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(14,165,233,0.10);
             border-color: #0ea5e9 !important;
+          }
+
+          @media (max-width: 575px) {
+            .admin-profile-grid {
+              display: grid !important;
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 8px !important;
+            }
+
+            .admin-profile-grid .hide-mobile {
+              display: none !important;
+            }
+
+            .permissions-row {
+              display: none !important;
+            }
+
+            .admin-profile-buttons {
+              display: flex !important;
+              flex-direction: column !important;
+              gap: 8px !important;
+            }
+
+            .admin-profile-buttons button {
+              flex: 1;
+              width: 100% !important;
+              font-size: 0.75rem !important;
+              padding: 8px 10px !important;
+            }
           }
         `}</style>
       </Container>
