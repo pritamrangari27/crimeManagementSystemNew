@@ -123,6 +123,7 @@
   flex-direction: column;
   animation: fadeIn 0.4s cubic-bezier(0.4,0,0.2,1) 0.08s both;
   transition: box-shadow var(--transition-base);
+  -webkit-overflow-scrolling: touch;
 }
 .mgmt-table-wrap:hover {
   box-shadow: var(--shadow-hover);
@@ -130,18 +131,32 @@
 .mgmt-table-scroll {
   flex: 1;
   overflow-y: auto;
+  overflow-x: auto;
   max-height: calc(100vh - var(--banner-height, 38px) - var(--footer-height, 42px) - 200px);
+  -webkit-overflow-scrolling: touch;
 }
-.mgmt-table-scroll::-webkit-scrollbar { width: 5px; }
-.mgmt-table-scroll::-webkit-scrollbar-track { background: transparent; }
-.mgmt-table-scroll::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.2); border-radius: 3px; }
-.mgmt-table-scroll::-webkit-scrollbar-thumb:hover { background: rgba(16,185,129,0.35); }
+.mgmt-table-scroll::-webkit-scrollbar { 
+  width: 6px; 
+  height: 6px;
+}
+.mgmt-table-scroll::-webkit-scrollbar-track { 
+  background: transparent; 
+}
+.mgmt-table-scroll::-webkit-scrollbar-thumb { 
+  background: rgba(16,185,129,0.3); 
+  border-radius: 4px; 
+}
+.mgmt-table-scroll::-webkit-scrollbar-thumb:hover { 
+  background: rgba(16,185,129,0.5); 
+}
 
 .mgmt-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.8rem;
   margin: 0;
+  min-width: 100%;
+  table-layout: auto;
 }
 .mgmt-table thead {
   position: sticky;
@@ -149,32 +164,38 @@
   z-index: 2;
 }
 .mgmt-table thead th {
-  padding: 9px 14px;
-  font-size: 0.68rem;
+  padding: 10px 12px;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   white-space: nowrap;
-  background: #0f172a;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   color: #e2e8f0;
-  border: none;
+  border: 1px solid #334155;
+  text-align: left;
+  vertical-align: middle;
 }
 .mgmt-table tbody td {
-  padding: 7px 14px;
+  padding: 9px 12px;
   vertical-align: middle;
   border-bottom: 1px solid #f1f5f9;
   color: #334155;
   font-weight: 500;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .mgmt-table tbody tr {
   transition: background var(--transition-base), transform 0.15s ease;
   background: #fff;
+  border-top: 1px solid #f1f5f9;
 }
 .mgmt-table tbody tr:hover {
   background: #f0fdf4;
+  box-shadow: inset 0 0 0 1px #dcfce7;
 }
 .mgmt-table tbody tr:last-child td {
-  border-bottom: none;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 /* ── Action button cluster inside tables ── */
@@ -417,48 +438,53 @@
   border: 1.5px solid #e2e8f0;
   box-shadow: var(--shadow-rest);
   transition: box-shadow var(--transition-base);
+  -webkit-overflow-scrolling: touch;
+  overflow-x: auto;
+  overflow-y: visible;
 }
 .dense-table-wrap:hover { box-shadow: var(--shadow-hover); }
 .dense-table-wrap .table { 
   margin: 0; 
-  font-size: 0.8rem;
-  table-layout: fixed;
+  font-size: 0.85rem;
+  table-layout: auto;
   width: 100%;
+  min-width: auto;
+  border-collapse: collapse;
 }
 .dense-table-wrap .table thead th {
   position: sticky; 
   top: 0; 
   z-index: 2;
-  padding: 12px 14px;
-  font-size: 0.7rem;
+  padding: 11px 12px;
+  font-size: 0.72rem;
   letter-spacing: 0.5px;
   font-weight: 700;
   text-transform: uppercase;
   white-space: nowrap;
   text-align: left;
-  background-color: #10b981;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: #ffffff;
-  border: none;
+  border: 1px solid #0d9488;
+  vertical-align: middle;
 }
-.dense-table-wrap .table thead th:nth-child(1) { width: 20%; }
-.dense-table-wrap .table thead th:nth-child(2) { width: 25%; }
-.dense-table-wrap .table thead th:nth-child(3) { width: 15%; }
-.dense-table-wrap .table thead th:nth-child(4) { width: 20%; }
-.dense-table-wrap .table thead th:nth-child(5) { width: 20%; }
 .dense-table-wrap .table tbody td {
-  padding: 10px 14px;
+  padding: 10px 12px;
   vertical-align: middle;
   text-align: left;
   border-color: #f0f0f0;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  font-size: 0.82rem;
+  border-bottom: 1px solid #e5e7eb;
 }
 .dense-table-wrap .table tbody tr {
   transition: background var(--transition-base);
   background-color: #ffffff;
+  border-top: 1px solid #f1f5f9;
 }
 .dense-table-wrap .table tbody tr:hover {
-  background-color: #f8f9fa;
+  background-color: #f0fdf4;
+  box-shadow: inset 0 0 0 1px #dcfce7;
 }
 
 /* ── Quick-action button rows ── */
@@ -1687,35 +1713,83 @@
     font-size: 0.75rem !important;
   }
 
-  /* Tables - Stack Layout */
+  /* Tables - Full Horizontal Scroll with All Columns Visible */
   .table-responsive {
-    border: none;
-    box-shadow: none;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .table {
+    font-size: 0.8rem;
+    min-width: auto;
+    width: 100%;
   }
 
   .table thead {
-    display: none;
+    display: table-header-group;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    position: sticky;
+    top: 0;
+    z-index: 2;
   }
 
-  /* Recent FIRs Table - Keep Horizontal with Scrollbar */
+  .table thead th {
+    padding: 9px 8px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+    color: #ffffff;
+    border: 1px solid #334155;
+    text-align: left;
+  }
+
+  .table tbody tr {
+    display: table-row;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .table tbody td {
+    display: table-cell;
+    padding: 8px;
+    vertical-align: middle;
+    text-align: left;
+    border: none;
+    font-size: 0.75rem;
+    color: #334155;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* All table cells remain visible */
+  .table thead th,
+  .table tbody td {
+    display: table-cell !important;
+  }
+
+  /* Dense table - show all columns with horizontal scroll */
   .dense-table-wrap {
-    overflow-x: auto !important;
-    overflow-y: visible !important;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
   }
 
-  /* Custom scrollbar styling for horizontal scroll on mobile */
   .dense-table-wrap::-webkit-scrollbar {
     height: 6px;
   }
 
   .dense-table-wrap::-webkit-scrollbar-track {
     background: #f1f5f9;
-    border-radius: 10px;
   }
 
   .dense-table-wrap::-webkit-scrollbar-thumb {
     background: #cbd5e1;
-    border-radius: 10px;
+    border-radius: 3px;
   }
 
   .dense-table-wrap::-webkit-scrollbar-thumb:hover {
@@ -1723,77 +1797,33 @@
   }
 
   .dense-table-wrap .table {
-    display: table !important;
-    width: auto !important;
-    min-width: 360px !important;
+    width: auto;
+    min-width: 100%;
+    margin: 0;
+    font-size: 0.75rem;
   }
 
-  .dense-table-wrap thead {
-    display: table-header-group !important;
+  .dense-table-wrap .table thead th {
+    padding: 8px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
   }
 
-  .dense-table-wrap tbody tr {
-    display: table-row !important;
-    border: none;
-    border-bottom: 1px solid #e5e7eb !important;
-    margin-bottom: 0 !important;
-    box-shadow: none !important;
-  }
-
-  .dense-table-wrap tbody td {
-    display: table-cell !important;
-    padding: 8px 6px !important;
-    text-align: left !important;
-    position: relative !important;
-    border: none !important;
-    font-size: 0.68rem !important;
-  }
-
-  .dense-table-wrap thead th {
-    padding: 8px 6px !important;
-    font-size: 0.65rem !important;
-    font-weight: 600 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.04em !important;
-    white-space: nowrap !important;
-  }
-
-  /* Hide Crime Type and Status columns */
-  .dense-table-wrap thead th:nth-child(2),
-  .dense-table-wrap thead th:nth-child(3),
-  .dense-table-wrap tbody td:nth-child(2),
-  .dense-table-wrap tbody td:nth-child(3) {
-    display: none !important;
-  }
-
-  /* Adjust column widths for FIR Number, Date, View button */
-  .dense-table-wrap thead th:first-child,
-  .dense-table-wrap tbody td:first-child {
-    width: 120px !important;
-    min-width: 120px !important;
-  }
-
-  .dense-table-wrap thead th:nth-child(4),
-  .dense-table-wrap tbody td:nth-child(4) {
-    width: 100px !important;
-    min-width: 100px !important;
-  }
-
-  .dense-table-wrap thead th:last-child,
-  .dense-table-wrap tbody td:last-child {
-    width: 100px !important;
-    min-width: 100px !important;
-    text-align: center !important;
-    display: table-cell !important;
+  .dense-table-wrap .table tbody td {
+    padding: 8px;
+    font-size: 0.75rem;
   }
 
   .dense-table-wrap .btn {
-    padding: 4px 6px !important;
-    font-size: 0.6rem !important;
-    white-space: nowrap !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 2px !important;
+    padding: 4px 8px;
+    font-size: 0.65rem;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
   }
   }
 
@@ -2202,31 +2232,68 @@
   /* Management table on mobile */
   .mgmt-table-wrap {
     border-radius: 8px;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mgmt-table-scroll {
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mgmt-table-scroll::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  .mgmt-table-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
   }
 
   .mgmt-table {
     font-size: 0.75rem;
+    width: auto;
+    min-width: 100%;
+    table-layout: auto;
   }
 
   .mgmt-table thead th {
-    padding: 8px 6px;
+    padding: 8px;
     font-size: 0.65rem;
-    padding: 6px 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
   }
 
   .mgmt-table tbody td {
-    padding: 6px 4px;
+    padding: 8px;
     font-size: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
   }
 
   .mgmt-table tbody tr {
     background: #fff;
+    border-top: 1px solid #f1f5f9;
   }
 
   .mgmt-actions {
-    gap: 2px;
-    flex-wrap: nowrap;
-    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .mgmt-actions .btn,
+  .mgmt-actions button {
+    padding: 4px 8px;
+    font-size: 0.65rem;
+    white-space: nowrap;
+    border-radius: 4px;
   }
 
   .mgmt-actions button,

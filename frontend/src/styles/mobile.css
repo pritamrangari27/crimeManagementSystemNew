@@ -182,44 +182,77 @@
   .table-responsive {
     -webkit-overflow-scrolling: touch;
     overflow-x: auto;
-    border: none;
-    box-shadow: none;
+    overflow-y: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
   .table {
     font-size: 0.8rem;
     margin-bottom: 0;
+    width: auto;
+    min-width: 100%;
+    table-layout: auto;
   }
 
   .table thead {
-    display: none;
+    display: table-header-group;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .table thead th {
+    padding: 8px 6px;
+    font-weight: 700;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+    border: 1px solid #334155;
+    white-space: nowrap;
+    vertical-align: middle;
   }
 
   .table tbody tr {
-    display: block;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    display: table-row;
+    border-top: 1px solid #f1f5f9;
+    border-bottom: 1px solid #e5e7eb;
   }
 
   .table tbody td {
-    display: block;
-    padding: 8px 12px !important;
-    text-align: left !important;
+    display: table-cell;
+    padding: 7px 6px;
+    font-size: 0.7rem;
+    text-align: left;
     border: none;
-    position: relative;
-    padding-left: 40% !important;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    vertical-align: middle;
   }
 
-  .table tbody td:before {
-    content: attr(data-label);
-    position: absolute;
-    left: 8px;
-    font-weight: 600;
-    color: #0ea5e9;
-    font-size: 0.75rem;
-    text-transform: uppercase;
+  .table tbody tr:hover {
+    background-color: #f0fdf4;
+  }
+
+  /* Horizontal scrollbar styling for mobile */
+  .table-responsive::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .table-responsive::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+
+  .table-responsive::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+
+  .table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
   }
 
   /* Modals - Full Screen on Mobile */
