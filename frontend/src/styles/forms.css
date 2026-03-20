@@ -323,6 +323,18 @@ textarea.form-control {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  /* 🔴 CRITICAL: WCAG 2.1 Level AAA - minimum 44x44px touch target */
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+}
+
+/* Adjust padding for larger buttons on mobile */
+@media (max-width: 575px) {
+  .btn {
+    min-height: 46px;
+    padding: 0.65rem 1.2rem;
+  }
 }
 
 .btn-primary {
@@ -409,6 +421,15 @@ textarea.form-control {
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
   width: auto;
+  /* Maintain accessibility for small buttons */
+  min-height: 40px;
+  min-width: 40px;
+}
+
+@media (max-width: 575px) {
+  .btn-sm {
+    min-height: 42px;
+  }
 }
 
 .btn-icon {
@@ -872,6 +893,15 @@ textarea.form-control {
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
   width: auto;
+  /* Maintain accessibility for small buttons */
+  min-height: 40px;
+  min-width: 40px;
+}
+
+@media (max-width: 575px) {
+  .btn-sm {
+    min-height: 42px;
+  }
 }
 
 .btn-icon {
