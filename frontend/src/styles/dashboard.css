@@ -2032,7 +2032,46 @@
 }
 
 /* ===== SMALL DESKTOP - Screens 769px to 1024px ===== */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 850px) {
+  /* Icon-only sidebar mode */
+  .dashboard-container,
+  .mgmt-container,
+  .management-container {
+    margin-left: 80px;
+    padding: 14px !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .bento-grid.cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .bento-grid.cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .dashboard-card-icon {
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .table {
+    font-size: 0.83rem;
+  }
+
+  .form-control,
+  .form-select {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* ===== MEDIUM DESKTOP - Screens 851px to 1024px ===== */
+@media (min-width: 851px) and (max-width: 1024px) {
   .dashboard-container,
   .mgmt-container,
   .management-container {
@@ -2068,7 +2107,7 @@
   }
 }
 
-/* ===== MEDIUM DESKTOP - Screens 1025px to 1440px ===== */
+/* ===== LARGE DESKTOP - Screens 1025px to 1440px ===== */
 @media (min-width: 1025px) and (max-width: 1440px) {
   .dashboard-container,
   .mgmt-container,
