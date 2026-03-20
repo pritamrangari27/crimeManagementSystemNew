@@ -126,6 +126,7 @@
 }
 
 .table tbody td {
+  display: table-cell;
   padding: 9px 12px;
   vertical-align: middle;
   border-color: #e5e7eb;
@@ -138,6 +139,7 @@
 }
 
 .table tbody tr {
+  display: table-row;
   transition: background 0.2s ease, transform 0.15s ease;
   background: #ffffff;
   border-top: 1px solid #f1f5f9;
