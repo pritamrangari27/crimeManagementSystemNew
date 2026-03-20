@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Alert, Spinner, Row, Col } from 'react-bootstrap';
 import { authAPI } from '../api/client';
 import { updateAuthUser } from '../utils/authService';
+import { validateProfileForm } from '../utils/formValidators';
 
 const EditProfileModal = ({ show, onHide, user, onSuccess }) => {
   const [formData, setFormData] = useState({
@@ -32,16 +33,9 @@ const EditProfileModal = ({ show, onHide, user, onSuccess }) => {
   };
 
   const validateForm = () => {
-    if (!formData.username.trim()) {
-      setError('Username is required');
-      return false;
-    }
-    if (!formData.email.trim()) {
-      setError('Email is required');
-      return false;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setError('Please enter a valid email address');
+    const validation = validateProfileForm(formData);
+    if (!validation.valid) {
+      setError(validation.message);
       return false;
     }
     return true;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Alert, Spinner } from 'react-bootstrap';
 import { authAPI } from '../api/client';
+import { validatePasswordChange } from '../utils/formValidators';
 
 const ChangePasswordModal = ({ show, onHide }) => {
   const [formData, setFormData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
@@ -16,24 +17,9 @@ const ChangePasswordModal = ({ show, onHide }) => {
   };
 
   const validateForm = () => {
-    if (!formData.oldPassword) {
-      setError('Current password is required');
-      return false;
-    }
-    if (!formData.newPassword) {
-      setError('New password is required');
-      return false;
-    }
-    if (formData.newPassword.length < 6) {
-      setError('New password must be at least 6 characters');
-      return false;
-    }
-    if (formData.newPassword !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return false;
-    }
-    if (formData.oldPassword === formData.newPassword) {
-      setError('New password must be different from current password');
+    const validation = validatePasswordChange(formData);
+    if (!validation.valid) {
+      setError(validation.message);
       return false;
     }
     return true;

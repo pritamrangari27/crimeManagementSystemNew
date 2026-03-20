@@ -4,6 +4,7 @@ import { Container, Button, Card, Form, Alert, Spinner } from 'react-bootstrap';
 import Sidebar from '../components/Sidebar';
 import { authAPI } from '../api/client';
 import { getCurrentUser, getUserRole } from '../utils/authService';
+import { validatePasswordChange } from '../utils/formValidators';
 import '../styles/forms.css';
 
 const ChangePassword = () => {
@@ -36,24 +37,9 @@ const ChangePassword = () => {
   };
 
   const validateForm = () => {
-    if (!formData.currentPassword) {
-      setError('Current password is required');
-      return false;
-    }
-    if (!formData.newPassword) {
-      setError('New password is required');
-      return false;
-    }
-    if (formData.newPassword.length < 6) {
-      setError('New password must be at least 6 characters long');
-      return false;
-    }
-    if (formData.newPassword !== formData.confirmPassword) {
-      setError('New password and confirm password do not match');
-      return false;
-    }
-    if (formData.currentPassword === formData.newPassword) {
-      setError('New password must be different from current password');
+    const validation = validatePasswordChange(formData);
+    if (!validation.valid) {
+      setError(validation.message);
       return false;
     }
     return true;
