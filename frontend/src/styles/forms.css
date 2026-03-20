@@ -101,7 +101,7 @@
   margin-bottom: 0;
   width: 100%;
   border-collapse: collapse;
-  table-layout: auto;
+  table-layout: fixed;
   font-size: 0.85rem;
 }
 
@@ -133,8 +133,9 @@
   font-size: 0.82rem;
   color: #334155;
   font-weight: 500;
-  word-break: break-word;
-  overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -547,6 +548,7 @@ textarea.form-control {
     min-width: 100%;
     width: auto;
     font-size: 0.8rem;
+    table-layout: fixed;
   }
 
   .table thead {
@@ -559,12 +561,15 @@ textarea.form-control {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.4px;
+    white-space: nowrap;
   }
 
   .table td {
     padding: 8px;
     font-size: 0.75rem;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .table tbody tr {
@@ -601,7 +606,7 @@ textarea.form-control {
     min-width: 100%;
     width: auto;
     font-size: 0.75rem;
-    table-layout: auto;
+    table-layout: fixed;
   }
 
   .table thead {
@@ -633,6 +638,9 @@ textarea.form-control {
     font-size: 0.7rem;
     vertical-align: middle;
     border: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .table-container {

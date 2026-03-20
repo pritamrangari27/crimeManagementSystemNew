@@ -101,7 +101,7 @@
   margin-bottom: 0;
   background: #ffffff;
   border-collapse: collapse;
-  table-layout: auto;
+  table-layout: fixed;
   width: 100%;
   font-size: 0.85rem;
 }
@@ -133,8 +133,9 @@
   font-size: 0.82rem;
   color: #334155;
   font-weight: 500;
-  word-break: break-word;
-  overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -543,7 +544,7 @@
     font-size: 0.8rem;
     width: auto;
     min-width: 100%;
-    table-layout: auto;
+    table-layout: fixed;
   }
 
   .table thead {
@@ -576,7 +577,9 @@
     font-size: 0.7rem;
     position: relative;
     border: none;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Cards */

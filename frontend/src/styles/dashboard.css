@@ -156,7 +156,7 @@
   font-size: 0.8rem;
   margin: 0;
   min-width: 100%;
-  table-layout: auto;
+  table-layout: fixed;
 }
 .mgmt-table thead {
   position: sticky;
@@ -183,8 +183,9 @@
   border-bottom: 1px solid #f1f5f9;
   color: #334155;
   font-weight: 500;
-  word-break: break-word;
-  overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .mgmt-table tbody tr {
   display: table-row;
@@ -448,9 +449,9 @@
 .dense-table-wrap .table { 
   margin: 0; 
   font-size: 0.85rem;
-  table-layout: auto;
+  table-layout: fixed;
   width: 100%;
-  min-width: auto;
+  min-width: 100%;
   border-collapse: collapse;
 }
 .dense-table-wrap .table thead th {
@@ -475,8 +476,9 @@
   vertical-align: middle;
   text-align: left;
   border-color: #f0f0f0;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 0.82rem;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -1729,6 +1731,7 @@
     font-size: 0.8rem;
     min-width: auto;
     width: 100%;
+    table-layout: fixed;
   }
 
   .table thead {
@@ -1764,8 +1767,9 @@
     border: none;
     font-size: 0.75rem;
     color: #334155;
-    word-break: break-word;
-    overflow-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* All table cells remain visible */
@@ -1805,6 +1809,7 @@
     min-width: 100%;
     margin: 0;
     font-size: 0.75rem;
+    table-layout: fixed;
   }
 
   .dense-table-wrap .table thead th {
@@ -1819,6 +1824,9 @@
   .dense-table-wrap .table tbody td {
     padding: 8px;
     font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .dense-table-wrap .btn {

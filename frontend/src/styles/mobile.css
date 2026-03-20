@@ -191,9 +191,9 @@
   .table {
     font-size: 0.8rem;
     margin-bottom: 0;
-    width: auto;
+    width: 100%;
     min-width: 100%;
-    table-layout: auto;
+    table-layout: fixed;
   }
 
   .table thead {
@@ -228,8 +228,9 @@
     font-size: 0.7rem;
     text-align: left;
     border: none;
-    word-break: break-word;
-    overflow-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     vertical-align: middle;
   }
 
