@@ -21,45 +21,18 @@
   padding: 16px 20px;
 }
 
-/* General modal centering - Centers in viewport */
+/* Desktop modal positioning - default Bootstrap style */
 .modal {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  z-index: 9999 !important;
-}
-
-.modal.show {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  /* Let Bootstrap handle positioning on desktop */
 }
 
 .modal-dialog {
-  position: relative !important;
-  margin: auto !important;
-  width: 100% !important;
-  max-width: 600px !important;
-}
-
-/* Background overlay */
-.modal-backdrop {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  background-color: rgba(0, 0, 0, 0.5) !important;
-  z-index: 1040 !important;
+  /* Let Bootstrap handle on desktop */
 }
 
 /* Mobile optimized modals */
 @media (max-width: 480px) {
+  /* Center modals on mobile only */
   .modal {
     position: fixed !important;
     top: 0 !important;
@@ -156,26 +129,14 @@
 
 @media (max-width: 575px) {
   /* Confirm modal sizing for tablet/mobile */
-  .modal {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    z-index: 9999 !important;
-  }
-
   .confirm-modal .modal-dialog {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
     width: calc(100vw - 28px) !important;
     max-width: 340px !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     z-index: 9999 !important;
   }
 
@@ -210,13 +171,13 @@
   /* Change password and edit profile modals */
   .change-password-modal .modal-dialog,
   .edit-profile-modal .modal-dialog {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
     width: calc(100vw - 20px) !important;
     max-width: 400px !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     z-index: 9999 !important;
   }
 
@@ -238,45 +199,5 @@
   .edit-profile-modal .modal-footer {
     padding: 12px 16px !important;
     gap: 8px !important;
-  }
-}
-
-/* Desktop and larger screens */
-@media (min-width: 576px) {
-  .modal {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    z-index: 9999 !important;
-  }
-
-  .modal-dialog {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    margin: 0 auto !important;
-    transform: none !important;
-  }
-
-  .modal-content {
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
-    border-radius: 12px !important;
-  }
-
-  /* Ensure all specific modals are centered */
-  .confirm-modal .modal-dialog,
-  .change-password-modal .modal-dialog,
-  .edit-profile-modal .modal-dialog,
-  .fir-view-modal .modal-dialog {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    margin: 0 auto !important;
   }
 }

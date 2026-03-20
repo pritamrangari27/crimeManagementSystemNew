@@ -256,7 +256,7 @@
     background: #94a3b8;
   }
 
-  /* Modals - Centered on Mobile */
+  /* Modals - Centered on Mobile ONLY */
   .modal {
     position: fixed !important;
     top: 0 !important;
