@@ -312,4 +312,18 @@ Contributions are welcome! Here's how to get started:
 | `docs:` | Documentation update |
 | `chore:` | Config, dependencies, tooling |
 
+
+6. **Pictures**
+   1] login Page
+   <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9462463a-bace-47c0-abe0-5f6711b56b53" />
+   2] User Dashboard
+   <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/507e2e26-7ced-444f-9457-e4a8ae54e154" />
+   3] Admin Dashboard
+    <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/7daa82cd-fa11-4a42-a973-b0bff62b465f" />
+   4] Police Dashboard
+   <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1dd592b7-cfb0-4861-aeb2-ea0367e2acf6" />
+
+   
+
+
 ---
