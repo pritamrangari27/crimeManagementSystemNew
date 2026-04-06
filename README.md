@@ -33,20 +33,6 @@ The **Crime Management System** is a production-ready web application designed f
 
 ---
 
-##  Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Runtime** | Node.js 18+ |
-| **Framework** | Express.js 4.18 |
-| **Database** | PostgreSQL via Supabase |
-| **Authentication** | JWT (JSON Web Tokens) + bcrypt |
-| **AI Service** | Python FastAPI (crime classification) |
-| **Deployment** | Vercel (frontend) + Render/Railway (backend) |
-| **ORM / DB Layer** | Custom `pg` pool wrapper with SQLite-compatible API |
-
----
-
 ##  System Architecture
 
 ```
